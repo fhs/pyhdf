@@ -1,5 +1,8 @@
-# $Id: SD.py,v 1.5 2004-08-02 17:06:20 gosselin Exp $
+# $Id: SD.py,v 1.6 2005-01-25 18:17:53 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.5  2004/08/02 17:06:20  gosselin
+# pyhdf-0.7.2
+#
 # Revision 1.4  2004/08/02 15:36:04  gosselin
 # pyhdf-0.7-1
 #
@@ -971,7 +974,7 @@ from error import _checkErr, HDF4Error
 # List of names we want to be imported by an "from pyhdf.SD import *"
 # statement
 
-__all__ = ['SD', 'SDAttr', 'SDC', 'SDS', 'SDim']
+__all__ = ['SD', 'SDAttr', 'SDC', 'SDS', 'SDim', 'HDF4Error']
 
 try:
     import Numeric as _toto
