@@ -1,5 +1,8 @@
-# $Id: README,v 1.2 2004-08-02 15:16:38 gosselin Exp $
+# $Id: README,v 1.3 2004-08-02 15:29:52 gosselin Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/08/02 15:16:38  gosselin
+# pyhdf 0.6-1
+#
 # Revision 1.1  2004/08/02 14:45:56  gosselin
 # Initial revision
 #
@@ -10,22 +13,27 @@ Author: Andre Gosselin
         Mont-Joli, Canada
         gosselina@dfo-mpo.gc.ca
 
-Latest version: 0.6-1
-Date:  December 3 2003
+Latest version: 0.7-1
+Date:  FIXDATE
 
-pyhdf is a python wrapper around the NCSA HDF4 library.
-The SD (Scientific Dataset) and VS (Vdata) API's are currently
-implemented. netCDF files can also be read and modified.
+pyhdf is a python wrapper around the NCSA HDF version 4 library.
+The SD (Scientific Dataset), VS (Vdata) and V (Vgroup) API's 
+are currently implemented. netCDF files can also be 
+read and modified.
 
 Installation:
   To install, see file INSTALL.
 
 Documentation:
   For documentation, see the doc/ subdirectory:
+    -pyhdf.HDF.txt  text format
+    -pyhdf.HDF.html html format
     -pyhdf.SD.txt   text format
     -pyhdf.SD.html  html format
     -pyhdf.VS.txt   text format
     -pyhdf.VS.html  html format
+    -pyhdf.V.txt    text format
+    -pyhdf.V.html   html format
 
 Note that the documentation was totally produced using the
 Python pydoc module.
