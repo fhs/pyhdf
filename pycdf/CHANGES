@@ -1,0 +1,21 @@
+List of changes to 'pycdf' since the initial release.
+
+pycdf-0.5-2
+  July 20 2003
+    -Corrected unfortunate error in the 'setup.py' script.
+    -Forced closing of the dataset when the python object
+     referring to it goes out of scope.
+    -To avoid name clashes with an upcoming 'pyhdf' package,
+     all netCDF constants heve been moved to a new 'NC' class.
+     As a consequence, instead of saying eg:"CDF(<file>,READ)", 
+     one must now write: "CDF(<file>,NC.READ). Since this change 
+     comes really early in the lifetime of 'pycdf', it is hoped 
+     it will not impact too many users.
+     *** EXAMPLES MUST BE DOWNLOADED AFRESH ***
+    -List of names imported by an "from pycdf import *" statement
+     has been substantially cleaned up.
+
+pycdf-0.5-1
+  July 19 2003
+    -Initial release.
+

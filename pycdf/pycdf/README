@@ -1,0 +1,3 @@
+To compile the pycdf python extension and module, do:
+  
+  % make python

@@ -1,0 +1,20 @@
+Gestion de pycdf
+----------------
+
+Pour regenerer l'extension pycdf avec SWIG:
+
+  % cd pycdf
+  % make python
+  % make python_clean
+
+Pour creer une distribution source:
+
+  % python setup.py sdist
+
+  La distribution est cree dans dist/pycdf...*.gz
+
+Pour installer pycdf:
+
+  % tar xfz pycdf...*gz
+  % cd pycdf...
+  % python setup.py install
