@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 #
-# $Id: mpy.pyx,v 1.6 2005-02-13 01:51:14 gosselin_a Exp $
+# $Id: mpy.pyx,v 1.7 2005-02-13 03:03:45 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.6  2005/02/13 01:51:14  gosselin_a
+# Added support for numeric array to MPY_Scatterv().
+#
 # Revision 1.5  2005/02/12 03:55:59  gosselin_a
 # Fixed comments in the header of MPY_Scatter().
 #
@@ -4213,18 +4216,29 @@ def MPY_Scatterv(int root, msg=None, sendCount=None, int recvCount=0,
                     only at root, and is ignored on non-root processes, where
                     it should be omitted (or set to the default None).
                     When dataType == MPY_PYTHON_ARRAY, 'msg' must by a Numeric
-                    array. For other datatypes, 'msg' must be a sequence whose length
+                    array whose number of elements must be >= the sum of entries
+                    in the 'sendCount' parameter.
+                    For other datatypes, 'msg' must be a sequence whose length
                     must match the number of processes inside the communicator,
                     message at index 'i' being sent to process of rank 'i'.
                     Remember that the root process participates in the scatter and
                     thus sends a message to itself.
-      sendCount     Significant only when dataType == MPY_PYTHON_ARRAY. sendCount 
+      sendCount     Significant only when dataType == MPY_PYTHON_ARRAY. 'sendCount' 
                     is then a sequence giving the number of data elements to send to
-                    each process.
+                    each process. The sum of 'sendCounts' values must be <= the number
+                    of elements inside array 'msg'. When dataType != MPY_PYTHON_ARRAY
+                    the number fo data elements is automatically computed from the
+                    length of each element of the 'msg' sequence.
       recvCount     Max number of data elements to receive. Must be greater or
                     equal to the message size. If set to 0 (default value),
-                    root process scatters the number of data elements sent to
-                    each process.
+                    the root process scatters the number of data elements sent to
+                    each process, and the receiving process dimensions its receive
+                    buffer accordingly.
+      array         Significant only when dataType == MPY_PYTHON_ARRAY. 'array' then
+                    identifies the Numeric array where the  scatter will be returned.
+                    It this parameter is omitted, a one-dimensional array will
+                    be allocated, with size equal to the sendCount for that process,
+                    and the type equal to the type of of 'msg' array'. 
       dataType      Message datatype.
       comm          Communicator handle.
 
