@@ -15,36 +15,35 @@ print "I am P%d of %d on node %s" % \
 
 MPY_Barrier()
 
-for k in range(1,2):
-    if rank == root:
-        # IMPORTANT :  the root participates in the gather operation,
-        # and sends a message to itself.
+if rank == root:
+    # IMPORTANT :  the root participates in the gather operation,
+    # and sends a message to itself.
 
-        # Each process sends a 4-element integer vector. The vectors are gathered
-        # inside matrix 'arr1' of shape (size x 4).
-        arr1 = Numeric.zeros((size, 4), 'i')
-        # root sends vector 'v1'.
-        v1 = Numeric.array(range(rank, rank+4), 'i')
-        # Gather vectors from all processes inside 'arr1'.
-        MPY_Gather(v1, root, dataType=MPY_PYTHON_ARRAY, array=arr1)
-        print "P%d MPY_Gather res1=\n%s" % (rank, arr1)
+    # Each process sends a 4-element integer vector. The vectors are gathered
+    # inside matrix 'arr1' of shape (size x 4).
+    arr1 = Numeric.zeros((size, 4), 'i')
+    # root sends vector 'v1'.
+    v1 = Numeric.array(range(rank, rank+4), 'i')
+    # Gather vectors from all processes inside 'arr1'.
+    MPY_Gather(v1, root, dataType=MPY_PYTHON_ARRAY, array=arr1)
+    print "P%d MPY_Gather res1=\n%s" % (rank, arr1)
 
-        # Each process now sends a 2-element float vector. Allocate array 'arr2'
-        # of shape (size x 2) to gather those vectors.
-        arr2 = Numeric.zeros((size, 2), 'f')
-        # The vector sent by root.
-        v2 = Numeric.array((-1.5, 2.5), 'f')
-        # Gather vectors from all processes inside 'arr2'.
-        MPY_Gather(v2, root, dataType=MPY_PYTHON_ARRAY, array=arr2)
-        print "P%d MPY_Gather res2=\n%s" % (rank, arr2)
-        
-    else:
-        # Send a 4-element integer vector.
-        v1 = Numeric.array(range(2*rank, 2*rank+4), 'i')
-        MPY_Gather(v1, root, dataType=MPY_PYTHON_ARRAY)
+    # Each process now sends a 2x2 float array. This time we let
+    # the function allocate the resulting array itself.
+    # The vector sent by root.
+    v2 = Numeric.array(((-1.5, 2.5),(-2.5, 1.5)), 'f')
+    # Gather vectors from all processes inside 'arr2'.
+    arr2 = MPY_Gather(v2, root, dataType=MPY_PYTHON_ARRAY)
+    print "P%d MPY_Gather res2=\n%s" % (rank, arr2)
 
-        # Send a 2-element float vector.
-        v2 = Numeric.array((-rank*10.0, rank*100.0), 'f')
-        MPY_Gather(v2, root, dataType=MPY_PYTHON_ARRAY)
+else:
+    # Send a 4-element integer vector.
+    v1 = Numeric.array(range(2*rank, 2*rank+4), 'i')
+    MPY_Gather(v1, root, dataType=MPY_PYTHON_ARRAY)
+
+    # Send a 2x2 float array.
+    v2 = Numeric.array(((-rank*10.0, rank*100.0),
+                        (rank*100, -rank*10)), 'f')
+    MPY_Gather(v2, root, dataType=MPY_PYTHON_ARRAY)
 
 MPY_Finalize()
