@@ -1,5 +1,9 @@
-# $Id: VS.py,v 1.2 2004-08-02 15:36:04 gosselin Exp $
+# $Id: VS.py,v 1.3 2004-08-02 17:06:20 gosselin Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/08/02 15:36:04  gosselin
+# pyhdf-0.7-1
+#
+
 """A module of the pyhdf package implementing the VS (Vdata table)
 API of the NCSA HDF4 library.
 (see: hdf.ncsa.uiuc.edu)

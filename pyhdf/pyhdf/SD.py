@@ -1,5 +1,8 @@
-# $Id: SD.py,v 1.4 2004-08-02 15:36:04 gosselin Exp $
+# $Id: SD.py,v 1.5 2004-08-02 17:06:20 gosselin Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2004/08/02 15:36:04  gosselin
+# pyhdf-0.7-1
+#
 # Revision 1.3  2004/08/02 15:22:59  gosselin
 # pyhdf -0.6-1
 #
@@ -15,7 +18,7 @@ Author: Andre Gosselin
         gosselina@dfo-mpo.gc.ca
         
 Version: 0.7-1
-Date:    FIXDATE
+Date:    December 17 2003
 
 Table of contents
 -----------------
@@ -1226,7 +1229,11 @@ class SDAttr:
         using the dot notation. See "High level attribute access".
         
                                                   """
-        n_values = len(values)
+	try:
+            n_values = len(values)
+	except:
+	    n_values = 1
+	    values = [values]
         if data_type == SDC.CHAR8:
             buf = _C.array_byte(n_values)
             # Allow values to be passed as a string. 
@@ -3050,7 +3057,8 @@ def _setattr(obj, name, value, privAttr):
     # Called by the __setattr__ method of the SD, SDS and SDim objects.
 
     # Be careful with private attributes.
-    if name in privAttr:
+    #if name in privAttr:
+    if name[0] == '_':
         obj.__dict__[name] = value
         return
 
@@ -3114,8 +3122,5 @@ def _array_to_str(buf, nValues):
         chrs = [chr(buf[0])]
     else:
         chrs = [chr(b) for b in _array_to_ret(buf, nValues)]
-    # Strip NULL at end
-    if chrs[-1] == '\0':
-        del chrs[-1]
     return ''.join(chrs)
 
