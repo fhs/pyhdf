@@ -1,0 +1,61 @@
+#!/usr/bin/env python
+
+import sys
+from Numeric import *
+
+from mpy import *
+
+MPY_Init()
+rank = MPY_Comm_rank()
+size = MPY_Comm_size()
+
+root = 0
+
+print "I am P%d of %d on node %s" % \
+      (rank, size, MPY_Get_processor_name())
+MPY_Barrier()
+
+if rank == root:
+    # Initialize a Numeric array.
+    numArr = identity(6, 'i')
+    for i in range(6):
+        for j in range(6):
+            numArr[i,j] = i*10+j
+    numArr[0,0] = -1
+    print "numArr initialized"
+
+    # Send the shape and type of the array.
+    MPY_Send((numArr.shape, numArr.typecode()), 1)
+    # Send the Numeric array to process 1, as a numeric array.
+    MPY_Send(numArr, 1, dataType=MPY_PYTHON_ARRAY)
+    print "P%d sent to P1\n%s" % (rank, numArr)
+    MPY_Barrier()
+        
+    # Send slices.
+    s = numArr[:,1:3]
+    MPY_Send(s, 1, dataType=MPY_PYTHON_ARRAY)
+    MPY_Barrier()
+
+    s = numArr[3:5,3:5]
+    MPY_Send(s, 1, dataType=MPY_PYTHON_ARRAY)
+
+elif rank == 1:
+    # Receive message holding the shape and type of the array. Allocate array.
+    shp, dataType = MPY_Recv(root)
+    print "P%d shape=%s dataType=%s" % (rank, shp, dataType)
+    arr = zeros(shp, dataType)
+    
+    # Receive integer array. 
+    obj2, status2 = MPY_Recv(root, retStatus=True, dataType=MPY_PYTHON_ARRAY, array=arr)
+    print "P%d recv status2=%s\n%s" % (rank, status2, obj2)
+    MPY_Barrier()
+        
+    # Receive slices.
+    obj3, status3 = MPY_Recv(root, retStatus=True, dataType=MPY_PYTHON_ARRAY,
+                             array=arr[:,1:3])
+    print "P%d recv status3=%s\n%s" % (rank, status3, obj3)
+    MPY_Barrier()
+    
+    obj4, status4 = MPY_Recv(root, retStatus=True, dataType=MPY_PYTHON_ARRAY,
+                             array=arr[3:5,3:5])
+    print "P%d recv status4=%s\n%s" % (rank, status4, obj4)

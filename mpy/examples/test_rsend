@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+
+import sys
+import mpi
+import Numeric
+import time
+
+mpi.init()
+rank = mpi.comm_rank()
+size = mpi.comm_size()
+
+root = 0
+
+print "%.5f" % time.time(), "I am P%d of %d on node %s" % \
+      (rank, size, mpi.get_processor_name())
+mpi.barrier()
+
+toProc = [1,2,3]
+numMes = 3
+
+# PROBLEM: a ready-send should provoke an error if no receive has been
+#          posted. This does not seem to be the case here, as the first
+#          group of readdy-sends are posted well in advance of the first
+#          group of receives.
+
+if rank == root:
+    for num in range(numMes):
+        for p in toProc:
+            msg = "ready send from %d to %d msg #%d" % (rank, p, num)
+            print "%.5f" % time.time(),"P%d rsending to %d msg %d" % \
+                  (rank, p, num)
+            status = mpi.rsend(msg, p)
+            print "%.5f" % time.time(),"P%d ready send to %d msg='%s'" % \
+                  (rank, p, msg)
+    print "%.5f" % time.time(),"P%d all messages sent in ready mode" % rank
+
+    for p in toProc:
+        print "%.5f" % time.time(),"P%d posting recv to %d" % (rank, p)
+        msg, status = mpi.recv(p, retStatus=True)
+        print "%.5f" % time.time(),"P%d received from %d msg='%s'" % \
+              (rank, p, msg)
+        
+elif rank in toProc:
+    time.sleep(5)
+    for num in range(numMes):
+        print "%.5f" % time.time(),"P%d posting recv to %d" % (rank, root)
+        msg, status = mpi.recv(root, retStatus=True)
+        print "%.5f" % time.time(),"P%d received from %d msg='%s' status=%s" % \
+              (rank, root, msg, status)
+    print "%.5f" % time.time(),"P%d all ready messages received" % rank
+
+    msg = "ready send from %d to %d" % (rank, root)
+    mpi.rsend(msg, root)
+    print "%.5f" % time.time(),"P%d ready send to %d msg='%s'" % (rank, root, msg)

@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+
+# This example implements the classical computation of PI
+# done by integrating function f(x)=1/(1+x*x) over interval [0,1],
+# delegating to each process the computation of the area of 1 every
+# n rectangle under the curve.
+
+import sys, math
+import Numeric
+import mpi
+
+mpi.init(sys.argv)   
+myid =    mpi.comm_rank()
+numproc = mpi.comm_size()
+node =    mpi.get_processor_name()
+root = 0
+
+print "I am P%d of %d on node %s" %(myid, numproc, node)
+mpi.barrier()
+
+def f(x):
+    return 4.0 / (1.0 + x * x)
+
+if myid == 0:
+    if len(sys.argv) != 2:
+        print "Usage: compute_pi n"
+	sys.exit(1)
+    n = int(sys.argv[1])
+else:
+    n = sys.maxint 
+
+
+# Broadcast the number of steps 'n' to all processes.
+n = mpi.bcast(n, 0)
+
+# Integrate.
+t0 = mpi.wtime()
+h = 1.0 / n
+sum = 0.0
+for i in range(myid + 1, n + 1, numproc):
+    x = h * (i - 0.5)
+    y = f(x)
+    sum += y
+
+res = mpi.reduce(sum, mpi.MPI_SUM, root)
+
+print "P%d took %f secs" % \
+      (myid, mpi.wtime() - t0)
+mpi.barrier()
+if myid == 0:
+    mypi = h * res
+    print "PI is about", mypi, "error=", abs(math.pi - mypi)
+
+mpi.finalize()

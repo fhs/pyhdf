@@ -1,0 +1,40 @@
+#!/usr/bin/env python
+
+import sys
+
+from mpy import *
+
+MPY_Init()
+rank = MPY_Comm_rank()
+size = MPY_Comm_size()
+root = 0
+
+print "I am P%d of %d on node %s" % \
+      (rank, size, MPY_Get_processor_name())
+
+MPY_Barrier()
+
+for k in range(1,2):
+    if rank == root:
+        # IMPORTANT :  the root participates in the gather operation,
+        # and sends a message to itself.
+
+        # All gathered messages must be of the same length. Using MPY_Gather() with
+        # messages transmitted as python objects is risky, since it may be
+        # hard to guarantee that the strings used to encapsulate the objects
+        # will be of the same length. It is better to use MPY_Gatherv() instead.
+        v1 = range(rank, rank + 3)
+        res1 = MPY_Gather(v1, root)
+        print "P%d MPY_Gather res1=%s" % (rank, res1)
+        
+        # This time we gather messages transmitted using MPI datatypes.
+        v2= [10, 20, 30]
+        res2 = MPY_Gather(v2, root, dataType=MPY_FLOAT)
+        print "P%d MPY_Gather res2=%s" % (rank, res2)
+    else:
+        v1 = range(rank, rank+3)
+        MPY_Gather(v1, root)
+        v2 = [1000, 1001, 1002]
+        MPY_Gather(v2, root, dataType=MPY_FLOAT)
+
+MPY_Finalize()

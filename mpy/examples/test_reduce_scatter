@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+
+import sys
+
+from mpy import *
+
+MPY_Init()
+rank = MPY_Comm_rank()
+size = MPY_Comm_size()
+root = 0
+
+print "I am P%d of %d on node %s" % \
+      (rank, size, MPY_Get_processor_name())
+
+MPY_Barrier()
+
+v1 = range(12)
+# Each process receives a segment of 3 values.
+res1 = MPY_Reduce_scatter(v1, [3,3,3,3], MPY_SUM)
+print "P%d MPY_Reduce res1=%s" % (rank, res1)
+MPY_Barrier()
+        
+# This time we use MPI datatypes.
+# Process 0 and 1 receive 3 values each, and process 2 and 3 receive 2 values each.
+v2 = range(10)
+res2 = MPY_Reduce_scatter(v2, [3,3,2,2], MPY_SUM, dataType=MPY_FLOAT)
+print "P%d MPY_Reduce res2=%s" % (rank, res2)
+
+
+MPY_Finalize()

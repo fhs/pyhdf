@@ -1,0 +1,100 @@
+#!/usr/bin/env python
+
+import sys
+import Numeric
+
+from mpy import *
+
+MPY_Init()
+rank = MPY_Comm_rank()
+size = MPY_Comm_size()
+
+root = 0
+
+print "I am P%d of %d on node %s" % \
+      (rank, size, MPY_Get_processor_name())
+MPY_Barrier()
+
+toProc = [1,2,3]
+
+# Sender part.
+if rank == root:
+    # root sends a number of messages to the processes listed inside list
+    # 'toProc'. Messages are sent using numeric arrays. The shape and type
+    # of the array, and the number of messages, vary with each process.
+    
+    # First create a permanent request for each process we send to,
+    # using a numeric array as the message container. Next, inform each
+    # process of the array shape and type, and the number of messages to be sent.
+    requests = {}        # permanent request dictionnary
+    arr     = {}         # array dictionnary
+    numMess = {}         # number of messages sent to each process
+    for p in toProc:
+        numMess[p] = p+2                     # number of messages sent to p
+        shp    = (p, 2*p)                    # array shape
+        type   = p % 2 and 'f' or 'i'        # type of the array sent to p
+        arr[p] = Numeric.ones(shp, type)     # array used for messages to p
+
+        # Create permanent request.
+        requests[p] = MPY_Send_init(p, dataType=MPY_PYTHON_ARRAY, array=arr[p])
+        
+        # Inform receiver of the shape and type of the array used to send messages,
+        # and the number of messages to follow. This info is sent packaged inside
+        # a python tuple. Note how this considerably simplifies the code
+        # (see matching MPY_Recv() call) .
+        MPY_Send((shp, type, numMess[p]), p)
+        
+    # Send messages using the permanent requests. A message is sent in turn
+    # to each process before testing the requests completion, to allow overlap.
+    # Looping over the processes, then over the messages for each process,
+    # would force us to wait after each request (since a request must be complete
+    # before is is reused), thus making the process strictly sequential.
+    
+    # Loop for the maximum number of messages.
+    for num in range(max(numMess.values())):
+        # Loop for each process.
+        for p in toProc:
+            # Ignore this process if it has already been sent its allocated
+            # number of messages.
+            if num >= numMess[p]:
+                continue
+            a = arr[p]
+            ni, nj = a.shape
+            # Load a different contents into array at each loop.
+            for i in range(ni):
+                for j in range(nj):
+                    a[i,j] = num*10 + p
+            # Start the send, equivalent to MPY_Isend()
+            MPY_Start(requests[p])
+            
+        # Wait for requests to complete.
+        for p in toProc:
+            MPY_Wait(requests[p])
+
+    print "P%d all msgs sent" % rank
+    # Free requests
+    for p in toProc:
+        MPY_Request_free(requests[p])
+        
+# Receivers part.
+elif rank in toProc:
+    # Read the message informing us of the array shape and type, and
+    # the number of messages to read. The message is received as a python
+    # tuple. Note again how resorting the MPY_PYTHON_OBJ datatype greatly
+    # simplifies the code.
+    shape, type, n = MPY_Recv(root)
+    # Allocate numeric array where to receive message.
+    msg = Numeric.zeros(shape, type)
+    # Define permanent request, using array to receive the message.
+    request = MPY_Recv_init(root, dataType=MPY_PYTHON_ARRAY, array=msg)
+    # Receive messages through the permanent request.
+    for i in range(n):
+        # Start the receive.
+        MPY_Start(request)
+        # Wait for request to complete.
+        MPY_Wait(request)
+        # Extract message.
+        print "P%d received \n%s" % (rank, msg)
+        
+    # Free request
+    MPY_Request_free(request)

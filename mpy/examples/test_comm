@@ -1,0 +1,56 @@
+#!/usr/bin/env python
+
+import sys
+
+from mpy import *
+
+MPY_Init()
+
+rank = MPY_Comm_rank()
+size = MPY_Comm_size()
+
+# Create communicators derived from MPY_COMM_WORLD
+world_group = MPY_Comm_group(MPY_COMM_WORLD)
+print "P%d world_group=%x"  % (rank, world_group)
+
+# First 3 processes.
+group1 = MPY_Group_incl(world_group, [0,1,2])
+comm1 = MPY_Comm_create(MPY_COMM_WORLD, group1)
+print "P%d comm1=%x" % (rank, comm1)
+
+# Last 3 processes.
+group2 = MPY_Group_incl(world_group, [1,2,3])
+comm2 = MPY_Comm_create(MPY_COMM_WORLD, group2)
+print "P%d comm2=%x" % (rank, comm2)
+
+# group2 amd group3 are identical, except for context.
+group3 = MPY_Group_incl(world_group, [1,2,3])
+comm3 = MPY_Comm_create(MPY_COMM_WORLD, group3)
+print "P%d comm3=%x" % (rank, comm3)
+
+if comm1 != MPY_COMM_NULL:
+    if comm1 != MPY_COMM_NULL:
+        print "P%d compare comm1-comm1=%d" % (rank, MPY_Comm_compare(comm1, comm1))
+    if comm2 != MPY_COMM_NULL:
+        print "P%d compare comm1-comm2=%d" % (rank, MPY_Comm_compare(comm1, comm2))
+    if comm3 != MPY_COMM_NULL:
+        print "P%d compare comm1-comm3=%d" % (rank, MPY_Comm_compare(comm1, comm3))
+if comm2 != MPY_COMM_NULL:
+    if comm1 != MPY_COMM_NULL:
+        print "P%d compare comm2-comm1=%d" % (rank, MPY_Comm_compare(comm2, comm1))
+    if comm3 != MPY_COMM_NULL:
+        print "P%d compare comm2-comm3=%d" % (rank, MPY_Comm_compare(comm2, comm3))
+if comm3 != MPY_COMM_NULL:
+    if comm1 != MPY_COMM_NULL:
+        print "P%d compare comm3-comm1=%d" % (rank, MPY_Comm_compare(comm3, comm1))
+    if comm2 != MPY_COMM_NULL:
+        print "P%d compare comm3-comm2=%d" % (rank, MPY_Comm_compare(comm3, comm2))
+
+# Split MPY_COMM_WORLD into even and odd processes.
+split_comm = MPY_Comm_split(MPY_COMM_WORLD, rank % 2 == 0, rank)
+split_group = MPY_Comm_group(split_comm)
+print "P%d split_group members=%s" % \
+      (rank, MPY_Group_translate_ranks(split_group, range(MPY_Group_size(split_group)),
+                                       world_group))
+
+MPY_Finalize()

@@ -1,0 +1,121 @@
+#!/usr/bin/env python
+
+import sys
+import time
+
+from mpy import *
+
+MPY_Init()
+
+root = 0
+
+group1 = MPY_Comm_group(MPY_COMM_WORLD)
+
+size = MPY_Group_size(group1)
+rank = MPY_Group_rank(group1)
+print "P%d group size=%d" % (rank, size)
+
+# Create new groups.
+group2 = MPY_Group_incl(group1, [1, 2])
+group3 = MPY_Group_incl(group1, [3,2,1,0])
+group4 = MPY_Group_excl(group1, [0, 3])
+group5 = MPY_Group_difference(group1, group2)
+group6 = MPY_Group_intersection(group2, group5)   # == MPY_GROUP_Empty
+group7 = MPY_Comm_group(MPY_COMM_SELF)
+# Even processes, then odd ones
+group8 = MPY_Group_range_incl(group1, [(0,size-1,2), (1,size-1,2)])
+# Exclude odd processes.
+group9 = MPY_Group_range_excl(group1, [(1,size-1,2)])
+
+print "P%d group1 rank=%d size=%d" % \
+      (rank, MPY_Group_rank(group1), MPY_Group_size(group1))
+print "P%d group2 rank=%d size=%d" % \
+      (rank, MPY_Group_rank(group2), MPY_Group_size(group2))
+print "P%d group3 rank=%d size=%d" % \
+      (rank, MPY_Group_rank(group3), MPY_Group_size(group3))
+print "P%d group4 rank=%d size=%d" % \
+      (rank, MPY_Group_rank(group4), MPY_Group_size(group4))
+print "P%d group5 rank=%d size=%d" % \
+      (rank, MPY_Group_rank(group5), MPY_Group_size(group5))
+# Demonstrate that group6 is empty.
+print "P%d group6 rank=%d size=%d empty=%s" % \
+      (rank, MPY_Group_rank(group6), MPY_Group_size(group6),
+       group6 == MPY_GROUP_EMPTY)
+
+print "P%d group7 rank=%d size=%d" % \
+      (rank, MPY_Group_rank(group7), MPY_Group_size(group7))
+print "P%d group8 rank=%d size=%d" % \
+      (rank, MPY_Group_rank(group8), MPY_Group_size(group8))
+print "P%d group9 rank=%d size=%d" % \
+      (rank, MPY_Group_rank(group9), MPY_Group_size(group9))
+
+
+MPY_Barrier()
+time.sleep(0.00001)      # This makes Barrier() works ok, why?
+print "P%d group7 members correspond to group1 : %s " % \
+      (rank, MPY_Group_translate_ranks(group7, range(MPY_Group_size(group7)),
+                                       group1))
+print "P%d group1 members correspond to group7 : %s " % \
+      (rank, MPY_Group_translate_ranks(group1, range(MPY_Group_size(group1)),
+                                       group7))
+MPY_Barrier()
+time.sleep(0.00001)      # This makes Barrier() works ok, why?
+
+
+if rank == root:
+    # Show members of some groups relative to group1.
+    print "P%d group2 members correspond to group1 : %s " % \
+          (rank, MPY_Group_translate_ranks(group2, range(MPY_Group_size(group2)),
+                                       group1))
+    print "P%d group3 members correspond to group1 : %s " % \
+          (rank, MPY_Group_translate_ranks(group3, range(MPY_Group_size(group3)),
+                                           group1))
+    print "P%d group4 members correspond to group1 : %s " % \
+          (rank, MPY_Group_translate_ranks(group4, range(MPY_Group_size(group4)),
+                                           group1))
+    print "P%d group5 members correspond to group1 : %s " % \
+          (rank, MPY_Group_translate_ranks(group5, range(MPY_Group_size(group5)),
+                                           group1))
+    print "P%d group8 members correspond to group1 : %s " % \
+          (rank, MPY_Group_translate_ranks(group8, range(MPY_Group_size(group8)),
+                                           group1))
+    print "P%d group9 members correspond to group1 : %s " % \
+          (rank, MPY_Group_translate_ranks(group9, range(MPY_Group_size(group9)),
+                                           group1))
+
+    # Show members of group1 relative to other groups.
+    print "P%d group1 members correspond to group2 : %s " % \
+          (rank, MPY_Group_translate_ranks(group1, range(MPY_Group_size(group1)),
+                                       group2))
+    print "P%d group1 members correspond to group3 : %s " % \
+          (rank, MPY_Group_translate_ranks(group1, range(MPY_Group_size(group1)),
+                                       group3))
+    print "P%d group1 members correspond to group4 : %s " % \
+          (rank, MPY_Group_translate_ranks(group1, range(MPY_Group_size(group1)),
+                                       group4))
+    print "P%d group1 members correspond to group5 : %s " % \
+          (rank, MPY_Group_translate_ranks(group1, range(MPY_Group_size(group1)),
+                                       group5))
+    print "P%d group1 members correspond to group8 : %s " % \
+          (rank, MPY_Group_translate_ranks(group1, range(MPY_Group_size(group1)),
+                                       group8))
+    print "P%d group1 members correspond to group9 : %s " % \
+          (rank, MPY_Group_translate_ranks(group1, range(MPY_Group_size(group1)),
+                                       group9))
+
+    # group2 and group4 should be identical.
+    print "P%d compare(group2,group4)=%d" % (rank, MPY_Group_compare(group4, group2))
+    # group1 and group3 should be similar.
+    print "P%d compare(group1,group3)=%d" % (rank, MPY_Group_compare(group1, group3))
+    # group1 and group2 should be unequal.
+    print "P%d compare(group1,group2)=%d" % (rank, MPY_Group_compare(group1, group2))
+
+# Free all groups
+n = 0
+for g in [group1, group2, group3, group4, group5,
+          group6, group7, group8, group9]:
+    n += 1
+    print "P%d freeing group%d %x -> %x" % (rank, n, g, MPY_Group_free(g)) 
+
+MPY_Finalize()
+

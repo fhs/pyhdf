@@ -1,0 +1,40 @@
+#!/usr/bin/env python
+
+import sys
+import mpi
+
+mpi.init()
+rank = mpi.comm_rank()
+size = mpi.comm_size()
+
+root = 0
+
+print "I am P%d of %d on node %s" % \
+      (rank, size, mpi.get_processor_name())
+mpi.barrier()
+
+toProc = [1,2,3]
+numMes = 3
+
+if rank == root:
+    for num in range(numMes):
+        for p in toProc:
+            msg = "from %d to %d msg #%d" % (rank, p, num)
+            mpi.send(msg, p, tag=num)
+            print "P%d sent mes #%d to %d" % (rank, num, p)
+    
+
+elif rank in toProc:
+    for num in range(numMes):
+        nTest = 0
+        while True:
+            nTest += 1
+            flag, status = mpi.iprobe(retStatus=True)
+            if not flag:
+                continue
+            print "P%d after %d tests msg waiting from %d tag=%d length=%d" % \
+                  (rank, nTest, status.source, status.tag, status.length)
+            msg = mpi.recv(status.source, tag=status.tag)
+            print "P%d received '%s'" % (rank, msg)
+            break
+    

@@ -1,0 +1,40 @@
+#!/usr/bin/env python
+
+import sys
+
+from mpy import *
+
+MPY_Init()
+
+rank = MPY_Comm_rank()
+size = MPY_Comm_size()
+major, minor = MPY_Get_version()
+print "P%d MPI version = %d.%d" % (rank, major, minor) 
+
+# Get standard attribute avlues
+print "P%d MPY_TAG_UB=         %x" % (rank, MPY_Attr_get(MPY_COMM_WORLD, MPY_TAG_UB)[1])
+print "P%d MPY_HOST=           %d" % (rank, MPY_Attr_get(MPY_COMM_WORLD, MPY_HOST)[1])
+print "P%d MPY_IO=             %d" % (rank, MPY_Attr_get(MPY_COMM_WORLD, MPY_IO)[1])
+print "P%d MPY_WTIME_IS_GLOBAL=%d" % (rank, MPY_Attr_get(MPY_COMM_WORLD,
+                                                         MPY_WTIME_IS_GLOBAL)[1])
+
+# Get current handler, must be MPY_ERRORS_ARE_FATAL
+print "P%d MPY_ERRORS_ARE_FATAL=%x current=%x" % \
+      (rank, MPY_ERRORS_ARE_FATAL, MPY_Errhandler_get(MPY_COMM_WORLD))
+# Make errors non fatal
+MPY_Errhandler_set(MPY_COMM_WORLD, MPY_ERRORS_RETURN)
+# Provoque an MPI error (invalid communicator)
+try:
+    MPY_Attr_get(0, MPY_TAG_UB)
+except MPY_Error, msg:
+    print "P%d Error: %s" % (rank, msg)
+    print "Aborting..."
+    MPY_Abort()
+
+# Show error strings.
+for n in range(MPY_ERR_LASTCODE):
+    print "Error code %d class=%d '%s'" % (n, MPY_Error_class(n), MPY_Error_string(n))
+
+
+MPY_Finalize()
+

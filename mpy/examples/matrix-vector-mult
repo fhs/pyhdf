@@ -1,0 +1,108 @@
+#!/usr/bin/env python
+
+# Matrix-vector multiplication. Adapted from :
+# "Using MPI, 2nd ed.", pp 38-42.
+
+import sys, math, time
+import cPickle
+import Numeric
+import mpi
+
+
+cols = 10
+rows = 10
+OVERTAG = 32000
+
+def master(masterId):
+
+    # Initialize vector 'b' and matrix 'a'
+    b = Numeric.zeros(cols, 'f')
+    a = Numeric.zeros((rows, cols), 'f')
+    for j in range(cols):
+       b[j] = 1
+       for i in range(rows):
+           a[i,j] = i
+
+    # Send b to each slave process.
+    mpi.bcast(b, masterId)
+    
+    # Seed each slave process with a row, tagging with row number.
+    buf = Numeric.zeros(cols, 'f')    # Useless ?
+    r = 0
+    for p in range(mpi.comm_size()):
+        # Do not send to master
+        if p == masterId:
+            continue
+        # Send row 'r'.
+	mpi.send(a[r], p, tag=r)
+	r += 1
+        if r == rows:
+            break
+
+    # Collect dot products.
+    res = Numeric.zeros(rows, 'f')
+    numsent = r
+    for r in range(rows):
+        # Read a dot product from any slave, for any row.
+        # The tag identifies the row number.
+        dot, status = mpi.recv(mpi.MPI_ANY_SOURCE,
+                               tag=mpi.MPI_ANY_TAG,
+                               retStatus=True)
+        source = status.source
+        rowNum = status.tag
+        res[rowNum] = dot
+        if numsent < rows:
+            # Send another row to the slave who just answered.
+            mpi.send(a[numsent], source, tag=numsent)
+            numsent += 1
+        else:
+            # Signal end of processing with an OVERTAG tag.
+            mpi.send(buf, source, tag=OVERTAG)
+
+    print "a=\n", a
+    print "b=", b
+    print "a*transpose(b)=", res
+
+
+def slave(masterId, slaveId):
+
+    # Initialize vector 'b'.
+    b = Numeric.zeros(cols, 'f')
+    r = Numeric.zeros(cols, 'f')
+
+    # Receive value of 'b' from master.
+    b = mpi.bcast(b, masterId)
+
+    while True:
+        # Receive a row from master.
+        r, status = mpi.recv(masterId, tag=mpi.MPI_ANY_TAG,
+                             retStatus=True)
+        rowNum = status.tag
+        source = status.source
+        if rowNum == OVERTAG:
+            break
+
+        # Compute dot product.
+        dot = 0.0
+        for i in range(len(b)):
+            dot += b[i] * r[i]
+
+        # Send dot product to master. Tag identifies the row number.
+        mpi.send(dot, masterId, tag=rowNum)
+    
+        
+mpi.init()
+myid =    mpi.comm_rank()
+numproc = mpi.comm_size()
+node =    mpi.get_processor_name()
+root = 0
+
+print "P%d of %d running on node %s" %(myid, numproc, node)
+mpi.barrier()
+
+if myid == root:
+    master(myid)
+else:
+    slave(root, myid)
+
+mpi.finalize()

@@ -1,0 +1,37 @@
+#!/usr/bin/env python
+
+import sys
+
+from mpy import *
+
+MPY_Init()
+rank = MPY_Comm_rank()
+size = MPY_Comm_size()
+root = 0
+
+print "I am P%d of %d on node %s" % \
+      (rank, size, MPY_Get_processor_name())
+
+MPY_Barrier()
+
+# With MPY_Allgatherv(), gathered messages can be of different lengths.
+
+# Exchange Python objects.
+msgs = {0 : [1,2,3],
+        1 : ['a', 'b', 'c', 'd', 'e'],
+        2 : [1000, 1002],
+        3 : ['foo', 'bar', 'spam']}
+
+res1 = MPY_Allgatherv(msgs[rank])
+print "P%d MPY_Allgatherv res1=%s" % (rank, res1)
+MPY_Barrier()
+        
+# This time we gather messages transmitted using MPI datatypes.
+msgs = {0 : [1],
+        1 : [1,2],
+        2 : [1,2,3],
+        3 : [1,2,3,4]}
+res2 = MPY_Allgatherv(msgs[rank], dataType=MPY_FLOAT)
+print "P%d MPY_Allgatherv res2=%s" % (rank, res2)
+
+MPY_Finalize()

@@ -1,0 +1,105 @@
+#!/usr/bin/env python
+
+# Compute pi using a Monte Carlo method.
+# Adapted from "Using MPI, 2nd ed." pp. 56-59.
+#
+# This version creates the workers group using 'comm_split()' function.
+
+import sys
+import random, math
+import mpi
+
+REQUEST = 1
+REPLY   = 2
+CHUNKSIZE = 2000        # generate 1000 x values and 1000 y values 
+
+mpi.init()
+world = mpi.MPI_COMM_WORLD
+numprocs = mpi.comm_size(world)
+myid     = mpi.comm_rank(world)
+
+
+def serverProcess(serverId):
+    """Feed worker processed with random numbers.
+                                                      """
+
+    # Send random numbers until one of the workers tell us to quit.
+    while True:
+        # Get a request from a worker for a chunk of random numbers.
+        # a 0 indicates the computation is over.
+        request, status = mpi.recv(mpi.MPI_ANY_SOURCE, tag=REQUEST, comm=world,
+                                   retStatus=True)
+        if request == 0:
+            break
+        rands = []
+        for i in range(CHUNKSIZE):
+            rands.append(random.uniform(-1.0, 1.0))
+        mpi.send(rands, status.source, tag=REPLY, comm=world)
+
+def workersProcess(serverId, epsilon, totalMax):
+    """Request random numbers until the tolerance is reached.
+                                                                   """
+    request = 1
+    mpi.send(request, serverId, tag=REQUEST, comm=world)
+    workerId = mpi.comm_rank(workers)
+
+    inside = 0
+    outside = 0
+    while request:
+        rands, status = mpi.recv(serverId, tag=REPLY, comm=world,
+                                 retStatus=True)
+        i = 0
+        while i < len(rands):
+            x = rands[i]
+            y = rands[i+1]
+            i += 2
+            if x*x + y*y <= 1.0:
+                inside += 1
+            else:
+                outside += 1
+
+        totalin  = mpi.allreduce(inside,  mpi.MPI_SUM, workers)
+        totalout = mpi.allreduce(outside, mpi.MPI_SUM, workers)
+        total    = totalin + totalout
+
+        pi = 4.0 * totalin / total
+#        if abs(pi - math.pi) < epsilon or total > totalMax:
+        if abs(pi-math.pi) < epsilon:
+            request = 0
+
+        # Request a new chunk of random numbers.
+        if request:
+            mpi.send(request, serverId, tag=REQUEST, comm=world)
+        # Let the first process inform the random server that the
+        # computation is over.
+        elif workerId == 0:
+            mpi.send(0, serverId, tag=REQUEST, comm=world)
+
+    # Free workers communicator
+    mpi.comm_free(workers)
+    return total, totalin, totalout, pi
+                
+        
+server = numprocs - 1            # last proc is server
+    
+# Get tolerance value from command line (process 0)
+# and broadcast it to all other processes.
+if myid == 0:
+    epsilon = float(sys.argv[1])
+    mpi.bcast(epsilon, 0, world)
+else:
+    epsilon = mpi.bcast(0.0, 0, world)
+
+# Create a 'workers' communicator regrouping all processes different
+# from 'server'.
+workers = mpi.comm_split(world, myid != server, 0)
+
+# Start random number generator
+if myid == server:
+    serverProcess(server)
+else:
+    total, totalin, totalout, pi = workersProcess(server, epsilon, 500 * CHUNKSIZE)
+    if myid == 1:
+        print "total=%d totalin=%d totalout=%d pi=%f" % \
+              (total,totalin, totalout, pi)
+

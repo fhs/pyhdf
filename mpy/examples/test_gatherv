@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+
+import sys
+
+from mpy import *
+
+MPY_Init()
+rank = MPY_Comm_rank()
+size = MPY_Comm_size()
+root = 0
+
+print "I am P%d of %d on node %s" % \
+      (rank, size, MPY_Get_processor_name())
+
+MPY_Barrier()
+
+for k in range(1,2):
+    if rank == root:
+        # IMPORTANT :  the root participates in the gather operation,
+        # and sends a message to itself.
+
+        # When gathering messages sent as python objects, gatherv() should
+        # be called rather than gather() since it can be hard to predict
+        # the exact size of the string used to encapsulate the object.
+        # Even if the objects contain the same number of elements of the same
+        # type, the magnitude of the element values may generate strings
+        # of different length.
+        v1 = [1,2,3]
+        res1 = MPY_Gatherv(v1, root)
+        print "P%d gather res1=%s" % (rank, res1)
+
+        # Gather values sent as MPI datatypes. Rank root sends 2 values
+        # whereas other ranks send 6, so gatherv() must be called. Note
+        # that the input message contains integers, and the MPI datatype
+        # is specified as MPY_FLOAT : integers will thus be converted to
+        # 32 bits floats.
+        v2= [10, 20]
+        res2 = MPY_Gatherv(v2, root, dataType=MPY_FLOAT)
+        print "P%d gather res2=%s" % (rank, res2)
+    else:
+        v1 = [5, 6, 7, 8, 9, 10]
+        MPY_Gatherv(v1, root)
+        v2 = [1000, 1001, 1002, -1, -2, -3]
+        MPY_Gatherv(v2, root, dataType=MPY_FLOAT)
+
+MPY_Finalize()
