@@ -1,5 +1,5 @@
 /*
- * $Id: hdfext.i,v 1.4 2004-08-02 16:53:25 gosselin Exp $
+ * $Id: hdfext.i,v 1.5 2004-11-02 21:33:39 gosselin Exp $
  * $Log: not supported by cvs2svn $
  * Revision 1.3  2004/08/02 15:36:04  gosselin
  * pyhdf-0.7-1
