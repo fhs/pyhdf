@@ -1,5 +1,8 @@
-# $Id: setup.py,v 1.3 2004-08-02 15:16:38 gosselin Exp $
+# $Id: setup.py,v 1.4 2004-08-02 15:29:52 gosselin Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2004/08/02 15:16:38  gosselin
+# pyhdf 0.6-1
+#
 # Revision 1.2  2004/08/02 15:05:02  gosselin
 # pyhdf 0.5.2
 #
@@ -8,8 +11,8 @@
 #
 
 # distutils setup file for the pyhdf package
-# Version: 0.6-1
-# Date: 2003-11-17
+# Version: 0.7-1
+# Date: FIXDATE
 
 from distutils.core import setup, Extension
 
@@ -33,15 +36,15 @@ setup(name         = 'pyhdf',
       keywords     = ['hdf', 'netcdf', 'Numeric', 'python'],
       license      = 'public',
       long_description = 'The pyhdf package wraps the functionality\n '
-                         'of the NCSA HDF4 library inside a Python OOP\n '
-			 'framework. The SD (scientific dataset) and VS\n '
-			 '(Vdata) APIs are currently implemented.\n '
+                         'of the NCSA HDF version 4 library inside a Python OOP\n '
+			 'framework. The SD (scientific dataset), VS\n '
+			 '(Vdata) and V (Vgroup) APIs are currently implemented.\n '
 			 'Other APIs should be covered in the\n '
 			 'near future. SD datasets are read/written\n '
 			 'through Numeric arrays. netCDF files can also\n '
 			 'be read and modified with pyhdf.',
       url          = 'ftp://nordet.qc.dfo-mpo.gc.ca/pub/soft/pyhdf',
-      version      ='0.6-1',
+      version      ='0.7-1',
       packages     = ['pyhdf'],
       ext_modules  = [_hdfext]
       )
