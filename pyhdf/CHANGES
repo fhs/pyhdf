@@ -1,12 +1,27 @@
-# $Id: CHANGES,v 1.2 2004-08-02 15:05:39 gosselin Exp $
+# $Id: CHANGES,v 1.3 2004-08-02 15:16:38 gosselin Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/08/02 15:05:39  gosselin
+# pyhdf-0.5.2
+#
 # Revision 1.1  2004/08/02 14:45:56  gosselin
 # Initial revision
 #
 
 List of changes to 'pyhdf' since the initial release.
 
+pyhdf-0.6-1
+-----------
+  December 3 2003
+    -Implementation of the VS (vdata) API.
+    -Added support for unsigned integer types UINT16 and UINT32 inside
+     the SD API. Version 22 of Numeric must however be installed
+     (see comments inside `setup.py' for a way to remove support for
+     unsigned integers and compile with a lower version number of Numeric).
+    -Improved documentation.
+    -Bug fixes (thanks to Richard.Andrews@esands.com)
+
 pyhdf-0.5-2
+-----------
   August 3 2003
     -After starting the implementation of another HDF API, it
      was found that the idea of having on C extension module
@@ -19,6 +34,7 @@ pyhdf-0.5-2
     -A new "error" module has been added.
 
 pyhdf-0.5-1
+-----------
   July 31 2003
     -Initial release.
 

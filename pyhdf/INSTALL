@@ -1,5 +1,8 @@
-# $Id: INSTALL,v 1.1 2004-08-02 14:45:56 gosselin Exp $
+# $Id: INSTALL,v 1.2 2004-08-02 15:16:38 gosselin Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/08/02 14:45:56  gosselin
+# Initial revision
+#
 
 Installing the pycdf python package.
 
@@ -23,6 +26,9 @@ To install, follow these steps.
 2-Install the python Numeric package. Source code is
   available at: numpy.sourceforge.net. Binary packages
   are available for most popular environments.
+  Note that version 22 or above is needed to compile
+  support for unsigned integer types. See details inside
+  `setup.py' if you want to use an earlier version of Numeric.
 
 3-Uncompress and untar the pyhdf tar ball, then cd to the
   pyhdf-xxx directory just created.
@@ -61,11 +67,11 @@ To install, follow these steps.
     the HDF libjpeg.a file exists in the directory pointed by "library_dirs". 
     To solve the problem, edit the line:
    
-      #extra_objects=["extra stuff passed to the linker"],
+      #extra_link_args=["extra stuff passed to the linker"],
 
     changing it to:
 
-      extra_objects = ["-oldstyle_liblookup"],
+      extra_link_args = ["-oldstyle_liblookup"],
 
     This will tell the linker to look for .so then for .a files in each visited
     directory.
