@@ -1,5 +1,8 @@
-# $Id: setup.py,v 1.4 2004-08-02 15:29:52 gosselin Exp $
+# $Id: setup.py,v 1.5 2004-08-02 17:03:04 gosselin Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2004/08/02 15:29:52  gosselin
+# pyhdf-0.7-1
+#
 # Revision 1.3  2004/08/02 15:16:38  gosselin
 # pyhdf 0.6-1
 #
@@ -11,8 +14,8 @@
 #
 
 # distutils setup file for the pyhdf package
-# Version: 0.7-1
-# Date: FIXDATE
+# Version: 0.7-2
+# Date: August 2 2004
 
 from distutils.core import setup, Extension
 
@@ -44,7 +47,7 @@ setup(name         = 'pyhdf',
 			 'through Numeric arrays. netCDF files can also\n '
 			 'be read and modified with pyhdf.',
       url          = 'ftp://nordet.qc.dfo-mpo.gc.ca/pub/soft/pyhdf',
-      version      ='0.7-1',
+      version      ='0.7-2',
       packages     = ['pyhdf'],
       ext_modules  = [_hdfext]
       )
