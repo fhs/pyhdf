@@ -1,7 +1,22 @@
-# $Id: CHANGES,v 1.1 2004-08-02 14:45:56 gosselin Exp $
+# $Id: CHANGES,v 1.2 2004-08-02 15:05:39 gosselin Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/08/02 14:45:56  gosselin
+# Initial revision
+#
 
 List of changes to 'pyhdf' since the initial release.
+
+pyhdf-0.5-2
+  August 3 2003
+    -After starting the implementation of another HDF API, it
+     was found that the idea of having on C extension module
+     per HDF API was not a good one. It made difficult the sharing
+     of HDF data structures between the C extension modules.
+     It was thus decided to have just one C extension module
+     shared between all the python modules.
+    -The new C extension module is named "_hdfext". The SD python 
+     module has been modified to import "_hdfext" instead of "_sdext".
+    -A new "error" module has been added.
 
 pyhdf-0.5-1
   July 31 2003
