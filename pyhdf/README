@@ -1,0 +1,31 @@
+# $Id: README,v 1.1 2004-08-02 14:45:56 gosselin Exp $
+# $Log: not supported by cvs2svn $
+
+Author: Andre Gosselin
+        Maurice-Lamontagne Institute
+        Fisheries and Oceans Department
+        Mont-Joli, Canada
+        gosselina@dfo-mpo.gc.ca
+
+pyhdf is a python wrapper around the NCSA HDF4 library.
+Only the SD (Scientific Dataset) API is currently
+implemented. netCDF files can also be read and modified.
+
+Installation:
+  To install, see file INSTALL.
+
+Documentation:
+  For documentation, see the doc/ subdirectory:
+    -pyhdf.SD.txt   text format
+    -pyhdf.SD.html  html format
+
+Note that the documentation was totally produced using the
+Python pydoc module.
+
+Examples:
+
+  Example python programs using the pyhdf package
+  can be found inside the examples/ subdirectory.
+
+Please report all bugs and problems to the author at the
+address given above.
