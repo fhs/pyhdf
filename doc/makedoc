@@ -1,0 +1,10 @@
+#!/bin/sh
+
+pydoc    pyhdf.HDF > pyhdf.HDF.txt
+pydoc -w pyhdf.HDF > pyhdf.HDF.html
+pydoc    pyhdf.SD  > pyhdf.SD.txt
+pydoc -w pyhdf.SD  > pyhdf.SD.html
+pydoc    pyhdf.VS  > pyhdf.VS.txt
+pydoc -w pyhdf.VS  > pyhdf.VS.html
+pydoc    pyhdf.V   > pyhdf.V.txt
+pydoc -w pyhdf.V   > pyhdf.V.html
