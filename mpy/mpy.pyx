@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 #
-# $Id: mpy.pyx,v 1.1.1.1 2005-02-10 22:54:06 gosselin_a Exp $
+# $Id: mpy.pyx,v 1.2 2005-02-10 23:11:04 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2005/02/10 22:54:06  gosselin_a
+# Initial import of the mpy package
+#
+# Following logs refer to an earlier CVS repository used
+# to manage "mpy" at the Maurice-Lamontagne Institute.
+#
 # Revision 1.14  2005/02/10 04:04:00  gosselin_a
 # Added support for Numeric arrays inside MPY_Bcast().
 #
