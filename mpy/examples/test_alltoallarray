@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+
+import sys
+import Numeric
+
+from mpy import *
+
+MPY_Init()
+rank = MPY_Comm_rank()
+size = MPY_Comm_size()
+root = 0
+
+print "I am P%d of %d on node %s" % \
+      (rank, size, MPY_Get_processor_name())
+
+MPY_Barrier()
+
+# All gathered messages must be of the same length.
+
+msgs = {0: Numeric.array(((101,102),(103,104),(105,106),(107,108)), 'i'),
+        1: Numeric.array(((201,202),(203,204),(205,206),(207,208)), 'i'),
+        2: Numeric.array(((301,302),(303,304),(305,306),(307,308)), 'i'),
+        3: Numeric.array(((401,402),(403,404),(405,406),(407,408)), 'i') }
+
+# Define the output array.
+arr = Numeric.zeros((4,2), 'i')
+# Dispatch data.
+res1 = MPY_Alltoall(msgs[rank], dataType=MPY_PYTHON_ARRAY, array=arr)
+print "P%d res1=\n%s" % (rank, res1)
+
+# This time we let the function allocate the array for us.
+# The function has allocated a one-dimensional array. We reshape
+# it to the wanted shape.
+res2 = MPY_Alltoall(msgs[rank], dataType=MPY_PYTHON_ARRAY)
+res2 = Numeric.reshape(res2, (4,2))
+print "P%d res2=\n%s" % (rank, res2)
+
+
+MPY_Finalize()
