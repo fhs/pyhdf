@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 #
-# $Id: mpy.pyx,v 1.8 2005-02-14 00:06:56 gosselin_a Exp $
+# $Id: mpy.pyx,v 1.9 2005-02-15 03:15:21 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.8  2005/02/14 00:06:56  gosselin_a
+# Completed the support for Numeric arrays in the collective operations.
+#
 # Revision 1.7  2005/02/13 03:03:45  gosselin_a
 # Updated comments in the header of MPY_Scatterv().
 #
@@ -1605,7 +1608,7 @@ def MPY_Bcast(int root, msg=None, int nElem=0, dataType=MPY_PYTHON_OBJ, array=No
     return obj
 
 
-def MPY_Bsend(msg, int dest, dataType=MPY_PYTHON_OBJ,
+def MPY_Bsend(msg, int dest, dataType=MPY_PYTHON_OBJ, arrInfo=False,
               int tag=1, long comm=MPY_COMM_WORLD):
     """
     Python wrapper around MPI_Bsend()
@@ -1615,6 +1618,10 @@ def MPY_Bsend(msg, int dest, dataType=MPY_PYTHON_OBJ,
       dest          Rank inside the communicator of the process to which the
                     message is sent
       dataType      Message transmission mode.
+      arrInfo       Significant only when dataType == MPY_PYTHON_ARRAY.
+                    Set to true to precede the message with a private message
+                    holding the array shape and type. The corresponding
+                    call to MPY_Recv() should also specify this parameter.
       tag           Numeric tag which can be used to identify this message.
       comm          Communicator handle
 
@@ -1626,6 +1633,11 @@ def MPY_Bsend(msg, int dest, dataType=MPY_PYTHON_OBJ,
     cdef int nElem
     cdef long s, mpi_datatype
     cdef ArrayType arrayObj
+
+    # If dataType == MPY_PYTHON_ARRAY and arrInfo == True, send a message
+    # holding the array shape and type.
+    if dataType == MPY_PYTHON_ARRAY and arrInfo:
+        MPY_Send((msg.shape, msg.typecode()), dest, tag=tag, comm=comm)
 
     # Allocate and initialize send buffer. 'arrayObj' is meaningful only when the
     # object is to be sent using the MPY_PYTHON_ARRAY datatype. It is returned
@@ -3701,7 +3713,7 @@ def MPY_Probe(int source=MPY_ANY_SOURCE, int tag=MPY_ANY_TAG,
 
     
 def MPY_Recv(int source, int nElem=0, dataType=MPY_PYTHON_OBJ, array=None,
-             int tag=MPY_ANY_TAG,
+             arrInfo=False, int tag=MPY_ANY_TAG,
              long comm=MPY_COMM_WORLD, retStatus=False):
     """
     Python wrapper around MPI_Recv() .
@@ -3711,13 +3723,22 @@ def MPY_Recv(int source, int nElem=0, dataType=MPY_PYTHON_OBJ, array=None,
                     the message.
       nElem         Maximum number of data elements inside the message to receive.
                     If omitted or 0, function will probe the message queue to
-                    obtain the message length. 
+                    obtain the message length, except if
+                    dataType == MPY_PYTHON_ARRAY. 
       dataType      Message transmission mode.
-      array         If dataType==MPY_PYTHON_ARRAY, parameter 'array' must identify
-                    the Numeric array into which to store the received data.
-                    The caller must make sure that this array is compatible
-                    with the one to be received (size and datatype); its shape can
-                    always be modified afterwards.
+      array         If dataType==MPY_PYTHON_ARRAY and parameter 'arrInfo' is None,
+                    parameter 'array' must identify the Numeric array into which to
+                    store the received data. The caller must make sure that this
+                    array is compatible with the one to be received (size and
+                    datatype); its shape can always be modified afterwards.
+                    Instead of setting the output array explicitly, one can set
+                    parameter 'arrInfo' to true, and also in the matching MPY_Send()
+                    call. This will let the function allocate the array.
+      arrInfo       Significant only when dataType == MPY_PYTHON_ARRAY. Set it to
+                    true if the matching call to MPY_Send() also set this
+                    parameter. The function will then use the private message
+                    to properly declare the output array. Parameter 'array'
+                    should then be set to None.
       tag           Numeric tag identifying the message to receive, or MPY_ANY_TAG
                     to ignore message tags.
       comm          Communicator handle.
@@ -3746,6 +3767,9 @@ def MPY_Recv(int source, int nElem=0, dataType=MPY_PYTHON_OBJ, array=None,
             checkErr(res, "MPY_Recv/MPI_Probe")
             nElem = status.st_length / dataTypeSize(dataType)
 
+    elif arrInfo:
+        shp, type = MPY_Recv(source, tag=tag, comm=comm)
+        array = Numeric.zeros(shp, type)
     else:
         if array is None:
             raise MPY_Error, "MPY_Recv : parameter 'array' cannot be None " \
@@ -4118,7 +4142,7 @@ def requestLoad(request, obj):
     obj2CArray(obj, request.dataType, <void *>l)
 
 
-def MPY_Rsend(msg, int dest, dataType=MPY_PYTHON_OBJ,
+def MPY_Rsend(msg, int dest, dataType=MPY_PYTHON_OBJ, arrInfo=False,
               int tag=1, long comm=MPY_COMM_WORLD):
     """
     Python wrapper around MPI_Rsend() .
@@ -4128,16 +4152,25 @@ def MPY_Rsend(msg, int dest, dataType=MPY_PYTHON_OBJ,
       dest          Rank inside the communicator of the process to which the
                     message is sent
       dataType      Message transmission mode.
+      arrInfo       Significant only when dataType == MPY_PYTHON_ARRAY.
+                    Set to true to precede the message with a private message
+                    holding the array shape and type. The corresponding
+                    call to MPY_Recv() should also specify this parameter.
       tag           Numeric tag which can be used to identify this message.
       comm          Communicator handle
 
     Returns:
       None
-                                                                                    """
+                                                                           """
 
     cdef int nElem
     cdef long s, mpi_datatype
     cdef ArrayType arrayObj
+
+    # If dataType == MPY_PYTHON_ARRAY and arrInfo == True, send a message
+    # holding the array shape and type.
+    if dataType == MPY_PYTHON_ARRAY and arrInfo:
+        MPY_Send((msg.shape, msg.typecode()), dest, tag=tag, comm=comm)
 
     # Allocate and initialize send buffer. 'arrayObj' is meaningful only when the
     # object is to be sent using the MPY_PYTHON_ARRAY datatype. It is returned
@@ -4581,7 +4614,7 @@ def MPY_Scatterv(int root, msg=None, sendCount=None, int recvCount=0,
     return obj
             
 
-def MPY_Send(msg, int dest, dataType=MPY_PYTHON_OBJ,
+def MPY_Send(msg, int dest, dataType=MPY_PYTHON_OBJ, arrInfo=False,
              int tag=1, long comm=MPY_COMM_WORLD):
     """
     Python wrapper around MPI_Send() .
@@ -4591,6 +4624,10 @@ def MPY_Send(msg, int dest, dataType=MPY_PYTHON_OBJ,
       dest          Rank inside the communicator of the process to which
                     the message is sent.
       dataType      Message transmission mode.
+      arrInfo       Significant only when dataType == MPY_PYTHON_ARRAY.
+                    Set to true to precede the message with a private message
+                    holding the array shape and type. The corresponding
+                    call to MPY_Recv() should also specify this parameter.
       tag           Numeric tag which can be used to identify the message
                     to receive.
       comm          Communicator handle.
@@ -4602,6 +4639,11 @@ def MPY_Send(msg, int dest, dataType=MPY_PYTHON_OBJ,
     cdef int nElem
     cdef long s, mpi_datatype
     cdef ArrayType arrayObj
+
+    # If dataType == MPY_PYTHON_ARRAY and arrInfo == True, send a message
+    # holding the array shape and type.
+    if dataType == MPY_PYTHON_ARRAY and arrInfo:
+        MPY_Send((msg.shape, msg.typecode()), dest, tag=tag, comm=comm)
 
     # Allocate and initialize send buffer. 'arrayObj' is meaningful only when 
     # object is to be sent using the MPY_PYTHON_ARRAY datatype. It is returned
@@ -4832,7 +4874,7 @@ def MPY_Sendrecv_replace(sendMsg, int dest, dataType=MPY_PYTHON_OBJ,
         return (recvMsg, Status(status.MPI_SOURCE, status.MPI_TAG, 
                                 status.MPI_ERROR, status.st_length))
     
-def MPY_Ssend(msg, int dest, dataType=MPY_PYTHON_OBJ,
+def MPY_Ssend(msg, int dest, dataType=MPY_PYTHON_OBJ, arrInfo=False,
               int tag=1, long comm=MPY_COMM_WORLD):
     """
     Python wrapper around MPI_Ssend() .
@@ -4846,15 +4888,24 @@ def MPY_Ssend(msg, int dest, dataType=MPY_PYTHON_OBJ,
                     parameter is ignored and can be omitted. If set, it must be
                     coherent with 'buffer' and 'dataType'.
       dataType      Message transmission mode.
+      arrInfo       Significant only when dataType == MPY_PYTHON_ARRAY.
+                    Set to true to precede the message with a private message
+                    holding the array shape and type. The corresponding
+                    call to MPY_Recv() should also specify this parameter.
       tag           Numeric tag which can be used to identify this message.
       comm          Communicator handle
 
     Returns:
       None
-                                                                                    """
+                                                                             """
     cdef int nElem
     cdef long s, mpi_datatype
     cdef ArrayType arrayObj
+
+    # If dataType == MPY_PYTHON_ARRAY and arrInfo == True, send a message
+    # holding the array shape and type.
+    if dataType == MPY_PYTHON_ARRAY and arrInfo:
+        MPY_Send((msg.shape, msg.typecode()), dest, tag=tag, comm=comm)
 
     # Allocate and initialize send buffer. 'arrayObj' is meaningful only when the
     # object is to be sent using the MPY_PYTHON_ARRAY datatype. It is returned
@@ -5713,23 +5764,6 @@ cdef int lenPickle(object o):
     """Return the pickle length of object 'o'."""
 
     return len(cPickle.dumps(o,2))
-
-cdef int recvCtrl(int source):
-    """Receive a control message.
-                                                     """
-    cdef int bufSize
-    cdef MPI_Status status
-    
-    MPI_Recv(&bufSize, 1, MPI_INT, source, 1, priv_comm, &status)
-
-    return bufSize
-    
-
-cdef sendCtrl(int bufSize, int dest):
-    """Send a control message.
-                                                      """
-    MPI_Send(&bufSize, 1, MPI_INT, dest, 1, priv_comm)
-
 
 cdef validateDataType(dataType):
     """Validate dataType, raising an exception if invalid."""
