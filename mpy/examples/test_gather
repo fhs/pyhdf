@@ -24,6 +24,7 @@ for k in range(1,2):
         # hard to guarantee that the strings used to encapsulate the objects
         # will be of the same length. It is better to use MPY_Gatherv() instead.
         v1 = range(rank, rank + 3)
+        print "P%d calling MPY_Gather" % rank
         res1 = MPY_Gather(v1, root)
         print "P%d MPY_Gather res1=%s" % (rank, res1)
         

@@ -23,9 +23,9 @@ if rank == root:
     msgSeq = []
     for k in range(size):
         msgSeq.append(range(k, k+5))
-    res = MPY_Scatter(root, msgSeq, ctrl=True, dataType=MPY_FLOAT)
+    res = MPY_Scatter(root, msgSeq, dataType=MPY_FLOAT)
 else:
-    res = MPY_Scatter(root, ctrl=True, dataType=MPY_FLOAT)
+    res = MPY_Scatter(root, dataType=MPY_FLOAT)
 
 print "P%d received '%s'" % (rank, res)
 MPY_Barrier()
@@ -33,9 +33,9 @@ MPY_Barrier()
 # Now we use default dataType MPY_PYTHON_OBJ. Messages can be of different lengths.
 if rank == root:
     msgSeq = [[1,2,3,'a'], [100,200,300,'ab'], 'abc', 'abcd']
-    res = MPY_Scatter(root, msgSeq, ctrl=True)
+    res = MPY_Scatter(root, msgSeq)
 else:
-    res = MPY_Scatter(root, ctrl=True)
+    res = MPY_Scatter(root)
 
 print "P%d received '%s'" % (rank, res)
 MPY_Barrier()

@@ -27,7 +27,7 @@ for k in range(1,2):
         # of different length.
         v1 = [1,2,3]
         res1 = MPY_Gatherv(v1, root)
-        print "P%d gather res1=%s" % (rank, res1)
+        print "P%d gatherv res1=%s" % (rank, res1)
 
         # Gather values sent as MPI datatypes. Rank root sends 2 values
         # whereas other ranks send 6, so gatherv() must be called. Note
@@ -36,7 +36,7 @@ for k in range(1,2):
         # 32 bits floats.
         v2= [10, 20]
         res2 = MPY_Gatherv(v2, root, dataType=MPY_FLOAT)
-        print "P%d gather res2=%s" % (rank, res2)
+        print "P%d gatherv res2=%s" % (rank, res2)
     else:
         v1 = [5, 6, 7, 8, 9, 10]
         MPY_Gatherv(v1, root)
