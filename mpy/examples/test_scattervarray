@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+
+import sys
+import Numeric
+
+from mpy import *
+
+MPY_Init()
+rank = MPY_Comm_rank()
+size = MPY_Comm_size()
+
+root = 0
+
+print "I am P%d of %d on node %s" % \
+      (rank, size, MPY_Get_processor_name())
+MPY_Barrier()
+
+# Scatter using Numeric array.
+if rank == root:
+    # IMPORTANT :  the root participates in the scatter operation,
+    # and sends a message to itself.
+
+    arr = Numeric.array(((1,2,3,4),
+                         (5,6,7,8),
+                         (9,10,11,12),
+                         (13,14,15,16),
+                         (17,18,19,20)), 'i')
+    sendCount=[4,8,4,4]
+
+    res = MPY_Scatterv(root, arr, dataType=MPY_PYTHON_ARRAY)
+else:
+    res = MPY_Scatterv(root, dataType=MPY_PYTHON_ARRAY)
+
+print "P%d received '%s'" % (rank, res)
+MPY_Barrier()
+
+
+MPY_Finalize()
