@@ -1,4 +1,4 @@
-# $Id: SD.py,v 1.1 2004-08-02 14:53:31 gosselin Exp $
+# $Id: SD.py,v 1.2 2004-08-02 15:00:34 gosselin Exp $
 # $Log: not supported by cvs2svn $
 """A python package to access HDF (v4) files.
 (see: hdf.ncsa.uiuc.edu)
@@ -7,14 +7,15 @@ Author: Andre Gosselin
         Maurice-Lamontagne Institute
         gosselina@dfo-mpo.gc.ca
         
-Version: 0.5-1
-Date:    August 1 2003
+Version: 0.5-2
+Date:    August 3 2003
 
 Table of contents
   Introduction
   The SD API
   Package components
   Prerequisites
+  Limitations
   Documentation
   Summary of differences between the pyhdf and C API
   Error handling
@@ -97,14 +98,14 @@ a directory named similarly to the package and holding an __init__.py
 file. For each HDF API there exists a corresponding set of modules.
 The pyhdf package is currently composed of 3 modules defining the SD API.
 
-  _sdext    C extension module responsible for wrapping the HDF
-            SD API
+  _hdfext   C extension module responsible for wrapping the HDF
+            library
   sdext     python module implementing some utility functions
-            complementing the C extension module
-  SD        python module which wraps the C extension module inside
+            complementing the SD library routines
+  SD        python module which wraps the SD library rotines inside
             an OOP framework
 
-_sdext and sdext were generated with the SWIG preprocessor.
+_hdfext and sdext were generated with the SWIG preprocessor.
 SWIG is however *not* needed to run the package. Those two modules
 are meant to do their work in the background, and should never be called
 directly. Only 'pyhdf.SD' should be imported by the user program.
@@ -123,6 +124,10 @@ work.
     HDF variables are read/written using the array data type provided
     by the python Numeric package. It is available at
     "numpy.sourceforge.net".
+
+Limitations
+-----------
+  -Version 0.5-2 does not support datasets using types UINT16 and UINT32.
 
 Documentation
 -------------
@@ -447,6 +452,7 @@ pyhdf defines the following classes.
              SDC.INT16
              SDC.UINT16
              SDC.INT32
+             SDC.INT32     
              SDC.FLOAT32
              SDC.FLOAT64
 
@@ -670,6 +676,7 @@ typeTab = {
            SDC.INT16:   'INT16',
            SDC.UINT16:  'UINT16',
            SDC.INT32:   'INT32',
+           SDC.UINT32:  'UINT32',
            SDC.FLOAT32: 'FLOAT32',
            SDC.FLOAT64: 'FLOAT64'
 	   }
@@ -801,13 +808,13 @@ except HDF4Error, msg:
 """
 import os, sys, types
 
-import sdext as _C
+import hdfext as _C
+from error import _checkErr, HDF4Error
 
 # List of names we want to be imported by an "from pyhdf import *"
 # statement
 
-__all__ = ['SD', 'SDAttr', 'SDC', 'SDS', 'SDim',
-           'HDF4Error']
+__all__ = ['SD', 'SDAttr', 'SDC', 'SDS', 'SDim']
 
 
 class SDC:
@@ -827,6 +834,7 @@ class SDC:
     INT16        = _C.DFNT_INT16
     UINT16       = _C.DFNT_UINT16
     INT32        = _C.DFNT_INT32
+    UINT32       = _C.DFNT_UINT32 
     FLOAT32      = _C.DFNT_FLOAT32
     FLOAT64      = _C.DFNT_FLOAT64
 
@@ -844,7 +852,7 @@ class SDC:
 
 # NOTE:
 #  UCHAR8 and UINT8 are handled similarly (signed byte -128,...,0,...127)
-#  UINT32, INT64 and UINT64 are not yet supported py pyhdf
+#  INT64 and UINT64 are not yet supported py pyhdf
 
 class SDAttr:
 
@@ -972,6 +980,9 @@ class SDAttr:
         elif data_type == SDC.INT32:
             buf = _C.array_int32(n_values)
 
+        elif data_type == SDC.UINT32:
+            buf = _C.array_uint32(n_values)
+
         elif data_type == SDC.FLOAT32:
             buf = _C.array_float32(n_values)
 
@@ -1044,6 +1055,9 @@ class SDAttr:
 
         elif data_type == SDC.INT32:
             buf = _C.array_int32(n_values)
+
+        elif data_type == SDC.UINT32:
+            buf = _C.array_uint32(n_values)
 
         elif data_type == SDC.FLOAT32:
             buf = _C.array_float32(n_values)
@@ -1591,7 +1605,8 @@ class SDS:
                                  'the size (%d) of dimension %d' \
                                  % (dim_sizes[n], n)
         if not data_type in [SDC.FLOAT32, SDC.FLOAT64, SDC.INT8, SDC.UINT8,
-                             SDC.INT16, SDC.INT32, SDC.CHAR8, SDC.UCHAR8]:
+                             SDC.INT16, SDC.INT32, SDC.CHAR8,
+                             SDC.UCHAR8]:
             raise HDF4Error, 'get cannot currrently deal with '\
                              'the SDS data type'
 
@@ -1671,7 +1686,8 @@ class SDS:
                                  % (dim_sizes[n], n)
         # ??? Check support for UINT16
         if not data_type in [SDC.FLOAT32, SDC.FLOAT64, SDC.INT8, SDC.UINT8,
-                             SDC.INT16, SDC.INT32, SDC.CHAR8, SDC.UCHAR8]:
+                             SDC.INT16, SDC.INT32, SDC.CHAR8,
+                             SDC.UCHAR8]:
             raise HDF4Error, 'set cannot currrently deal '\
                              'with the SDS data type'
 
@@ -1971,6 +1987,9 @@ class SDS:
         elif data_type == SDC.INT32:
             buf = _C.array_int32(n_values)
 
+        elif data_type == SDC.UINT32:
+            buf = _C.array_uint32(n_values)
+
         elif data_type == SDC.FLOAT32:
             buf = _C.array_float32(n_values)
 
@@ -2040,6 +2059,10 @@ class SDS:
         elif data_type == SDC.INT32:
             buf1 = _C.array_int32(n_values)
             buf2 = _C.array_int32(n_values)
+
+        elif data_type == SDC.UINT32:
+            buf1 = _C.array_uint32(n_values)
+            buf2 = _C.array_uint32(n_values)
 
         elif data_type == SDC.FLOAT32:
             buf1 = _C.array_float32(n_values)
@@ -2168,6 +2191,9 @@ class SDS:
         elif data_type == SDC.INT32:
             buf = _C.array_int32(n_values)
 
+        elif data_type == SDC.UINT32:
+            buf = _C.array_uint32(n_values)
+
         elif data_type == SDC.FLOAT32:
             buf = _C.array_float32(n_values)
 
@@ -2255,6 +2281,10 @@ class SDS:
         elif data_type == SDC.INT32:
             buf1 = _C.array_int32(n_values)
             buf2 = _C.array_int32(n_values)
+
+        elif data_type == SDC.UINT32:
+            buf1 = _C.array_uint32(n_values)
+            buf2 = _C.array_uint32(n_values)
 
         elif data_type == SDC.FLOAT32:
             buf1 = _C.array_float32(n_values)
@@ -2572,6 +2602,9 @@ class SDim:
         elif data_type == SDC.INT32:
             buf = _C.array_int32(dim_size)
 
+        elif data_type == SDC.UINT32:
+            buf = _C.array_uint32(dim_size)
+
         elif data_type == SDC.FLOAT32:
             buf = _C.array_float32(dim_size)
 
@@ -2654,6 +2687,9 @@ class SDim:
 
         elif data_type == SDC.INT32:
             buf = _C.array_int32(n_values)
+
+        elif data_type == SDC.UINT32:
+            buf = _C.array_uint32(n_values)
 
         elif data_type == SDC.FLOAT32:
             buf = _C.array_float32(n_values)
@@ -2862,22 +2898,3 @@ def _array_to_str(buf, nValues):
         del chrs[-1]
     return ''.join(chrs)
 
-# #################
-# Error processing
-# #################
-
-class HDF4Error(Exception):
-
-    def __init__(self, args=None):
-        self.args = args
-
-def _checkErr(procName, val, msg=""):
-
-    if val < 0:
-        # _HEprint();
-        # errCode = HEvalue(1)
-        #if errCode != 0:
-        #    str = "%s (%d): %s" % (procName, errCode, HEstring(errCode))
-        #else:
-        str = "%s : %s" % (procName, msg)
-        raise HDF4Error, str

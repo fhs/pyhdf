@@ -1,13 +1,16 @@
-# $Id: setup.py,v 1.1 2004-08-02 14:45:56 gosselin Exp $
+# $Id: setup.py,v 1.2 2004-08-02 15:05:02 gosselin Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/08/02 14:45:56  gosselin
+# Initial revision
+#
 
 # distutils setup file for the pyhdf package
 
 from distutils.core import setup, Extension
 
 # SD API
-_sdext =    Extension('pyhdf._sdext', 
-                       sources   = ["pyhdf/sdext_wrap.c"],
+_hdfext =    Extension('pyhdf._hdfext', 
+                       sources   = ["pyhdf/hdfext_wrap.c"],
 		       #include_dirs=["non standard path where hdf includes live"],
 		       #library_dirs=["non standard path where hdf libs live"],
 		       #extra_objects=["extra stuff passed to the linker"],
@@ -27,7 +30,7 @@ setup(name         = 'pyhdf',
 			 'through Numeric arrays. netCDF files can also '
 			 'be read and modified with pyhdf.',
       url          = 'ftp://nordet.qc.dfo-mpo.gc.ca/pub/soft/pyhdf',
-      version      ='0.5-1',
+      version      ='0.5-2',
       packages     = ['pyhdf'],
-      ext_modules  = [_sdext]
+      ext_modules  = [_hdfext]
       )
