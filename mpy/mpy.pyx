@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 #
-# $Id: mpy.pyx,v 1.4 2005-02-12 02:31:38 gosselin_a Exp $
+# $Id: mpy.pyx,v 1.5 2005-02-12 03:55:59 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2005/02/12 02:31:38  gosselin_a
+# Added support for Numeric array datatype inside MPY_Scatter().
+#
 # Revision 1.3  2005/02/11 04:09:47  gosselin_a
 # Support for Numeric arrays in function MPY_Gather().
 #
@@ -4072,16 +4075,27 @@ def MPY_Scatter(int root, msg=None, recvCount=0,
       msg           Messages to scatter. This parameter is significant
                     only at root, and is ignored on non-root processes, where
                     it should be omitted (or set to the default None).
-                    The length of this sequence must match the number of processes
-                    inside the communicator, message at index 'i' being sent to
-                    process of rank 'i'. Messages must be of the same length.
-                    Remember that the root process participates
-                    in the exchange and thus sends a message to itself.
+                    When dataType == MPY_PYTHON_ARRAY, 'msg' must by a Numeric
+                    array, whose total number of elements must be a multiple
+                    of the number of processes inside the communicator. The array
+                    contents are divided into equal-sized "chunks", and a chunk is
+                    sent to each process, in rank order.
+                    For other datatypes, 'msg' must be a sequence whose length
+                    must match the number of processes inside the communicator,
+                    message at index 'i' being sent to process of rank 'i'.
+                    Messages must be of the same length.
+                    Remember that the root process participates in the scatter and
+                    thus sends a message to itself.
       recvCount     Max number of data elements to receive. Must be greater or
                     equal to the message size. If set to 0 (default value), the
                     root process will first broadcast the number of data elements
                     scattered to the processes
       dataType      Message datatype.
+      array         Significant only if dataType == MPY_PYTHON_ARRAY. This parameter
+                    then identifies the array where the process will receive its 
+                    "chunk". If this parameter is omitted, a one-dimensional array
+                    is allocated to store the chunk elements. The array type is
+                    taken from that of the array given to the root process.
       comm          Communicator handle.
 
     Returns:
