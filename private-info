@@ -1,0 +1,35 @@
+$Id: private-info,v 1.1 2004-11-02 21:17:54 gosselin Exp $
+$Log: not supported by cvs2svn $
+
+To compile:
+
+  % cd pyhdf
+  % make python
+
+To generate source distributon:
+
+  % python setup.py sdist
+
+To install:
+
+  % su 
+  # rm -rf /usr/lib/python???/site-packages/pyhdf
+  # cd dist
+  # tar xvfz pyhdf*.tar.gz
+  # cd pyhdf-*
+  # python setup.py install
+
+  Package is installed inside directory `/usr/lib/python???/site-packages/pyhdf'.
+
+  The tarball is generated inside directory `dist/'.
+
+To generate documentation:
+
+  % pydoc    pyhdf.HDF > pyhdf.HDF.txt
+  % pydoc -w pyhdf.HDF > pyhdf.HDF.html
+  % pydoc    pyhdf.SD  > pyhdf.SD.txt
+  % pydoc -w pyhdf.SD  > pyhdf.SD.html
+  % pydoc    pyhdf.VS  > pyhdf.VS.txt
+  % pydoc -w pyhdf.VS  > pyhdf.VS.html
+  % pydoc    pyhdf.V   > pyhdf.V.txt
+  % pydoc -w pyhdf.V   > pyhdf.V.html
