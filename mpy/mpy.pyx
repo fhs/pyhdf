@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 #
-# $Id: mpy.pyx,v 1.3 2005-02-11 04:09:47 gosselin_a Exp $
+# $Id: mpy.pyx,v 1.4 2005-02-12 02:31:38 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2005/02/11 04:09:47  gosselin_a
+# Support for Numeric arrays in function MPY_Gather().
+#
 # Revision 1.2  2005/02/10 23:11:04  gosselin_a
 # Fixed comments in front of old logs generated when "mpy" was hosted at
 # the Maurice-Lamontagne Institute.
@@ -2218,10 +2221,10 @@ def MPY_Gather(msg, int root, dataType=MPY_PYTHON_OBJ, array=None,
     """
     Python wrapper around MPI_Gather() .
 
-    MPY_Gather() and MPY_Gatherv() have the same calling sequence. They differ from
-    each other in that, with MPY_Gather(), all participating processes must send
-    the same number of data elements, whereas MPY_Gatherv() allows each process to
-    send a different number of data elements.
+    MPY_Gather() and MPY_Gatherv() have the same calling sequence. They differ
+    from each other in that, with MPY_Gather(), all participating processes
+    must send the same number of data elements, whereas MPY_Gatherv() allows
+    each process to send a different number of data elements.
 
     When gathering messages sent as python objects, MPY_Gatherv() should
     be called rather than MPY_Gather() since it can be hard to predict
@@ -2248,16 +2251,23 @@ def MPY_Gather(msg, int root, dataType=MPY_PYTHON_OBJ, array=None,
                     It then identifies the numeric array where the messages will
                     be gathered. Gathered messages will then be stored one after
                     another in rank order inside the array. The caller must
-                    guarantee that the array type agrees with that of the messages
-                    sent by the processes, and that the array size is at least
-                    equal to the total number of data elements to be gathered.
+                    guarantee that the array type agrees with that of the
+                    messages sent by the processes, and that the array size is
+                    at least equal to the total number of data elements to be
+                    gathered. If parameter 'array' is None, an output array
+                    will be allocated whose shape will be (size, sh0, ...).
+                    'size' is the number of processes in the communicator, and
+                    'sh0, ...' is the shape of the gathered messages (all
+                    messages are required to be of equal shape). The type of
+                    the output array wil be set to that of the gathered messages.
       comm          Communicator handle.
 
     Returns:
       On the root process:
-        List holding the gathered messages, one per process inside the
-        communicator. Remember that the root process participates in
-        the gather and thus sends a message to itself.
+        If dataType==MPY_PYTHON_ARRAY, numeric array storing the gathered
+        messages. Otherwise, List holding the gathered messages, one per
+        process inside the communicator. Remember that the root process
+        participates in the gather and thus sends a message to itself.
 
       On the non-root processes:
         None
@@ -2285,9 +2295,16 @@ def MPY_Gather(msg, int root, dataType=MPY_PYTHON_OBJ, array=None,
     # 'recvArrayObj' serves only when dataType==MPY_PYTHON_ARRAY, to avoid
     # the garbage collection of the python object to which buffer 'r' belongs. 
     if rank == root:
-        chunkSize = nElem * dataTypeSize(dataType)   # CHECK
+        if dataType == MPY_PYTHON_ARRAY:
+            # Allocate an output if array if none given. The shape of the output
+            # array is (size, sh0) where 'size' is the communicator size, and
+            # 'sh0' is the shape of the input messages (which must be identical).
+            if array is None:
+                array = Numeric.zeros((size,) + msg.shape, msg.typecode())
+        else:
+            chunkSize = nElem * dataTypeSize(dataType)   # CHECK
         r, mpi_datatype, dum, recvArrayObj = prepRecv2(nElem * size,
-                                                         array, dataType)
+                                                       array, dataType)
             
     # The receive buffer is meaningless for non-root members.
     else:
@@ -2299,7 +2316,7 @@ def MPY_Gather(msg, int root, dataType=MPY_PYTHON_OBJ, array=None,
                      root, <MPI_Comm>comm)
     checkErr(res, "MPY_Gather")
 
-    # Simply return the array arg if Numeric array was used to
+    # Simply return the array arg if a Numeric array was used to
     # send the message.
     if dataType == MPY_PYTHON_ARRAY:
         return array
@@ -2326,7 +2343,7 @@ def MPY_Gather(msg, int root, dataType=MPY_PYTHON_OBJ, array=None,
 
     # Non-root processes receive nothing.
 
-def MPY_Gatherv(buffer, int root, dataType=MPY_PYTHON_OBJ,
+def MPY_Gatherv(msg, int root, dataType=MPY_PYTHON_OBJ, array=None,
                 long comm=MPY_COMM_WORLD):
     """ 
     Python wrapper around MPI_Gatherv() .
@@ -2346,15 +2363,32 @@ def MPY_Gatherv(buffer, int root, dataType=MPY_PYTHON_OBJ,
     because of the magnitude of their respective values.
 
     Params:
-      buffer        Message which will be sent to root process. Note that
+      msg           Message which will be sent to root process. Note that
                     root itself sends this message. The number of data elements
                     is automatically determined. Each participant does not need
                     to send the same number of data elements, countrary to
                     function MPY_Gather() where each participant needs to send the
                     same number of data elements.
+                    If 'msg' is a Numeric array (dataType==MPY_PYTHON_ARRAY)
+                    the message is made of the array elements sent in row major
+                    order.
       root          Rank inside the communicator of the process which
                     gathers the messages.
       dataType      Message datatype.
+      array         Significant only when dataType==MPY_PYTHON_ARRAY.
+                    It then identifies the numeric array where the messages will
+                    be gathered. Gathered messages will then be stored one after
+                    another in rank order inside the array. The caller must
+                    guarantee that the array type agrees with that of the
+                    messages sent by the processes, and that the array size is
+                    at least equal to the total number of data elements to be
+                    gathered. If parameter 'array' is None, an output array
+                    will be allocated whose shape will be (size, sh0, ...).
+                    'size' is the number of processes in the communicator, and
+                         CHECK!!!
+                    'sh0, ...' is the shape of the gathered messages (all
+                    messages are required to be of equal shape). The type of
+                    the output array wil be set to that of the gathered messages.
       comm          Communicator handle.
 
     Returns:
@@ -2366,20 +2400,27 @@ def MPY_Gatherv(buffer, int root, dataType=MPY_PYTHON_OBJ,
       
                                                                  """
     cdef long r, s, mpi_datatype
-    cdef int size, rank
+    cdef int nElem, size, rank
     cdef long adr
-    cdef int nElem, *nElemArr, *displArr, i, totalElem, elemSize
+    cdef ArrayType sendArrayObj, recvArrayObj
+    cdef int *nElemArr, *displArr, i, totalElem, elemSize
 
     size = MPY_Comm_size(comm)
     rank = MPY_Comm_rank(comm)
 
-    # Allocate buffer to store message to be sent.
-    s, nElem, mpi_datatype = obj2CArray(buffer, dataType, NULLPT)
+    # Allocate buffer to store message sent by all processes (root included).
+    # 'sendArrayObj' is meaningful only when the message is to be sent using the
+    # MPY_PYTHON_ARRAY datatype. It is returned to avoid the garbage collection
+    # of the array object from which the internal buffer address 's' comes from.
+    # Simply ignore 'arrayObj' and the object will be garbage collected when
+    # the function returns.
+    s, nElem, mpi_datatype, sendArrayObj = obj2CArray2(msg, dataType, NULLPT)
 
     # On root, allocate element and displacement arrays.
     if rank == root:
         nElemArr = <int *>PyMem_Malloc(size * sizeof(int))
         displArr = <int *>PyMem_Malloc(size * sizeof(int))
+    # Those arrays are meaningless on non-root processes.
     else:
         nElemArr = <int *>NULLPT
         displArr = <int *>NULLPT
@@ -2404,10 +2445,18 @@ def MPY_Gatherv(buffer, int root, dataType=MPY_PYTHON_OBJ,
     # into chunks of size 'nElemArr[i]' data elements.
     # Each value returned by member of rank 'n' will be written
     # to chunk number 'n'.
+    # 'recvArrayObj' serves only when dataType==MPY_PYTHON_ARRAY, to avoid
+    # the garbage collection of the python object to which buffer 'r' belongs. 
     if rank == root:
-        r, mpi_datatype = prepRecv(totalElem, dataType)
+        if dataType == MPY_PYTHON_ARRAY:
+            # Allocate an output if array if none given. The array is allocated
+            # as one-dimensional, its size beingequal to the total number of elements
+            # gathered. The calling program can reshape it later.
+            if array is None:
+                array = Numeric.zeros(totalElem, msg.typecode())
+        r, mpi_datatype, dum, recvArrayObj = prepRecv2(totalElem, array, dataType)
             
-    # The receive buffer is meaningless for non-root members.
+    # The receive buffer is meaningless for non-root processes.
     else:
         r = <long>NULLPT
 
@@ -2417,12 +2466,17 @@ def MPY_Gatherv(buffer, int root, dataType=MPY_PYTHON_OBJ,
                       root, <MPI_Comm>comm)
     checkErr(res, "MPY_Gatherv")
 
+    # Simply return the array arg if a Numeric array was used to
+    # send the message.
+    if dataType == MPY_PYTHON_ARRAY:
+        return array
+    
     # Dispose of the C source buffer.
     PyMem_Free(<void *>s)
 
     # If root, convert the receive buffer to a Python list.
     if rank == root:
-        adr = <long>r
+        adr = r
         res = []
         elemSize = dataTypeSize(dataType)
         for k in range(size):
@@ -3527,8 +3581,8 @@ def MPY_Recv(int source, int nElem=0, dataType=MPY_PYTHON_OBJ, array=None,
                   "if dataType == MPY_PYTHON_ARRAY"
 
     # Allocate buffer to store message.
-    # 'arrayObj' serves only when dataType==MPY_PYTHON_ARRAY, to avoid the garbage
-    # collection of the python object to which buffer 's' belongs. 
+    # 'arrayObj' serves only when dataType==MPY_PYTHON_ARRAY, to avoid the
+    # garbage collection of the python object to which buffer 's' belongs. 
     s, mpi_datatype, nElem, arrayObj = prepRecv2(nElem, array, dataType)
 
     # Receive message
@@ -4007,15 +4061,15 @@ def MPY_Scan(buf, long op, dataType=MPY_PYTHON_OBJ,
     return obj
 
 
-def MPY_Scatter(int root, msgSeq=None, recvCount=0, ctrl=False,
-                dataType=MPY_PYTHON_OBJ, long comm=MPY_COMM_WORLD):
+def MPY_Scatter(int root, msg=None, recvCount=0,
+                dataType=MPY_PYTHON_OBJ, array=None, long comm=MPY_COMM_WORLD):
     """
     Python wrapper around MPI_Scatter() .
 
     Params:
       root          Rank inside the communicator of the process which
                     scatters the messages.
-      msgSeq        Sequence of messages to scatter. This parameter is significant
+      msg           Messages to scatter. This parameter is significant
                     only at root, and is ignored on non-root processes, where
                     it should be omitted (or set to the default None).
                     The length of this sequence must match the number of processes
@@ -4024,13 +4078,9 @@ def MPY_Scatter(int root, msgSeq=None, recvCount=0, ctrl=False,
                     Remember that the root process participates
                     in the exchange and thus sends a message to itself.
       recvCount     Max number of data elements to receive. Must be greater or
-                    equal to the message size. If set to 0 (default value)
-                    'ctrl' must be set to true to obtain the message length from
-                    the root process.
-      ctrl          True to ask the root process to precede the scatter by a control
-                    message holding the length of each "chunk". Usefull when the
-                    receiving processes do not know in advance the size of the message
-                    they will receive.
+                    equal to the message size. If set to 0 (default value), the
+                    root process will first broadcast the number of data elements
+                    scattered to the processes
       dataType      Message datatype.
       comm          Communicator handle.
 
@@ -4042,72 +4092,87 @@ def MPY_Scatter(int root, msgSeq=None, recvCount=0, ctrl=False,
 
     cdef long r, s, mpi_datatype, adr, adr0
     cdef int nElem, mxElem, chunkSize, size, rank, p
-
-    if recvCount == 0 and not ctrl:
-        raise MPY_Error, "MPY_Scatter(): 'recvCount' cannot be set to 0 " \
-              "if 'ctrl' is false"
+    cdef ArrayType sendArrayObj, recvArrayObj
 
     size = MPY_Comm_size(comm)
     rank = MPY_Comm_rank(comm)
 
     # Only root scatters messages.
     if rank == root:
-        # Compute the maximum number of elements among the messages to send.
-        # Each proces will we sent a message with this number of elements.
-        mxElem = 0
-        for obj in msgSeq:
-            if dataType == MPY_PYTHON_OBJ:
-                nElem = lenPickle(obj)
-            else:
-                # Sequence
-                if type(obj) in [types.TupleType, types.ListType, types.StringType]:
-                    nElem = len(obj)
-                # Scalar.
+        # Unless Numeric arrays are used, we must allocate a buffer
+        # where all messages will be regrouped.
+        if dataType != MPY_PYTHON_ARRAY:
+            # Compute the maximum number of elements among the messages to send.
+            # Each proces will we sent a message with this number of elements.
+            mxElem = 0
+            for obj in msg:
+                if dataType == MPY_PYTHON_OBJ:
+                    nElem = lenPickle(obj)
                 else:
-                    nElem = 1
-            if nElem > mxElem:
-                mxElem = nElem
+                    # Sequence
+                    if type(obj) in [types.TupleType, types.ListType,
+                                     types.StringType]:
+                        nElem = len(obj)
+                    # Scalar.
+                    else:
+                        nElem = 1
+                if nElem > mxElem:
+                    mxElem = nElem
 
-        # Allocate a buffer to store the messages to send.
-        s, mpi_datatype = prepRecv(mxElem * size, dataType)
+            # Allocate a buffer to store the messages to send.
+            s, mpi_datatype = prepRecv(mxElem * size, dataType)
 
-        # Copy messages to this buffer, one per chunk.
-        adr = s
-        chunkSize = mxElem * dataTypeSize(dataType)   # in bytes
-        for obj in msgSeq:
-           adr0, nElem, mpi_datatype = obj2CArray(obj, dataType, <void *>adr)
-           adr = adr + chunkSize
+            # Copy messages to this buffer, one per chunk.
+            adr = s
+            chunkSize = mxElem * dataTypeSize(dataType)   # in bytes
+            for obj in msg:
+                adr0, nElem, mpi_datatype = obj2CArray(obj, dataType, <void *>adr)
+                adr = adr + chunkSize
 
-        # Send control info to receiving processes.
-        if ctrl:
-             for p from 0 <= p < size:
-                if p != root:
-                    sendCtrl(mxElem, p)
-    
-    # Recover the message length from a control message.
-    else:
-        if ctrl:
-            mxElem = recvCtrl(root)
-        s = <long>NULLPT
-            
-    # Allocate receive buffer, for everyone.
+        # A Numeric array is used. Divide the total number of elements inside
+        # the array into chunks, one per process.
+        else:
+            s, nElem, mpi_datatype, sendArrayObj = obj2CArray2(msg, dataType, NULLPT)
+            mxElem = nElem / size
+            # Get the array typecode. We may need to broadcast it later.
+            typeCode = msg.typecode()
+
+    # If the receive count is omitted, broadcast the number of data elements
+    # per chunk.
     if recvCount == 0:
+        MPI_Bcast(&mxElem, 1, MPI_INT, root, <MPI_Comm>comm)
         recvCount = mxElem
-    r, mpi_datatype = prepRecv(recvCount, dataType)
+                  
+    # Allocate receive buffer, for everyone. If dataType == MPY_PYTHON_ARRAY,
+    # use parameter 'array' as the buffer, unless it is None. In that case,
+    # allocate a one-dimensional array of length 'mxElem', whose type is the same as
+    # that of the array passed to the root process.
+    if dataType == MPY_PYTHON_ARRAY and array is None:
+        # Let root broadcast the array typecode (1 char string).
+        typeCode = MPY_Bcast(root, typeCode, nElem=1, dataType=MPY_PYTHON_STR,
+                             comm=comm)
+        # Allocate the array.
+        array = Numeric.zeros(mxElem, typeCode)
+    r, mpi_datatype, dum, recvArrayObj = prepRecv2(recvCount, array, dataType)
 
     # Scatter data.
     res = MPI_Scatter(<void *>s, mxElem, <MPI_Datatype>mpi_datatype,
                       <void *>r, recvCount, <MPI_Datatype>mpi_datatype,
                       root, <MPI_Comm>comm)
     checkErr(res, "MPY_Scatter")
-        
-    # Return scattered message.
-    obj = CArray2Obj(<void *>r, dataType, mxElem, False)
 
-    # Free allocated buffers.
-    PyMem_Free(<void *>r)
-    if rank == root:
-        PyMem_Free(<void *>s)
+    # If Numeric array was used, simply return it.
+    if dataType == MPY_PYTHON_ARRAY:
+        obj = array
+    
+    # Otherwise, convert message to Python object and free allocated buffers.
+    else:
+        obj = CArray2Obj(<void *>r, dataType, mxElem, False)
+
+        # Free allocated buffers.
+        PyMem_Free(<void *>r)
+        if rank == root:
+            PyMem_Free(<void *>s)
 
     # Return results.
     return obj
@@ -4245,7 +4310,8 @@ def MPY_Send(msg, int dest, dataType=MPY_PYTHON_OBJ,
       dest          Rank inside the communicator of the process to which
                     the message is sent.
       dataType      Message transmission mode.
-      tag           Numeric tag which can be used to identify the message to receive.
+      tag           Numeric tag which can be used to identify the message
+                    to receive.
       comm          Communicator handle.
 
     Returns:
@@ -4256,7 +4322,7 @@ def MPY_Send(msg, int dest, dataType=MPY_PYTHON_OBJ,
     cdef long s, mpi_datatype
     cdef ArrayType arrayObj
 
-    # Allocate and initialize send buffer. 'arrayObj' is meaningful only when the
+    # Allocate and initialize send buffer. 'arrayObj' is meaningful only when 
     # object is to be sent using the MPY_PYTHON_ARRAY datatype. It is returned
     # to avoid the garbage collection of the array object from which the
     # internal buffer address 's' comes from. Simply ignore 'arrayObj' and the
