@@ -17,13 +17,13 @@ MPY_Barrier()
 v1 = range(rank, rank+3)
 print "P%d v1=%s" % (rank, v1)
 res1 = MPY_Allreduce(v1, MPY_MIN)
-print "P%d MPY_Allreduce res1=%s" % (rank, res1)
+print "P%d MPY_Allreduce MIN=%s" % (rank, res1)
 MPY_Barrier()
         
 # This time we use MPI datatypes.
 v2 = range(100*rank, 100*rank+4)
 print "P%d v2=%s" % (rank, v2)
 res2 = MPY_Allreduce(v2, MPY_SUM, dataType=MPY_FLOAT)
-print "P%d MPY_Reduce res2=%s" % (rank, res2)
+print "P%d MPY_Reduce SUM=%s" % (rank, res2)
 
 MPY_Finalize()

@@ -27,7 +27,7 @@ if rank == root:
                          (17,18,19,20)), 'i')
     sendCount=[4,8,4,4]
 
-    res = MPY_Scatterv(root, arr, dataType=MPY_PYTHON_ARRAY)
+    res = MPY_Scatterv(root, arr, sendCount, dataType=MPY_PYTHON_ARRAY)
 else:
     res = MPY_Scatterv(root, dataType=MPY_PYTHON_ARRAY)
 

@@ -20,12 +20,12 @@ MPY_Barrier()
 # will be of the same length. It is better to use MPY_Allgatherv() instead.
 v1 = range(rank, rank + 3)
 res1 = MPY_Allgather(v1)
-print "P%d MPY_Allgather res1=%s" % (rank, res1)
+print "P%d res1=%s" % (rank, res1)
 MPY_Barrier()
         
 # This time we gather messages transmitted using MPI datatypes.
-v2= range(10*rank, 10*rank+3)
+v2= range(10*rank, 10*rank+2)
 res2 = MPY_Allgather(v2, dataType=MPY_FLOAT)
-print "P%d MPY_Allgather res2=%s" % (rank, res2)
+print "P%d res2=%s" % (rank, res2)
 
 MPY_Finalize()

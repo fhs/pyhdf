@@ -17,20 +17,22 @@ MPY_Barrier()
 if rank == root:
     # IMPORTANT :  the root participates in the reduce operation.
 
-    v1 = [1, 2]
+    #v1 = [4, 2]
+    v1 = -4
     print "P%d v1=%s" % (rank, v1)
     res1 = MPY_Reduce(v1, MPY_MIN, root)
-    print "P%d MPY_Reduce res1=%s" % (rank, res1)
+    print "P%d MIN=%s" % (rank, res1)
     MPY_Barrier()
         
     # This time we use MPI datatypes.
     v2 = [10, 20, 30]
     print "P%d v2=%s" % (rank, v2)
     res2 = MPY_Reduce(v2, MPY_SUM, root, dataType=MPY_FLOAT)
-    print "P%d MPY_Reduce res2=%s" % (rank, res2)
+    print "P%d SUM=%s" % (rank, res2)
 
 else:
-    v1 = range(rank, rank+2)
+    #v1 = range(rank, rank+2)
+    v1 = rank
     print "P%d v1=%s" % (rank, v1)
     MPY_Reduce(v1, MPY_MIN, root)
     MPY_Barrier()
