@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: pyhdf
+Version: 0.5-1
+Summary: Python interface to the NCSA HDF4 library
+Home-page: ftp://nordet.qc.dfo-mpo.gc.ca/pub/soft/pyhdf
+Author: Andre Gosselin
+Author-email: gosselina@dfo-mpo.gc.ca
+License: public
+Description: The pyhdf package wraps the functionality of the NCSA HDF4 library inside a Python OOP framework. Only the SD API is implemented for now, but other APIs will be covered in the near future. SD variables are read/written through Numeric arrays. netCDF files can also be read and modified with pyhdf.
+Keywords: hdf,netcdf,Numeric,python
+Platform: UNKNOWN
