@@ -35,8 +35,10 @@ if rank == root:
     #  issue a buffer_detach
 
     for p in toProc:
-        arr = Numeric.zeros((p,p), 'i')
-        msg = MPY_Recv(p, dataType=MPY_PYTHON_ARRAY, array=arr)
+        # Parameter 'arrInfo' is set to true because it is also set to true
+        # in the matching send. A private message is received allowing the
+        # allocation of an array matching the one coming from the sender. 
+        msg = MPY_Recv(p, dataType=MPY_PYTHON_ARRAY, arrInfo=True)
         print "P%d received from %d msg=\n%s" % (rank, p, msg)
         
 elif rank in toProc:
@@ -45,7 +47,9 @@ elif rank in toProc:
     print "P%d received from %d msg=\n%s" % (rank, root, msg)
 
     arr = Numeric.ones((rank, rank), 'i')
-    MPY_Bsend(arr, root, dataType=MPY_PYTHON_ARRAY)
+    # Parameter 'arrInfo' is set so that the receiver receives enough info
+    # to allocate an array of the proper shape and type.
+    MPY_Bsend(arr, root, dataType=MPY_PYTHON_ARRAY, arrInfo=True)
     print "P%d sent to %d\n%s" % (rank, root, arr)
 
 MPY_Buffer_detach()
