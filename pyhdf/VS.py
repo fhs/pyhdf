@@ -1,6 +1,6 @@
-# $Id: VS.py,v 1.1 2004-08-02 15:22:59 gosselin Exp $
-# $Log: #
-"""A module of the pyhdf package implementing the VS (vdata table)
+# $Id: VS.py,v 1.2 2004-08-02 15:36:04 gosselin Exp $
+# $Log: not supported by cvs2svn $
+"""A module of the pyhdf package implementing the VS (Vdata table)
 API of the NCSA HDF4 library.
 (see: hdf.ncsa.uiuc.edu)
 
@@ -8,8 +8,8 @@ Author: Andre Gosselin
         Maurice-Lamontagne Institute
         gosselina@dfo-mpo.gc.ca
         
-Version: 0.6-1
-Date:    December 3 2003
+Version: 0.7-1
+Date:    FIXDATE
 
 Table of contents
 -----------------
@@ -19,7 +19,7 @@ Table of contents
   Package components
   Prerequisites
   Documentation
-  Summary of differences between the pyhdf and C API
+  Summary of differences between the pyhdf and C VS API
   Error handling
   VS needs support from the HDF module
   Classes summary
@@ -42,8 +42,8 @@ the NCSA HDF library and letting one manage HDF files from within a python
 program. Two versions of the HDF library currently exist, version 4 and
 version 5. pyhdf only implements version 4 of the library. Many
 different APIs are to be found inside the HDF4 specification.
-Currently, pyhdf implements just a few of those: the SD and VS APIs.
-Other APIs should be added in the future (V, GR, AN, etc).
+Currently, pyhdf implements just a few of those: the SD, VS and V APIs.
+Other APIs should be added in the future (GR, AN, etc).
 
 VS allows the definition of structured data tables inside an HDF file.
 Those tables are designated as "vdatas" (the name has to do with data
@@ -119,7 +119,7 @@ Accessing the VS module
 -----------------------
 To access the VS module a python program can say one of:
 
-  >>> import phdf            # must prefix names with "pyhdf.VS."
+  >>> import pyhdf.VS        # must prefix names with "pyhdf.VS."
   >>> from pyhdf import VS   # must prefix names with "VS."
   >>> from pyhdf.VS import * # names need no prefix
 
@@ -148,13 +148,14 @@ The following modules are related to the VS API.
   hdfext    python module implementing some utility functions
             complementing the _hdfext extension module
   error     defines the HDF4Error exception
+  HDF       python module providing support to the VS module
   VS        python module wrapping the VS API routines inside
             an OOP framework
 
 _hdfext and hdfext were generated using the SWIG preprocessor.
 SWIG is however *not* needed to run the package. Those two modules
 are meant to do their work in the background, and should never be called
-directly. Only 'pyhdf.VS' should be imported by the user program.
+directly. Only HDF and VS should be imported by the user program.
 
 Prerequisites
 -------------
@@ -204,9 +205,9 @@ pydoc can also be called from the command line, as in:
   % pydoc pyhdf.VS.VD         # doc for the whole VD class
   % pydoc pyhdf.VS.VD.read    # doc for the VD.read method
   
-Summary of differences between the pyhdf and C API
---------------------------------------------------
-Most of the differences between the pyhdf and C API can
+Summary of differences between the pyhdf and C VS API
+-----------------------------------------------------
+Most of the differences between the pyhdf and C VS API can
 be summarized as follows.
 
    -In the C API, every function returns an integer status code, and values
@@ -220,7 +221,7 @@ be summarized as follows.
    
 Error handling
 --------------
-All errors reported by the VS C API with a SUCCESS/FAIL error code
+All errors reported by the C VS API with a SUCCESS/FAIL error code
 are reported by pyhdf using the Python exception mechanism.
 When the C library reports a FAIL status, pyhdf raises an HDF4Error
 exception (a subclass of Exception) with a descriptive message. 
@@ -231,7 +232,7 @@ of the time cannot do more than saying "execution error".
 VS needs support from the HDF module
 ------------------------------------
 The VS module is not self-contained (countrary to the SD module).
-It requires help from the HDF modules, namely:
+It requires help from the HDF module, namely:
   -the HDF.HDF class to open and close the HDF file, and initialize the
    VS interface
   -the HDF.HC class to provide different sorts of constants (opening modes,
@@ -245,7 +246,7 @@ the following minimal set of calls:
   >>> hdfFile = HDF(name, HC.xxx)# open HDF file
   >>> vs = hdfFile.vstart()      # initialize VS interface on HDF file
   >>> ...                        # manipulate vdatas through "vs"
-  >>> vs.vend()                  # terminate VS interface
+  >>> vs.end()                   # terminate VS interface
   >>> hdfFile.close()            # close HDF file
 
 Classes summary
@@ -279,7 +280,7 @@ In more detail:
                             its values
 
            closing the interface
-             vend()         close the VS interface on the HDF file
+             end()          close the VS interface on the HDF file
 
            searching
              find()         get a vdata reference number given its name
@@ -425,7 +426,7 @@ returns the current attribute value. Here is an example.
   >>> print attr.get()             # get and print attribute value
   
   >>> vd.detach()                # "close" the vdata
-  >>> vs.vend()                  # terminate the vdata interface
+  >>> vs.end()                   # terminate the vdata interface
   >>> f.close()                  # close the HDF file
 
 The second way consists of setting/querying an attribute as if it were a
@@ -433,6 +434,7 @@ normal python class attribute, using the usual dot notation. Above example
 then becomes:
 
   >>> from pyhdf.HDF import *
+  >>> from pyhdf.VS import *
   >>> f = HDF('test.hdf', HC.WRITE) # Open file 'test.hdf' in write mode
   >>> vs = f.vstart()            # init vdata interface
   >>> vd = vs.attach('vtest', 1) # attach vdata 'vtest' in write mode
@@ -444,7 +446,7 @@ then becomes:
                                  # it to the pair of ints (-10, 15)
   >>> print fld.range            # print attribute value
   >>> vd.detach()                # "close" the vdata
-  >>> vs.vend()                  # terminate the vdata interface
+  >>> vs.end()                   # terminate the vdata interface
   >>> f.close()                  # close the HDF file
 
 Note how the dot notation greatly simplifies and clarifies the code.
@@ -453,13 +455,22 @@ because the pyhdf package, not the programmer, is then responsible of
 setting the attribute type. The attribute type is chosen to be one of:
 
   HC.CHAR8    if the attribute value is a string
-  HC.INT32    if all attribute values ar integers
+  HC.INT32    if all attribute values are integers
   HC.FLOAT64  otherwise
 
 The first way of handling attribute values must be used if one wants to
 define an attribute of any other type (for ex. 8 or 16 bit integers,
 signed or unsigned). Also, only a VDAttr instance gives access to attribute
 info, through its info() method.
+
+However, accessing HDF attributes as if they were python attributes raises
+an important issue. There must exist a way to assign generic attributes
+to the python objects without requiring those attributes to be converted
+to HDF attributes. pyhdf uses the following rule: an attribute whose name
+starts with an underscore ('_') is either a "predefined" attribute
+(see below) or a standard python attribute. Otherwise, the attribute
+is handled as an HDF attribute. Also, HDF attributes are not stored inside
+the object dictionnary: the python dir() function will not list them.
 
 Attribute values can be updated, but it is illegal to try to change the
 value type, or the attribute order (number of values). This is important
@@ -624,7 +635,7 @@ described in the "Introduction" section.
               ))
     vd.detach()               # "close" the vdata
 
-    vs.vend()                 # terminate the vdata interface
+    vs.end()                  # terminate the vdata interface
     f.close()                 # close the HDF file
 
 
@@ -664,7 +675,7 @@ INVENTORY vdata created before is used.
                     )
     vd.detach()               # "close" the vdata
 
-    vs.vend()                 # terminate the vdata interface
+    vs.end()                  # terminate the vdata interface
     f.close()                 # close the HDF file
 
 Note how, when updating the value of the 'status' vdata attribute,
@@ -707,7 +718,7 @@ before is used.
               ('R3389', 'robot', 3, 45, 2000)
               )
     vd.detach()               # "close" the vdata
-    vs.vend()                 # terminate the vdata interface
+    vs.end()                  # terminate the vdata interface
     f.close()                 # close the HDF file
 
 Reading a vdata
@@ -759,7 +770,7 @@ to break out of the reading loop when we reach the end of the vdata.
             break
 
     vd.detach()               # "close" the vdata
-    vs.vend()                 # terminate the vdata interface
+    vs.end()                  # terminate the vdata interface
     f.close()                 # close the HDF file
 
 In the previous example, the reading/displaying loop can be greatly
@@ -792,8 +803,7 @@ import os, sys, types
 
 import hdfext as _C
 
-import HDF
-from HDF import *
+from HC import HC
 from error import HDF4Error, _checkErr
 
 # List of names we want to be imported by an "from pyhdf.VS import *"
@@ -829,16 +839,16 @@ class VS:
         
 
     def __del__(self):
-        """Delete the instance, first calling the vend() method 
+        """Delete the instance, first calling the end() method 
         if not already done.          """
 
         try:
             if self._hdf_inst:
-                self.vend()
+                self.end()
         except:
             pass
 
-    def vend(self):
+    def end(self):
         """Close the VS interface.
 
         Args:
@@ -850,10 +860,12 @@ class VS:
                                                 """
 
         # Note: Vend is just a macro; use 'Vfinish' instead
-        _checkErr('vend', _C.Vfinish(self._hdf_inst._id),
+        _checkErr('end', _C.Vfinish(self._hdf_inst._id),
                   "cannot terminate VS interface")
         self._hdf_inst = None
 
+    vend = end      # For backward compatibility
+    
     def attach(self, num_name, write=0):
         """Locate an existing vdata or create a new vdata in the HDF file,
         returning a VD instance.
@@ -1048,7 +1060,6 @@ class VS:
         C library equivalent : VHstoredata / VHstoredatam
                                                 """
 
-        HC = HDF.HC
         # See if the field is multi-valued.
         nrecs = len(values)
         if type(values[0]) in [types.ListType, types.TupleType]:
@@ -1140,7 +1151,7 @@ class VD:
         #  id          vdata reference number
 
         # Private attributes:
-        #  _vs_inst   VS instance to which the vdata velongs
+        #  _vs_inst   VS instance to which the vdata belongs
         #  _id        vdata identifier
         #  _offset    current record offset
         #  _setfields last arg to setfields()
@@ -1241,6 +1252,10 @@ class VD:
         raise AttributeError
 
     def __setattr__(self, name, value):
+
+        # A name starting with an underscore will be treated as
+        # a standard python attribute, and as an HDF attribute
+        # otherwise.
 
         # Forbid assigning to our predefined attributes
         if name in ["_fields", "_isattr", "_nattrs", "_nfields",
@@ -1354,7 +1369,7 @@ class VD:
         if not already done.          """
 
         try:
-            if self._vd:
+            if self._id:
                 self.detach()
         except:
             pass
@@ -1591,7 +1606,6 @@ class VD:
             values.append(v)
 
         # Unpack each field in turn.
-        HC = HDF.HC
         for numFld in range(nFields):
             fld = self.field(fields[numFld])
             data_type = fld._type
@@ -1718,7 +1732,6 @@ class VD:
         fldArr = _C.new_array_voidp(1)
 
         # Pack each field in turn.
-        HC = HDF.HC
         for numFld in range(nFields):
             fld = self.field(fields[numFld])
             data_type = fld._type
@@ -1940,9 +1953,9 @@ class VD:
         Args:
           no argument
         Returns:
-          list describing each vdata attribute; each attribute is
-          described using a 5-element tuple giving:
-            -attribute name
+          dictionnary describing each vdata attribute; for each attribute
+          a (name,data) pair is added to the dictionary, where 'data' is
+          a tuple holding:
             -attribute data type (one of HC.xxx constants)
             -attribute order
             -attribute value
@@ -1951,17 +1964,13 @@ class VD:
         C library equivalent : no equivalent
                                                   """
 
-        lst = []
+        dic = {}
         for n in range(self._nattrs):
             att = self.attr(n)
             name, type, order, size = att.info()
-            lst.append((name,
-                        type,
-                        order,
-                        att.get(),
-                        size))
+            dic[name] = (type, order, att.get(), size)
 
-        return lst
+        return dic
                   
     def __buildStartCount(self, elem, setitem=0):
 
@@ -2180,9 +2189,9 @@ class VDField:
         Args:
           no argument
         Returns:
-          list describing each vdata attribute; each attribute is
-          described using a 5-element tuple giving:
-            -attribute name
+          dictionnary describing each vdata attribute; for each attribute
+          a (name,data) pair is added to the dictionary, where 'data' is
+          a tuple holding:
             -attribute data type (one of HC.xxx constants)
             -attribute order
             -attribute value
@@ -2191,20 +2200,17 @@ class VDField:
         C library equivalent : no equivalent
                                                   """
 
-        lst = []
+        dic = {}
         for n in range(self._nattrs):
             att = self.attr(n)
             name, type, order, size = att.info()
-            lst.append((name,
-                        type,
-                        order,
-                        att.get(),
-                        size))
+            dic[name] = (type, order, att.get(), size)
 
-        return lst
+        return dic
+                  
 
 class VDAttr:
-    """The VSAttr class encapsulates methods used to set and query attributes
+    """The VDAttr class encapsulates methods used to set and query attributes
     defined at the level either of the vdata or of the vdata field.
     To create an instance of this class, call the attr() method of a VD
     (vdata) or VDField (vdata field) instance. """
@@ -2268,8 +2274,6 @@ class VDAttr:
         C library equivalent : VSgetattr
         
                                                 """
-        HC = HDF.HC
-
         # Make sure th attribute exists.
         if self._index is None:
             raise HDF4Error, "non existent attribute"
@@ -2330,9 +2334,9 @@ class VDAttr:
                          to HC.CHAR8 and 'values' to the corresponding
                          string
 
-                         If the attribute already exists, it will be updated.
-                         However, it is illegal to try to change its data
-                         type or its order (number of values).
+                         If the attribute already exists, it will be
+                         updated. However, it is illegal to try to change
+                         its data type or its order (number of values).
                      
         Returns: 
           None
@@ -2340,7 +2344,6 @@ class VDAttr:
         C library equivalent : VSsetattr
 
                                                   """
-        HC = HDF.HC
         try:
             n_values = len(values)
         except:
@@ -2467,13 +2470,13 @@ def _setattr(obj, name, value):
             typeList = []
             break
     if types.StringType in typeList:
-        xtype = HDF.HC.CHAR8
+        xtype = HC.CHAR8
         value = value[0]
     # double is "stronger" than int
     elif types.FloatType in typeList:
-        xtype = HDF.HC.FLOAT64
+        xtype = HC.FLOAT64
     elif types.IntType in typeList:
-        xtype = HDF.HC.INT32
+        xtype = HC.INT32
     else:
         raise HDF4Error, "Illegal attribute value"
 

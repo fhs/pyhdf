@@ -1,5 +1,8 @@
-# $Id: HDF.py,v 1.1 2004-08-02 15:22:59 gosselin Exp $
+# $Id: HDF.py,v 1.2 2004-08-02 15:36:04 gosselin Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/08/02 15:22:59  gosselin
+# Initial revision
+#
 
 """A module of the pyhdf package implementing the basic API of the
 NCSA HDF4 library.
@@ -9,8 +12,8 @@ Author: Andre Gosselin
         Maurice-Lamontagne Institute
         gosselina@dfo-mpo.gc.ca
         
-Version: 0.6-1
-Date:    December 3 2003
+Version: 0.7-1
+Date:    FIXDATE
 
 Introduction
 ------------
@@ -40,10 +43,12 @@ The HDF module provides the following classes.
 
       methods:
         constructors:
-          HDF()    open an HDF file, creating the file if necessary,
-                   and return an HDF instance
-          vstart() initialize the VS API over the HDF file and return a
-                   VS instance (see the VS module documentation)
+          HDF()     open an HDF file, creating the file if necessary,
+                    and return an HDF instance
+          vstart()  initialize the VS (Vdata) API over the HDF file and
+                    return a VS instance
+          vgstart() initialize the V (Vgroup) interface over the HDF file
+                    and return a V instance.
           
 
         closing file
@@ -64,74 +69,29 @@ The HDF module also offers the following functions.
 import os, sys, types
 
 import hdfext as _C
+from HC import HC
 
-import VS
+# NOTE: The vstart() and vgstart() modules need to access the
+#       VS and V modules, resp. We could simply import those
+#       two modules, but then they would always be loaded and this
+#       may not be what the user wants. Instead of forcing the
+#       systematic import, we import the package `pyhdf',
+#       and access the needed constructors by writing 
+#       'pyhdf.VS.VS()' and 'pyhdf.V.V()'. Until the VS or
+#       V modules are imported, those statements will give an
+#       error (undefined attribute). Once the user has imported
+#       the modules, the error will disappear.
+
+import pyhdf
 
 from error import HDF4Error, _checkErr
 
-# List of names we want to be imported by an "from pyhdf import *"
+# List of names we want to be imported by an "from pyhdf.HDF import *"
 # statement
 
 __all__ = ['HDF', 'HDF4Error',
            'HC',
            'getlibversion', 'ishdf']
-
-
-
-class HC:
-    """The HC class holds contants defining opening modes and data types.
-
-File opening modes (flags ORed together)
-
-    CREATE   4     create file if it does not exist
-    READ     1     read-only mode
-    TRUNC  256     truncate if it exists
-    WRITE    2     read-write mode
-
-Data types
-
-    CHAR     4    8-bit char
-    CHAR8    4    8-bit char
-    UCHAR    3    unsigned 8-bit integer (0 to 255)
-    UCHAR8   3    unsigned 8-bit integer (0 to 255)
-    INT8    20    signed 8-bit integer (-128 to 127)
-    UINT8   21    unsigned 8-bit integer (0 to 255)
-    INT16   23    signed 16-bit integer
-    UINT16  23    unsigned 16-bit integer
-    INT32   24    signed 32-bit integer
-    UINT32  25    unsigned 32-bit integer
-    FLOAT32  5    32-bit floating point
-    FLOAT64  6    64-bit floating point
-
-
-
-    """
-
-    CREATE       = _C.DFACC_CREATE
-    READ         = _C.DFACC_READ
-    TRUNC        = 0x100          # specific to pyhdf
-    WRITE        = _C.DFACC_WRITE
-
-    CHAR         = _C.DFNT_CHAR8
-    CHAR8        = _C.DFNT_CHAR8
-    UCHAR        = _C.DFNT_UCHAR8
-    UCHAR8       = _C.DFNT_UCHAR8
-    INT8         = _C.DFNT_INT8
-    UINT8        = _C.DFNT_UINT8
-    INT16        = _C.DFNT_INT16
-    UINT16       = _C.DFNT_UINT16
-    INT32        = _C.DFNT_INT32
-    UINT32       = _C.DFNT_UINT32
-    FLOAT32      = _C.DFNT_FLOAT32
-    FLOAT64      = _C.DFNT_FLOAT64
-
-    FULL_INTERLACE = 0
-    NO_INTERLACE   =1
-    
-
-# NOTE:
-#  INT64 and UINT64 are not yet supported py pyhdf
-
 
 def getlibversion():
     """Get the library version info.
@@ -164,6 +124,7 @@ def ishdf(filename):
                                             """
 
     return _C.Hishdf(filename)
+
 
 class HDF:
     """The HDF class encapsulates the basic HDF functions.
@@ -306,7 +267,21 @@ class HDF:
 
         C library equivalent : Vstart (in fact: Vinitialize)
                                                               """
-        return VS.VS(self)
+	# See note at top of file.
+        return pyhdf.VS.VS(self)
+
+    def vgstart(self):
+        """Initialize the V API over the file and return a V instance.
+
+        Args:
+          no argument
+        Returns:
+          V instance
+
+        C library equivalent : Vstart (in fact: Vinitialize)
+                                                              """
+	# See note at top of file.
+        return pyhdf.V.V(self)
 
 
 

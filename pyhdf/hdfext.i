@@ -1,6 +1,9 @@
-/*
- * $Id: hdfext.i,v 1.2 2004-08-02 15:22:59 gosselin Exp $
+*
+ * $Id: hdfext.i,v 1.3 2004-08-02 15:36:04 gosselin Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2004/08/02 15:22:59  gosselin
+ * pyhdf-0.6-1
+ *
  * Revision 1.1  2004/08/02 15:00:34  gosselin
  * Initial revision
  *
@@ -79,6 +82,11 @@
 #define COMP_CODE_NBIT    2
 #define COMP_CODE_SKPHUFF 3
 #define COMP_CODE_DEFLATE 4
+
+/* Tags */
+#define  DFTAG_NDG  720
+#define  DFTAG_VH  1962 
+#define  DFTAG_VG  1965
 
 %array_class(unsigned char, array_byte);
 %array_class(signed char, array_int8);
@@ -829,3 +837,115 @@ extern intn  VSattrinfo(int32 vdata_id,
 extern intn  VSfindattr(int32 vdata_id,
                         int32 field_index,
                         const char *attr_name);
+
+/*********
+ * V API *
+ *********/
+
+/*
+ * Access vgroup
+ */
+
+extern int32  Vattach(int32 file_id,
+                      int32 vgroup_ref,
+                      const char *vg_access_mode);
+
+extern int32 Vdetach(int32 vgroup_id);
+
+%cstring_bounded_output(char *name, 256);
+extern int32 Vgetname(int32 vgroup_id,
+                      char *name);
+%clear char *name;
+
+extern int32 Vsetname(int32 vgroup_id,
+                      const char *vgroup_name);
+
+%cstring_bounded_output(char *name, 256);
+extern int32 Vgetclass(int32 vgroup_id,
+                       char *name);
+%clear char *name;
+
+extern int32 Vsetclass(int32 vgroup_id,
+                       const char *vgroup_class);
+
+extern int32 Vfind(int32 file_id,
+                   const char *vgroup_name);
+
+extern int32 Vfindclass(int32 file_id,
+                        const char *vgroup_class);
+
+extern int32 Vinsert(int32 vgroup_id,
+                     int32 v_id);
+
+extern int32 Vaddtagref(int32 vgroup_id,
+                        int32 obj_tag,
+                        int32 obj_ref);
+
+extern int32 Vdeletetagref(int32 vgroup_id,
+                           int32 obj_tag,
+                           int32 obj_ref);
+
+extern int32 Vdelete(int32 file_id,
+                     int32 vgroup_id);
+
+extern int32 VQueryref(int32 vgroup_id);
+
+extern int32 VQuerytag(int32 vgroup_id);
+
+extern int32 Vntagrefs(int32 vgroup_id);
+
+extern int32 Vgettagref(int32 vgroup_id,
+                        int32 index,
+                        int32 *OUTPUT,       /* obj_tag */
+                        int32 *OUTPUT);      /* obj_ref */
+
+extern int32 Vgetversion(int32 vgroup_id);
+
+extern int32 Vgettagrefs(int32 vgroup_id,
+                         void  *tag_attay,
+                         void  *ref_array,
+                         int32  maxsize);
+
+extern int32 Vgetid(int32 file_id,
+                    int32 vgroup_ref);
+
+extern intn  Vinqtagref(int32 vgroup_id,
+                        int32 tag,
+                        int32 ref);
+
+extern intn  Visvg(int32 vgroup_id,
+                   int32 obj_ref);
+
+extern intn  Visvs(int32 vgroup_id,
+                   int32 obj_ref);
+
+extern int32 Vnrefs(int32 vgroup_id,
+                    int32 tag_type);
+
+/*
+ * Attributes
+ */
+
+extern intn  Vfindattr(int32 vgroup_id,
+                       const char *attr_name);
+
+extern intn  Vgetattr(int32 vdata_id, 
+		      intn  attr_index,
+		      void *buf);
+
+extern intn  Vsetattr(int32 vgroup_id, 
+                      const char *attr_name, 
+                      int32 data_type,
+                      int32 n_values, 
+                      const void *values);
+
+%cstring_bounded_output(char *attr_name, 256);
+extern intn  Vattrinfo(int32 vgroup_id,
+		       intn  attr_index, 
+		       char  *attr_name,
+		       int32 *OUTPUT,     /* data_type */
+		       int32 *OUTPUT,     /* n_values */
+		       int32 *OUTPUT);    /* size */
+%clear char *attr_name;
+
+extern intn  Vnattrs(int32 vgroup_id);
