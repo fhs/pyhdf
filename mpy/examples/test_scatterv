@@ -20,14 +20,12 @@ if rank == root:
     # and sends a message to itself.
 
     # Scattered messages can be of different lengths.
-    # Set argument 'ctrl' to True to inform the receiving processes of
-    # the length of the messages sent to them.
     msgSeq = []
     for k in range(size):
         msgSeq.append(range(k, 5*k+2))
-    res = MPY_Scatterv(root, msgSeq, ctrl=True, dataType=MPY_FLOAT)
+    res = MPY_Scatterv(root, msgSeq, dataType=MPY_FLOAT)
 else:
-    res = MPY_Scatterv(root, ctrl=True, dataType=MPY_FLOAT)
+    res = MPY_Scatterv(root, dataType=MPY_FLOAT)
 
 print "P%d received '%s'" % (rank, res)
 MPY_Barrier()
@@ -35,9 +33,9 @@ MPY_Barrier()
 # Now we use default dataType MPY_PYTHON_OBJ. 
 if rank == root:
     msgSeq = [[1,2,3,'a'], [100,200,300,'ab'], "scatterv test", "a long long string"]
-    res = MPY_Scatterv(root, msgSeq, ctrl=True)
+    res = MPY_Scatterv(root, msgSeq)
 else:
-    res = MPY_Scatterv(root, ctrl=True)
+    res = MPY_Scatterv(root)
 
 print "P%d received '%s'" % (rank, res)
 MPY_Barrier()
