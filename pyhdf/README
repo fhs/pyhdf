@@ -1,4 +1,4 @@
-# $Id: README,v 1.4 2004-08-02 16:46:30 gosselin Exp $
+# $Id: README,v 1.5 2004-08-02 17:04:38 gosselin Exp $
 # $Log: not supported by cvs2svn $
 # Revision 1.3  2004/08/02 15:29:52  gosselin
 # pyhdf-0.7-1
@@ -16,8 +16,8 @@ Author: Andre Gosselin
         Mont-Joli, Canada
         gosselina@dfo-mpo.gc.ca
 
-Latest version: 0.7-1
-Date:  December 16 2003
+Latest version: 0.7-2
+Date:  June 9 2004
 
 pyhdf is a python wrapper around the NCSA HDF version 4 library.
 The SD (Scientific Dataset), VS (Vdata) and V (Vgroup) API's 
