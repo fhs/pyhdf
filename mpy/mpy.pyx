@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 #
-# $Id: mpy.pyx,v 1.5 2005-02-12 03:55:59 gosselin_a Exp $
+# $Id: mpy.pyx,v 1.6 2005-02-13 01:51:14 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.5  2005/02/12 03:55:59  gosselin_a
+# Fixed comments in the header of MPY_Scatter().
+#
 # Revision 1.4  2005/02/12 02:31:38  gosselin_a
 # Added support for Numeric array datatype inside MPY_Scatter().
 #
@@ -4064,7 +4067,7 @@ def MPY_Scan(buf, long op, dataType=MPY_PYTHON_OBJ,
     return obj
 
 
-def MPY_Scatter(int root, msg=None, recvCount=0,
+def MPY_Scatter(int root, msg=None, int recvCount=0,
                 dataType=MPY_PYTHON_OBJ, array=None, long comm=MPY_COMM_WORLD):
     """
     Python wrapper around MPI_Scatter() .
@@ -4072,7 +4075,7 @@ def MPY_Scatter(int root, msg=None, recvCount=0,
     Params:
       root          Rank inside the communicator of the process which
                     scatters the messages.
-      msg           Messages to scatter. This parameter is significant
+      msg           Message to scatter. This parameter is significant
                     only at root, and is ignored on non-root processes, where
                     it should be omitted (or set to the default None).
                     When dataType == MPY_PYTHON_ARRAY, 'msg' must by a Numeric
@@ -4192,8 +4195,8 @@ def MPY_Scatter(int root, msg=None, recvCount=0,
     return obj
             
 
-def MPY_Scatterv(int root, msgSeq=None, recvCount=0, ctrl=False,
-                 dataType=MPY_PYTHON_OBJ, long comm=MPY_COMM_WORLD):
+def MPY_Scatterv(int root, msg=None, sendCount=None, int recvCount=0,
+                 dataType=MPY_PYTHON_OBJ, array=None, long comm=MPY_COMM_WORLD):
     """
     Python wrapper around MPI_Scatterv() .
 
@@ -4206,22 +4209,22 @@ def MPY_Scatterv(int root, msgSeq=None, recvCount=0, ctrl=False,
     Params:
       root          Rank inside the communicator of the process which
                     scatters the messages.
-      msgSeq        Sequence of messages to scatter. This parameter is significant
+      msg           Message to scatter. This parameter is significant
                     only at root, and is ignored on non-root processes, where
                     it should be omitted (or set to the default None).
-                    The length of this sequence must match the number of processes
-                    inside the communicator, message at index 'i' being sent to
-                    process of rank 'i'. Messages can be of different length.
-                    Remember that the root process participates
-                    in the exchange and thus sends a message to itself.
+                    When dataType == MPY_PYTHON_ARRAY, 'msg' must by a Numeric
+                    array. For other datatypes, 'msg' must be a sequence whose length
+                    must match the number of processes inside the communicator,
+                    message at index 'i' being sent to process of rank 'i'.
+                    Remember that the root process participates in the scatter and
+                    thus sends a message to itself.
+      sendCount     Significant only when dataType == MPY_PYTHON_ARRAY. sendCount 
+                    is then a sequence giving the number of data elements to send to
+                    each process.
       recvCount     Max number of data elements to receive. Must be greater or
-                    equal to the message size. If set to 0 (default value)
-                    'ctrl' must be set to true to obtain the message length from
-                    the root process through a control message.
-      ctrl          True to ask the root process to precede the scatter by a control
-                    message holding the length of the "chunk". Usefull when the
-                    receiving processes do not know in advance the size of the message
-                    they will receive.
+                    equal to the message size. If set to 0 (default value),
+                    root process scatters the number of data elements sent to
+                    each process.
       dataType      Message datatype.
       comm          Communicator handle.
 
@@ -4234,65 +4237,80 @@ def MPY_Scatterv(int root, msgSeq=None, recvCount=0, ctrl=False,
     cdef int nElem, totElem, chunkSize, size, rank, p, dSize
     cdef int *sendCounts, *displ
 
-    if recvCount == 0 and not ctrl:
-        raise MPY_Error, "MPY_Scatterv() : 'recvCount' cannot be set to 0 " \
-              "if 'ctrl' is false"
-
     size = MPY_Comm_size(comm)
     rank = MPY_Comm_rank(comm)
 
     # Only root scatters messages.
     if rank == root:
-        # Compute the total number of elements among the messages to send.
-        totElem = 0
-        for obj in msgSeq:
-            if dataType == MPY_PYTHON_OBJ:
-                nElem = lenPickle(obj)
-            else:
-                # Sequence
-                if type(obj) in [types.TupleType, types.ListType, types.StringType]:
-                    nElem = len(obj)
-                # Scalar.
-                else:
-                    nElem = 1
-            totElem = totElem + nElem
-
-        # Allocate a buffer to store the messages to send, their lengths and
-        # their offsets.
-        s, mpi_datatype = prepRecv(totElem, dataType)
         sendCounts = <int *>PyMem_Malloc(size * sizeof(int))
         displ      = <int *>PyMem_Malloc(size * sizeof(int))
 
-        # Copy messages to this buffer. Setup length and offset arrays.
-        adr = s
-        p = 0
-        dSize = dataTypeSize(dataType)
-        for obj in msgSeq:
-           adr0, nElem, mpi_datatype = obj2CArray(obj, dataType, <void *>adr)
-           sendCounts[p] = nElem
-           displ[p] = (adr - s) / dSize
-           adr = adr + nElem * dSize
-           p = p + 1
+        # Unless Numeric arrays are used, we must allocate a buffer
+        # where all messages will be regrouped.
+        if dataType != MPY_PYTHON_ARRAY:
+            # Compute the total number of elements among the messages to send.
+            totElem = 0
+            for obj in msg:
+                if dataType == MPY_PYTHON_OBJ:
+                    nElem = lenPickle(obj)
+                else:
+                    # Sequence
+                    if type(obj) in [types.TupleType, types.ListType,
+                                     types.StringType]:
+                        nElem = len(obj)
+                    # Scalar.
+                    else:
+                        nElem = 1
+                totElem = totElem + nElem
 
-        # Send control info to receiving processes.
-        if ctrl:
-             for p from 0 <= p < size:
-                if p != root:
-                    sendCtrl(sendCounts[p], p)
-        nElem = sendCounts[0]
-    
-    # Recover the message length from a control message.
-    else:
-        if ctrl:
-            nElem = recvCtrl(root)
-        s = <long>NULLPT
-        sendCounts = <int *>NULLPT
-        displ      = <int *>NULLPT
-            
-    # Allocate receive buffer, for everyone.
+            # Allocate a buffer to store the messages to send, their lengths and
+            # their offsets.
+            s, mpi_datatype = prepRecv(totElem, dataType)
+
+            # Copy messages to this buffer. Setup length and offset arrays.
+            adr = s
+            p = 0
+            dSize = dataTypeSize(dataType)
+            for obj in msg:
+                adr0, nElem, mpi_datatype = obj2CArray(obj, dataType, <void *>adr)
+                sendCounts[p] = nElem
+                displ[p] = (adr - s) / dSize
+                adr = adr + nElem * dSize
+                p = p + 1
+
+        # A Numeric array is used.
+        else:
+            s, nElem, mpi_datatype, sendArrayObj = obj2CArray2(msg, dataType, NULLPT)
+            for p in range(size):
+                if sendCount is None:
+                    sendCounts[p] = nElem / size
+                else:
+                    sendCounts[p] = sendCount[p]
+                if p == 0:
+                    displ[p] = 0
+                else:
+                    displ[p] = displ[p - 1] + sendCounts[p - 1]
+            # Get the array typecode. We may need to broadcast it later.
+            typeCode = msg.typecode()
+
+    # Scatter the counts to each process if the receive count is not
+    # specified.
     if recvCount == 0:
-        recvCount = nElem
-    r, mpi_datatype = prepRecv(recvCount, dataType)
+        MPI_Scatter(sendCounts, 1, MPI_INT, &recvCount, 1, MPI_INT,
+                    root, <MPI_Comm>comm)
+
+    # Allocate receive buffer, for everyone. If dataType == MPY_PYTHON_ARRAY,
+    # use parameter 'array' as the buffer, unless it is None. In that case,
+    # allocate a one-dimensional array of length 'recvCount', whose type is the same as
+    # that of the array passed to the root process.
+    if dataType == MPY_PYTHON_ARRAY and array is None:
+        # Let root broadcast the array typecode (1 char string).
+        typeCode = MPY_Bcast(root, typeCode, nElem=1, dataType=MPY_PYTHON_STR,
+                             comm=comm)
+        # Allocate the array.
+        array = Numeric.zeros(recvCount, typeCode)
+        
+    r, mpi_datatype, dum, recvArrayObj = prepRecv2(recvCount, array, dataType)
 
     # Scatter data.
     res = MPI_Scatterv(<void *>s, sendCounts, displ, <MPI_Datatype>mpi_datatype,
@@ -4300,15 +4318,21 @@ def MPY_Scatterv(int root, msgSeq=None, recvCount=0, ctrl=False,
                        root, <MPI_Comm>comm)
     checkErr(res, "MPY_Scatterv")
         
-    # Return scattered message.
-    obj = CArray2Obj(<void *>r, dataType, recvCount, False)
+    # If Numeric array was used, simply return it.
+    if dataType == MPY_PYTHON_ARRAY:
+        obj = array
 
-    # Free allocated buffers.
-    PyMem_Free(<void *>r)
-    if rank == root:
-        PyMem_Free(<void *>s)
-        PyMem_Free(<void *>sendCounts)
-        PyMem_Free(<void *>displ)
+    # Otherwise, convert received message to Python object,
+    # and free allocated buffers.
+    else:
+        obj = CArray2Obj(<void *>r, dataType, recvCount, False)
+
+        # Free allocated buffers.
+        PyMem_Free(<void *>r)
+        if rank == root:
+            PyMem_Free(<void *>s)
+            PyMem_Free(<void *>sendCounts)
+            PyMem_Free(<void *>displ)
 
     # Return results.
     return obj
