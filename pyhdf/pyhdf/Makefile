@@ -1,5 +1,8 @@
-# $Id: Makefile,v 1.1 2004-08-02 15:00:34 gosselin Exp $
+# $Id: Makefile,v 1.2 2004-11-03 16:02:06 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/08/02 15:00:34  gosselin
+# Initial revision
+#
 #
 # ------------------------------------------------------------
 # SWIG Examples Makefile
@@ -250,8 +253,8 @@ perl5_clean:
 ##################################################################
 
 # Make sure these locate your Python installation
-PYTHON_INCLUDE= -DHAVE_CONFIG_H -I/usr/include/python2.2 -I/usr/lib/python2.2/config
-PYTHON_LIB    = /usr/lib/python2.2/config
+PYTHON_INCLUDE= -DHAVE_CONFIG_H -I/usr/include/python2.3 -I/usr/lib/python2.3/config
+PYTHON_LIB    = /usr/lib/python2.3/config
 
 # Extra Python specific dynamic linking options
 PYTHON_DLNK   = 
