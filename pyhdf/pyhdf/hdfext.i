@@ -1,6 +1,9 @@
 /*
- * $Id: hdfext.i,v 1.1 2004-08-02 15:00:34 gosselin Exp $
+ * $Id: hdfext.i,v 1.2 2004-08-02 15:22:59 gosselin Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2004/08/02 15:00:34  gosselin
+ * Initial revision
+ *
  */
 
 %module hdfext
@@ -82,18 +85,93 @@
 %array_class(short, array_int16);
 %array_class(unsigned short, array_uint16);
 %array_class(int, array_int32);
+%array_class(unsigned int, array_uint32);
 %array_class(float, array_float32);
 %array_class(double, array_float64);
+%array_functions(void *, array_voidp);
+
+typedef int           int32;
+typedef int           intn;
+typedef int          uint32;
+typedef short         int16;
+typedef unsigned char uint8;
+
+%{
+#include "hdfi.h"   /* declares basic HDF types: int16 int32, etc */
+%}
+
+/* 
+ ***************
+ * Basic HDF API
+ ***************
+ */
+
+/*
+ * Opening and closing HDF file.
+ */
+
+extern int32 Hopen(const char *filename,
+                   intn        access_mode,
+                   int         num_dds_blocks);
+extern intn  Hclose(int32      file_id);
+
+/*
+ * Library version.
+ */
+
+%cstring_bounded_output(char *string, 256);
+extern intn Hgetlibversion(uint32 *OUTPUT,     /* major_v */
+                           uint32 *OUTPUT,     /* minor_v */
+                           uint32 *OUTPUT,     /* release */
+                           char   *string);
+extern intn Hgetfileversion(int32  file_id,
+                            uint32 *OUTPUT,    /* major_v */
+                            uint32 *OUTPUT,     /* minor_v */
+                            uint32 *OUTPUT,     /* release */
+                            char   *string);
+%clear char *string;
+
+/*
+ * Inquiry.
+ */
+
+extern intn Hishdf(const char *filename);
+
+/*
+ ***********
+ * Error API
+ ***********
+ */
+
+%{
+#include <stdio.h>
+void _HEprint(void)   {
+
+    HEprint(stderr,0);
+    }
+%}
+
+extern int32 HEvalue(int32 error_stack_offset);
+extern const char *HEstring(int32 error_code);
+extern void _HEprint(void);
+
+
+/*
+ ********
+ * SD API
+ ********
+ */
 
 /* 
  * Interface to Numeric, which is used to read and write
- * array data.
+ * SD array data.
  */
 
 %init %{
   /* Init Numeric. Mandatory, otherwise the extension will bomb. */
   import_array();
   %}
+
 
 %{
 #include "hdfi.h"     /* declares int32, float32, etc */
@@ -131,7 +209,13 @@ static int HDFtoNumericType(int hdf)    {
         case DFNT_INT8   : num = PyArray_SBYTE; break;
         case DFNT_UINT8  : num = PyArray_UBYTE; break;
         case DFNT_INT16  : num = PyArray_SHORT; break;
+#ifndef NOUINT
+        case DFNT_UINT16 : num = PyArray_USHORT; break;
+#endif
         case DFNT_INT32  : num = PyArray_INT; break;
+#ifndef NOUINT
+        case DFNT_UINT32 : num = PyArray_UINT; break;
+#endif
         case DFNT_CHAR8  : num = PyArray_CHAR; break;
         case DFNT_UCHAR8 : num = PyArray_UBYTE; break;
         default: 
@@ -346,8 +430,6 @@ static PyObject * _SDwritedata_0(int32 sds_id, int32 data_type,
 
 %}
 
-typedef int int32;
-
 /*
  * Following two routines are defined above, and interface to the 
  * `SDreaddata()' and `SDwritedata()' hdf functions.
@@ -363,13 +445,6 @@ extern PyObject * _SDwritedata_0(int32 sds_id, int32 data_type,
                                  PyObject *edges,
                                  PyObject *data, 
                                  PyObject *stride);
-
-
-
-/* 
- * SDS API
- *********
- */
 
 /*
  * Access
@@ -553,19 +628,204 @@ extern int32 SDsetexternalfile(int32 sds_id, const char *filename,
                                int32 offset);
 
 /*
- * Error API
- ***********
+ ********
+ * VS API
+ ********
+ */
+ 
+
+/* 
+ * Access / Create
+ *****************
  */
 
-%{
-#include <stdio.h>
-void _HEprint(void)   {
+extern intn    Vinitialize(int32 file_id);     /* Vstart is a macro */
 
-    HEprint(stderr,0);
-    }
-%}
+extern int32   VSattach(int32 file_id,
+                        int32 vdata_ref,
+                        const char * vdata_access_mode);
 
-extern int32 HEvalue(int32 error_stack_offset);
-extern const char *HEstring(int32 error_code);
-extern void _HEprint(void);
+extern int32   VSdetach(int32 vdata_id);
 
+extern intn    Vfinish(int32 file_id);         /* Vend is a macro */
+
+/*
+ * Creating one-field vdata.
+ */
+
+extern int32  VHstoredata(int32 file_id, 
+                          const char *fieldname,
+                          void *buf,
+                          int32 n_records,
+                          int32 data_type,
+                          const char *vdata_name,
+                          const char *vdata_class);
+
+extern int32  VHstoredatam(int32 file_id, 
+                           const char *fieldname,
+                           void *buf,
+                           int32 n_records,
+                           int32 data_type,
+                           const char *vdata_name,
+                           const char *vdata_class,
+                           int32 order);
+
+/*
+ * Defining vdata structure.
+ */
+
+extern intn  VSfdefine(int32 vdata_id,
+                       const char *fieldname,
+                       int32 data_type,
+                       int32 order);
+
+extern intn  VSsetfields(int32 vdata_id,
+                         const char *fieldname_list);
+
+/*
+ * Reading / writing vdata.
+ */
+
+int32 VSseek(int32 vdata_id,
+             int32 record_index);
+
+int32 VSread(int32 vdata_id,
+             void *databuf,
+             int32 n_records,
+             int32 interlace_mode);
+
+int32 VSwrite(int32 vdata_id,
+              void *databuf,
+              int32 n_records,
+              int32 interlace_mode);
+
+intn  VSfpack(int32 vdata_id,
+              intn  action,    /* 0: PACK, 1: UNPACK */
+              const char *fields_in_buf,
+              void *buf,
+              intn buf_size,
+              intn n_records,
+              const char *fieldname_list,
+              void **bufptrs);
+
+/*
+ * Inquiry.
+ */
+
+extern int32 VSelts(int32 vdata_id);
+
+%cstring_bounded_output(char *vdata_class, 256);
+extern intn  VSgetclass(int32 vdata_id,
+                        char *vdata_class);
+%clear char *vdata_class;
+
+%cstring_bounded_output(char *fieldname_list, 256);
+extern int32 VSgetfields(int32 vdata_id,
+                         char *fieldname_list);
+%clear char *fieldname_list;
+
+extern intn  VSgetinterlace(int32 vdata_id);
+
+%cstring_bounded_output(char *vdata_name, 256);
+extern intn  VSgetname(int32 vdata_id,
+                       char *vdata_name);
+%clear char *vdata_name;
+
+extern intn  VSsizeof(int32 vdata_id,
+                      const char *fieldname_list);
+
+%cstring_bounded_output(char *fieldname_list, 256);
+%cstring_bounded_output(char *vdata_name, 256);
+extern intn  VSinquire(int32 vdata_id,
+                       int32 *OUTPUT,         /* n_records */
+                       int32 *OUTPUT,         /* interlace_mode */
+                       char  *fieldname_list,
+                       int32 *OUTPUT,         /* vdata_size */
+                       char *vdata_name);
+%clear char *fieldname_list;
+%clear char *vdata_name;
+
+extern int32  VSQuerytag(int32 vdata_id);
+
+extern int32  VSQueryref(int32 vdata_id);
+
+extern intn   VSfindex(int32 vdata_id,
+                       const char *field_name,
+                       int32 *OUTPUT);         /* field_index */
+
+extern intn   VSisattr(int32 vdta_id);
+
+extern int32  VFnfields(int32 vdata_id);
+
+extern int32  VFfieldtype(int32 vdata_id,
+                          int32 field_index);
+
+extern const char *VFfieldname(int32 vdata_id,
+                               int32 field_index);
+
+extern int32  VFfieldesize(int32 vdata_id, 
+                           int32 field_index);
+
+extern int32  VFfieldisize(int32 vdata_id, 
+                           int32 field_index);
+
+extern int32  VFfieldorder(int32 vdata_id, 
+                           int32 field_index);
+
+
+/*
+ * Searching
+ */
+
+extern int32  VSfind(int32 file_id,
+                     const char *vdata_name);
+
+extern int32  VSgetid(int32 file_id,
+                      int32 vdata_ref);
+
+extern intn   VSfexist(int32 vdata_id,
+                       const char *fieldname_list);
+
+/*
+ * Attributes.
+ */
+
+extern int32 VSsetclass(int32 vdata_id, 
+                        const char *vdata_class);
+
+extern int32 VSsetname(int32 vdata_id,
+                       const char *vdata_name);
+
+extern intn  VSsetinterlace(int32 vdata_id, 
+                            int32 interlace_mode);
+
+extern intn  VSsetattr(int32 vdata_id, 
+                       int32 field_index,
+                       const char *attr_name, 
+                       int32 data_type,
+                       int32 n_values, 
+                       const void *values);
+
+extern intn  VSgetattr(int32 vdata_id, 
+                       int32 field_index, 
+                       intn  attr_index,
+                       void *buf);
+
+extern int32 VSfnattrs(int32 vdata_id,
+                       int32 field_index);
+
+extern int32 VSnattrs(int32 vdata_id);
+
+%cstring_bounded_output(char *attr_name, 256);
+extern intn  VSattrinfo(int32 vdata_id,
+                        int32 field_index,
+                        intn  attr_index, 
+                        char  *attr_name,
+                        int32 *OUTPUT,     /* data_type */
+                        int32 *OUTPUT,     /* n_values */
+                        int32 *OUTPUT);    /* size */
+%clear char *attr_name;
+
+extern intn  VSfindattr(int32 vdata_id,
+                        int32 field_index,
+                        const char *attr_name);

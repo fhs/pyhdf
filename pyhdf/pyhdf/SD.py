@@ -1,61 +1,58 @@
-# $Id: SD.py,v 1.2 2004-08-02 15:00:34 gosselin Exp $
+# $Id: SD.py,v 1.3 2004-08-02 15:22:59 gosselin Exp $
 # $Log: not supported by cvs2svn $
-"""A python package to access HDF (v4) files.
+# Revision 1.2  2004/08/02 15:00:34  gosselin
+# pyhdf 0.5-2
+#
+"""A module of the pyhdf package implementing the SD (scientific
+dataset) API of the NCSA HDF4 library.
 (see: hdf.ncsa.uiuc.edu)
 
 Author: Andre Gosselin
         Maurice-Lamontagne Institute
         gosselina@dfo-mpo.gc.ca
         
-Version: 0.5-2
-Date:    August 3 2003
+Version: 0.6-1
+Date:    December 3 2003
 
 Table of contents
+-----------------
   Introduction
-  The SD API
+  SD module key features
+  Accessing the SD module
   Package components
   Prerequisites
-  Limitations
   Documentation
-  Summary of differences between the pyhdf and C API
+  Summary of differences between the pyhdf and C SD API
   Error handling
-  High level attribute access
-  High level variable access
+  Attribute access: low and high level
+  Variable access: low and high level
   Reading/setting multivalued HDF attributes and variables
   netCDF files
   Classes summary
+  Data types
+  Programming models
   Examples
-  
+  Module documentation
 
 Introduction
 ------------
-The pyhdf package lets one manage HDF files from within a python program.
-netCDF files can also be read and modified using the package.
+SD is one of the modules composing pyhdf, a python package implementing
+the NCSA HDF library and letting one manage HDF files from within a python
+program. Two versions of the HDF library currently exist, version 4 and
+version 5. pyhdf only implements version 4 of the library. Many
+different APIs are to be found inside the HDF4 specification.
+Currently, pyhdf implements just a few of those: the SD and VS APIs.
+Other APIs should be added in the future (V, GR, AN, etc).
 
-Two versions of HDF currently exist, version 4 and version 5.
-pyhdf only implements HDF version 4.
+The SD module implements the SD API of the HDF4 library, supporting what
+are known as "scientific datasets". The HDF SD API has many similarities
+with the netCDF API, another popular API for dealing with scientific
+datasets. netCDF files can be in fact read and modified using the SD
+module (but cannot be created from scratch).
 
-Many different APIs are found inside the HDF4 specification. Currently,
-pyhdf implements just one of those: the SD API. Other APIs should be added
-in the future (VS, V, GR, AN, etc).
-  
-The SD API
-----------
-pyhdf wraps the SD API using 4 different types of python objects:
-  SD     HDF SD interface (almost synonimous with the HDF file)
-  SDS    scientific dataset
-  SDim   dataset dimension
-  SDattr attribute (either at the file, dataset or dimension level)
-  
-To access the SD API a python program can say one of:
-
-  >>> import phdf            # must prefix names with "pyhdf.SD."
-  >>> from pyhdf import SD   # must prefix names with "SD."
-  >>> from pyhdf.SD import * # names need no prefix
-
-This document assumes the last import style is used.
-  
-pyhdf key features are as follows.
+SD module key features
+----------------------
+SD key features are as follows.
    
   -Almost every routine of the original SD API has been implemented inside
    pyhdf. Only a few have been ignored, most of them being of a rare use:
@@ -65,69 +62,93 @@ pyhdf key features are as follows.
     - SDsetblocksize()
     - SDisdimval_bwcomp(), SDsetdimval_comp()
 
-  -It is quite straightforward to go from C to python and vice-versa, and
-   to learn pyhdf usage by refering to the C API documentation.
+  -It is quite straightforward to go from a C version to a python version
+   of a program accessing the SD API, and to learn SD usage by refering to
+   the C API documentation.
 
   -A few high-level python methods have been developped to ease
-   programmers task. Of greatest interest are those allowing HDF
-   access through familiar python idioms:   
-     -HDF attributes can be read/written like ordinary python class
-      attributes
-     -HDF datasets can be read/written like ordinary python lists using
+   programmers task. Of greatest interest are those allowing access
+   to SD datasets through familiar python idioms.
+     -Attributes can be read/written like ordinary python class
+      attributes.
+     -Datasets can be read/written like ordinary python lists using
       multidimensional indices and so-called "extended slice syntax", with
-      strides allowed
+      strides allowed.
 
       See "High level attribute access" and "High level variable access"
       sections for details.
 
-     -pyhdf offers methods to retrieve a dictionnary of the attributes,
+     -SD offers methods to retrieve a dictionnary of the attributes,
       dimensions and variables defined on a dataset, and of the attributes
       set on a variable and a dimension. Querying a dataset is thus geatly
       simplified.
 
-  -HDF datasets are read/written through "Numeric", a sophisticated
+  -SD datasets are read/written through "Numeric", a sophisticated
    python package for efficiently handling multi-dimensional arrays of
-   numbers. Numeric can nicely extend the HDF functionnality, eg.
+   numbers. Numeric can nicely extend the SD functionnality, eg.
    adding/subtracting arrays with the '+/-' operators.
 
+Accessing the SD module
+-----------------------
+To access the SD API a python program can say one of:
+
+  >>> import phdf            # must prefix names with "pyhdf.SD."
+  >>> from pyhdf import SD   # must prefix names with "SD."
+  >>> from pyhdf.SD import * # names need no prefix
+
+This document assumes the last import style is used.
+
+Numeric will also need to be imported:
+
+  >>> from Numeric import *
  
 Package components
 ------------------
 pyhdf is a proper Python package, eg a collection of modules stored under
-a directory named similarly to the package and holding an __init__.py 
-file. For each HDF API there exists a corresponding set of modules.
-The pyhdf package is currently composed of 3 modules defining the SD API.
+a directory whose name is that of the package and which stores an
+__init__.py file. Following the normal installation procedure, this
+directory will be <python-lib>/site-packages/pyhdf', where <python-lib>
+stands for the python installation directory.
+
+For each HDF API exists a corresponding set of modules.
+
+The following modules are related to the SD API.
 
   _hdfext   C extension module responsible for wrapping the HDF
-            library
-  sdext     python module implementing some utility functions
-            complementing the SD library routines
-  SD        python module which wraps the SD library rotines inside
+            C-library for all python modules
+  hdfext    python module implementing some utility functions
+            complementing the _hdfext extension module
+  error     defines the HDF4Error exception
+  SD        python module wrapping the SD API routines inside
             an OOP framework
 
-_hdfext and sdext were generated with the SWIG preprocessor.
+_hdfext and hdfext were generated using the SWIG preprocessor.
 SWIG is however *not* needed to run the package. Those two modules
 are meant to do their work in the background, and should never be called
 directly. Only 'pyhdf.SD' should be imported by the user program.
 
 Prerequisites
 -------------
-The following software must be installed in order for pyhdf to
+The following software must be installed in order for SD to
 work.
   
   HDF (v4) library
     pyhdf does *not* include the HDF4 library, which must
-    be installed separately. HDF is available at
+    be installed separately.
+
+    HDF is available at:
     "http://hdf.ncsa.uiuc.edu/obtain.html".
 
-  Numeric python package
-    HDF variables are read/written using the array data type provided
-    by the python Numeric package. It is available at
-    "numpy.sourceforge.net".
+The SD module also needs:
 
-Limitations
------------
-  -Version 0.5-2 does not support datasets using types UINT16 and UINT32.
+  Numeric python package
+    SD variables are read/written using the array data type provided
+    by the python Numeric package. Note that since version 0.6-1 of
+    pyhdf, version 22 or above of Numeric is needed for the support
+    of unsigned integer types.
+
+    Numeric is available at:
+    "http://numpy.sourceforge.net".
 
 Documentation
 -------------
@@ -138,12 +159,14 @@ to the C API, the manual can be easily used as a documentary source
 for pyhdf, once the class to which a function belongs has been
 identified, and of course once requirements imposed by the Python
 langage have been taken into account. Consequently, this documentation
-will not attempt to provide an exhaustive coverage of the HDF
-library. For this, the user is referred to the above mentioned manual.
+will not attempt to provide an exhaustive coverage of the HDF SD
+API. For this, the user is referred to the above manual.
+The documentation of each pyhdf method will indicate the name
+of the equivalent routine inside the C API.
   
 This document (in both its text and html versions) has been completely
 produced using "pydoc", the Python documentation generator (which
-made its debut in the 2.1 release). pydoc can also be used
+made its debut in the 2.1 Python release). pydoc can also be used
 as an on-line help tool. For example, to know everything about
 the SD.SDS class, say:
   
@@ -156,21 +179,24 @@ SDS class:
 
   >>> help(SDS.get)   # or...
   >>> help(vinst.get) # if vinst is an SDS instance
+
+pydoc can also be called from the command line, as in:
+
+  % pydoc pyhdf.SD.SDS        # doc for the whole SDS class
+  % pydoc pyhdf.SD.SDS.get    # doc for the SDS.get method
   
 Summary of differences between the pyhdf and C SD API
 -----------------------------------------------------
 Most of the differences between the pyhdf and C SD API can
 be summarized as follows.
 
-  Return values
-  
    -In the C API, every function returns an integer status code, and values
     computed by the function are returned through one or more pointers
     passed as arguments.
    -In pyhdf, error statuses are returned through the Python exception
     mechanism, and values are returned as the method result. When the
     C API specifies that multiple values are returned, pyhdf returns a 
-    tuple of values, which are ordered similarly as the pointers in the
+    tuple of values, which are ordered similarly to the pointers in the
     C function argument list.
    
 Error handling
@@ -183,10 +209,12 @@ Unfortunately, the C library is rarely informative about the cause of
 the error. pyhdf does its best to try to document the error, but most 
 of the time cannot do more than saying "execution error".
  
-High level attribute access
----------------------------
-HDF allows setting attributes either at the dataset, the variable
-or the dimension level. With pyhdf, this can can be achieved in two ways.
+Attribute access: low and high level
+------------------------------------
+In the SD API, attributes can be of many types (integer, float, string,
+etc) and can be single or multi-valued. Attributes can be set either at
+the dataset, the variable or the dimension level. This can can be achieved
+in two ways.
 
   -By calling the get()/set() method of an attribute instance. In the
    following example, HDF file 'example.hdf' is created, and string
@@ -196,8 +224,7 @@ or the dimension level. With pyhdf, this can can be achieved in two ways.
      >>> d = SD('example.hdf',SDC.WRITE|SDC.CREATE)  # create file
      >>> att = d.attr('title')            # create attribute instance
      >>> att.set(SDC.CHAR, 'example')     # set attribute type and value
-     >>> att.get()                        # get attribute value
-     'example'
+     >>> print att.get()                  # get attribute value
      >>>
 
   -By handling the attribute like an ordinary Python class attribute.
@@ -205,29 +232,29 @@ or the dimension level. With pyhdf, this can can be achieved in two ways.
      >>> from pyhdf.SD import *
      >>> d = SD('example.hdf',SDC.WRITE|SDC.CREATE)  # create dataset
      >>> d.title = 'example'              # set attribute type and value
-     >>> d.title                          # get attribute value
-     'example'
+     >>> print d.title                    # get attribute value
      >>>
 
-  This applies as well to multi-valued attributes.
-    >>> att = d.attr('values')               # With an attribute instance
-    >>> att.set(SDC.INT32, (1,2,3,4,5))           
-    >>> att.get()
+What has been said above applies as well to multi-valued attributes.
+    >>> att = d.attr('values')            # With an attribute instance
+    >>> att.set(SDC.INT32, (1,2,3,4,5))   # Assign 5 ints as attribute value
+    >>> att.get()                         # Get attribute values
     [1, 2, 3, 4, 5]
 
-    >>> d.values = (1,2,3,4,5)               # As a Python class attribute
-    >>> d.values
+    >>> d.values = (1,2,3,4,5)            # As a Python class attribute
+    >>> d.values                          # Get attribute values
     [1, 2, 3, 4, 5]
 
-When the attribute is known by its name through a string, standard
-functions 'setattr()' and 'getattr()' can be used to replace the dot
-notation. Above example becomes:
+When the attribute is known by its name , standard functions 'setattr()'
+and 'getattr()' can be used to replace the dot notation.
+Above example becomes:
     >>> setattr(d, 'values', (1,2,3,4,5))
     >>> getattr(d, 'values')
     [1, 2, 3, 4, 5]
 
-Handling a HDF attribute like a Python class attribute is admittedly
-more natural, and also simpler. Some control is however lost in doing so.
+Handling a SD attribute like a Python class attribute is admittedly
+more natural, and also much simpler. Some control is however lost in
+doing so.
   -Attribute type cannot be specified. pyhdf automatically selects one of
    three types according to the value(s) assigned to the attribute:
    SDC.CHAR if value is a string, SDC.INT32 if all values are integral,
@@ -236,9 +263,9 @@ more natural, and also simpler. Some control is however lost in doing so.
   -Attribute properties (length, type, index number) can only be queried
    through methods of an attribute instance.
 
-High level variable access
---------------------------
-With pyhdf, datasets can be read/written in two ways.
+Variable access: low and high level
+-----------------------------------
+Similarly to attributes, datasets can be read/written in two ways.
 
 The first way is through the get()/set() methods of a dataset instance.
 Those methods accept parameters to specify the starting indices, the count
@@ -256,7 +283,7 @@ array, except that data is read from/written to a file instead of memory.
 
 Extended indexing let you access variable elements with the familiar
 [i,j,...] notation, with one index per dimension. For example, if 'm' is a
-3x3x3 HDF dataset, one could write:
+rank 3 dataset, one could write:
     >>> m[0,3,5] = m[0,5,3]
     
 When indexing is used to select a dimension in a 'get' operation, this
@@ -306,15 +333,15 @@ Reading/setting multivalued HDF attributes and variables
 --------------------------------------------------------
 Multivalued HDF attributes are set using a python sequence (tuple or
 list). Reading such an attribute returns a python list. The easiest way to
-read/set am HDF attribute is by handling it like a Python class attribute
+read/set an attribute is by handling it like a Python class attribute
 (see "High level attribute access"). For example:
     >>> d=SD('test.hdf',SDC.WRITE|SDC.CREATE)  # create file
     >>> d.integers = (1,2,3,4)         # define multivalued integer attr
     >>> d.integers                     # get the attribute value
     [1, 2, 3, 4]
 
-The easiest way to set multivalued HDF datasets is to assign to an
-indexed subset of the dataset, using "[:]" to assign to the whole dataset
+The easiest way to set multivalued HDF datasets is to assign to a
+subset of the dataset, using "[:]" to assign to the whole dataset
 (see "High level variable access"). The assigned value can be a python
 sequence, which can be multi-leveled when assigning to a multdimensional
 dataset. For example:
@@ -334,14 +361,14 @@ Note how we use indexing expressions 'v1[:]' and 'v2[:]' when assigning
 using python sequences, and just the variable names when assigning Numeric
 arrays.
 
-Reading an HDF variable always returns a Numeric array, except if
+Reading an HDF dataset always returns a Numeric array, except if
 indexing is used and produces a rank-0 array, in which case a scalar is
 returned.
 
 netCDF files
 ------------
 Files written in the popular Unidata netCDF format can be read and updated
-using the HDF SD API. Unfortunately, pyhdf cannot create netCDF formatted
+using the HDF SD API. However, pyhdf cannot create netCDF formatted
 files from scratch. The python 'pycdf' package can be used for that.
 
 When accessing netCDF files through pyhdf, one should be aware of the
@@ -352,25 +379,37 @@ following differences between the netCDF and the HDF SD libraries.
    a dataset is called a 'variable' in netCDF parlance.
   -In the netCDF API, dimensions are defined at the global (netCDF dataset)
    level. Thus, two netCDF variables defined over dimensions X and Y
-   have the same rank and shape.
-  -In the HDF SD API, dimensions are defined at the HDF dataset level.
-   Dimensions can be named, but this is only a commodity. Dimension X for
-   variable A can be totally different from dimension X of variable B.
-  -A consequence of the global dimension definition feature in netCDF is
-   that, when two netCDF variables are based on the unlimited dimension,
+   necessarily have the same rank and shape.
+  -In the HDF SD API, dimensions are defined at the HDF dataset level,
+   except when they are named. Dimensions with the same name are considered
+   to be "shared" between all the file datasets. They must be of the same
+   length, and they share all their scales and attributes. For example,
+   setting an attribute on a shared dimension affects all datasets sharing
+   that dimension.
+  -When two or more netCDF variables are based on the unlimited dimension,
    they automatically grow in sync. If variables A and B use the unlimited
    dimension, adding "records" to A along its unlimited dimension
    implicitly adds records in B (which are left in an undefined state and
    filled with the fill_value when the file is refreshed).
   -In HDF, unlimited dimensions behave independently. If HDF datasets A and
    B are based on an unlimited dimension, adding records to A does not
-   affect the number of records in B.
+   affect the number of records to B. This is true even if the unlimited
+   dimensions bear the same name (they do not appear to be "shared" as is
+   the case when the dimensions are fixed).
 
 
 Classes summary
 ---------------
-pyhdf defines the following classes.
+pyhdf wraps the SD API using different types of python classes:
 
+  SD     HDF SD interface (almost synonymous with the subset of the
+         HDF file holding all the SD datasets)
+  SDS    scientific dataset
+  SDim   dataset dimension
+  SDAttr attribute (either at the file, dataset or dimension level)
+  SDC    constants (opening modes, data types, etc)
+
+In more detail:
 
   SD     The SD class implements the HDF SD interface as applied to a given
          file. This class encapsulates the "SD interface" identifier
@@ -384,7 +423,9 @@ pyhdf defines the following classes.
              SD()          open an existing HDF file or create a new one,
                            returning an SD instance
              attr()        create an SDAttr (attribute) instance to access
-                           an existing file attribute or create a new one
+                           an existing file attribute or create a new one;
+                           "dot notation" can also be used to get and set
+                           an attribute
              create()      create a new dataset, returning an SDS instance
              select()      locate an existing dataset given its name or
                            index number, returning an SDS instance
@@ -419,14 +460,15 @@ pyhdf defines the following classes.
          SDS (dataset) or dimension (SDim) object, and call its attr()
          method.
 
+         NOTE. An attribute can also be read/written like
+               a python class attribute, using the familiar
+               dot notation. See "High level attribute access".
+
          methods:
            read/write value
              get()         get the attribute value
              set()         set the attribute value
 
-                           An attribute can also be read/written like
-                           a python class attribute, using the familiar
-                           dot notation. See "High level attribute access".
            
            inquiry
              index()       get the attribute index number
@@ -438,30 +480,31 @@ pyhdf defines the following classes.
          data types. Constants are named after their C API counterparts.
 
            file opening modes:
-             SDC.CREATE
-             SDC.READ
-             SDC.TRUNC      # specific to pyhdf
-             SDC.WRITE
+             SDC.CREATE      create file if non existent
+             SDC.READ        read-only mode
+             SDC.TRUNC       truncate file if already exists
+             SDC.WRITE       read-write mode
 
            data types:
-             SDC.CHAR
-             SDC.CHAR8
-             SDC.UCHAR8
-             SDC.INT8
-             SDC.UINT8
-             SDC.INT16
-             SDC.UINT16
-             SDC.INT32
-             SDC.INT32     
-             SDC.FLOAT32
-             SDC.FLOAT64
+             SDC.CHAR        8-bit character
+             SDC.CHAR8       8-bit character
+             SDC.UCHAR       unsigned 8-bit integer
+             SDC.UCHAR8      unsigned 8-bit integer
+             SDC.INT8        signed 8-bit integer
+             SDC.UINT8       unsigned 8-bit integer
+             SDC.INT16       signed 16-bit integer
+             SDC.UINT16      unsigned 16-bit intege
+             SDC.INT32       signed 32-bit integer
+             SDC.UINT32      unsigned 32-bit integer
+             SDC.FLOAT32     32-bit floating point
+             SDC.FLOAT64     64-bit floaring point
 
            dataset fill mode:
              SDC.FILL
              SDC.NOFILL
 
            dimension:
-             SDC.UNLIMITED
+             SDC.UNLIMITED   dimension can grow dynamically
 
            data compression:
              COMP_NONE
@@ -479,7 +522,9 @@ pyhdf defines the following classes.
            constructors
              attr()        create an SDAttr (attribute) instance to access
                            an existing dataset attribute or create a
-                           new one
+                           new one; "dot notation" can also be used to get
+                           and set an attribute
+
              dim()         return an SDim (dimension) instance for a given
                            dataset dimension, given the dimension index
                            number
@@ -542,7 +587,9 @@ pyhdf defines the following classes.
            constructors
              attr()         create an SDAttr (attribute) instance to access
                             an existing dimension attribute or create a
-                            new one
+                            new one; "dot notation" can also be used to
+                            get and set an attribute
+
            inquiry
              attributes()   return a dictionnary describing every 
                             attribute defined on the dimension
@@ -560,17 +607,121 @@ pyhdf defines the following classes.
                               long_name, units, format
              setstrs()      set the dimension standard string attributes
              
+Data types
+----------
+Data types come into play when first defining datasets and their attributes,
+and later when querying the definition of those objects.
+Data types are specified using the symbolic constants defined inside the
+SDC class of the SD module.
+
+  - CHAR and CHAR8 (equivalent): an 8-bit character. 
+  - UCHAR, UCHAR8 and UINT8 (equivalent): unsigned 8-bit values (0 to 255)
+  - INT8:    signed 8-bit values (-128 to 127)
+  - INT16:   signed 16-bit values
+  - UINT16:  unsigned 16 bit values
+  - INT32:   signed 32 bit values
+  - UINT32:  unsigned 32 bit values
+  - FLOAT32: 32 bit floating point values (C floats)
+  - FLOAT64: 64 bit floating point values (C doubles)
+
+There is no explicit "string" type. To simulate a string, set the 
+type to CHAR, and set the length to a value of 'n' > 1. This creates and
+"array of characters", close to a string (except that strings will always
+be of length 'n', right-padded with spaces if necessary).
+
+
+Programming models
+------------------
+
+Writing
+-------
+The following code can be used as a model to create an SD dataset.
+It shows how to use the most important functionnalities
+of the SD interface needed to initialize a dataset.
+A real program should of course add error handling.
+
+    # Import SD and Numeric.
+    from pyhdf.SD import *
+    from Numeric import *
+
+    fileName = 'template.hdf'
+    # Create HDF file.
+    hdfFile = SD(fileName ,SDC.WRITE|SDC.CREATE)
+    # Assign a few attributes at the file level
+    hdfFile.author = 'It is me...'
+    hdfFile.priority = 2
+    # Create a dataset named 'd1' to hold a 3x3 float array.
+    d1 = hdfFile.create('d1', SDC.FLOAT32, (3,3))
+    # Set some attributs on 'd1'
+    d1.description = 'Sample 3x3 float array'
+    d1.units = 'celsius'
+    # Name 'd1' dimensions and assign them attributes.
+    dim1 = d1.dim(0)
+    dim2 = d1.dim(1)
+    dim1.setname('width')
+    dim2.setname('height')
+    dim1.units = 'm'
+    dim2.units = 'cm'
+    # Assign values to 'd1'
+    d1[0]  = (14.5, 12.8, 13.0)  # row 1
+    d1[1:] = ((-1.3, 0.5, 4.8),  # row 2 and
+              (3.1, 0.0, 13.8))  # row 3
+    # Close dataset
+    d1.endaccess()
+    # Close file
+    hdfFile.end()
+
+Reading
+-------
+The following code, which reads the dataset created above, can also serve as
+a model for any program which needs to access an SD dataset.
+
+    # Import SD and Numeric.
+    from pyhdf.SD import *
+    from Numeric import *
+
+    fileName = 'template.hdf'
+    # Open file in read-only mode (default)
+    hdfFile = SD(fileName)
+    # Display attributes.
+    print "file:", fileName
+    print "author:", hdfFile.author
+    print "priority:", hdfFile.priority
+    # Open dataset 'd1'
+    d1 = hdfFile.select('d1')
+    # Display dataset attributes.
+    print "dataset:", 'd1'
+    print "description:",d1.description
+    print "units:", d1.units
+    # Display dimensions info.
+    dim1 = d1.dim(0)
+    dim2 = d1.dim(1)
+    print "dimensions:"
+    print "dim1: name=", dim1.info()[0], 
+    print "length=", dim1.length(), 
+    print "units=", dim1.units
+    print "dim2: name=", dim2.info()[0], 
+    print "length=", dim2.length(), 
+    print "units=", dim2.units
+    # Show dataset values
+    print d1[:]
+    # Close dataset
+    d1.endaccess()
+    # Close file
+    hdfFile.end()
+
+
 Examples
 --------
 
 Example-1
-
+---------
 The following simple example exercises some important pyhdf.SD methods. It
 shows how to create an HDF dataset, define attributes and dimensions,
 create variables, and assign their contents.
 
 Suppose we have a series of text files each defining a 2-dimensional real-
-values matrix. First line holds the matrix dimensions, and following lines
+valued matrix. First line holds the matrix dimensions, and following lines
 hold matrix values, one row per line. The following procedure will load
 into an HDF dataset the contents of any one of those text files. The
 procedure computes the matrix min and max values, storing them as
@@ -653,7 +804,7 @@ We could now call the procedure as follows:
 
 
 Example 2
-
+---------
 This example shows a usefull python program that will display the
 structure of the SD component of any HDF file whose name is given on
 the command line. After the HDF file is opened, high level inquiry methods
@@ -811,14 +962,55 @@ import os, sys, types
 import hdfext as _C
 from error import _checkErr, HDF4Error
 
-# List of names we want to be imported by an "from pyhdf import *"
+# List of names we want to be imported by an "from pyhdf.SD import *"
 # statement
 
 __all__ = ['SD', 'SDAttr', 'SDC', 'SDS', 'SDim']
 
+try:
+    import Numeric as _toto
+    del _toto
+except ImportError:
+    raise HDF4Error, "Numeric package required but not installed"
 
 class SDC:
-    """The SDC class holds contants defining opening modes and data types."""
+    """The SDC class holds contants defining opening modes and data types.
+
+           file opening modes:
+             SDC.CREATE     4    create file if non existent
+             SDC.READ       1    read-only mode
+             SDC.TRUNC    256    truncate file if already exists
+             SDC.WRITE      2    read-write mode
+
+           data types:
+             SDC.CHAR       4    8-bit character
+             SDC.CHAR8      4    8-bit character
+             SDC.UCHAR      3    unsigned 8-bit integer
+             SDC.UCHAR8     3    unsigned 8-bit integer
+             SDC.INT8      20    signed 8-bit integer
+             SDC.UINT8     21    unsigned 8-bit integer
+             SDC.INT16     22    signed 16-bit integer
+             SDC.UINT16    23    unsigned 16-bit intege
+             SDC.INT32     24    signed 32-bit integer
+             SDC.UINT32    25    unsigned 32-bit integer
+             SDC.FLOAT32    5    32-bit floating point
+             SDC.FLOAT64    6    64-bit floaring point
+
+           dataset fill mode:
+             SDC.FILL       0
+             SDC.NOFILL   256
+
+           dimension:
+             SDC.UNLIMITED  0    dimension can grow dynamically
+
+           data compression:
+             COMP_NONE      0
+             COMP_RLE       1
+             COMP_NBIT      2
+             COMP_SKPHUFF   3
+             COMP_DEFLATE   4
+
+"""
 
     CREATE       = _C.DFACC_CREATE
     READ         = _C.DFACC_READ
@@ -848,18 +1040,35 @@ class SDC:
     COMP_NBIT    = _C.COMP_CODE_NBIT
     COMP_SKPHUFF = _C.COMP_CODE_SKPHUFF
     COMP_DEFLATE = _C.COMP_CODE_DEFLATE
-    
 
-# NOTE:
-#  UCHAR8 and UINT8 are handled similarly (signed byte -128,...,0,...127)
-#  INT64 and UINT64 are not yet supported py pyhdf
+    # Types with an equivalent in the Numeric package
+    # NOTE:
+    #  CHAR8 and INT8 are handled similarly (signed byte -128,...,0,...127)
+    #  UCHAR8 and UINT8 are treated equivalently (unsigned byte: 0,1,...,255)
+    #  UINT16 and UINT32 are supported depending on the version of Numeric
+    #  installed (supported in version 22 and up)
+    #  INT64 and UINT64 are not yet supported py pyhdf
+    equivNumericTypes = [FLOAT32, FLOAT64,
+                         INT8, UINT8,
+                         INT16, 
+                         INT32,
+                         CHAR8, UCHAR8]
+    try:
+        from Numeric import UInt16 as _bozo
+        equivNumericTypes.append(UINT16)
+        from Numeric import UInt32 as _bozo
+        equivNumericTypes.append(UINT32)
+        del _bozo
+    except ImportError:
+        pass
+
 
 class SDAttr:
 
     def __init__(self, obj, index_or_name):
         """Init an SDAttr instance. Should not be called directly by
         the user program. An SDAttr instance must be created through
-        the attr() methos of the SD, SDS or SDim classes.
+        the attr() methods of the SD, SDS or SDim classes.
                                                 """
         # Args
         #  obj   object instance to which the attribute refers
@@ -900,8 +1109,6 @@ class SDAttr:
             
  
         C library equivalent : SDattrinfo
-                               Note: The C function does not accept an
-                               attribute name as argument.
                                                        """
         if self._index is None:
             try:
@@ -940,8 +1147,6 @@ class SDAttr:
           values are returned as a string
  
         C library equivalent : SDreadattr
-                               Note: The C function does not accept an
-                               attribute name as argument.
 
         Attributes can also be read like ordinary python attributes,
         using the dot notation. See "High level attribute access".
@@ -1087,7 +1292,7 @@ class SD:
 
 
     def __init__(self, path, mode=SDC.READ):
-        """Initialize an SD interface on an HDF file,
+        """SD constructor. Initialize an SD interface on an HDF file,
         creating the file if necessary.
  
         Args:
@@ -1108,9 +1313,9 @@ class SD:
                                   in which case the file is created
 
                    Note an important difference in the way CREATE is
-                   handled by the HDF library and the pyhdf package.
-                   For the library, CREATE indicates that a new file should
-                   always be created, overwriting an existing one if
+                   handled by the C library and the pyhdf package.
+                   For the C library, CREATE indicates that a new file
+                   should always be created, overwriting an existing one if
                    any. For pyhdf, CREATE indicates a new file should be
                    created only if it does not exist, and the overwriting
                    of an already existing file must be explicitly asked
@@ -1120,8 +1325,8 @@ class SD:
                    the way files are opened in the pycdf and pyhdf
                    packages. Also, this solves a limitation in the
                    hdf (and netCDF) library, where there is no easy way
-                   to implement the frequent requirement where
-                   a file has to be opened in read-write mode, or created
+                   to implement the frequent requirement that an existent
+                   file be opened in read-write mode, or created
                    if it does not exist.
 	
         Returns:
@@ -1132,9 +1337,16 @@ class SD:
 	# Private attributes:
 	#  _id:       file id
                                                    
+        # Make sure _id is initialized in case __del__ is called
+        # when the SD object goes out of scope after failing to
+        # open file. Failure to do so may put python into an infinite loop
+        # (thanks to Richard.Andrews@esands.com for reporting this bug).
+        self._id = None
+        
         # See if file exists.
         exists = os.path.exists(path)
 
+        # We must have either WRITE or READ flag.
         if SDC.WRITE & mode:
             if exists:
                 if SDC.TRUNC & mode:
@@ -1150,11 +1362,13 @@ class SD:
                     mode |= SDC.WRITE
                 else:
                     raise HDF4Error, "SD: no such file"
-        else:
+        elif SDC.READ & mode:
             if exists:
                 mode = SDC.READ
             else:
                 raise HDF4Error, "SD: no such file"
+        else:
+            raise HDF4Error, "SD: bad mode, READ or WRITE must be set"
                 
         id = _C.SDstart(path, mode)
         _checkErr('SD', id, "cannot open %s" % path)
@@ -1201,7 +1415,7 @@ class SD:
         self._id = None
 
     def info(self):
-        """Retrieve information about the contents of the HDF file.
+        """Retrieve information about the SD interface.
  
         Args:
           no argument
@@ -1280,8 +1494,8 @@ class SD:
                          dimensional array is specified with an integer,
                          an n-dimensional array with an n-element sequence
                          of integers; the length of the first dimension can
-                         be set to SDC.UNLIMITED to create a "record"
-                         variable.
+                         be set to SDC.UNLIMITED to create an unlimited
+                         dimension (a "record" variable).
 
                          IMPORTANT:  netCDF and HDF differ in the way
                          the UNLIMITED dimension is handled. In netCDF,
@@ -1335,7 +1549,7 @@ class SD:
 
     def attr(self, name_or_index):
         """Create an SDAttr instance representing a global
-        (file) attribute.
+        attribute (defined at the level of the SD interface).
 
         Args:
           name_or_index   attribute name or index number; if a name is
@@ -1356,7 +1570,7 @@ class SD:
 
     def attributes(self, full=0):
         """Return a dictionnary describing every global
-	attribute attached to the HDF file.
+	attribute attached to the SD interface.
 
 	Args:
           full      true to get complete info about each attribute
@@ -1439,7 +1653,8 @@ class SDS:
     To create an SDS instance, call the create() or select()
     methods of the SD class. To set attributes on an SDS instance,
     call the SDS.attr() method to create an attribute instance,
-    then call the methods of this instance. """
+    then call the methods of this instance. Attributes can also be
+    set using the "dot notation". """
 
     def __init__(self, sd, id):
         """This constructor should not be called by the user program.
@@ -1604,9 +1819,7 @@ class SDS:
                 raise HDF4Error, 'get arguments violate ' \
                                  'the size (%d) of dimension %d' \
                                  % (dim_sizes[n], n)
-        if not data_type in [SDC.FLOAT32, SDC.FLOAT64, SDC.INT8, SDC.UINT8,
-                             SDC.INT16, SDC.INT32, SDC.CHAR8,
-                             SDC.UCHAR8]:
+        if not data_type in SDC.equivNumericTypes:
             raise HDF4Error, 'get cannot currrently deal with '\
                              'the SDS data type'
 
@@ -1685,9 +1898,7 @@ class SDS:
                                  'the size (%d) of dimension %d' \
                                  % (dim_sizes[n], n)
         # ??? Check support for UINT16
-        if not data_type in [SDC.FLOAT32, SDC.FLOAT64, SDC.INT8, SDC.UINT8,
-                             SDC.INT16, SDC.INT32, SDC.CHAR8,
-                             SDC.UCHAR8]:
+        if not data_type in SDC.equivNumericTypes:
             raise HDF4Error, 'set cannot currrently deal '\
                              'with the SDS data type'
 
@@ -2473,7 +2684,8 @@ class SDim:
        To create an SDim instance, call the dim() method of an SDS class
        instance. To set attributes on an SDim instance, call the
        SDim.attr() method to create an attribute instance, then call the
-       methods of this instance. """
+       methods of this instance.  Attributes can also be set using the
+       "dot notation". """
 
     def __init__(self, sds, id, index):
         """Init an SDim instance. This method should not be called
@@ -2550,7 +2762,9 @@ class SDim:
         """Set the dimension name.
  
         Args:
-          dim_name    dimension name
+          dim_name    dimension name; setting 2 dimensions to the same
+                      name make the dimensions "shared"; in order to be
+                      shared, the dimesions must be deined similarly.
         Returns:
           None
  
