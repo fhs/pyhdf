@@ -1,5 +1,8 @@
-# $Id: SD.py,v 1.3 2004-08-02 15:22:59 gosselin Exp $
+# $Id: SD.py,v 1.4 2004-08-02 15:36:04 gosselin Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2004/08/02 15:22:59  gosselin
+# pyhdf -0.6-1
+#
 # Revision 1.2  2004/08/02 15:00:34  gosselin
 # pyhdf 0.5-2
 #
@@ -11,8 +14,8 @@ Author: Andre Gosselin
         Maurice-Lamontagne Institute
         gosselina@dfo-mpo.gc.ca
         
-Version: 0.6-1
-Date:    December 3 2003
+Version: 0.7-1
+Date:    FIXDATE
 
 Table of contents
 -----------------
@@ -41,8 +44,8 @@ the NCSA HDF library and letting one manage HDF files from within a python
 program. Two versions of the HDF library currently exist, version 4 and
 version 5. pyhdf only implements version 4 of the library. Many
 different APIs are to be found inside the HDF4 specification.
-Currently, pyhdf implements just a few of those: the SD and VS APIs.
-Other APIs should be added in the future (V, GR, AN, etc).
+Currently, pyhdf implements just a few of those: the SD, VS and V APIs.
+Other APIs should be added in the future (GR, AN, etc).
 
 The SD module implements the SD API of the HDF4 library, supporting what
 are known as "scientific datasets". The HDF SD API has many similarities
@@ -92,7 +95,7 @@ Accessing the SD module
 -----------------------
 To access the SD API a python program can say one of:
 
-  >>> import phdf            # must prefix names with "pyhdf.SD."
+  >>> import pyhdf.SD        # must prefix names with "pyhdf.SD."
   >>> from pyhdf import SD   # must prefix names with "SD."
   >>> from pyhdf.SD import * # names need no prefix
 
@@ -201,7 +204,7 @@ be summarized as follows.
    
 Error handling
 --------------
-All errors that the SD API reports with a SUCCESS/FAIL error code
+All errors that the C SD API reports with a SUCCESS/FAIL error code
 are reported by pyhdf using the Python exception mechanism.
 When the C library reports a FAIL status, pyhdf raises an HDF4Error
 exception (a subclass of Exception) with a descriptive message. 
@@ -1392,6 +1395,10 @@ class SD:
 
     def __setattr__(self, name, value):
         # Set value(s) of SD attribute 'name'.
+
+        # A name starting with an underscore will be treated as
+        # a standard python attribute, and as an HDF attribute
+        # otherwise.
 
         _setattr(self, name, value, ['_id'])
 
