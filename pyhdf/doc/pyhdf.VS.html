@@ -1,16 +1,14 @@
 wrote pyhdf.VS.html
 IC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html><head><title>Python: module pyhdf.VS</title>
-<style type="text/css"><!--
-TT { font-family: lucidatypewriter, lucida console, courier }
---></style></head><body bgcolor="#f0f0f8">
+</head><body bgcolor="#f0f0f8">
 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="pyhdf.html"><font color="#ffffff">pyhdf</font></a>.VS</strong></big></big></font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python2.2/site-packages/pyhdf/VS.py">/usr/lib/python2.2/site-packages/pyhdf/VS.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python2.4/site-packages/pyhdf/VS.py">/usr/lib/python2.4/site-packages/pyhdf/VS.py</a></font></td></tr></table>
     <p><tt>A&nbsp;module&nbsp;of&nbsp;the&nbsp;pyhdf&nbsp;package&nbsp;implementing&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;(Vdata&nbsp;table)<br>
 API&nbsp;of&nbsp;the&nbsp;NCSA&nbsp;HDF4&nbsp;library.<br>
 (see:&nbsp;hdf.ncsa.uiuc.edu)<br>
@@ -19,8 +17,8 @@ Author:&nbsp;Andre&nbsp;Gosselin<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maurice-Lamontagne&nbsp;Institute<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gosselina@dfo-mpo.gc.ca<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-Version:&nbsp;0.7-1<br>
-Date:&nbsp;&nbsp;&nbsp;&nbsp;FIXDATE<br>
+Version:&nbsp;0.7-3<br>
+Date:&nbsp;&nbsp;&nbsp;&nbsp;July&nbsp;13&nbsp;2005<br>
 &nbsp;<br>
 Table&nbsp;of&nbsp;contents<br>
 -----------------<br>
@@ -414,7 +412,7 @@ can&nbsp;be&nbsp;of&nbsp;many&nbsp;types&nbsp;(int,&nbsp;float,&nbsp;char)&nbsp;
 attribute&nbsp;must&nbsp;all&nbsp;be&nbsp;of&nbsp;the&nbsp;same&nbsp;type.<br>
 &nbsp;<br>
 Attributes&nbsp;can&nbsp;be&nbsp;set&nbsp;and&nbsp;queried&nbsp;in&nbsp;two&nbsp;different&nbsp;ways.&nbsp;First,&nbsp;given&nbsp;a<br>
-<a href="#VD">VD</a>&nbsp;instance&nbsp;(describing&nbsp;a&nbsp;vdata&nbsp;object)&nbsp;or&nbsp;a&nbsp;<a href="#VDField">VDField</a>&nbsp;instance&nbsp;(describing&nbsp;a<br>
+<a href="#VD">VD</a>&nbsp;instance&nbsp;(describing&nbsp;a&nbsp;vdata&nbsp;<a href="__builtin__.html#object">object</a>)&nbsp;or&nbsp;a&nbsp;<a href="#VDField">VDField</a>&nbsp;instance&nbsp;(describing&nbsp;a<br>
 vdata&nbsp;field),&nbsp;the&nbsp;attr()&nbsp;method&nbsp;of&nbsp;that&nbsp;instance&nbsp;is&nbsp;called&nbsp;to&nbsp;create&nbsp;a<br>
 <a href="#VDAttr">VDAttr</a>&nbsp;instance&nbsp;representing&nbsp;the&nbsp;wanted&nbsp;attribute&nbsp;(possibly&nbsp;non&nbsp;existent).<br>
 The&nbsp;set()&nbsp;method&nbsp;of&nbsp;this&nbsp;<a href="#VDAttr">VDAttr</a>&nbsp;instance&nbsp;is&nbsp;then&nbsp;called&nbsp;to&nbsp;define&nbsp;the<br>
@@ -481,7 +479,7 @@ to&nbsp;HDF&nbsp;attributes.&nbsp;pyhdf&nbsp;uses&nbsp;the&nbsp;following&nbsp;r
 starts&nbsp;with&nbsp;an&nbsp;underscore&nbsp;('_')&nbsp;is&nbsp;either&nbsp;a&nbsp;"predefined"&nbsp;attribute<br>
 (see&nbsp;below)&nbsp;or&nbsp;a&nbsp;standard&nbsp;python&nbsp;attribute.&nbsp;Otherwise,&nbsp;the&nbsp;attribute<br>
 is&nbsp;handled&nbsp;as&nbsp;an&nbsp;HDF&nbsp;attribute.&nbsp;Also,&nbsp;HDF&nbsp;attributes&nbsp;are&nbsp;not&nbsp;stored&nbsp;inside<br>
-the&nbsp;object&nbsp;dictionnary:&nbsp;the&nbsp;python&nbsp;dir()&nbsp;function&nbsp;will&nbsp;not&nbsp;list&nbsp;them.<br>
+the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;dictionnary:&nbsp;the&nbsp;python&nbsp;dir()&nbsp;function&nbsp;will&nbsp;not&nbsp;list&nbsp;them.<br>
 &nbsp;<br>
 Attribute&nbsp;values&nbsp;can&nbsp;be&nbsp;updated,&nbsp;but&nbsp;it&nbsp;is&nbsp;illegal&nbsp;to&nbsp;try&nbsp;to&nbsp;change&nbsp;the<br>
 value&nbsp;type,&nbsp;or&nbsp;the&nbsp;attribute&nbsp;order&nbsp;(number&nbsp;of&nbsp;values).&nbsp;This&nbsp;is&nbsp;important<br>
@@ -806,44 +804,47 @@ simplified&nbsp;by&nbsp;rewriting&nbsp;it&nbsp;as&nbsp;follows:<br>
 The&nbsp;indexing&nbsp;expression&nbsp;'vd[:]'&nbsp;returns&nbsp;the&nbsp;complete&nbsp;set&nbsp;of&nbsp;records,<br>
 which&nbsp;can&nbsp;then&nbsp;be&nbsp;looped&nbsp;over&nbsp;using&nbsp;a&nbsp;'for'&nbsp;statement.&nbsp;This&nbsp;style&nbsp;of&nbsp;loop<br>
 is&nbsp;quite&nbsp;clean,&nbsp;and&nbsp;should&nbsp;look&nbsp;very&nbsp;familiar&nbsp;to&nbsp;python&nbsp;adepts.</tt></p>
-
+<p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
     
-<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="pyhdf.hdfext.html">pyhdf.hdfext</a><br>
 </td><td width="25%" valign=top><a href="os.html">os</a><br>
 </td><td width="25%" valign=top><a href="sys.html">sys</a><br>
 </td><td width="25%" valign=top><a href="types.html">types</a><br>
-</td></tr></table></td></tr></table>
+</td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
     
-<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
 <dt><font face="helvetica, arial"><a href="pyhdf.VS.html#VD">VD</a>
 </font></dt><dt><font face="helvetica, arial"><a href="pyhdf.VS.html#VDAttr">VDAttr</a>
 </font></dt><dt><font face="helvetica, arial"><a href="pyhdf.VS.html#VDField">VDField</a>
 </font></dt><dt><font face="helvetica, arial"><a href="pyhdf.VS.html#VS">VS</a>
 </font></dt></dl>
- 
+</dd>
+</dl>
+ <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="VD">class <strong>VD</strong></a></font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="VD">class <strong>VD</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>The&nbsp;<a href="#VD">VD</a>&nbsp;class&nbsp;encapsulates&nbsp;the&nbsp;functionnality&nbsp;of&nbsp;a&nbsp;vdata.<br>
 To&nbsp;instantiate&nbsp;a&nbsp;<a href="#VD">VD</a>&nbsp;class,&nbsp;call&nbsp;the&nbsp;attach()&nbsp;or&nbsp;the&nbsp;create()<br>
 method&nbsp;of&nbsp;a&nbsp;<a href="#VS">VS</a>&nbsp;class&nbsp;instance.<br>&nbsp;</tt></td></tr>
-<tr><td>&nbsp;&nbsp;</td>
+<tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
-<dl><dt><a name="VD-_VD__buildStartCount"><strong>_VD__buildStartCount</strong></a> = __buildStartCount(self, elem, setitem<font color="#909090">=0</font>)</dt></dl>
-
 <dl><dt><a name="VD-__del__"><strong>__del__</strong></a>(self)</dt><dd><tt>Delete&nbsp;the&nbsp;instance,&nbsp;first&nbsp;calling&nbsp;the&nbsp;<a href="#VD-detach">detach</a>()&nbsp;method&nbsp;<br>
 if&nbsp;not&nbsp;already&nbsp;done.</tt></dd></dl>
 
@@ -1126,23 +1127,23 @@ Method&nbsp;<a href="#VD-seekend">seekend</a>()&nbsp;does&nbsp;just&nbsp;that.<b
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSwrite</tt></dd></dl>
 
 <hr>
-Data and non-method functions defined here:<br>
-<dl><dt><strong>__doc__</strong> = 'The VD class encapsulates the functionnality of ...r the create()<font color="#c040c0">\n</font>    method of a VS class instance.'</dl>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
-<dl><dt><strong>__module__</strong> = 'pyhdf.VS'</dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'VD' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
-</td></tr></table> 
+</td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="VDAttr">class <strong>VDAttr</strong></a></font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="VDAttr">class <strong>VDAttr</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>The&nbsp;<a href="#VDAttr">VDAttr</a>&nbsp;class&nbsp;encapsulates&nbsp;methods&nbsp;used&nbsp;to&nbsp;set&nbsp;and&nbsp;query&nbsp;attributes<br>
 defined&nbsp;at&nbsp;the&nbsp;level&nbsp;either&nbsp;of&nbsp;the&nbsp;vdata&nbsp;or&nbsp;of&nbsp;the&nbsp;vdata&nbsp;field.<br>
 To&nbsp;create&nbsp;an&nbsp;instance&nbsp;of&nbsp;this&nbsp;class,&nbsp;call&nbsp;the&nbsp;attr()&nbsp;method&nbsp;of&nbsp;a&nbsp;<a href="#VD">VD</a><br>
 (vdata)&nbsp;or&nbsp;<a href="#VDField">VDField</a>&nbsp;(vdata&nbsp;field)&nbsp;instance.<br>&nbsp;</tt></td></tr>
-<tr><td>&nbsp;&nbsp;</td>
+<tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="VDAttr-__init__"><strong>__init__</strong></a>(self, obj, name_or_index, fIndex)</dt></dl>
 
@@ -1191,22 +1192,22 @@ Returns:&nbsp;<br>
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSsetattr</tt></dd></dl>
 
 <hr>
-Data and non-method functions defined here:<br>
-<dl><dt><strong>__doc__</strong> = 'The VDAttr class encapsulates methods used to se...D<font color="#c040c0">\n</font>    (vdata) or VDField (vdata field) instance. '</dl>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
-<dl><dt><strong>__module__</strong> = 'pyhdf.VS'</dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'VDAttr' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
-</td></tr></table> 
+</td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="VDField">class <strong>VDField</strong></a></font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="VDField">class <strong>VDField</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>The&nbsp;<a href="#VDField">VDField</a>&nbsp;class&nbsp;represents&nbsp;a&nbsp;vdata&nbsp;field.<br>
 To&nbsp;create&nbsp;a&nbsp;<a href="#VDField">VDField</a>&nbsp;instance,&nbsp;call&nbsp;the&nbsp;field()&nbsp;method&nbsp;of&nbsp;a<br>
 <a href="#VD">VD</a>&nbsp;class&nbsp;instance.<br>&nbsp;</tt></td></tr>
-<tr><td>&nbsp;&nbsp;</td>
+<tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="VDField-__getattr__"><strong>__getattr__</strong></a>(self, name)</dt><dd><tt>Some&nbsp;field&nbsp;properties&nbsp;can&nbsp;be&nbsp;queried&nbsp;through&nbsp;the&nbsp;following<br>
 read-only&nbsp;attributes.&nbsp;Their&nbsp;names&nbsp;all&nbsp;start&nbsp;with&nbsp;an&nbsp;"_"&nbsp;to&nbsp;avoid<br>
@@ -1268,23 +1269,23 @@ Returns:<br>
 &nbsp;C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSfindattr</tt></dd></dl>
 
 <hr>
-Data and non-method functions defined here:<br>
-<dl><dt><strong>__doc__</strong> = 'The VDField class represents a vdata field.<font color="#c040c0">\n</font>    ...l the field() method of a<font color="#c040c0">\n</font>    VD class instance. '</dl>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
-<dl><dt><strong>__module__</strong> = 'pyhdf.VS'</dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'VDField' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
-</td></tr></table> 
+</td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="VS">class <strong>VS</strong></a></font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="VS">class <strong>VS</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>The&nbsp;<a href="#VS">VS</a>&nbsp;class&nbsp;implements&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;(Vdata)&nbsp;interface&nbsp;applied&nbsp;to&nbsp;an<br>
 HDF&nbsp;file.<br>
 To&nbsp;instantiate&nbsp;a&nbsp;<a href="#VS">VS</a>&nbsp;class,&nbsp;call&nbsp;the&nbsp;vstart()&nbsp;method&nbsp;of&nbsp;an<br>
 HDF&nbsp;instance.<br>&nbsp;</tt></td></tr>
-<tr><td>&nbsp;&nbsp;</td>
+<tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="VS-__del__"><strong>__del__</strong></a>(self)</dt><dd><tt>Delete&nbsp;the&nbsp;instance,&nbsp;first&nbsp;calling&nbsp;the&nbsp;<a href="#VS-end">end</a>()&nbsp;method&nbsp;<br>
 if&nbsp;not&nbsp;already&nbsp;done.</tt></dd></dl>
@@ -1427,29 +1428,17 @@ C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
 <dl><dt><a name="VS-vend"><strong>vend</strong></a> = <a href="#VS-end">end</a>(self)</dt></dl>
 
 <hr>
-Data and non-method functions defined here:<br>
-<dl><dt><strong>__doc__</strong> = 'The VS class implements the VS (Vdata) interface...call the vstart() method of an<font color="#c040c0">\n</font>    HDF instance. '</dl>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
-<dl><dt><strong>__module__</strong> = 'pyhdf.VS'</dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'VS' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
-</td></tr></table></td></tr></table>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#eeaa77">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
-    
-<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
-<td width="100%"><dl><dt><a name="-_array_to_ret"><strong>_array_to_ret</strong></a>(buf, nValues)</dt></dl>
- <dl><dt><a name="-_array_to_str"><strong>_array_to_str</strong></a>(buf, nValues)</dt></dl>
- <dl><dt><a name="-_setattr"><strong>_setattr</strong></a>(obj, name, value)</dt></dl>
-</td></tr></table>
+</td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
-<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
-<td width="100%"><strong>__all__</strong> = ['VS', 'VD', 'VDField', 'VDAttr']<br>
-<strong>__file__</strong> = '/usr/lib/python2.2/site-packages/pyhdf/VS.pyc'<br>
-<strong>__name__</strong> = 'pyhdf.VS'</td></tr></table>
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__all__</strong> = ['VS', 'VD', 'VDField', 'VDAttr']</td></tr></table>
 </body></html>

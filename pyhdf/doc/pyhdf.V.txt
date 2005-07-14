@@ -1,10 +1,10 @@
-Python Library Documentation: module pyhdf.V in pyhdf
+Help on module pyhdf.V in pyhdf:
 
 NAME
     pyhdf.V
 
 FILE
-    /usr/lib/python2.2/site-packages/pyhdf/V.py
+    /usr/lib/python2.4/site-packages/pyhdf/V.py
 
 DESCRIPTION
     A module of the pyhdf package implementing the V (Vgroup)
@@ -15,8 +15,8 @@ DESCRIPTION
             Maurice-Lamontagne Institute
             gosselina@dfo-mpo.gc.ca
             
-    Version: 0.7-1
-    Date:    FIXDATE
+    Version: 0.7-3
+    Date:    july 13 2005
     
     Table of contents
     -----------------
@@ -658,11 +658,12 @@ DESCRIPTION
     by the HDF library for its own internal needs.
 
 CLASSES
-    V
-    VG
-    VGAttr
+    __builtin__.object
+        V
+        VG
+        VGAttr
     
-    class V
+    class V(__builtin__.object)
      |  The V class implements the V (Vgroup) interface applied to an
      |  HDF file.
      |  To instantiate a V class, call the vgstart() method of an
@@ -715,7 +716,7 @@ CLASSES
      |      
      |      Args:
      |        num_name    either the reference number or the name of
-     |                    the vgroupe to delete
+     |                    the vgroup to delete
      |      Return
      |        None
      |      
@@ -773,13 +774,15 @@ CLASSES
      |      C library equivalent : Vgetid
      |  
      |  ----------------------------------------------------------------------
-     |  Data and non-method functions defined here:
+     |  Data and other attributes defined here:
      |  
-     |  __doc__ = 'The V class implements the V (Vgroup) interface ...all the ...
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
      |  
-     |  __module__ = 'pyhdf.V'
+     |  __weakref__ = <attribute '__weakref__' of 'V' objects>
+     |      list of weak references to the object (if defined)
     
-    class VG
+    class VG(__builtin__.object)
      |  The VG class encapsulates the functionnality of a vgroup.
      |  To instantiate a VG class, call the attach() or create() methods
      |  of a V class instance.
@@ -973,13 +976,15 @@ CLASSES
      |      C library equivalent : Vgettagrefs
      |  
      |  ----------------------------------------------------------------------
-     |  Data and non-method functions defined here:
+     |  Data and other attributes defined here:
      |  
-     |  __doc__ = 'The VG class encapsulates the functionnality of ...() or cr...
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
      |  
-     |  __module__ = 'pyhdf.V'
+     |  __weakref__ = <attribute '__weakref__' of 'VG' objects>
+     |      list of weak references to the object (if defined)
     
-    class VGAttr
+    class VGAttr(__builtin__.object)
      |  The VGAttr class encapsulates methods used to set and query
      |  attributes defined on a vgroup. To create an instance of this class,
      |  call the attr() method of a VG class.
@@ -1044,21 +1049,15 @@ CLASSES
      |      C library equivalent : Vsetattr
      |  
      |  ----------------------------------------------------------------------
-     |  Data and non-method functions defined here:
+     |  Data and other attributes defined here:
      |  
-     |  __doc__ = 'The VGAttr class encapsulates methods used to se...ss,\n   ...
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
      |  
-     |  __module__ = 'pyhdf.V'
-
-FUNCTIONS
-    _array_to_ret(buf, nValues)
-    
-    _array_to_str(buf, nValues)
-    
-    _setattr(obj, name, value)
+     |  __weakref__ = <attribute '__weakref__' of 'VGAttr' objects>
+     |      list of weak references to the object (if defined)
 
 DATA
     __all__ = ['V', 'VG', 'VGAttr']
-    __file__ = '/usr/lib/python2.2/site-packages/pyhdf/V.pyc'
-    __name__ = 'pyhdf.V'
+
 

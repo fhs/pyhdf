@@ -1,5 +1,8 @@
-# $Id: HDF.py,v 1.2 2004-08-02 15:36:04 gosselin Exp $
+# $Id: HDF.py,v 1.3 2005-07-14 01:36:41 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/08/02 15:36:04  gosselin
+# pyhdf-0.7-1
+#
 # Revision 1.1  2004/08/02 15:22:59  gosselin
 # Initial revision
 #
@@ -12,8 +15,8 @@ Author: Andre Gosselin
         Maurice-Lamontagne Institute
         gosselina@dfo-mpo.gc.ca
         
-Version: 0.7-1
-Date:    FIXDATE
+Version: 0.7-3
+Date:    July 13 2005
 
 Introduction
 ------------
@@ -126,7 +129,7 @@ def ishdf(filename):
     return _C.Hishdf(filename)
 
 
-class HDF:
+class HDF(object):
     """The HDF class encapsulates the basic HDF functions.
     Its main use is to open and close an HDF file, and return
     instances of the major HDF APIs (except for SD).

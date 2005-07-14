@@ -1,10 +1,10 @@
-Python Library Documentation: module pyhdf.SD in pyhdf
+Help on module pyhdf.SD in pyhdf:
 
 NAME
     pyhdf.SD
 
 FILE
-    /usr/lib/python2.2/site-packages/pyhdf/SD.py
+    /usr/lib/python2.4/site-packages/pyhdf/SD.py
 
 DESCRIPTION
     A module of the pyhdf package implementing the SD (scientific
@@ -15,8 +15,8 @@ DESCRIPTION
             Maurice-Lamontagne Institute
             gosselina@dfo-mpo.gc.ca
             
-    Version: 0.7-1
-    Date:    FIXDATE
+    Version: 0.7-3
+    Date:    July 13 2005
     
     Table of contents
     -----------------
@@ -133,15 +133,21 @@ DESCRIPTION
     
     Prerequisites
     -------------
-    The following software must be installed in order for SD to
+    The following software must be installed in order for pyhdf release 0.7-3 to
     work.
       
-      HDF (v4) library
+      HDF (v4) library, release 4.2r1
         pyhdf does *not* include the HDF4 library, which must
         be installed separately.
     
         HDF is available at:
         "http://hdf.ncsa.uiuc.edu/obtain.html".
+    
+      HDF4.2r1 in turn needs the following packages :
+      
+        libjpeg (jpeg library) release 6b
+        libz    (zlib library) release 1.1.4 or above
+        libsz   (SZIP library) release 2.0
     
     The SD module also needs:
     
@@ -511,11 +517,15 @@ DESCRIPTION
                  SDC.UNLIMITED   dimension can grow dynamically
     
                data compression:
-                 COMP_NONE
-                 COMP_RLE
-                 COMP_NBIT
-                 COMP_SKPHUFF
-                 COMP_DEFLATE
+                 SDC.COMP_NONE
+                 SDC.COMP_RLE
+                 SDC.COMP_NBIT
+                 SDC.COMP_SKPHUFF
+                 SDC.COMP_DEFLATE
+                 SDC.COMP_SZIP
+                 SDC.COMP_SZIP_EC
+                 SDC.COMP_SZIP_NN
+                 SDC.COMP_SZIP_RAW
     
       SDS    The SDS class implements an HDF scientific dataset (SDS) object.
     
@@ -576,8 +586,8 @@ DESCRIPTION
                  setrange()     set the dataset min and max values
     
                compression
-                 getcompress()  get the dataset compression type
-                 setcompress()  set the dataset compression type
+                 getcompress()  get info about the dataset compression type and mode
+                 setcompress()  set the dataset compression type and mode
                  
                misc
                  setexternalfile()  store the dataset in an external file
@@ -959,13 +969,28 @@ DESCRIPTION
         print "HDF4Error", msg
 
 CLASSES
-    SD
-    SDAttr
-    SDC
-    SDS
-    SDim
+    __builtin__.object
+        SD
+        SDAttr
+        SDC
+        SDS
+        SDim
+    exceptions.Exception
+        pyhdf.error.HDF4Error
     
-    class SD
+    class HDF4Error(exceptions.Exception)
+     |  Methods defined here:
+     |  
+     |  __init__(self, args=None)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from exceptions.Exception:
+     |  
+     |  __getitem__(...)
+     |  
+     |  __str__(...)
+    
+    class SD(__builtin__.object)
      |  The SD class implements an HDF SD interface.
      |  To instantiate an SD class, call the SD() constructor.
      |  To set attributes on an SD instance, call the SD.attr()
@@ -1181,13 +1206,15 @@ CLASSES
      |      C library equivalent: SDsetfillmode
      |  
      |  ----------------------------------------------------------------------
-     |  Data and non-method functions defined here:
+     |  Data and other attributes defined here:
      |  
-     |  __doc__ = 'The SD class implements an HDF SD interface.\n   ...nce, th...
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
      |  
-     |  __module__ = 'pyhdf.SD'
+     |  __weakref__ = <attribute '__weakref__' of 'SD' objects>
+     |      list of weak references to the object (if defined)
     
-    class SDAttr
+    class SDAttr(__builtin__.object)
      |  Methods defined here:
      |  
      |  __init__(self, obj, index_or_name)
@@ -1259,13 +1286,15 @@ CLASSES
      |      using the dot notation. See "High level attribute access".
      |  
      |  ----------------------------------------------------------------------
-     |  Data and non-method functions defined here:
+     |  Data and other attributes defined here:
      |  
-     |  __doc__ = None
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
      |  
-     |  __module__ = 'pyhdf.SD'
+     |  __weakref__ = <attribute '__weakref__' of 'SDAttr' objects>
+     |      list of weak references to the object (if defined)
     
-    class SDC
+    class SDC(__builtin__.object)
      |  The SDC class holds contants defining opening modes and data types.
      |  
      |  file opening modes:
@@ -1296,13 +1325,18 @@ CLASSES
      |    SDC.UNLIMITED  0    dimension can grow dynamically
      |  
      |  data compression:
-     |    COMP_NONE      0
-     |    COMP_RLE       1
-     |    COMP_NBIT      2
-     |    COMP_SKPHUFF   3
-     |    COMP_DEFLATE   4
+     |    SDC.COMP_NONE      0
+     |    SDC.COMP_RLE       1
+     |    SDC.COMP_NBIT      2
+     |    SDC.COMP_SKPHUFF   3
+     |    SDC.COMP_DEFLATE   4
+     |    SDC.COMP_SZIP      5
      |  
-     |  Data and non-method functions defined here:
+     |    SDC.COMP_SZIP_EC     4
+     |    SDC.COMP_SZIP_NN    32
+     |    SDC.COMP_SZIP_RAW  128
+     |  
+     |  Data and other attributes defined here:
      |  
      |  CHAR = 4
      |  
@@ -1317,6 +1351,14 @@ CLASSES
      |  COMP_RLE = 1
      |  
      |  COMP_SKPHUFF = 3
+     |  
+     |  COMP_SZIP = 5
+     |  
+     |  COMP_SZIP_EC = 4
+     |  
+     |  COMP_SZIP_NN = 32
+     |  
+     |  COMP_SZIP_RAW = 128
      |  
      |  CREATE = 4
      |  
@@ -1352,13 +1394,15 @@ CLASSES
      |  
      |  WRITE = 2
      |  
-     |  __doc__ = 'The SDC class holds contants defining opening mo... COMP_SK...
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
      |  
-     |  __module__ = 'pyhdf.SD'
+     |  __weakref__ = <attribute '__weakref__' of 'SDC' objects>
+     |      list of weak references to the object (if defined)
      |  
      |  equivNumericTypes = [5, 6, 20, 21, 22, 24, 4, 3, 23, 25]
     
-    class SDS
+    class SDS(__builtin__.object)
      |  The SDS class implements an HDF dataset object.
      |  To create an SDS instance, call the create() or select()
      |  methods of the SD class. To set attributes on an SDS instance,
@@ -1367,8 +1411,6 @@ CLASSES
      |  set using the "dot notation".
      |  
      |  Methods defined here:
-     |  
-     |  _SDS__buildStartCountStride = __buildStartCountStride(self, elem)
      |  
      |  __del__(self)
      |  
@@ -1533,16 +1575,31 @@ CLASSES
      |      C library equivalent: SDgetcal()
      |  
      |  getcompress(self)
-     |      Retrieves data set compression type.
+     |      Retrieves info about dataset compression type and mode.
      |      
      |      Args:
      |        no argument
      |      Returns: 
-     |        2-element tuple holding :
-     |          -compression type, one of the SDC.COMP_xxx constants
-     |          -auxiliary value for some of the compression types
+     |        tuple holding :
+     |          -compression type (one of the SDC.COMP_xxx constants)
+     |          -one one more auxiliary values, depending on the compression type
+     |             COMP_SKPHUFF    1 value  : skip size
+     |             COMP_DEFLATE    1 value  : level (1 to 9)
+     |             COMP_SZIP       5 values : options mask,
+     |                                        pixels per block (2 to 32)
+     |                                        pixels per scanline,
+     |                                        bits per pixel (number of bits in the SDS datatype) 
+     |                                        pixels (number of elements in the SDS)
      |      
-     |      An exception is raised if compression is not set.
+     |                                        Note: in the context of an SDS, the word "pixel"
+     |                                        should really be understood as meaning "data element",
+     |                                        eg a cell value inside a multidimensional grid.
+     |                                        Test the options mask against constants SDC.COMP_SZIP_NN
+     |                                        and SDC.COMP_SZIP_EC, eg :
+     |                                          if optionMask & SDC.COMP_SZIP_EC:
+     |                                              print "EC encoding scheme used"
+     |      
+     |      An exception is raised if dataset is not compressed.
      |      
      |      C library equivalent: SDgetcompress
      |  
@@ -1714,20 +1771,26 @@ CLASSES
      |      
      |      C library equivalent: SDsetcal
      |  
-     |  setcompress(self, comp_type, value=0)
-     |      Compresses the data set using a specified compression method.
+     |  setcompress(self, comp_type, value=0, v2=0)
+     |      Compresses the dataset using a specified compression method.
      |      
      |      Args:
      |        comp_type    compression type, identified by one of the
      |                     SDC.COMP_xxx constants
-     |        value        auxiliary value needed by some compression types
-     |                     (data size for SDC.COMP_SKPHUFF, deflate level
-     |                     for SDC.COMP_DEFLATE; omit for other types)
+     |        value,v2     auxiliary value(s) needed by some compression types
+     |                       SDC.COMP_SKPHUFF   value=data size, v2 is ignored
+     |                       SDC.COMP_DEFLATE   value=deflate level (1 to 9), v2 is ignored
+     |                       SDC.COMP_SZIP      value=encoding scheme (SDC.COMP_SZIP_EC or
+     |                                          SDC.COMP_SZIP_NN), v2=pixels per block (2 to 32)
      |      Returns: None
      |      
      |      SDC.COMP_DEFLATE applies the GZIP compression to the dataset,
      |      and the value varies from 1 to 9, according to the level of
      |      compression desired.
+     |      
+     |      SDC.COMP_SZIP compresses the dataset using the SZIP algorithm. See the HDF User's Guide
+     |      for details about the encoding scheme and the number of pixels per block. SZIP is new
+     |      with HDF 4.2.
      |      
      |      'setcompress' must be called before writing to the dataset.
      |      The dataset must be written all at once, unless it is 
@@ -1802,13 +1865,15 @@ CLASSES
      |      C library equivalent: SDsetrange
      |  
      |  ----------------------------------------------------------------------
-     |  Data and non-method functions defined here:
+     |  Data and other attributes defined here:
      |  
-     |  __doc__ = 'The SDS class implements an HDF dataset object.\n...es can ...
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
      |  
-     |  __module__ = 'pyhdf.SD'
+     |  __weakref__ = <attribute '__weakref__' of 'SDS' objects>
+     |      list of weak references to the object (if defined)
     
-    class SDim
+    class SDim(__builtin__.object)
      |  The SDim class implements a dimension object.
      |  There can be one dimension object for each dataset dimension.
      |  To create an SDim instance, call the dim() method of an SDS class
@@ -1970,23 +2035,15 @@ CLASSES
      |      C library equivalent: SDsetdimstrs
      |  
      |  ----------------------------------------------------------------------
-     |  Data and non-method functions defined here:
+     |  Data and other attributes defined here:
      |  
-     |  __doc__ = 'The SDim class implements a dimension object.\n  ...can als...
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
      |  
-     |  __module__ = 'pyhdf.SD'
-
-FUNCTIONS
-    _array_to_ret(buf, nValues)
-    
-    _array_to_str(buf, nValues)
-    
-    _getattr(obj, name)
-    
-    _setattr(obj, name, value, privAttr)
+     |  __weakref__ = <attribute '__weakref__' of 'SDim' objects>
+     |      list of weak references to the object (if defined)
 
 DATA
-    __all__ = ['SD', 'SDAttr', 'SDC', 'SDS', 'SDim']
-    __file__ = '/usr/lib/python2.2/site-packages/pyhdf/SD.pyc'
-    __name__ = 'pyhdf.SD'
+    __all__ = ['SD', 'SDAttr', 'SDC', 'SDS', 'SDim', 'HDF4Error']
+
 

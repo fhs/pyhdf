@@ -1,10 +1,10 @@
-Python Library Documentation: module pyhdf.VS in pyhdf
+Help on module pyhdf.VS in pyhdf:
 
 NAME
     pyhdf.VS
 
 FILE
-    /usr/lib/python2.2/site-packages/pyhdf/VS.py
+    /usr/lib/python2.4/site-packages/pyhdf/VS.py
 
 DESCRIPTION
     A module of the pyhdf package implementing the VS (Vdata table)
@@ -15,8 +15,8 @@ DESCRIPTION
             Maurice-Lamontagne Institute
             gosselina@dfo-mpo.gc.ca
             
-    Version: 0.7-1
-    Date:    FIXDATE
+    Version: 0.7-3
+    Date:    July 13 2005
     
     Table of contents
     -----------------
@@ -804,19 +804,18 @@ DESCRIPTION
     is quite clean, and should look very familiar to python adepts.
 
 CLASSES
-    VD
-    VDAttr
-    VDField
-    VS
+    __builtin__.object
+        VD
+        VDAttr
+        VDField
+        VS
     
-    class VD
+    class VD(__builtin__.object)
      |  The VD class encapsulates the functionnality of a vdata.
      |  To instantiate a VD class, call the attach() or the create()
      |  method of a VS class instance.
      |  
      |  Methods defined here:
-     |  
-     |  _VD__buildStartCount = __buildStartCount(self, elem, setitem=0)
      |  
      |  __del__(self)
      |      Delete the instance, first calling the detach() method 
@@ -1118,13 +1117,15 @@ CLASSES
      |      C library equivalent : VSwrite
      |  
      |  ----------------------------------------------------------------------
-     |  Data and non-method functions defined here:
+     |  Data and other attributes defined here:
      |  
-     |  __doc__ = 'The VD class encapsulates the functionnality of ...r the cr...
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
      |  
-     |  __module__ = 'pyhdf.VS'
+     |  __weakref__ = <attribute '__weakref__' of 'VD' objects>
+     |      list of weak references to the object (if defined)
     
-    class VDAttr
+    class VDAttr(__builtin__.object)
      |  The VDAttr class encapsulates methods used to set and query attributes
      |  defined at the level either of the vdata or of the vdata field.
      |  To create an instance of this class, call the attr() method of a VD
@@ -1182,13 +1183,15 @@ CLASSES
      |      C library equivalent : VSsetattr
      |  
      |  ----------------------------------------------------------------------
-     |  Data and non-method functions defined here:
+     |  Data and other attributes defined here:
      |  
-     |  __doc__ = 'The VDAttr class encapsulates methods used to se...D\n    (...
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
      |  
-     |  __module__ = 'pyhdf.VS'
+     |  __weakref__ = <attribute '__weakref__' of 'VDAttr' objects>
+     |      list of weak references to the object (if defined)
     
-    class VDField
+    class VDField(__builtin__.object)
      |  The VDField class represents a vdata field.
      |  To create a VDField instance, call the field() method of a
      |  VD class instance.
@@ -1259,13 +1262,15 @@ CLASSES
      |       C library equivalent : VSfindattr
      |  
      |  ----------------------------------------------------------------------
-     |  Data and non-method functions defined here:
+     |  Data and other attributes defined here:
      |  
-     |  __doc__ = 'The VDField class represents a vdata field.\n    ...l the f...
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
      |  
-     |  __module__ = 'pyhdf.VS'
+     |  __weakref__ = <attribute '__weakref__' of 'VDField' objects>
+     |      list of weak references to the object (if defined)
     
-    class VS
+    class VS(__builtin__.object)
      |  The VS class implements the VS (Vdata) interface applied to an
      |  HDF file.
      |  To instantiate a VS class, call the vstart() method of an
@@ -1422,21 +1427,15 @@ CLASSES
      |  vend = end(self)
      |  
      |  ----------------------------------------------------------------------
-     |  Data and non-method functions defined here:
+     |  Data and other attributes defined here:
      |  
-     |  __doc__ = 'The VS class implements the VS (Vdata) interface...call the...
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
      |  
-     |  __module__ = 'pyhdf.VS'
-
-FUNCTIONS
-    _array_to_ret(buf, nValues)
-    
-    _array_to_str(buf, nValues)
-    
-    _setattr(obj, name, value)
+     |  __weakref__ = <attribute '__weakref__' of 'VS' objects>
+     |      list of weak references to the object (if defined)
 
 DATA
     __all__ = ['VS', 'VD', 'VDField', 'VDAttr']
-    __file__ = '/usr/lib/python2.2/site-packages/pyhdf/VS.pyc'
-    __name__ = 'pyhdf.VS'
+
 

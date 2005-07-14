@@ -1,5 +1,8 @@
-# $Id: VS.py,v 1.3 2004-08-02 17:06:20 gosselin Exp $
+# $Id: VS.py,v 1.4 2005-07-14 01:36:41 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2004/08/02 17:06:20  gosselin
+# pyhdf-0.7.2
+#
 # Revision 1.2  2004/08/02 15:36:04  gosselin
 # pyhdf-0.7-1
 #
@@ -12,8 +15,8 @@ Author: Andre Gosselin
         Maurice-Lamontagne Institute
         gosselina@dfo-mpo.gc.ca
         
-Version: 0.7-1
-Date:    FIXDATE
+Version: 0.7-3
+Date:    July 13 2005
 
 Table of contents
 -----------------
@@ -815,7 +818,7 @@ from error import HDF4Error, _checkErr
 
 __all__ = ['VS', 'VD', 'VDField', 'VDAttr']
 
-class VS:
+class VS(object):
     """The VS class implements the VS (Vdata) interface applied to an
     HDF file.
     To instantiate a VS class, call the vstart() method of an
@@ -1140,7 +1143,7 @@ class VS:
         return vd
         
 
-class VD:
+class VD(object):
     """The VD class encapsulates the functionnality of a vdata.
     To instantiate a VD class, call the attach() or the create()
     method of a VS class instance."""
@@ -2055,7 +2058,7 @@ class VD:
 
         return start, count
     
-class VDField:
+class VDField(object):
     """The VDField class represents a vdata field.
     To create a VDField instance, call the field() method of a
     VD class instance. """
@@ -2213,7 +2216,7 @@ class VDField:
         return dic
                   
 
-class VDAttr:
+class VDAttr(object):
     """The VDAttr class encapsulates methods used to set and query attributes
     defined at the level either of the vdata or of the vdata field.
     To create an instance of this class, call the attr() method of a VD

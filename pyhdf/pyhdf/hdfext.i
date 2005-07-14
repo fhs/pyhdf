@@ -1,6 +1,9 @@
 /*
- * $Id: hdfext.i,v 1.5 2004-11-02 21:33:39 gosselin Exp $
+ * $Id: hdfext.i,v 1.6 2005-07-14 01:36:41 gosselin_a Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.5  2004/11/02 21:33:39  gosselin
+ * *** empty log message ***
+ *
  * Revision 1.3  2004/08/02 15:36:04  gosselin
  * pyhdf-0.7-1
  *
@@ -85,6 +88,7 @@
 #define COMP_CODE_NBIT    2
 #define COMP_CODE_SKPHUFF 3
 #define COMP_CODE_DEFLATE 4
+#define COMP_CODE_SZIP    5
 
 /* Tags */
 #define  DFTAG_NDG  720
@@ -588,7 +592,8 @@ extern int32 SDsetrange(int32 sds_id, const void *max, const void *min);
 
 #include "hcomp.h"
 
-static int32 _SDgetcompress(int32 sds_id, int32 *comp_type, int32 *value)    {
+static int32 _SDgetcompress(int32 sds_id, int32 *comp_type, int32 *value, 
+                            int32 *v2, int32 *v3, int32 *v4, int32 *v5)    {
 
     comp_info c_info;
     int32 status;
@@ -604,11 +609,21 @@ static int32 _SDgetcompress(int32 sds_id, int32 *comp_type, int32 *value)    {
         case COMP_CODE_DEFLATE:
             *value = c_info.deflate.level;
             break;
+#ifndef NOSZIP
+        case COMP_CODE_SZIP:
+            *value = c_info.szip.options_mask;
+            *v2 =    c_info.szip.pixels_per_block;
+            *v3 =    c_info.szip.pixels_per_scanline;
+            *v4 =    c_info.szip.bits_per_pixel;
+            *v5 =    c_info.szip.pixels;
+            break;
+#endif
         }
     return status;
     }
 
-static int32 _SDsetcompress(int32 sds_id, int32 comp_type, int32 value)    {
+static int32 _SDsetcompress(int32 sds_id, int32 comp_type, int32 value,
+                            int32 v2)    {
 
     comp_info c_info;
 
@@ -622,14 +637,23 @@ static int32 _SDsetcompress(int32 sds_id, int32 comp_type, int32 value)    {
         case COMP_CODE_DEFLATE:
             c_info.deflate.level = value;
             break;
+#ifndef NOSZIP
+        case COMP_CODE_SZIP:
+            c_info.szip.options_mask = value;
+            c_info.szip.pixels_per_block = v2;
+            break;
+#endif
         }
     return SDsetcompress(sds_id, comp_type, &c_info);
     }
 
 %}
 
-extern int32 _SDgetcompress(int32 sds_id, int32 *OUTPUT, int32 *OUTPUT);
-extern int32 _SDsetcompress(int32 sds_id, int32 comp_type, int32 value);
+extern int32 _SDgetcompress(int32 sds_id, int32 *OUTPUT, int32 *OUTPUT,
+                            int32 *OUTPUT, int32 *OUTPUT, int32 *OUTPUT,
+                            int32 *OUTPUT);
+extern int32 _SDsetcompress(int32 sds_id, int32 comp_type, int32 value,
+                            int32 v2);
 
 /*
  * Misc

@@ -1,5 +1,9 @@
-# $Id: Makefile,v 1.2 2004-11-03 16:02:06 gosselin_a Exp $
+# $Id: Makefile,v 1.3 2005-07-14 01:36:41 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/11/03 16:02:06  gosselin_a
+# Change include and lib directories to the Python2.4 distribution
+# (previously Python2.3).
+#
 # Revision 1.1  2004/08/02 15:00:34  gosselin
 # Initial revision
 #
@@ -34,8 +38,8 @@ CFLAGS     =
 prefix     = /usr/local
 exec_prefix= ${prefix}
 SRCS       = 
-INCLUDES   = 
-LIBS       = -lmfhdf -ldf -lz -ljpeg
+INCLUDES   = -I/usr/local/hdf-4.2r1/include
+LIBS       = -lmfhdf -ldf -lz -ljpeg -lsz
 INTERFACE  = hdfext.i
 SWIGOPT    = 
 SWIG       = swig
@@ -253,8 +257,8 @@ perl5_clean:
 ##################################################################
 
 # Make sure these locate your Python installation
-PYTHON_INCLUDE= -DHAVE_CONFIG_H -I/usr/include/python2.3 -I/usr/lib/python2.3/config
-PYTHON_LIB    = /usr/lib/python2.3/config
+PYTHON_INCLUDE= -DHAVE_CONFIG_H -I/usr/include/python2.4 -I/usr/lib/python2.4/config
+PYTHON_LIB    = /usr/lib/python2.4/config
 
 # Extra Python specific dynamic linking options
 PYTHON_DLNK   = 
