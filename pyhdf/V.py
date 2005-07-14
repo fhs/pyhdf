@@ -1,5 +1,8 @@
-# $Id: V.py,v 1.1 2004-08-02 15:36:04 gosselin Exp $
+# $Id: V.py,v 1.2 2005-07-14 01:36:41 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/08/02 15:36:04  gosselin
+# Initial revision
+#
 """A module of the pyhdf package implementing the V (Vgroup)
 API of the NCSA HDF4 library.
 (see: hdf.ncsa.uiuc.edu)
@@ -8,8 +11,8 @@ Author: Andre Gosselin
         Maurice-Lamontagne Institute
         gosselina@dfo-mpo.gc.ca
         
-Version: 0.7-1
-Date:    FIXDATE
+Version: 0.7-3
+Date:    july 13 2005
 
 Table of contents
 -----------------
@@ -665,7 +668,7 @@ from error import HDF4Error, _checkErr
 
 __all__ = ['V', 'VG', 'VGAttr']
 
-class V:
+class V(object):
     """The V class implements the V (Vgroup) interface applied to an
     HDF file.
     To instantiate a V class, call the vgstart() method of an
@@ -855,7 +858,7 @@ class V:
         return num
         
 
-class VG:
+class VG(object):
     """The VG class encapsulates the functionnality of a vgroup.
     To instantiate a VG class, call the attach() or create() methods
     of a V class instance."""
@@ -1217,7 +1220,7 @@ class VG:
         return att
 
 
-class VGAttr:
+class VGAttr(object):
     """The VGAttr class encapsulates methods used to set and query
     attributes defined on a vgroup. To create an instance of this class,
     call the attr() method of a VG class.    """

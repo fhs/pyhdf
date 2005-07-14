@@ -1,16 +1,14 @@
 wrote pyhdf.SD.html
 IC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html><head><title>Python: module pyhdf.SD</title>
-<style type="text/css"><!--
-TT { font-family: lucidatypewriter, lucida console, courier }
---></style></head><body bgcolor="#f0f0f8">
+</head><body bgcolor="#f0f0f8">
 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="pyhdf.html"><font color="#ffffff">pyhdf</font></a>.SD</strong></big></big></font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python2.2/site-packages/pyhdf/SD.py">/usr/lib/python2.2/site-packages/pyhdf/SD.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python2.4/site-packages/pyhdf/SD.py">/usr/lib/python2.4/site-packages/pyhdf/SD.py</a></font></td></tr></table>
     <p><tt>A&nbsp;module&nbsp;of&nbsp;the&nbsp;pyhdf&nbsp;package&nbsp;implementing&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;(scientific<br>
 dataset)&nbsp;API&nbsp;of&nbsp;the&nbsp;NCSA&nbsp;HDF4&nbsp;library.<br>
 (see:&nbsp;hdf.ncsa.uiuc.edu)<br>
@@ -19,8 +17,8 @@ Author:&nbsp;Andre&nbsp;Gosselin<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maurice-Lamontagne&nbsp;Institute<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gosselina@dfo-mpo.gc.ca<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-Version:&nbsp;0.7-1<br>
-Date:&nbsp;&nbsp;&nbsp;&nbsp;FIXDATE<br>
+Version:&nbsp;0.7-3<br>
+Date:&nbsp;&nbsp;&nbsp;&nbsp;July&nbsp;13&nbsp;2005<br>
 &nbsp;<br>
 Table&nbsp;of&nbsp;contents<br>
 -----------------<br>
@@ -126,7 +124,7 @@ The&nbsp;following&nbsp;modules&nbsp;are&nbsp;related&nbsp;to&nbsp;the&nbsp;<a h
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C-library&nbsp;for&nbsp;all&nbsp;python&nbsp;modules<br>
 &nbsp;&nbsp;hdfext&nbsp;&nbsp;&nbsp;&nbsp;python&nbsp;module&nbsp;implementing&nbsp;some&nbsp;utility&nbsp;functions<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;complementing&nbsp;the&nbsp;_hdfext&nbsp;extension&nbsp;module<br>
-&nbsp;&nbsp;error&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;defines&nbsp;the&nbsp;HDF4Error&nbsp;exception<br>
+&nbsp;&nbsp;error&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;defines&nbsp;the&nbsp;<a href="#HDF4Error">HDF4Error</a>&nbsp;exception<br>
 &nbsp;&nbsp;<a href="#SD">SD</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;python&nbsp;module&nbsp;wrapping&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;API&nbsp;routines&nbsp;inside<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;OOP&nbsp;framework<br>
 &nbsp;<br>
@@ -137,15 +135,21 @@ directly.&nbsp;Only&nbsp;'pyhdf.<a href="#SD">SD</a>'&nbsp;should&nbsp;be&nbsp;i
 &nbsp;<br>
 Prerequisites<br>
 -------------<br>
-The&nbsp;following&nbsp;software&nbsp;must&nbsp;be&nbsp;installed&nbsp;in&nbsp;order&nbsp;for&nbsp;<a href="#SD">SD</a>&nbsp;to<br>
+The&nbsp;following&nbsp;software&nbsp;must&nbsp;be&nbsp;installed&nbsp;in&nbsp;order&nbsp;for&nbsp;pyhdf&nbsp;release&nbsp;0.7-3&nbsp;to<br>
 work.<br>
 &nbsp;&nbsp;<br>
-&nbsp;&nbsp;HDF&nbsp;(v4)&nbsp;library<br>
+&nbsp;&nbsp;HDF&nbsp;(v4)&nbsp;library,&nbsp;release&nbsp;4.2r1<br>
 &nbsp;&nbsp;&nbsp;&nbsp;pyhdf&nbsp;does&nbsp;*not*&nbsp;include&nbsp;the&nbsp;HDF4&nbsp;library,&nbsp;which&nbsp;must<br>
 &nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;installed&nbsp;separately.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;HDF&nbsp;is&nbsp;available&nbsp;at:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;"<a href="http://hdf.ncsa.uiuc.edu/obtain.html">http://hdf.ncsa.uiuc.edu/obtain.html</a>".<br>
+&nbsp;<br>
+&nbsp;&nbsp;HDF4.2r1&nbsp;in&nbsp;turn&nbsp;needs&nbsp;the&nbsp;following&nbsp;packages&nbsp;:<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;libjpeg&nbsp;(jpeg&nbsp;library)&nbsp;release&nbsp;6b<br>
+&nbsp;&nbsp;&nbsp;&nbsp;libz&nbsp;&nbsp;&nbsp;&nbsp;(zlib&nbsp;library)&nbsp;release&nbsp;1.1.4&nbsp;or&nbsp;above<br>
+&nbsp;&nbsp;&nbsp;&nbsp;libsz&nbsp;&nbsp;&nbsp;(SZIP&nbsp;library)&nbsp;release&nbsp;2.0<br>
 &nbsp;<br>
 The&nbsp;<a href="#SD">SD</a>&nbsp;module&nbsp;also&nbsp;needs:<br>
 &nbsp;<br>
@@ -211,8 +215,8 @@ Error&nbsp;handling<br>
 --------------<br>
 All&nbsp;errors&nbsp;that&nbsp;the&nbsp;C&nbsp;<a href="#SD">SD</a>&nbsp;API&nbsp;reports&nbsp;with&nbsp;a&nbsp;SUCCESS/FAIL&nbsp;error&nbsp;code<br>
 are&nbsp;reported&nbsp;by&nbsp;pyhdf&nbsp;using&nbsp;the&nbsp;Python&nbsp;exception&nbsp;mechanism.<br>
-When&nbsp;the&nbsp;C&nbsp;library&nbsp;reports&nbsp;a&nbsp;FAIL&nbsp;status,&nbsp;pyhdf&nbsp;raises&nbsp;an&nbsp;HDF4Error<br>
-exception&nbsp;(a&nbsp;subclass&nbsp;of&nbsp;Exception)&nbsp;with&nbsp;a&nbsp;descriptive&nbsp;message.&nbsp;<br>
+When&nbsp;the&nbsp;C&nbsp;library&nbsp;reports&nbsp;a&nbsp;FAIL&nbsp;status,&nbsp;pyhdf&nbsp;raises&nbsp;an&nbsp;<a href="#HDF4Error">HDF4Error</a><br>
+exception&nbsp;(a&nbsp;subclass&nbsp;of&nbsp;<a href="exceptions.html#Exception">Exception</a>)&nbsp;with&nbsp;a&nbsp;descriptive&nbsp;message.&nbsp;<br>
 Unfortunately,&nbsp;the&nbsp;C&nbsp;library&nbsp;is&nbsp;rarely&nbsp;informative&nbsp;about&nbsp;the&nbsp;cause&nbsp;of&nbsp;<br>
 the&nbsp;error.&nbsp;pyhdf&nbsp;does&nbsp;its&nbsp;best&nbsp;to&nbsp;try&nbsp;to&nbsp;document&nbsp;the&nbsp;error,&nbsp;but&nbsp;most&nbsp;<br>
 of&nbsp;the&nbsp;time&nbsp;cannot&nbsp;do&nbsp;more&nbsp;than&nbsp;saying&nbsp;"execution&nbsp;error".<br>
@@ -461,11 +465,11 @@ In&nbsp;more&nbsp;detail:<br>
 &nbsp;<br>
 &nbsp;&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;The&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;class&nbsp;defines&nbsp;an&nbsp;attribute,&nbsp;either&nbsp;at&nbsp;the&nbsp;file&nbsp;(<a href="#SD">SD</a>),<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataset&nbsp;(<a href="#SDS">SDS</a>)&nbsp;or&nbsp;dimension&nbsp;(<a href="#SDim">SDim</a>)&nbsp;level.&nbsp;The&nbsp;class&nbsp;encapsulates<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;object&nbsp;to&nbsp;which&nbsp;the&nbsp;attribute&nbsp;is&nbsp;attached,&nbsp;and&nbsp;the&nbsp;attribute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;to&nbsp;which&nbsp;the&nbsp;attribute&nbsp;is&nbsp;attached,&nbsp;and&nbsp;the&nbsp;attribute<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To&nbsp;create&nbsp;an&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;instance,&nbsp;obtain&nbsp;an&nbsp;instance&nbsp;for&nbsp;an&nbsp;<a href="#SD">SD</a>&nbsp;(file),<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDS">SDS</a>&nbsp;(dataset)&nbsp;or&nbsp;dimension&nbsp;(<a href="#SDim">SDim</a>)&nbsp;object,&nbsp;and&nbsp;call&nbsp;its&nbsp;attr()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDS">SDS</a>&nbsp;(dataset)&nbsp;or&nbsp;dimension&nbsp;(<a href="#SDim">SDim</a>)&nbsp;<a href="__builtin__.html#object">object</a>,&nbsp;and&nbsp;call&nbsp;its&nbsp;attr()<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NOTE.&nbsp;An&nbsp;attribute&nbsp;can&nbsp;also&nbsp;be&nbsp;read/written&nbsp;like<br>
@@ -515,13 +519,17 @@ In&nbsp;more&nbsp;detail:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.UNLIMITED&nbsp;&nbsp;&nbsp;dimension&nbsp;can&nbsp;grow&nbsp;dynamically<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;compression:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;COMP_NONE<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;COMP_RLE<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;COMP_NBIT<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;COMP_SKPHUFF<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;COMP_DEFLATE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_NONE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_RLE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_NBIT<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SKPHUFF<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_DEFLATE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_EC<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_NN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_RAW<br>
 &nbsp;<br>
-&nbsp;&nbsp;<a href="#SDS">SDS</a>&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<a href="#SDS">SDS</a>&nbsp;class&nbsp;implements&nbsp;an&nbsp;HDF&nbsp;scientific&nbsp;dataset&nbsp;(<a href="#SDS">SDS</a>)&nbsp;object.<br>
+&nbsp;&nbsp;<a href="#SDS">SDS</a>&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<a href="#SDS">SDS</a>&nbsp;class&nbsp;implements&nbsp;an&nbsp;HDF&nbsp;scientific&nbsp;dataset&nbsp;(<a href="#SDS">SDS</a>)&nbsp;<a href="__builtin__.html#object">object</a>.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To&nbsp;create&nbsp;an&nbsp;<a href="#SDS">SDS</a>&nbsp;instance,&nbsp;call&nbsp;the&nbsp;create()&nbsp;or&nbsp;select()&nbsp;methods<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;an&nbsp;<a href="#SD">SD</a>&nbsp;instance.<br>
@@ -580,13 +588,13 @@ In&nbsp;more&nbsp;detail:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setrange()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set&nbsp;the&nbsp;dataset&nbsp;min&nbsp;and&nbsp;max&nbsp;values<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;compression<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;getcompress()&nbsp;&nbsp;get&nbsp;the&nbsp;dataset&nbsp;compression&nbsp;type<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setcompress()&nbsp;&nbsp;set&nbsp;the&nbsp;dataset&nbsp;compression&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;getcompress()&nbsp;&nbsp;get&nbsp;info&nbsp;about&nbsp;the&nbsp;dataset&nbsp;compression&nbsp;type&nbsp;and&nbsp;mode<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setcompress()&nbsp;&nbsp;set&nbsp;the&nbsp;dataset&nbsp;compression&nbsp;type&nbsp;and&nbsp;mode<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;misc<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setexternalfile()&nbsp;&nbsp;store&nbsp;the&nbsp;dataset&nbsp;in&nbsp;an&nbsp;external&nbsp;file<br>
 &nbsp;<br>
-&nbsp;&nbsp;<a href="#SDim">SDim</a>&nbsp;&nbsp;&nbsp;The&nbsp;SDdim&nbsp;class&nbsp;implements&nbsp;a&nbsp;dimension&nbsp;object.<br>
+&nbsp;&nbsp;<a href="#SDim">SDim</a>&nbsp;&nbsp;&nbsp;The&nbsp;SDdim&nbsp;class&nbsp;implements&nbsp;a&nbsp;dimension&nbsp;<a href="__builtin__.html#object">object</a>.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To&nbsp;create&nbsp;an&nbsp;<a href="#SDim">SDim</a>&nbsp;instance,&nbsp;call&nbsp;the&nbsp;dim()&nbsp;method&nbsp;of&nbsp;an&nbsp;<a href="#SDS">SDS</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(dataset)&nbsp;instance.<br>
@@ -785,8 +793,8 @@ def&nbsp;txtToHDF(txtFile,&nbsp;hdfFile,&nbsp;varName,&nbsp;attr):<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v.endaccess()<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d.end()<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txt.close()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;except&nbsp;HDF4Error,&nbsp;msg:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"HDF4Error:",&nbsp;msg<br>
+&nbsp;&nbsp;&nbsp;&nbsp;except&nbsp;<a href="#HDF4Error">HDF4Error</a>,&nbsp;msg:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"<a href="#HDF4Error">HDF4Error</a>:",&nbsp;msg<br>
 &nbsp;<br>
 &nbsp;<br>
 We&nbsp;could&nbsp;now&nbsp;call&nbsp;the&nbsp;procedure&nbsp;as&nbsp;follows:<br>
@@ -959,46 +967,73 @@ try:&nbsp;&nbsp;#&nbsp;Catch&nbsp;pyhdf.<a href="#SD">SD</a>&nbsp;errors<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eol()<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-except&nbsp;HDF4Error,&nbsp;msg:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"HDF4Error",&nbsp;msg</tt></p>
-
+except&nbsp;<a href="#HDF4Error">HDF4Error</a>,&nbsp;msg:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"<a href="#HDF4Error">HDF4Error</a>",&nbsp;msg</tt></p>
+<p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
     
-<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="pyhdf.hdfext.html">pyhdf.hdfext</a><br>
 </td><td width="25%" valign=top><a href="os.html">os</a><br>
 </td><td width="25%" valign=top><a href="sys.html">sys</a><br>
 </td><td width="25%" valign=top><a href="types.html">types</a><br>
-</td></tr></table></td></tr></table>
+</td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
     
-<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
 <dt><font face="helvetica, arial"><a href="pyhdf.SD.html#SD">SD</a>
 </font></dt><dt><font face="helvetica, arial"><a href="pyhdf.SD.html#SDAttr">SDAttr</a>
 </font></dt><dt><font face="helvetica, arial"><a href="pyhdf.SD.html#SDC">SDC</a>
 </font></dt><dt><font face="helvetica, arial"><a href="pyhdf.SD.html#SDS">SDS</a>
 </font></dt><dt><font face="helvetica, arial"><a href="pyhdf.SD.html#SDim">SDim</a>
 </font></dt></dl>
- 
+</dd>
+<dt><font face="helvetica, arial"><a href="exceptions.html#Exception">exceptions.Exception</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="pyhdf.error.html#HDF4Error">pyhdf.error.HDF4Error</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="SD">class <strong>SD</strong></a></font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="HDF4Error">class <strong>HDF4Error</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="HDF4Error-__init__"><strong>__init__</strong></a>(self, args<font color="#909090">=None</font>)</dt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="HDF4Error-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="HDF4Error-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SD">class <strong>SD</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>The&nbsp;<a href="#SD">SD</a>&nbsp;class&nbsp;implements&nbsp;an&nbsp;HDF&nbsp;<a href="#SD">SD</a>&nbsp;interface.<br>
 To&nbsp;instantiate&nbsp;an&nbsp;<a href="#SD">SD</a>&nbsp;class,&nbsp;call&nbsp;the&nbsp;<a href="#SD">SD</a>()&nbsp;constructor.<br>
 To&nbsp;set&nbsp;attributes&nbsp;on&nbsp;an&nbsp;<a href="#SD">SD</a>&nbsp;instance,&nbsp;call&nbsp;the&nbsp;<a href="#SD">SD</a>.<a href="#SD-attr">attr</a>()<br>
 method&nbsp;to&nbsp;create&nbsp;an&nbsp;attribute&nbsp;instance,&nbsp;then&nbsp;call&nbsp;the&nbsp;methods<br>
 of&nbsp;this&nbsp;instance.<br>&nbsp;</tt></td></tr>
-<tr><td>&nbsp;&nbsp;</td>
+<tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="SD-__del__"><strong>__del__</strong></a>(self)</dt><dd><tt>Delete&nbsp;the&nbsp;instance,&nbsp;first&nbsp;calling&nbsp;the&nbsp;<a href="#SD-end">end</a>()&nbsp;method&nbsp;<br>
 if&nbsp;not&nbsp;already&nbsp;done.</tt></dd></dl>
@@ -1195,20 +1230,18 @@ Returns:&nbsp;<br>
 C&nbsp;library&nbsp;equivalent:&nbsp;SDsetfillmode</tt></dd></dl>
 
 <hr>
-Data and non-method functions defined here:<br>
-<dl><dt><strong>__doc__</strong> = 'The SD class implements an HDF SD interface.<font color="#c040c0">\n</font>   ...nce, then call the methods<font color="#c040c0">\n</font>    of this instance. '</dl>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
-<dl><dt><strong>__module__</strong> = 'pyhdf.SD'</dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'SD' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
-</td></tr></table> 
+</td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="SDAttr">class <strong>SDAttr</strong></a></font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="SDAttr">class <strong>SDAttr</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2>&nbsp;</td></tr>
-<tr><td>&nbsp;&nbsp;</td>
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="SDAttr-__init__"><strong>__init__</strong></a>(self, obj, index_or_name)</dt><dd><tt>Init&nbsp;an&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;instance.&nbsp;Should&nbsp;not&nbsp;be&nbsp;called&nbsp;directly&nbsp;by<br>
 the&nbsp;user&nbsp;program.&nbsp;An&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;instance&nbsp;must&nbsp;be&nbsp;created&nbsp;through<br>
@@ -1274,18 +1307,18 @@ Attributes&nbsp;can&nbsp;also&nbsp;be&nbsp;written&nbsp;like&nbsp;ordinary&nbsp;
 using&nbsp;the&nbsp;dot&nbsp;notation.&nbsp;See&nbsp;"High&nbsp;level&nbsp;attribute&nbsp;access".</tt></dd></dl>
 
 <hr>
-Data and non-method functions defined here:<br>
-<dl><dt><strong>__doc__</strong> = None</dl>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
-<dl><dt><strong>__module__</strong> = 'pyhdf.SD'</dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'SDAttr' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
-</td></tr></table> 
+</td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="SDC">class <strong>SDC</strong></a></font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="SDC">class <strong>SDC</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>The&nbsp;<a href="#SDC">SDC</a>&nbsp;class&nbsp;holds&nbsp;contants&nbsp;defining&nbsp;opening&nbsp;modes&nbsp;and&nbsp;data&nbsp;types.<br>
 &nbsp;<br>
 file&nbsp;opening&nbsp;modes:<br>
@@ -1316,13 +1349,18 @@ dimension:<br>
 &nbsp;&nbsp;<a href="#SDC">SDC</a>.UNLIMITED&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;dimension&nbsp;can&nbsp;grow&nbsp;dynamically<br>
 &nbsp;<br>
 data&nbsp;compression:<br>
-&nbsp;&nbsp;COMP_NONE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0<br>
-&nbsp;&nbsp;COMP_RLE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1<br>
-&nbsp;&nbsp;COMP_NBIT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2<br>
-&nbsp;&nbsp;COMP_SKPHUFF&nbsp;&nbsp;&nbsp;3<br>
-&nbsp;&nbsp;COMP_DEFLATE&nbsp;&nbsp;&nbsp;4<br>&nbsp;</tt></td></tr>
-<tr><td>&nbsp;&nbsp;</td>
-<td width="100%">Data and non-method functions defined here:<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_NONE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_RLE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_NBIT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SKPHUFF&nbsp;&nbsp;&nbsp;3<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_DEFLATE&nbsp;&nbsp;&nbsp;4<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_EC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_NN&nbsp;&nbsp;&nbsp;&nbsp;32<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_RAW&nbsp;&nbsp;128<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Data and other attributes defined here:<br>
 <dl><dt><strong>CHAR</strong> = 4</dl>
 
 <dl><dt><strong>CHAR8</strong> = 4</dl>
@@ -1336,6 +1374,14 @@ data&nbsp;compression:<br>
 <dl><dt><strong>COMP_RLE</strong> = 1</dl>
 
 <dl><dt><strong>COMP_SKPHUFF</strong> = 3</dl>
+
+<dl><dt><strong>COMP_SZIP</strong> = 5</dl>
+
+<dl><dt><strong>COMP_SZIP_EC</strong> = 4</dl>
+
+<dl><dt><strong>COMP_SZIP_NN</strong> = 32</dl>
+
+<dl><dt><strong>COMP_SZIP_RAW</strong> = 128</dl>
 
 <dl><dt><strong>CREATE</strong> = 4</dl>
 
@@ -1371,29 +1417,27 @@ data&nbsp;compression:<br>
 
 <dl><dt><strong>WRITE</strong> = 2</dl>
 
-<dl><dt><strong>__doc__</strong> = 'The SDC class holds contants defining opening mo... COMP_SKPHUFF   3<font color="#c040c0">\n</font>             COMP_DEFLATE   4<font color="#c040c0">\n\n</font>'</dl>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
-<dl><dt><strong>__module__</strong> = 'pyhdf.SD'</dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'SDC' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>equivNumericTypes</strong> = [5, 6, 20, 21, 22, 24, 4, 3, 23, 25]</dl>
 
-</td></tr></table> 
+</td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="SDS">class <strong>SDS</strong></a></font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="SDS">class <strong>SDS</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt>The&nbsp;<a href="#SDS">SDS</a>&nbsp;class&nbsp;implements&nbsp;an&nbsp;HDF&nbsp;dataset&nbsp;object.<br>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="#SDS">SDS</a>&nbsp;class&nbsp;implements&nbsp;an&nbsp;HDF&nbsp;dataset&nbsp;<a href="__builtin__.html#object">object</a>.<br>
 To&nbsp;create&nbsp;an&nbsp;<a href="#SDS">SDS</a>&nbsp;instance,&nbsp;call&nbsp;the&nbsp;create()&nbsp;or&nbsp;select()<br>
 methods&nbsp;of&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;class.&nbsp;To&nbsp;set&nbsp;attributes&nbsp;on&nbsp;an&nbsp;<a href="#SDS">SDS</a>&nbsp;instance,<br>
 call&nbsp;the&nbsp;<a href="#SDS">SDS</a>.<a href="#SDS-attr">attr</a>()&nbsp;method&nbsp;to&nbsp;create&nbsp;an&nbsp;attribute&nbsp;instance,<br>
 then&nbsp;call&nbsp;the&nbsp;methods&nbsp;of&nbsp;this&nbsp;instance.&nbsp;Attributes&nbsp;can&nbsp;also&nbsp;be<br>
 set&nbsp;using&nbsp;the&nbsp;"dot&nbsp;notation".<br>&nbsp;</tt></td></tr>
-<tr><td>&nbsp;&nbsp;</td>
+<tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
-<dl><dt><a name="SDS-_SDS__buildStartCountStride"><strong>_SDS__buildStartCountStride</strong></a> = __buildStartCountStride(self, elem)</dt></dl>
-
 <dl><dt><a name="SDS-__del__"><strong>__del__</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="SDS-__getattr__"><strong>__getattr__</strong></a>(self, name)</dt></dl>
@@ -1547,16 +1591,31 @@ by&nbsp;'getcal'&nbsp;are&nbsp;those&nbsp;of&nbsp;the&nbsp;following&nbsp;attrib
 &nbsp;<br>
 C&nbsp;library&nbsp;equivalent:&nbsp;SDgetcal()</tt></dd></dl>
 
-<dl><dt><a name="SDS-getcompress"><strong>getcompress</strong></a>(self)</dt><dd><tt>Retrieves&nbsp;data&nbsp;set&nbsp;compression&nbsp;type.<br>
+<dl><dt><a name="SDS-getcompress"><strong>getcompress</strong></a>(self)</dt><dd><tt>Retrieves&nbsp;info&nbsp;about&nbsp;dataset&nbsp;compression&nbsp;type&nbsp;and&nbsp;mode.<br>
 &nbsp;<br>
 Args:<br>
 &nbsp;&nbsp;no&nbsp;argument<br>
 Returns:&nbsp;<br>
-&nbsp;&nbsp;2-element&nbsp;tuple&nbsp;holding&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;-compression&nbsp;type,&nbsp;one&nbsp;of&nbsp;the&nbsp;<a href="#SDC">SDC</a>.COMP_xxx&nbsp;constants<br>
-&nbsp;&nbsp;&nbsp;&nbsp;-auxiliary&nbsp;value&nbsp;for&nbsp;some&nbsp;of&nbsp;the&nbsp;compression&nbsp;types<br>
+&nbsp;&nbsp;tuple&nbsp;holding&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-compression&nbsp;type&nbsp;(one&nbsp;of&nbsp;the&nbsp;<a href="#SDC">SDC</a>.COMP_xxx&nbsp;constants)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-one&nbsp;one&nbsp;more&nbsp;auxiliary&nbsp;values,&nbsp;depending&nbsp;on&nbsp;the&nbsp;compression&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;COMP_SKPHUFF&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;value&nbsp;&nbsp;:&nbsp;skip&nbsp;size<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;COMP_DEFLATE&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;value&nbsp;&nbsp;:&nbsp;level&nbsp;(1&nbsp;to&nbsp;9)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;COMP_SZIP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5&nbsp;values&nbsp;:&nbsp;options&nbsp;mask,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pixels&nbsp;per&nbsp;block&nbsp;(2&nbsp;to&nbsp;32)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pixels&nbsp;per&nbsp;scanline,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bits&nbsp;per&nbsp;pixel&nbsp;(number&nbsp;of&nbsp;bits&nbsp;in&nbsp;the&nbsp;<a href="#SDS">SDS</a>&nbsp;datatype)&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pixels&nbsp;(number&nbsp;of&nbsp;elements&nbsp;in&nbsp;the&nbsp;<a href="#SDS">SDS</a>)<br>
 &nbsp;<br>
-An&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;compression&nbsp;is&nbsp;not&nbsp;set.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Note:&nbsp;in&nbsp;the&nbsp;context&nbsp;of&nbsp;an&nbsp;<a href="#SDS">SDS</a>,&nbsp;the&nbsp;word&nbsp;"pixel"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;should&nbsp;really&nbsp;be&nbsp;understood&nbsp;as&nbsp;meaning&nbsp;"data&nbsp;element",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eg&nbsp;a&nbsp;cell&nbsp;value&nbsp;inside&nbsp;a&nbsp;multidimensional&nbsp;grid.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Test&nbsp;the&nbsp;options&nbsp;mask&nbsp;against&nbsp;constants&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_NN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_EC,&nbsp;eg&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;optionMask&nbsp;&amp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_EC:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"EC&nbsp;encoding&nbsp;scheme&nbsp;used"<br>
+&nbsp;<br>
+An&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;dataset&nbsp;is&nbsp;not&nbsp;compressed.<br>
 &nbsp;<br>
 C&nbsp;library&nbsp;equivalent:&nbsp;SDgetcompress</tt></dd></dl>
 
@@ -1719,19 +1778,25 @@ parameters,&nbsp;in&nbsp;order:&nbsp;<br>
 &nbsp;<br>
 C&nbsp;library&nbsp;equivalent:&nbsp;SDsetcal</tt></dd></dl>
 
-<dl><dt><a name="SDS-setcompress"><strong>setcompress</strong></a>(self, comp_type, value<font color="#909090">=0</font>)</dt><dd><tt>Compresses&nbsp;the&nbsp;data&nbsp;set&nbsp;using&nbsp;a&nbsp;specified&nbsp;compression&nbsp;method.<br>
+<dl><dt><a name="SDS-setcompress"><strong>setcompress</strong></a>(self, comp_type, value<font color="#909090">=0</font>, v2<font color="#909090">=0</font>)</dt><dd><tt>Compresses&nbsp;the&nbsp;dataset&nbsp;using&nbsp;a&nbsp;specified&nbsp;compression&nbsp;method.<br>
 &nbsp;<br>
 Args:<br>
 &nbsp;&nbsp;comp_type&nbsp;&nbsp;&nbsp;&nbsp;compression&nbsp;type,&nbsp;identified&nbsp;by&nbsp;one&nbsp;of&nbsp;the<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_xxx&nbsp;constants<br>
-&nbsp;&nbsp;value&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auxiliary&nbsp;value&nbsp;needed&nbsp;by&nbsp;some&nbsp;compression&nbsp;types<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(data&nbsp;size&nbsp;for&nbsp;<a href="#SDC">SDC</a>.COMP_SKPHUFF,&nbsp;deflate&nbsp;level<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;<a href="#SDC">SDC</a>.COMP_DEFLATE;&nbsp;omit&nbsp;for&nbsp;other&nbsp;types)<br>
+&nbsp;&nbsp;value,v2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auxiliary&nbsp;value(s)&nbsp;needed&nbsp;by&nbsp;some&nbsp;compression&nbsp;types<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SKPHUFF&nbsp;&nbsp;&nbsp;value=data&nbsp;size,&nbsp;v2&nbsp;is&nbsp;ignored<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_DEFLATE&nbsp;&nbsp;&nbsp;value=deflate&nbsp;level&nbsp;(1&nbsp;to&nbsp;9),&nbsp;v2&nbsp;is&nbsp;ignored<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value=encoding&nbsp;scheme&nbsp;(<a href="#SDC">SDC</a>.COMP_SZIP_EC&nbsp;or<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_NN),&nbsp;v2=pixels&nbsp;per&nbsp;block&nbsp;(2&nbsp;to&nbsp;32)<br>
 Returns:&nbsp;None<br>
 &nbsp;<br>
 <a href="#SDC">SDC</a>.COMP_DEFLATE&nbsp;applies&nbsp;the&nbsp;GZIP&nbsp;compression&nbsp;to&nbsp;the&nbsp;dataset,<br>
 and&nbsp;the&nbsp;value&nbsp;varies&nbsp;from&nbsp;1&nbsp;to&nbsp;9,&nbsp;according&nbsp;to&nbsp;the&nbsp;level&nbsp;of<br>
 compression&nbsp;desired.<br>
+&nbsp;<br>
+<a href="#SDC">SDC</a>.COMP_SZIP&nbsp;compresses&nbsp;the&nbsp;dataset&nbsp;using&nbsp;the&nbsp;SZIP&nbsp;algorithm.&nbsp;See&nbsp;the&nbsp;HDF&nbsp;User's&nbsp;Guide<br>
+for&nbsp;details&nbsp;about&nbsp;the&nbsp;encoding&nbsp;scheme&nbsp;and&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;per&nbsp;block.&nbsp;SZIP&nbsp;is&nbsp;new<br>
+with&nbsp;HDF&nbsp;4.2.<br>
 &nbsp;<br>
 'setcompress'&nbsp;must&nbsp;be&nbsp;called&nbsp;before&nbsp;writing&nbsp;to&nbsp;the&nbsp;dataset.<br>
 The&nbsp;dataset&nbsp;must&nbsp;be&nbsp;written&nbsp;all&nbsp;at&nbsp;once,&nbsp;unless&nbsp;it&nbsp;is&nbsp;<br>
@@ -1802,26 +1867,26 @@ array&nbsp;:<br>
 C&nbsp;library&nbsp;equivalent:&nbsp;SDsetrange</tt></dd></dl>
 
 <hr>
-Data and non-method functions defined here:<br>
-<dl><dt><strong>__doc__</strong> = 'The SDS class implements an HDF dataset object.<font color="#c040c0">\n</font>...es can also be<font color="#c040c0">\n</font>    set using the "dot notation". '</dl>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
-<dl><dt><strong>__module__</strong> = 'pyhdf.SD'</dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'SDS' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
-</td></tr></table> 
+</td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="SDim">class <strong>SDim</strong></a></font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="SDim">class <strong>SDim</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt>The&nbsp;<a href="#SDim">SDim</a>&nbsp;class&nbsp;implements&nbsp;a&nbsp;dimension&nbsp;object.<br>
-There&nbsp;can&nbsp;be&nbsp;one&nbsp;dimension&nbsp;object&nbsp;for&nbsp;each&nbsp;dataset&nbsp;dimension.<br>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="#SDim">SDim</a>&nbsp;class&nbsp;implements&nbsp;a&nbsp;dimension&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+There&nbsp;can&nbsp;be&nbsp;one&nbsp;dimension&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;for&nbsp;each&nbsp;dataset&nbsp;dimension.<br>
 To&nbsp;create&nbsp;an&nbsp;<a href="#SDim">SDim</a>&nbsp;instance,&nbsp;call&nbsp;the&nbsp;dim()&nbsp;method&nbsp;of&nbsp;an&nbsp;<a href="#SDS">SDS</a>&nbsp;class<br>
 instance.&nbsp;To&nbsp;set&nbsp;attributes&nbsp;on&nbsp;an&nbsp;<a href="#SDim">SDim</a>&nbsp;instance,&nbsp;call&nbsp;the<br>
 <a href="#SDim">SDim</a>.<a href="#SDim-attr">attr</a>()&nbsp;method&nbsp;to&nbsp;create&nbsp;an&nbsp;attribute&nbsp;instance,&nbsp;then&nbsp;call&nbsp;the<br>
 methods&nbsp;of&nbsp;this&nbsp;instance.&nbsp;&nbsp;Attributes&nbsp;can&nbsp;also&nbsp;be&nbsp;set&nbsp;using&nbsp;the<br>
 "dot&nbsp;notation".<br>&nbsp;</tt></td></tr>
-<tr><td>&nbsp;&nbsp;</td>
+<tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="SDim-__getattr__"><strong>__getattr__</strong></a>(self, name)</dt></dl>
 
@@ -1964,30 +2029,17 @@ Returns:&nbsp;<br>
 C&nbsp;library&nbsp;equivalent:&nbsp;SDsetdimstrs</tt></dd></dl>
 
 <hr>
-Data and non-method functions defined here:<br>
-<dl><dt><strong>__doc__</strong> = 'The SDim class implements a dimension object.<font color="#c040c0">\n</font>  ...can also be set using the<font color="#c040c0">\n</font>       "dot notation". '</dl>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
-<dl><dt><strong>__module__</strong> = 'pyhdf.SD'</dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'SDim' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
-</td></tr></table></td></tr></table>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#eeaa77">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
-    
-<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
-<td width="100%"><dl><dt><a name="-_array_to_ret"><strong>_array_to_ret</strong></a>(buf, nValues)</dt></dl>
- <dl><dt><a name="-_array_to_str"><strong>_array_to_str</strong></a>(buf, nValues)</dt></dl>
- <dl><dt><a name="-_getattr"><strong>_getattr</strong></a>(obj, name)</dt></dl>
- <dl><dt><a name="-_setattr"><strong>_setattr</strong></a>(obj, name, value, privAttr)</dt></dl>
-</td></tr></table>
+</td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
-<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
-<td width="100%"><strong>__all__</strong> = ['SD', 'SDAttr', 'SDC', 'SDS', 'SDim']<br>
-<strong>__file__</strong> = '/usr/lib/python2.2/site-packages/pyhdf/SD.pyc'<br>
-<strong>__name__</strong> = 'pyhdf.SD'</td></tr></table>
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__all__</strong> = ['SD', 'SDAttr', 'SDC', 'SDS', 'SDim', 'HDF4Error']</td></tr></table>
 </body></html>

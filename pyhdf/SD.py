@@ -1,5 +1,8 @@
-# $Id: SD.py,v 1.6 2005-01-25 18:17:53 gosselin_a Exp $
+# $Id: SD.py,v 1.7 2005-07-14 01:36:41 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.6  2005/01/25 18:17:53  gosselin_a
+# Importer le symbole 'HDF4Error' a partir du module SD.
+#
 # Revision 1.5  2004/08/02 17:06:20  gosselin
 # pyhdf-0.7.2
 #
@@ -20,8 +23,8 @@ Author: Andre Gosselin
         Maurice-Lamontagne Institute
         gosselina@dfo-mpo.gc.ca
         
-Version: 0.7-1
-Date:    December 17 2003
+Version: 0.7-3
+Date:    July 13 2005
 
 Table of contents
 -----------------
@@ -138,15 +141,21 @@ directly. Only 'pyhdf.SD' should be imported by the user program.
 
 Prerequisites
 -------------
-The following software must be installed in order for SD to
+The following software must be installed in order for pyhdf release 0.7-3 to
 work.
   
-  HDF (v4) library
+  HDF (v4) library, release 4.2r1
     pyhdf does *not* include the HDF4 library, which must
     be installed separately.
 
     HDF is available at:
     "http://hdf.ncsa.uiuc.edu/obtain.html".
+
+  HDF4.2r1 in turn needs the following packages :
+  
+    libjpeg (jpeg library) release 6b
+    libz    (zlib library) release 1.1.4 or above
+    libsz   (SZIP library) release 2.0
 
 The SD module also needs:
 
@@ -516,11 +525,15 @@ In more detail:
              SDC.UNLIMITED   dimension can grow dynamically
 
            data compression:
-             COMP_NONE
-             COMP_RLE
-             COMP_NBIT
-             COMP_SKPHUFF
-             COMP_DEFLATE
+             SDC.COMP_NONE
+             SDC.COMP_RLE
+             SDC.COMP_NBIT
+             SDC.COMP_SKPHUFF
+             SDC.COMP_DEFLATE
+             SDC.COMP_SZIP
+             SDC.COMP_SZIP_EC
+             SDC.COMP_SZIP_NN
+             SDC.COMP_SZIP_RAW
 
   SDS    The SDS class implements an HDF scientific dataset (SDS) object.
 
@@ -581,8 +594,8 @@ In more detail:
              setrange()     set the dataset min and max values
 
            compression
-             getcompress()  get the dataset compression type
-             setcompress()  set the dataset compression type
+             getcompress()  get info about the dataset compression type and mode
+             setcompress()  set the dataset compression type and mode
              
            misc
              setexternalfile()  store the dataset in an external file
@@ -982,7 +995,7 @@ try:
 except ImportError:
     raise HDF4Error, "Numeric package required but not installed"
 
-class SDC:
+class SDC(object):
     """The SDC class holds contants defining opening modes and data types.
 
            file opening modes:
@@ -1013,11 +1026,16 @@ class SDC:
              SDC.UNLIMITED  0    dimension can grow dynamically
 
            data compression:
-             COMP_NONE      0
-             COMP_RLE       1
-             COMP_NBIT      2
-             COMP_SKPHUFF   3
-             COMP_DEFLATE   4
+             SDC.COMP_NONE      0
+             SDC.COMP_RLE       1
+             SDC.COMP_NBIT      2
+             SDC.COMP_SKPHUFF   3
+             SDC.COMP_DEFLATE   4
+             SDC.COMP_SZIP      5
+
+             SDC.COMP_SZIP_EC     4
+             SDC.COMP_SZIP_NN    32
+             SDC.COMP_SZIP_RAW  128
 
 """
 
@@ -1049,6 +1067,11 @@ class SDC:
     COMP_NBIT    = _C.COMP_CODE_NBIT
     COMP_SKPHUFF = _C.COMP_CODE_SKPHUFF
     COMP_DEFLATE = _C.COMP_CODE_DEFLATE
+    COMP_SZIP    = _C.COMP_CODE_SZIP
+
+    COMP_SZIP_EC  =   4 
+    COMP_SZIP_NN  =  32
+    COMP_SZIP_RAW = 128
 
     # Types with an equivalent in the Numeric package
     # NOTE:
@@ -1072,7 +1095,7 @@ class SDC:
         pass
 
 
-class SDAttr:
+class SDAttr(object):
 
     def __init__(self, obj, index_or_name):
         """Init an SDAttr instance. Should not be called directly by
@@ -1296,7 +1319,7 @@ class SDAttr:
         _checkErr('find', self._index, 'illegal attribute')
 
 
-class SD:
+class SD(object):
     """The SD class implements an HDF SD interface.
     To instantiate an SD class, call the SD() constructor.
     To set attributes on an SD instance, call the SD.attr()
@@ -1665,7 +1688,7 @@ class SD:
         return res
         
 
-class SDS:
+class SDS(object):
     """The SDS class implements an HDF dataset object.
     To create an SDS instance, call the create() or select()
     methods of the SD class. To set attributes on an SDS instance,
@@ -2532,38 +2555,62 @@ class SDS:
         _checkErr('setrange', status, 'cannot execute')
 
     def getcompress(self):
-        """Retrieves data set compression type.
+        """Retrieves info about dataset compression type and mode.
  
         Args:
           no argument
         Returns: 
-          2-element tuple holding :
-            -compression type, one of the SDC.COMP_xxx constants
-            -auxiliary value for some of the compression types
+          tuple holding :
+            -compression type (one of the SDC.COMP_xxx constants)
+            -one one more auxiliary values, depending on the compression type
+               COMP_SKPHUFF    1 value  : skip size
+               COMP_DEFLATE    1 value  : level (1 to 9)
+               COMP_SZIP       5 values : options mask,
+                                          pixels per block (2 to 32)
+                                          pixels per scanline,
+                                          bits per pixel (number of bits in the SDS datatype) 
+                                          pixels (number of elements in the SDS)
 
-        An exception is raised if compression is not set.
+                                          Note: in the context of an SDS, the word "pixel"
+                                          should really be understood as meaning "data element",
+                                          eg a cell value inside a multidimensional grid.
+                                          Test the options mask against constants SDC.COMP_SZIP_NN
+                                          and SDC.COMP_SZIP_EC, eg :
+                                            if optionMask & SDC.COMP_SZIP_EC:
+                                                print "EC encoding scheme used"
+
+        An exception is raised if dataset is not compressed.
   
         C library equivalent: SDgetcompress
                                                            """
 
-        status, comp_type, value = _C._SDgetcompress(self._id)
+        status, comp_type, value, v2, v3, v4, v5 = _C._SDgetcompress(self._id)
         _checkErr('getcompress', status, 'no compression')
-        return comp_type, value
+        if comp_type == SDC.COMP_SZIP:
+               return comp_type, value, v2, v3, v4, v5
+        else:
+            return comp_type, value
 
-    def setcompress(self, comp_type, value=0):
-        """Compresses the data set using a specified compression method.
+    def setcompress(self, comp_type, value=0, v2=0):
+        """Compresses the dataset using a specified compression method.
  
         Args:
           comp_type    compression type, identified by one of the
                        SDC.COMP_xxx constants
-          value        auxiliary value needed by some compression types
-                       (data size for SDC.COMP_SKPHUFF, deflate level
-                       for SDC.COMP_DEFLATE; omit for other types)
+          value,v2     auxiliary value(s) needed by some compression types
+                         SDC.COMP_SKPHUFF   value=data size, v2 is ignored
+                         SDC.COMP_DEFLATE   value=deflate level (1 to 9), v2 is ignored
+                         SDC.COMP_SZIP      value=encoding scheme (SDC.COMP_SZIP_EC or
+			                    SDC.COMP_SZIP_NN), v2=pixels per block (2 to 32)
         Returns: None
   
         SDC.COMP_DEFLATE applies the GZIP compression to the dataset,
         and the value varies from 1 to 9, according to the level of
         compression desired.
+
+        SDC.COMP_SZIP compresses the dataset using the SZIP algorithm. See the HDF User's Guide
+        for details about the encoding scheme and the number of pixels per block. SZIP is new
+        with HDF 4.2.
  
         'setcompress' must be called before writing to the dataset.
         The dataset must be written all at once, unless it is 
@@ -2574,7 +2621,7 @@ class SDS:
         C library equivalent: SDsetcompress
                                                           """
 
-        status = _C._SDsetcompress(self._id, comp_type, value)
+        status = _C._SDsetcompress(self._id, comp_type, value, v2)
         _checkErr('setcompress', status, 'cannot execute')
 
 
@@ -2695,7 +2742,7 @@ class SDS:
         return res
 
 
-class SDim:
+class SDim(object):
     """The SDim class implements a dimension object.
        There can be one dimension object for each dataset dimension.
        To create an SDim instance, call the dim() method of an SDS class

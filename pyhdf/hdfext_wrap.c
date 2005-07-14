@@ -1196,7 +1196,8 @@ extern int32 SDsetrange(int32,void const *,void const *);
 
 #include "hcomp.h"
 
-static int32 _SDgetcompress(int32 sds_id, int32 *comp_type, int32 *value)    {
+static int32 _SDgetcompress(int32 sds_id, int32 *comp_type, int32 *value, 
+                            int32 *v2, int32 *v3, int32 *v4, int32 *v5)    {
 
     comp_info c_info;
     int32 status;
@@ -1212,11 +1213,21 @@ static int32 _SDgetcompress(int32 sds_id, int32 *comp_type, int32 *value)    {
         case COMP_CODE_DEFLATE:
             *value = c_info.deflate.level;
             break;
+#ifndef NOSZIP
+        case COMP_CODE_SZIP:
+            *value = c_info.szip.options_mask;
+            *v2 =    c_info.szip.pixels_per_block;
+            *v3 =    c_info.szip.pixels_per_scanline;
+            *v4 =    c_info.szip.bits_per_pixel;
+            *v5 =    c_info.szip.pixels;
+            break;
+#endif
         }
     return status;
     }
 
-static int32 _SDsetcompress(int32 sds_id, int32 comp_type, int32 value)    {
+static int32 _SDsetcompress(int32 sds_id, int32 comp_type, int32 value,
+                            int32 v2)    {
 
     comp_info c_info;
 
@@ -1230,13 +1241,19 @@ static int32 _SDsetcompress(int32 sds_id, int32 comp_type, int32 value)    {
         case COMP_CODE_DEFLATE:
             c_info.deflate.level = value;
             break;
+#ifndef NOSZIP
+        case COMP_CODE_SZIP:
+            c_info.szip.options_mask = value;
+            c_info.szip.pixels_per_block = v2;
+            break;
+#endif
         }
     return SDsetcompress(sds_id, comp_type, &c_info);
     }
 
 
-extern int32 _SDgetcompress(int32,int32 *,int32 *);
-extern int32 _SDsetcompress(int32,int32,int32);
+extern int32 _SDgetcompress(int32,int32 *,int32 *,int32 *,int32 *,int32 *,int32 *);
+extern int32 _SDsetcompress(int32,int32,int32,int32);
 extern int32 SDsetexternalfile(int32,char const *,int32);
 extern intn Vinitialize(int32);
 extern int32 VSattach(int32,int32,char const *);
@@ -3274,14 +3291,26 @@ static PyObject *_wrap__SDgetcompress(PyObject *self, PyObject *args) {
     int32 arg1 ;
     int32 *arg2 = (int32 *) 0 ;
     int32 *arg3 = (int32 *) 0 ;
+    int32 *arg4 = (int32 *) 0 ;
+    int32 *arg5 = (int32 *) 0 ;
+    int32 *arg6 = (int32 *) 0 ;
+    int32 *arg7 = (int32 *) 0 ;
     int32 result;
     int32 temp2 ;
     int32 temp3 ;
+    int32 temp4 ;
+    int32 temp5 ;
+    int32 temp6 ;
+    int32 temp7 ;
     
     arg2 = &temp2;
     arg3 = &temp3;
+    arg4 = &temp4;
+    arg5 = &temp5;
+    arg6 = &temp6;
+    arg7 = &temp7;
     if(!PyArg_ParseTuple(args,(char *)"i:_SDgetcompress",&arg1)) goto fail;
-    result = (int32)_SDgetcompress(arg1,arg2,arg3);
+    result = (int32)_SDgetcompress(arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     
     resultobj = PyInt_FromLong((long)result);
     {
@@ -3290,6 +3319,22 @@ static PyObject *_wrap__SDgetcompress(PyObject *self, PyObject *args) {
     }
     {
         PyObject *o = PyInt_FromLong((long) (*arg3));
+        resultobj = t_output_helper(resultobj,o);
+    }
+    {
+        PyObject *o = PyInt_FromLong((long) (*arg4));
+        resultobj = t_output_helper(resultobj,o);
+    }
+    {
+        PyObject *o = PyInt_FromLong((long) (*arg5));
+        resultobj = t_output_helper(resultobj,o);
+    }
+    {
+        PyObject *o = PyInt_FromLong((long) (*arg6));
+        resultobj = t_output_helper(resultobj,o);
+    }
+    {
+        PyObject *o = PyInt_FromLong((long) (*arg7));
         resultobj = t_output_helper(resultobj,o);
     }
     return resultobj;
@@ -3303,10 +3348,11 @@ static PyObject *_wrap__SDsetcompress(PyObject *self, PyObject *args) {
     int32 arg1 ;
     int32 arg2 ;
     int32 arg3 ;
+    int32 arg4 ;
     int32 result;
     
-    if(!PyArg_ParseTuple(args,(char *)"iii:_SDsetcompress",&arg1,&arg2,&arg3)) goto fail;
-    result = (int32)_SDsetcompress(arg1,arg2,arg3);
+    if(!PyArg_ParseTuple(args,(char *)"iiii:_SDsetcompress",&arg1,&arg2,&arg3,&arg4)) goto fail;
+    result = (int32)_SDsetcompress(arg1,arg2,arg3,arg4);
     
     resultobj = PyInt_FromLong((long)result);
     return resultobj;
@@ -4961,6 +5007,7 @@ static swig_const_info swig_const_table[] = {
 { SWIG_PY_INT,     (char *)"COMP_CODE_NBIT", (long) 2, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"COMP_CODE_SKPHUFF", (long) 3, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"COMP_CODE_DEFLATE", (long) 4, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"COMP_CODE_SZIP", (long) 5, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"DFTAG_NDG", (long) 720, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"DFTAG_VH", (long) 1962, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"DFTAG_VG", (long) 1965, 0, 0, 0},

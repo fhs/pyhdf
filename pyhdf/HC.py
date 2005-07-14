@@ -1,9 +1,12 @@
-# $Id: HC.py,v 1.1 2004-08-02 15:36:04 gosselin Exp $
+# $Id: HC.py,v 1.2 2005-07-14 01:36:41 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/08/02 15:36:04  gosselin
+# Initial revision
+#
 
 import hdfext as _C
 
-class HC:
+class HC(object):
     """The HC class holds contants defining opening modes and data types.
 
 File opening modes (flags ORed together)

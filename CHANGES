@@ -1,5 +1,8 @@
-# $Id: CHANGES,v 1.6 2004-08-02 17:04:38 gosselin Exp $
+# $Id: CHANGES,v 1.7 2005-07-14 01:36:40 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.6  2004/08/02 17:04:38  gosselin
+# pyhdf-0.7-2
+#
 # Revision 1.4  2004/08/02 15:29:52  gosselin
 # pyhdf-0.7-1
 #
@@ -14,6 +17,24 @@
 #
 
 List of changes to 'pyhdf' since the initial release.
+
+pyhdf 0.7-3
+-----------
+  July 13 2005
+    Interim release.
+      - The main motivation for this release is to benefit from HDF-4.2r1 bug fixes and 
+        optionally the SZIP compression method allowed by HDF4.2 on SDS datasets.
+      - To use this release, you need to install HDF4.2r1. It will *NOT* work over
+        HDF4.1. To compress datasets using SZIP, szip 2.0 library must also be installed,
+        and your HDF installation must have been compiled with the szip option enabled.
+      - Conversely, pyhdf versions preceeding 0.7-3 will *NOT* work over HDF4.2. 
+        Only pyhdf-0.7-3 will work with HDF4.2.
+      - Added new compression type SDC.COMP_SZIP, and defined new constants SDC.COMP_SZIP_EC
+        and SDC.COMP_SZIP_NN to configure the behavior of SZIP.
+      - Updated methods SDS.sdsetcompress() and SDS.getcompress() to allow compression using 
+        SZIP compression, and inquire about SZIP compression configuration.
+      - All classes are now of "new-style" type (eg they derive from calss 'object').
+      - Updated documentation.
 
 pyhdf-0.7-2
 -----------

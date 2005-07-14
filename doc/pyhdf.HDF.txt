@@ -1,10 +1,10 @@
-Python Library Documentation: module pyhdf.HDF in pyhdf
+Help on module pyhdf.HDF in pyhdf:
 
 NAME
     pyhdf.HDF
 
 FILE
-    /usr/lib/python2.2/site-packages/pyhdf/HDF.py
+    /usr/lib/python2.4/site-packages/pyhdf/HDF.py
 
 DESCRIPTION
     A module of the pyhdf package implementing the basic API of the
@@ -15,8 +15,8 @@ DESCRIPTION
             Maurice-Lamontagne Institute
             gosselina@dfo-mpo.gc.ca
             
-    Version: 0.7-1
-    Date:    FIXDATE
+    Version: 0.7-3
+    Date:    July 13 2005
     
     Introduction
     ------------
@@ -67,9 +67,94 @@ DESCRIPTION
         ishdf()            determine whether a file is an HDF file
 
 CLASSES
-    HDF
+    __builtin__.object
+        pyhdf.HC.HC
+        HDF
+    exceptions.Exception
+        pyhdf.error.HDF4Error
     
-    class HDF
+    class HC(__builtin__.object)
+     |  The HC class holds contants defining opening modes and data types.
+     |  
+     |  File opening modes (flags ORed together)
+     |  
+     |      CREATE       4    create file if it does not exist
+     |      READ         1    read-only mode
+     |      TRUNC      256    truncate if it exists
+     |      WRITE        2    read-write mode
+     |  
+     |  Data types
+     |  
+     |      CHAR         4    8-bit char
+     |      CHAR8        4    8-bit char
+     |      UCHAR        3    unsigned 8-bit integer (0 to 255)
+     |      UCHAR8       3    unsigned 8-bit integer (0 to 255)
+     |      INT8        20    signed 8-bit integer (-128 to 127)
+     |      UINT8       21    unsigned 8-bit integer (0 to 255)
+     |      INT16       23    signed 16-bit integer
+     |      UINT16      23    unsigned 16-bit integer
+     |      INT32       24    signed 32-bit integer
+     |      UINT32      25    unsigned 32-bit integer
+     |      FLOAT32      5    32-bit floating point
+     |      FLOAT64      6    64-bit floating point
+     |  
+     |  Tags
+     |  
+     |      DFTAG_NDG  720    dataset
+     |      DFTAG_VH  1962    vdata
+     |      DFTAG_VG  1965    vgroup
+     |  
+     |  Data and other attributes defined here:
+     |  
+     |  CHAR = 4
+     |  
+     |  CHAR8 = 4
+     |  
+     |  CREATE = 4
+     |  
+     |  DFTAG_NDG = 720
+     |  
+     |  DFTAG_VG = 1965
+     |  
+     |  DFTAG_VH = 1962
+     |  
+     |  FLOAT32 = 5
+     |  
+     |  FLOAT64 = 6
+     |  
+     |  FULL_INTERLACE = 0
+     |  
+     |  INT16 = 22
+     |  
+     |  INT32 = 24
+     |  
+     |  INT8 = 20
+     |  
+     |  NO_INTERLACE = 1
+     |  
+     |  READ = 1
+     |  
+     |  TRUNC = 256
+     |  
+     |  UCHAR = 3
+     |  
+     |  UCHAR8 = 3
+     |  
+     |  UINT16 = 23
+     |  
+     |  UINT32 = 25
+     |  
+     |  UINT8 = 21
+     |  
+     |  WRITE = 2
+     |  
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__ = <attribute '__weakref__' of 'HC' objects>
+     |      list of weak references to the object (if defined)
+    
+    class HDF(__builtin__.object)
      |  The HDF class encapsulates the basic HDF functions.
      |  Its main use is to open and close an HDF file, and return
      |  instances of the major HDF APIs (except for SD).
@@ -173,17 +258,27 @@ CLASSES
      |      C library equivalent : Vstart (in fact: Vinitialize)
      |  
      |  ----------------------------------------------------------------------
-     |  Data and non-method functions defined here:
+     |  Data and other attributes defined here:
      |  
-     |  __doc__ = 'The HDF class encapsulates the basic HDF functio...ntiate a...
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
      |  
-     |  __module__ = 'pyhdf.HDF'
+     |  __weakref__ = <attribute '__weakref__' of 'HDF' objects>
+     |      list of weak references to the object (if defined)
+    
+    class HDF4Error(exceptions.Exception)
+     |  Methods defined here:
+     |  
+     |  __init__(self, args=None)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from exceptions.Exception:
+     |  
+     |  __getitem__(...)
+     |  
+     |  __str__(...)
 
 FUNCTIONS
-    _array_to_ret(buf, nValues)
-    
-    _array_to_str(buf, nValues)
-    
     getlibversion()
         Get the library version info.
         
@@ -210,6 +305,5 @@ FUNCTIONS
 
 DATA
     __all__ = ['HDF', 'HDF4Error', 'HC', 'getlibversion', 'ishdf']
-    __file__ = '/usr/lib/python2.2/site-packages/pyhdf/HDF.pyc'
-    __name__ = 'pyhdf.HDF'
+
 

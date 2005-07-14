@@ -1,12 +1,15 @@
-# $Id: INSTALL,v 1.2 2004-08-02 15:16:38 gosselin Exp $
+# $Id: INSTALL,v 1.3 2005-07-14 01:36:41 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/08/02 15:16:38  gosselin
+# pyhdf 0.6-1
+#
 # Revision 1.1  2004/08/02 14:45:56  gosselin
 # Initial revision
 #
 
 Installing the pycdf python package.
 
-pyhdf has been successfully installed under python 2.2 on
+pyhdf has been successfully installed under python 2.2 and above on
 the following platforms:
   -Linux, kernel 2.4.19 and above
   -Tru64 4.0.f and above
@@ -22,6 +25,10 @@ To install, follow these steps.
 1-Install the HDF4 library. Source code is available at:
   http://hdf.ncsa.uiuc.edu/hdf4.html. Binary packages
   are available for most popular environments.
+  Release 4.2r1 must be installed for pyhdf-0.7-3 to work.
+
+  HDF4.2 in turn requires some libraries : libjpeg, libz, and libsz
+  if the SZIP compression method is to be used.
 
 2-Install the python Numeric package. Source code is
   available at: numpy.sourceforge.net. Binary packages
@@ -35,7 +42,7 @@ To install, follow these steps.
 
 4-If your HDF4 libraries or include files reside in directories
   that are not searched by default on your system,
-  the installation script wil complain about missing files.
+  the installation script will complain about missing files.
   In that case, edit the `setup.py' file and locate the 
   lines reading:
 
@@ -45,18 +52,23 @@ To install, follow these steps.
   Remove the pound sign to uncomment the line(s) to edit, and enter 
   the required paths in quotes between the square brackets. For ex.,
   if at your site HDF has been installed in directory
-  "/usr/local/hdf4", enter:
+  "/usr/local/hdf-4.2r1", enter:
 
-    include_dirs = ["/usr/local/hdf4/include"]
-    library_dirs = ["/usr/local/hdf4/lib"],
+    include_dirs = ["/usr/local/hdf-4.2r1/include"]
+    library_dirs = ["/usr/local/hdf-4.2r1/lib"],
 
-  The HDF installation comes with its own 'jpeg' and 'z' (compression)
-  library. This could cause trouble, since other versions of those
-  libraries may also be installed on your system. If this is the case, 
-  it is important that pyhdf be linked against the HDF versions of 'jpeg' 
-  and 'z', *not* the other ones. The setup script will tell the linker to
-  first look in the directories specified by "library_dirs", and this may
-  be a good reason to set this parameter in the first place.
+  HDF4.2 no more provides its own copies of the jpeg and z libraries.
+  Those must be installed separately (on Linux, they should be part of
+  any standard distribution). The sz 2.0 library must be installed if the SZIP
+  compression method is to be used, and HDF must have been compiled with
+  SZIP support. Note that if you installed precompiled HDF binaries provided
+  by NCSA, you *must* install SZIP in a separate step (see NCSA hdf site for
+  details). In case your HDF library does not include SZIP support,
+  set the following inside file 'setup.py' (see comments inside this file) :
+
+    extra_compile_args=["-DNOSZIP"]
+    libraries = ["mfhdf", "df", "jpeg", "z"]
+
 
   TRU64 note
     The HDF installation creates its libraries as archive (.a) files,
@@ -79,6 +91,18 @@ To install, follow these steps.
 
 5-As root, execute the command:
 
-    python setup.py install
+      # python setup.py install
+
+    As a precaution, you may want to first wipe out any previus pyhdf 
+    installation, if any :
+
+      # rm -rf <python-stdlib-path>/site-packages/pyhdf
+
+    where <python-stdlib-path> stands for the python standard library path
+    (on linux: /usr/lib/pythonx.x).
+
+6- Before experimenting with pyhdf, exit root privileges and leave the installation directory
+   (the one where you untarred the product). Failing to do so may cause all sorts
+   of mysterious problems.
 
 Enjoy!
