@@ -247,8 +247,8 @@ perl5_clean:
 ##################################################################
 
 # Make sure these locate your Python installation
-PYTHON_INCLUDE= -DHAVE_CONFIG_H -I/usr/include/python2.3 -I/usr/lib/python2.3/config
-PYTHON_LIB    = /usr/lib/python2.3/config
+PYTHON_INCLUDE= -DHAVE_CONFIG_H -I/usr/include/python2.4 -I/usr/lib/python2.4/config
+PYTHON_LIB    = /usr/lib/python2.4/config
 
 # Extra Python specific dynamic linking options
 PYTHON_DLNK   = 
