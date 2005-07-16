@@ -1,0 +1,5 @@
+#!/bin/sh
+
+pydoc    pycdf.pycdf > pycdf.txt
+pydoc -w pycdf.pycdf  1>/dev/null 2>&1
+mv -f  pycdf.pycdf.html pycdf.html
