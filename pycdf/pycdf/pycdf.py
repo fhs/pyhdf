@@ -1,8 +1,12 @@
+# $Id: pycdf.py,v 1.2 2005-07-16 16:22:35 gosselin_a Exp $
+# $Name: not supported by cvs2svn $
+# $Log: not supported by cvs2svn $
+
 """Python interface to the Unidata netCDF library
 (see: www.unidata.ucar.edu/packages/netcdf).
 
-Version: 0.5-2
-Date:    July 20 2003
+Version: 0.5-3
+Date:    July 16 2005
 
   
 Table of contents
@@ -792,7 +796,7 @@ def strerror(ncerr) :      # static method
                                             """
     return _C.nc_strerror(ncerr)
 
-class NC:
+class NC(object):
     """This class holds constants defining data types and opening modes"""
     
     NOERR      = _C.NOERR
@@ -815,7 +819,7 @@ class NC:
     GLOBAL     = _C.GLOBAL
     UNLIMITED  = _C.UNLIMITED  
 
-class CDF:
+class CDF(object):
     """The CDF class describes a netCDF dataset.
     To instantiate a netCDF dataset, call the CDF()
     constructor.                                     """
@@ -1515,7 +1519,7 @@ class CDF:
         return res
         
 
-class CDFDim:
+class CDFDim(object):
     """The CDFDim class describes a netCDF dimension.
     To instantiate a dimension, obtain a CDF instance,
     and then call one of the following methods of this
@@ -1610,7 +1614,7 @@ class CDFDim:
         _checkCDFErr('rename', 
                      _C.nc_rename_dim(self._ncid._id, self._id, name))
 
-class CDFVar:
+class CDFVar(object):
     """The CDFVar class defines a netCDF variable.
     To instantiate a netCDF variable, first obtain a
     CDF instance, then call one of the following methods of 
@@ -2403,7 +2407,7 @@ class CDFVar:
         return tuple(shape)
 
 
-class CDFAttr:
+class CDFAttr(object):
     """The CDFattr class describes a netCDF attribute,
     either a global (dataset) attribute or a variable attribute.
     To create an instance of this class, first obtain
