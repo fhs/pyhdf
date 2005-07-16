@@ -1,17 +1,17 @@
-Python Library Documentation: module pycdf.pycdf in pycdf
+Help on module pycdf.pycdf in pycdf:
 
 NAME
     pycdf.pycdf
 
 FILE
-    /usr/lib/python2.2/site-packages/pycdf/pycdf.py
+    /usr/lib/python2.4/site-packages/pycdf/pycdf.py
 
 DESCRIPTION
     Python interface to the Unidata netCDF library
     (see: www.unidata.ucar.edu/packages/netcdf).
     
-    Version: 0.5-2
-    Date:    July 20 2003
+    Version: 0.5-3
+    Date:    July 16 2005
     
       
     Table of contents
@@ -83,11 +83,11 @@ DESCRIPTION
     pycdf is a proper Python package, eg a collection of modules stored under
     a directory named by the package and holding an __init__.py file.
     The pycdf package is composed of 3 modules:
-      '_pycdfext'  C extension module responsible for wrapping the
+       _pycdfext   C extension module responsible for wrapping the
                    netcdf library
-      'pycdfext'   python module implementing some utility functions
+       pycdfext    python module implementing some utility functions
                    complementing the extension module
-      'pycdf'      python module which wraps the extension module inside
+       pycdf       python module which wraps the extension module inside
                    an OOP framework
     
     _pycdfext and pycdfest were generated with the SWIG preprocessor.
@@ -423,16 +423,16 @@ DESCRIPTION
                sync()       synchronize the dataset to disk
     
              dataset inquiry
+               attributes()    get a dictionnary describing the dataset
+                               global attributes
+               dimensions()    get a dictionnary describing the dataset
+                               dimensions
                inq()           query number of dimensions, variables, global
                                attributes and id of the unlimited dimension
                inq_natts()     query number of global attributes
                inq_ndims()     query number of dimensions
                inq_nvars()     query number of variables
                inq_unlimdim()  query id of the unlimited dimension
-               attributes()    get a dictionnary describing the dataset
-                               global attributes
-               dimensions()    get a dictionnary describing the dataset
-                               dimensions
                variables()     get a dictionnary describing the dataset
                                variables
                
@@ -518,38 +518,37 @@ DESCRIPTION
                    rename()    rename the variable
     
     
-    Constants
-    ---------
-    pycdf defines the same symbolic constants as the C API for setting
-    file opening modes, data types, etc. Those constants are defined as
-    attributes of the NC class.
+      NC       The NC class defines constants for setting file opening modes,
+               data Those constants are defined as class attributes.
+               Constants are named after their C API counterparts.
     
-      data types:
-        NC.BYTE
-        NC.CHAR
-        NC.SHORT
-        NC.INT
-        NC.FLOAT
-        NC.DOUBLE
+               
+                data types:
+                  NC.BYTE
+                  NC.CHAR
+                  NC.SHORT
+                  NC.INT
+                  NC.FLOAT
+                  NC.DOUBLE
     
-      opening modes:
-        NC.CREATE   (note: specific to pycdf, absent from the C API)
-        NC.TRUNC    (note: specific to pycdf, absent from the C API)
-        NC.LOCK
-        NC.SHARE
-        NC.NOWRITE
-        NC.WRITE
-    
-      fill mode:
-        NC.FILL
-        NC.NOFILL
-    
-      attribute:
-        NC.GLOBAL
-    
-      dimension:
-        NC.UNLIMITED
-    
+                file opening modes:
+                  NC.CREATE   (note: specific to pycdf, absent from the C API)
+                  NC.TRUNC    (note: specific to pycdf, absent from the C API)
+                  NC.LOCK
+                  NC.SHARE
+                  NC.NOWRITE
+                  NC.WRITE
+                  
+                dataset fill mode:
+                  NC.FILL
+                  NC.NOFILL
+                  
+                attribute:
+                  NC.GLOBAL
+                  
+                dimension:
+                  NC.UNLIMITED
+                  
     Examples
     --------
     
@@ -793,15 +792,16 @@ DESCRIPTION
           print "CDFError", msg
 
 CLASSES
-    CDF
-    CDFAttr
-    CDFDim
-    CDFVar
+    __builtin__.object
+        CDF
+        CDFAttr
+        CDFDim
+        CDFVar
+        NC
     exceptions.Exception
         CDFError
-    NC
     
-    class CDF
+    class CDF(__builtin__.object)
      |  The CDF class describes a netCDF dataset.
      |  To instantiate a netCDF dataset, call the CDF()
      |  constructor.
@@ -846,10 +846,6 @@ CLASSES
      |      C library equivalent : nc_create / nc_open
      |  
      |  __setattr__(self, name, value)
-     |  
-     |  _forceDataMode(self)
-     |  
-     |  _forceDefineMode(self)
      |  
      |  abort(self)
      |      Back out of recent definitions to the dataset. Dataset is closed
@@ -989,7 +985,7 @@ CLASSES
      |      C library equivalent : no equivalent
      |  
      |  dim(self, name_num)
-     |       Get a dimension instance given its name or number.
+     |      Get a dimension instance given its name or number.
      |      Dataset mode: does not matter.
      |      
      |      Args:
@@ -1192,13 +1188,15 @@ CLASSES
      |      C library equivalent : no equivalent
      |  
      |  ----------------------------------------------------------------------
-     |  Data and non-method functions defined here:
+     |  Data and other attributes defined here:
      |  
-     |  __doc__ = 'The CDF class describes a netCDF dataset.\n    To...constru...
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
      |  
-     |  __module__ = 'pycdf.pycdf'
+     |  __weakref__ = <attribute '__weakref__' of 'CDF' objects>
+     |      list of weak references to the object (if defined)
     
-    class CDFAttr
+    class CDFAttr(__builtin__.object)
      |  The CDFattr class describes a netCDF attribute,
      |  either a global (dataset) attribute or a variable attribute.
      |  To create an instance of this class, first obtain
@@ -1343,13 +1341,15 @@ CLASSES
      |      C library equivalent : nc_rename_att
      |  
      |  ----------------------------------------------------------------------
-     |  Data and non-method functions defined here:
+     |  Data and other attributes defined here:
      |  
-     |  __doc__ = 'The CDFattr class describes a netCDF attribute,\n...       ...
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
      |  
-     |  __module__ = 'pycdf.pycdf'
+     |  __weakref__ = <attribute '__weakref__' of 'CDFAttr' objects>
+     |      list of weak references to the object (if defined)
     
-    class CDFDim
+    class CDFDim(__builtin__.object)
      |  The CDFDim class describes a netCDF dimension.
      |  To instantiate a dimension, obtain a CDF instance,
      |  and then call one of the following methods of this
@@ -1414,23 +1414,18 @@ CLASSES
      |      C library equivalent : nc_rename_dim
      |  
      |  ----------------------------------------------------------------------
-     |  Data and non-method functions defined here:
+     |  Data and other attributes defined here:
      |  
-     |  __doc__ = 'The CDFDim class describes a netCDF dimension.\n ...is\n   ...
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
      |  
-     |  __module__ = 'pycdf.pycdf'
+     |  __weakref__ = <attribute '__weakref__' of 'CDFDim' objects>
+     |      list of weak references to the object (if defined)
     
     class CDFError(exceptions.Exception)
      |  Methods defined here:
      |  
      |  __init__(self, procName, errCode, errMsg)
-     |  
-     |  ----------------------------------------------------------------------
-     |  Data and non-method functions defined here:
-     |  
-     |  __doc__ = None
-     |  
-     |  __module__ = 'pycdf.pycdf'
      |  
      |  ----------------------------------------------------------------------
      |  Methods inherited from exceptions.Exception:
@@ -1439,15 +1434,13 @@ CLASSES
      |  
      |  __str__(...)
     
-    class CDFVar
+    class CDFVar(__builtin__.object)
      |  The CDFVar class defines a netCDF variable.
      |  To instantiate a netCDF variable, first obtain a
      |  CDF instance, then call one of the following methods of 
      |  this instance: def_var(), inq_var(id) or var() .
      |  
      |  Methods defined here:
-     |  
-     |  _CDFVar__buildStartCountStride = __buildStartCountStride(self, elem)
      |  
      |  __getattr__(self, name)
      |      Get value of variable attribute 'name'.
@@ -1721,16 +1714,18 @@ CLASSES
      |      C library equivalent : no equivalent
      |  
      |  ----------------------------------------------------------------------
-     |  Data and non-method functions defined here:
+     |  Data and other attributes defined here:
      |  
-     |  __doc__ = 'The CDFVar class defines a netCDF variable.\n    ...this in...
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
      |  
-     |  __module__ = 'pycdf.pycdf'
+     |  __weakref__ = <attribute '__weakref__' of 'CDFVar' objects>
+     |      list of weak references to the object (if defined)
     
-    class NC
+    class NC(__builtin__.object)
      |  This class holds constants defining data types and opening modes
      |  
-     |  Data and non-method functions defined here:
+     |  Data and other attributes defined here:
      |  
      |  BYTE = 1
      |  
@@ -1766,19 +1761,13 @@ CLASSES
      |  
      |  WRITE = 1
      |  
-     |  __doc__ = 'This class holds constants defining data types and opening ...
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
      |  
-     |  __module__ = 'pycdf.pycdf'
+     |  __weakref__ = <attribute '__weakref__' of 'NC' objects>
+     |      list of weak references to the object (if defined)
 
 FUNCTIONS
-    _array_to_ret(buf, nValues)
-         Convert array 'buf' to a scalar or a list.
-    
-    _array_to_str(buf, nValues)
-         Convert array of bytes 'buf' to a string .
-    
-    _checkCDFErr(procName, errCode, msg='')
-    
     inq_libvers()
         Return the netCDF library version.
         
@@ -1801,6 +1790,5 @@ FUNCTIONS
 
 DATA
     __all__ = ['CDF', 'CDFAttr', 'CDFDim', 'CDFVar', 'NC', 'CDFError', 'in...
-    __file__ = '/usr/lib/python2.2/site-packages/pycdf/pycdf.pyc'
-    __name__ = 'pycdf.pycdf'
+
 

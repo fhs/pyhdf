@@ -1,3 +1,7 @@
+# $Id: setup.py,v 1.2 2005-07-16 17:01:18 gosselin_a Exp $
+# $Name: not supported by cvs2svn $
+# $Log: not supported by cvs2svn $
+
 # distutils setup file for the pycdf package.
 
 from distutils.core import setup, Extension
@@ -18,7 +22,7 @@ setup(name         = 'pycdf',
                          'inside a Python OOP framework. Variables are'
 			 'read/written through Numeric arrays.',
       url          = 'ftp://nordet.qc.dfo-mpo.gc.ca/pub/soft/pycdf',
-      version      ='0.5-2',
+      version      ='0.5-3',
       packages     = ['pycdf'],
       ext_modules  = [_pycdf_ext]
       )

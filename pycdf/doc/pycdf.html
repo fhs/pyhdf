@@ -1,21 +1,19 @@
 
 <!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html><head><title>Python: module pycdf.pycdf</title>
-<style type="text/css"><!--
-TT { font-family: lucidatypewriter, lucida console, courier }
---></style></head><body bgcolor="#f0f0f8">
+</head><body bgcolor="#f0f0f8">
 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="pycdf.html"><font color="#ffffff">pycdf</font></a>.pycdf</strong></big></big></font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python2.2/site-packages/pycdf/pycdf.py">/usr/lib/python2.2/site-packages/pycdf/pycdf.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python2.4/site-packages/pycdf/pycdf.py">/usr/lib/python2.4/site-packages/pycdf/pycdf.py</a></font></td></tr></table>
     <p><tt>Python&nbsp;interface&nbsp;to&nbsp;the&nbsp;Unidata&nbsp;netCDF&nbsp;library<br>
 (see:&nbsp;www.unidata.ucar.edu/packages/netcdf).<br>
 &nbsp;<br>
-Version:&nbsp;0.5-2<br>
-Date:&nbsp;&nbsp;&nbsp;&nbsp;July&nbsp;20&nbsp;2003<br>
+Version:&nbsp;0.5-3<br>
+Date:&nbsp;&nbsp;&nbsp;&nbsp;July&nbsp;16&nbsp;2005<br>
 &nbsp;<br>
 &nbsp;&nbsp;<br>
 Table&nbsp;of&nbsp;contents<br>
@@ -87,11 +85,11 @@ Package&nbsp;components<br>
 pycdf&nbsp;is&nbsp;a&nbsp;proper&nbsp;Python&nbsp;package,&nbsp;eg&nbsp;a&nbsp;collection&nbsp;of&nbsp;modules&nbsp;stored&nbsp;under<br>
 a&nbsp;directory&nbsp;named&nbsp;by&nbsp;the&nbsp;package&nbsp;and&nbsp;holding&nbsp;an&nbsp;__init__.py&nbsp;file.<br>
 The&nbsp;pycdf&nbsp;package&nbsp;is&nbsp;composed&nbsp;of&nbsp;3&nbsp;modules:<br>
-&nbsp;&nbsp;'_pycdfext'&nbsp;&nbsp;C&nbsp;extension&nbsp;module&nbsp;responsible&nbsp;for&nbsp;wrapping&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;_pycdfext&nbsp;&nbsp;&nbsp;C&nbsp;extension&nbsp;module&nbsp;responsible&nbsp;for&nbsp;wrapping&nbsp;the<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;netcdf&nbsp;library<br>
-&nbsp;&nbsp;'pycdfext'&nbsp;&nbsp;&nbsp;python&nbsp;module&nbsp;implementing&nbsp;some&nbsp;utility&nbsp;functions<br>
+&nbsp;&nbsp;&nbsp;pycdfext&nbsp;&nbsp;&nbsp;&nbsp;python&nbsp;module&nbsp;implementing&nbsp;some&nbsp;utility&nbsp;functions<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;complementing&nbsp;the&nbsp;extension&nbsp;module<br>
-&nbsp;&nbsp;'pycdf'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;python&nbsp;module&nbsp;which&nbsp;wraps&nbsp;the&nbsp;extension&nbsp;module&nbsp;inside<br>
+&nbsp;&nbsp;&nbsp;pycdf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;python&nbsp;module&nbsp;which&nbsp;wraps&nbsp;the&nbsp;extension&nbsp;module&nbsp;inside<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;OOP&nbsp;framework<br>
 &nbsp;<br>
 _pycdfext&nbsp;and&nbsp;pycdfest&nbsp;were&nbsp;generated&nbsp;with&nbsp;the&nbsp;SWIG&nbsp;preprocessor.<br>
@@ -392,7 +390,7 @@ pycdf&nbsp;defines&nbsp;the&nbsp;following&nbsp;classes.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;netCDF&nbsp;file&nbsp;descriptor&nbsp;(refered&nbsp;to&nbsp;by&nbsp;'ncid'&nbsp;in&nbsp;the&nbsp;C&nbsp;manual),<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;all&nbsp;the&nbsp;netCDF&nbsp;top-level&nbsp;functions&nbsp;(those&nbsp;not&nbsp;dealing&nbsp;with<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimensions,&nbsp;variables&nbsp;or&nbsp;attributes).&nbsp;It&nbsp;contains&nbsp;constructors<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;create&nbsp;instances&nbsp;of&nbsp;all&nbsp;those&nbsp;object&nbsp;types.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;create&nbsp;instances&nbsp;of&nbsp;all&nbsp;those&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;types.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To&nbsp;create&nbsp;a&nbsp;<a href="#CDF">CDF</a>&nbsp;instance&nbsp;call&nbsp;the&nbsp;<a href="#CDF">CDF</a>()&nbsp;constructor.<br>
 &nbsp;<br>
@@ -427,16 +425,16 @@ pycdf&nbsp;defines&nbsp;the&nbsp;following&nbsp;classes.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sync()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;synchronize&nbsp;the&nbsp;dataset&nbsp;to&nbsp;disk<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataset&nbsp;inquiry<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attributes()&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;a&nbsp;dictionnary&nbsp;describing&nbsp;the&nbsp;dataset<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;attributes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimensions()&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;a&nbsp;dictionnary&nbsp;describing&nbsp;the&nbsp;dataset<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimensions<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;query&nbsp;number&nbsp;of&nbsp;dimensions,&nbsp;variables,&nbsp;global<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attributes&nbsp;and&nbsp;id&nbsp;of&nbsp;the&nbsp;unlimited&nbsp;dimension<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_natts()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;query&nbsp;number&nbsp;of&nbsp;global&nbsp;attributes<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_ndims()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;query&nbsp;number&nbsp;of&nbsp;dimensions<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_nvars()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;query&nbsp;number&nbsp;of&nbsp;variables<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_unlimdim()&nbsp;&nbsp;query&nbsp;id&nbsp;of&nbsp;the&nbsp;unlimited&nbsp;dimension<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attributes()&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;a&nbsp;dictionnary&nbsp;describing&nbsp;the&nbsp;dataset<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;attributes<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimensions()&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;a&nbsp;dictionnary&nbsp;describing&nbsp;the&nbsp;dataset<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimensions<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;variables()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;a&nbsp;dictionnary&nbsp;describing&nbsp;the&nbsp;dataset<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;variables<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
@@ -522,38 +520,37 @@ pycdf&nbsp;defines&nbsp;the&nbsp;following&nbsp;classes.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rename()&nbsp;&nbsp;&nbsp;&nbsp;rename&nbsp;the&nbsp;variable<br>
 &nbsp;<br>
 &nbsp;<br>
-Constants<br>
----------<br>
-pycdf&nbsp;defines&nbsp;the&nbsp;same&nbsp;symbolic&nbsp;constants&nbsp;as&nbsp;the&nbsp;C&nbsp;API&nbsp;for&nbsp;setting<br>
-file&nbsp;opening&nbsp;modes,&nbsp;data&nbsp;types,&nbsp;etc.&nbsp;Those&nbsp;constants&nbsp;are&nbsp;defined&nbsp;as<br>
-attributes&nbsp;of&nbsp;the&nbsp;<a href="#NC">NC</a>&nbsp;class.<br>
+&nbsp;&nbsp;<a href="#NC">NC</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<a href="#NC">NC</a>&nbsp;class&nbsp;defines&nbsp;constants&nbsp;for&nbsp;setting&nbsp;file&nbsp;opening&nbsp;modes,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;Those&nbsp;constants&nbsp;are&nbsp;defined&nbsp;as&nbsp;class&nbsp;attributes.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Constants&nbsp;are&nbsp;named&nbsp;after&nbsp;their&nbsp;C&nbsp;API&nbsp;counterparts.<br>
 &nbsp;<br>
-&nbsp;&nbsp;data&nbsp;types:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.BYTE<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.CHAR<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.SHORT<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.INT<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.FLOAT<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.DOUBLE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;types:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.BYTE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.CHAR<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.SHORT<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.INT<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.FLOAT<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.DOUBLE<br>
 &nbsp;<br>
-&nbsp;&nbsp;opening&nbsp;modes:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.CREATE&nbsp;&nbsp;&nbsp;(note:&nbsp;specific&nbsp;to&nbsp;pycdf,&nbsp;absent&nbsp;from&nbsp;the&nbsp;C&nbsp;API)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.TRUNC&nbsp;&nbsp;&nbsp;&nbsp;(note:&nbsp;specific&nbsp;to&nbsp;pycdf,&nbsp;absent&nbsp;from&nbsp;the&nbsp;C&nbsp;API)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.LOCK<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.SHARE<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.NOWRITE<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.WRITE<br>
-&nbsp;<br>
-&nbsp;&nbsp;fill&nbsp;mode:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.FILL<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.NOFILL<br>
-&nbsp;<br>
-&nbsp;&nbsp;attribute:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.GLOBAL<br>
-&nbsp;<br>
-&nbsp;&nbsp;dimension:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.UNLIMITED<br>
-&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;opening&nbsp;modes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.CREATE&nbsp;&nbsp;&nbsp;(note:&nbsp;specific&nbsp;to&nbsp;pycdf,&nbsp;absent&nbsp;from&nbsp;the&nbsp;C&nbsp;API)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.TRUNC&nbsp;&nbsp;&nbsp;&nbsp;(note:&nbsp;specific&nbsp;to&nbsp;pycdf,&nbsp;absent&nbsp;from&nbsp;the&nbsp;C&nbsp;API)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.LOCK<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.SHARE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.NOWRITE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.WRITE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataset&nbsp;fill&nbsp;mode:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.FILL<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.NOFILL<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attribute:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.GLOBAL<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimension:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.UNLIMITED<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
 Examples<br>
 --------<br>
 &nbsp;<br>
@@ -795,48 +792,53 @@ the&nbsp;contents&nbsp;of&nbsp;those&nbsp;dictionaries.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
 &nbsp;&nbsp;except&nbsp;<a href="#CDFError">CDFError</a>,&nbsp;msg:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Catch&nbsp;<a href="#CDFError">CDFError</a>&nbsp;exceptions<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"<a href="#CDFError">CDFError</a>",&nbsp;msg</tt></p>
-
+<p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
     
-<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="pycdf.pycdfext.html">pycdf.pycdfext</a><br>
 </td><td width="25%" valign=top><a href="os.html">os</a><br>
 </td><td width="25%" valign=top><a href="sys.html">sys</a><br>
 </td><td width="25%" valign=top><a href="types.html">types</a><br>
-</td></tr></table></td></tr></table>
+</td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
     
-<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
 <dt><font face="helvetica, arial"><a href="pycdf.pycdf.html#CDF">CDF</a>
 </font></dt><dt><font face="helvetica, arial"><a href="pycdf.pycdf.html#CDFAttr">CDFAttr</a>
 </font></dt><dt><font face="helvetica, arial"><a href="pycdf.pycdf.html#CDFDim">CDFDim</a>
 </font></dt><dt><font face="helvetica, arial"><a href="pycdf.pycdf.html#CDFVar">CDFVar</a>
-</font></dt><dt><font face="helvetica, arial"><a href="exceptions.html#Exception">exceptions.Exception</a>
+</font></dt><dt><font face="helvetica, arial"><a href="pycdf.pycdf.html#NC">NC</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="exceptions.html#Exception">exceptions.Exception</a>
 </font></dt><dd>
 <dl>
 <dt><font face="helvetica, arial"><a href="pycdf.pycdf.html#CDFError">CDFError</a>
 </font></dt></dl>
 </dd>
-<dt><font face="helvetica, arial"><a href="pycdf.pycdf.html#NC">NC</a>
-</font></dt></dl>
- 
+</dl>
+ <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="CDF">class <strong>CDF</strong></a></font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="CDF">class <strong>CDF</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>The&nbsp;<a href="#CDF">CDF</a>&nbsp;class&nbsp;describes&nbsp;a&nbsp;netCDF&nbsp;dataset.<br>
 To&nbsp;instantiate&nbsp;a&nbsp;netCDF&nbsp;dataset,&nbsp;call&nbsp;the&nbsp;<a href="#CDF">CDF</a>()<br>
 constructor.<br>&nbsp;</tt></td></tr>
-<tr><td>&nbsp;&nbsp;</td>
+<tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="CDF-__del__"><strong>__del__</strong></a>(self)</dt><dd><tt>Close&nbsp;the&nbsp;dataset&nbsp;when&nbsp;a&nbsp;<a href="#CDF">CDF</a>&nbsp;instance&nbsp;is&nbsp;deleted.</tt></dd></dl>
 
@@ -874,10 +876,6 @@ Returns:<br>
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_create&nbsp;/&nbsp;nc_open</tt></dd></dl>
 
 <dl><dt><a name="CDF-__setattr__"><strong>__setattr__</strong></a>(self, name, value)</dt></dl>
-
-<dl><dt><a name="CDF-_forceDataMode"><strong>_forceDataMode</strong></a>(self)</dt></dl>
-
-<dl><dt><a name="CDF-_forceDefineMode"><strong>_forceDefineMode</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="CDF-abort"><strong>abort</strong></a>(self)</dt><dd><tt>Back&nbsp;out&nbsp;of&nbsp;recent&nbsp;definitions&nbsp;to&nbsp;the&nbsp;dataset.&nbsp;Dataset&nbsp;is&nbsp;closed<br>
 at&nbsp;exit.<br>
@@ -1007,7 +1005,7 @@ Returns:<br>
 &nbsp;<br>
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
 
-<dl><dt><a name="CDF-dim"><strong>dim</strong></a>(self, name_num)</dt><dd><tt>&nbsp;Get&nbsp;a&nbsp;dimension&nbsp;instance&nbsp;given&nbsp;its&nbsp;name&nbsp;or&nbsp;number.<br>
+<dl><dt><a name="CDF-dim"><strong>dim</strong></a>(self, name_num)</dt><dd><tt>Get&nbsp;a&nbsp;dimension&nbsp;instance&nbsp;given&nbsp;its&nbsp;name&nbsp;or&nbsp;number.<br>
 Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
 &nbsp;<br>
 Args:<br>
@@ -1196,25 +1194,25 @@ Returns:<br>
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
 
 <hr>
-Data and non-method functions defined here:<br>
-<dl><dt><strong>__doc__</strong> = 'The CDF class describes a netCDF dataset.<font color="#c040c0">\n</font>    To...constructor.                                     '</dl>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
-<dl><dt><strong>__module__</strong> = 'pycdf.pycdf'</dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'CDF' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
-</td></tr></table> 
+</td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="CDFAttr">class <strong>CDFAttr</strong></a></font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="CDFAttr">class <strong>CDFAttr</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>The&nbsp;CDFattr&nbsp;class&nbsp;describes&nbsp;a&nbsp;netCDF&nbsp;attribute,<br>
 either&nbsp;a&nbsp;global&nbsp;(dataset)&nbsp;attribute&nbsp;or&nbsp;a&nbsp;variable&nbsp;attribute.<br>
 To&nbsp;create&nbsp;an&nbsp;instance&nbsp;of&nbsp;this&nbsp;class,&nbsp;first&nbsp;obtain<br>
 a&nbsp;<a href="#CDFVar">CDFVar</a>&nbsp;instance&nbsp;(for&nbsp;a&nbsp;variable&nbsp;attribute),&nbsp;or<br>
 a&nbsp;<a href="#CDF">CDF</a>&nbsp;instance&nbsp;(for&nbsp;a&nbsp;global&nbsp;attribute).<br>
 Then&nbsp;call&nbsp;the&nbsp;attr()&nbsp;method&nbsp;of&nbsp;this&nbsp;instance.<br>&nbsp;</tt></td></tr>
-<tr><td>&nbsp;&nbsp;</td>
+<tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="CDFAttr-__init__"><strong>__init__</strong></a>(self, ncid, varid, name)</dt><dd><tt>This&nbsp;constructor&nbsp;is&nbsp;for&nbsp;the&nbsp;internal&nbsp;use&nbsp;of&nbsp;the&nbsp;module.</tt></dd></dl>
 
@@ -1340,23 +1338,23 @@ Returns<br>
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_rename_att</tt></dd></dl>
 
 <hr>
-Data and non-method functions defined here:<br>
-<dl><dt><strong>__doc__</strong> = 'The CDFattr class describes a netCDF attribute,<font color="#c040c0">\n</font>...                                                 '</dl>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
-<dl><dt><strong>__module__</strong> = 'pycdf.pycdf'</dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'CDFAttr' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
-</td></tr></table> 
+</td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="CDFDim">class <strong>CDFDim</strong></a></font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="CDFDim">class <strong>CDFDim</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>The&nbsp;<a href="#CDFDim">CDFDim</a>&nbsp;class&nbsp;describes&nbsp;a&nbsp;netCDF&nbsp;dimension.<br>
 To&nbsp;instantiate&nbsp;a&nbsp;dimension,&nbsp;obtain&nbsp;a&nbsp;<a href="#CDF">CDF</a>&nbsp;instance,<br>
 and&nbsp;then&nbsp;call&nbsp;one&nbsp;of&nbsp;the&nbsp;following&nbsp;methods&nbsp;of&nbsp;this<br>
 instance:&nbsp;def_dim(),&nbsp;dim()&nbsp;or&nbsp;inq_dimid().<br>&nbsp;</tt></td></tr>
-<tr><td>&nbsp;&nbsp;</td>
+<tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="CDFDim-__init__"><strong>__init__</strong></a>(self, ncid, id)</dt><dd><tt>Instantiate&nbsp;a&nbsp;<a href="#CDFDim">CDFDim</a>&nbsp;class.&nbsp;This&nbsp;method&nbsp;is&nbsp;for&nbsp;the&nbsp;module<br>
 own&nbsp;internal&nbsp;use.&nbsp;To&nbsp;instantiate&nbsp;a&nbsp;netCDF&nbsp;dimension,<br>
@@ -1410,28 +1408,20 @@ Returns<br>
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_rename_dim</tt></dd></dl>
 
 <hr>
-Data and non-method functions defined here:<br>
-<dl><dt><strong>__doc__</strong> = 'The CDFDim class describes a netCDF dimension.<font color="#c040c0">\n</font> ...is<font color="#c040c0">\n</font>    instance: def_dim(), dim() or inq_dimid().'</dl>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
-<dl><dt><strong>__module__</strong> = 'pycdf.pycdf'</dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'CDFDim' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
-</td></tr></table> 
+</td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#000000" face="helvetica, arial"><a name="CDFError">class <strong>CDFError</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2>&nbsp;</td></tr>
-<tr><td>&nbsp;&nbsp;</td>
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="CDFError-__init__"><strong>__init__</strong></a>(self, procName, errCode, errMsg)</dt></dl>
-
-<hr>
-Data and non-method functions defined here:<br>
-<dl><dt><strong>__doc__</strong> = None</dl>
-
-<dl><dt><strong>__module__</strong> = 'pycdf.pycdf'</dl>
 
 <hr>
 Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
@@ -1439,21 +1429,19 @@ Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception<
 
 <dl><dt><a name="CDFError-__str__"><strong>__str__</strong></a>(...)</dt></dl>
 
-</td></tr></table> 
+</td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="CDFVar">class <strong>CDFVar</strong></a></font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="CDFVar">class <strong>CDFVar</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>The&nbsp;<a href="#CDFVar">CDFVar</a>&nbsp;class&nbsp;defines&nbsp;a&nbsp;netCDF&nbsp;variable.<br>
 To&nbsp;instantiate&nbsp;a&nbsp;netCDF&nbsp;variable,&nbsp;first&nbsp;obtain&nbsp;a<br>
 <a href="#CDF">CDF</a>&nbsp;instance,&nbsp;then&nbsp;call&nbsp;one&nbsp;of&nbsp;the&nbsp;following&nbsp;methods&nbsp;of&nbsp;<br>
 this&nbsp;instance:&nbsp;def_var(),&nbsp;inq_var(id)&nbsp;or&nbsp;var()&nbsp;.<br>&nbsp;</tt></td></tr>
-<tr><td>&nbsp;&nbsp;</td>
+<tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
-<dl><dt><a name="CDFVar-_CDFVar__buildStartCountStride"><strong>_CDFVar__buildStartCountStride</strong></a> = __buildStartCountStride(self, elem)</dt></dl>
-
 <dl><dt><a name="CDFVar-__getattr__"><strong>__getattr__</strong></a>(self, name)</dt><dd><tt>Get&nbsp;value&nbsp;of&nbsp;variable&nbsp;attribute&nbsp;'name'.<br>
 Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.</tt></dd></dl>
 
@@ -1708,21 +1696,21 @@ Returns:<br>
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
 
 <hr>
-Data and non-method functions defined here:<br>
-<dl><dt><strong>__doc__</strong> = 'The CDFVar class defines a netCDF variable.<font color="#c040c0">\n</font>    ...this instance: def_var(), inq_var(id) or var() . '</dl>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
-<dl><dt><strong>__module__</strong> = 'pycdf.pycdf'</dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'CDFVar' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
-</td></tr></table> 
+</td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="NC">class <strong>NC</strong></a></font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="NC">class <strong>NC</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>This&nbsp;class&nbsp;holds&nbsp;constants&nbsp;defining&nbsp;data&nbsp;types&nbsp;and&nbsp;opening&nbsp;modes<br>&nbsp;</tt></td></tr>
-<tr><td>&nbsp;&nbsp;</td>
-<td width="100%">Data and non-method functions defined here:<br>
+<tr><td>&nbsp;</td>
+<td width="100%">Data and other attributes defined here:<br>
 <dl><dt><strong>BYTE</strong> = 1</dl>
 
 <dl><dt><strong>CHAR</strong> = 2</dl>
@@ -1757,21 +1745,18 @@ Data and non-method functions defined here:<br>
 
 <dl><dt><strong>WRITE</strong> = 1</dl>
 
-<dl><dt><strong>__doc__</strong> = 'This class holds constants defining data types and opening modes'</dl>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
-<dl><dt><strong>__module__</strong> = 'pycdf.pycdf'</dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'NC' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
-</td></tr></table></td></tr></table>
+</td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#eeaa77">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
-<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
-<td width="100%"><dl><dt><a name="-_array_to_ret"><strong>_array_to_ret</strong></a>(buf, nValues)</dt><dd><tt>&nbsp;Convert&nbsp;array&nbsp;'buf'&nbsp;to&nbsp;a&nbsp;scalar&nbsp;or&nbsp;a&nbsp;list.</tt></dd></dl>
- <dl><dt><a name="-_array_to_str"><strong>_array_to_str</strong></a>(buf, nValues)</dt><dd><tt>&nbsp;Convert&nbsp;array&nbsp;of&nbsp;bytes&nbsp;'buf'&nbsp;to&nbsp;a&nbsp;string&nbsp;.</tt></dd></dl>
- <dl><dt><a name="-_checkCDFErr"><strong>_checkCDFErr</strong></a>(procName, errCode, msg<font color="#909090">=''</font>)</dt></dl>
- <dl><dt><a name="-inq_libvers"><strong>inq_libvers</strong></a>()</dt><dd><tt>Return&nbsp;the&nbsp;netCDF&nbsp;library&nbsp;version.<br>
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-inq_libvers"><strong>inq_libvers</strong></a>()</dt><dd><tt>Return&nbsp;the&nbsp;netCDF&nbsp;library&nbsp;version.<br>
 &nbsp;<br>
 Args:<br>
 &nbsp;&nbsp;no&nbsp;argument<br>
@@ -1787,14 +1772,12 @@ Returns:<br>
 &nbsp;&nbsp;error&nbsp;string<br>
 &nbsp;<br>
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_strerror</tt></dd></dl>
-</td></tr></table>
+</td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
-<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
-<td width="100%"><strong>__all__</strong> = ['CDF', 'CDFAttr', 'CDFDim', 'CDFVar', 'NC', 'CDFError', 'inq_libvers', 'strerror']<br>
-<strong>__file__</strong> = '/usr/lib/python2.2/site-packages/pycdf/pycdf.pyc'<br>
-<strong>__name__</strong> = 'pycdf.pycdf'</td></tr></table>
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__all__</strong> = ['CDF', 'CDFAttr', 'CDFDim', 'CDFVar', 'NC', 'CDFError', 'inq_libvers', 'strerror']</td></tr></table>
 </body></html>

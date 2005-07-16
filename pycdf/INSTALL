@@ -1,6 +1,10 @@
+# $Id: INSTALL,v 1.2 2005-07-16 17:01:18 gosselin_a Exp $
+# $Name: not supported by cvs2svn $
+# $Log: not supported by cvs2svn $
+
 Installing the pycdf python package.
 
-pycdf has been successfully installed under python 2.2 on
+pycdf has been successfully installed under python 2.2 and above on
 the following platforms:
   -Linux, kernel 2.4.19 and above
   -Tru64 4.0.f and above

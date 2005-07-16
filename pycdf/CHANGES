@@ -1,4 +1,15 @@
+# $Id: CHANGES,v 1.2 2005-07-16 17:01:18 gosselin_a Exp $
+# $Name: not supported by cvs2svn $
+# $Log: not supported by cvs2svn $
+
 List of changes to 'pycdf' since the initial release.
+
+pycdf-0.5-3
+  July 16 2005
+    Interim release.
+    
+    -pycdf classes are now 'new-style' classes (they derive from 'object').
+    -Updated documentation.
 
 pycdf-0.5-2
   July 20 2003
