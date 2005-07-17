@@ -1,0 +1,1071 @@
+wrote pyhdf.V.html
+LIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module pyhdf.V</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="pyhdf.html"><font color="#ffffff">pyhdf</font></a>.V</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python2.4/site-packages/pyhdf/V.py">/usr/lib/python2.4/site-packages/pyhdf/V.py</a></font></td></tr></table>
+    <p><tt>A&nbsp;module&nbsp;of&nbsp;the&nbsp;pyhdf&nbsp;package&nbsp;implementing&nbsp;the&nbsp;<a href="#V">V</a>&nbsp;(Vgroup)<br>
+API&nbsp;of&nbsp;the&nbsp;NCSA&nbsp;HDF4&nbsp;library.<br>
+(see:&nbsp;hdf.ncsa.uiuc.edu)<br>
+&nbsp;<br>
+Author:&nbsp;Andre&nbsp;Gosselin<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maurice-Lamontagne&nbsp;Institute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gosselina@dfo-mpo.gc.ca<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Version:&nbsp;0.7-3<br>
+Date:&nbsp;&nbsp;&nbsp;&nbsp;july&nbsp;13&nbsp;2005<br>
+&nbsp;<br>
+Table&nbsp;of&nbsp;contents<br>
+-----------------<br>
+&nbsp;&nbsp;Introduction<br>
+&nbsp;&nbsp;Accessing&nbsp;the&nbsp;<a href="#V">V</a>&nbsp;module<br>
+&nbsp;&nbsp;Package&nbsp;components<br>
+&nbsp;&nbsp;Prerequisites<br>
+&nbsp;&nbsp;Summary&nbsp;of&nbsp;differences&nbsp;between&nbsp;the&nbsp;pyhdf&nbsp;and&nbsp;C&nbsp;<a href="#V">V</a>&nbsp;API<br>
+&nbsp;&nbsp;Error&nbsp;handling<br>
+&nbsp;&nbsp;<a href="#V">V</a>&nbsp;needs&nbsp;support&nbsp;from&nbsp;the&nbsp;HDF&nbsp;module<br>
+&nbsp;&nbsp;Classes&nbsp;summary<br>
+&nbsp;&nbsp;Attribute&nbsp;access:&nbsp;low&nbsp;and&nbsp;high&nbsp;level<br>
+&nbsp;&nbsp;Predefined&nbsp;attributes<br>
+&nbsp;&nbsp;Programming&nbsp;models<br>
+&nbsp;<br>
+&nbsp;&nbsp;Module&nbsp;documentation<br>
+&nbsp;<br>
+&nbsp;<br>
+Introduction<br>
+------------<br>
+<a href="#V">V</a>&nbsp;is&nbsp;one&nbsp;of&nbsp;the&nbsp;modules&nbsp;composing&nbsp;pyhdf,&nbsp;a&nbsp;python&nbsp;package&nbsp;implementing<br>
+the&nbsp;NCSA&nbsp;HDF&nbsp;library&nbsp;and&nbsp;letting&nbsp;one&nbsp;manage&nbsp;HDF&nbsp;files&nbsp;from&nbsp;within&nbsp;a&nbsp;python<br>
+program.&nbsp;Two&nbsp;versions&nbsp;of&nbsp;the&nbsp;HDF&nbsp;library&nbsp;currently&nbsp;exist,&nbsp;version&nbsp;4&nbsp;and<br>
+version&nbsp;5.&nbsp;pyhdf&nbsp;only&nbsp;implements&nbsp;version&nbsp;4&nbsp;of&nbsp;the&nbsp;library.&nbsp;Many<br>
+different&nbsp;APIs&nbsp;are&nbsp;to&nbsp;be&nbsp;found&nbsp;inside&nbsp;the&nbsp;HDF4&nbsp;specification.<br>
+Currently,&nbsp;pyhdf&nbsp;implements&nbsp;just&nbsp;a&nbsp;few&nbsp;of&nbsp;those:&nbsp;the&nbsp;SD,&nbsp;VS&nbsp;and&nbsp;<a href="#V">V</a>&nbsp;APIs.<br>
+Other&nbsp;APIs&nbsp;should&nbsp;be&nbsp;added&nbsp;in&nbsp;the&nbsp;future&nbsp;(GR,&nbsp;AN,&nbsp;etc).<br>
+&nbsp;<br>
+The&nbsp;<a href="#V">V</a>&nbsp;API&nbsp;supports&nbsp;the&nbsp;definition&nbsp;of&nbsp;vgroups&nbsp;inside&nbsp;an&nbsp;HDF&nbsp;file.&nbsp;A&nbsp;vgroup<br>
+can&nbsp;thought&nbsp;of&nbsp;as&nbsp;a&nbsp;collection&nbsp;of&nbsp;arbitrary&nbsp;"references"&nbsp;to&nbsp;other&nbsp;HDF<br>
+objects&nbsp;defined&nbsp;in&nbsp;the&nbsp;same&nbsp;file.&nbsp;A&nbsp;vgroup&nbsp;may&nbsp;hold&nbsp;references&nbsp;to<br>
+other&nbsp;vgroups.&nbsp;It&nbsp;is&nbsp;thus&nbsp;possible&nbsp;to&nbsp;organize&nbsp;HDF&nbsp;objects&nbsp;into&nbsp;some&nbsp;sort<br>
+of&nbsp;a&nbsp;hierarchy,&nbsp;similar&nbsp;to&nbsp;files&nbsp;grouped&nbsp;into&nbsp;a&nbsp;directory&nbsp;tree&nbsp;under&nbsp;unix.<br>
+This&nbsp;vgroup&nbsp;hierarchical&nbsp;nature&nbsp;partly&nbsp;explains&nbsp;the&nbsp;origin&nbsp;of&nbsp;the&nbsp;"HDF"<br>
+name&nbsp;(Hierarchical&nbsp;Data&nbsp;Format).&nbsp;vgroups&nbsp;can&nbsp;help&nbsp;logically&nbsp;organize&nbsp;the<br>
+contents&nbsp;of&nbsp;an&nbsp;HDF&nbsp;file,&nbsp;for&nbsp;example&nbsp;by&nbsp;grouping&nbsp;together&nbsp;all&nbsp;the&nbsp;datasets<br>
+belonging&nbsp;to&nbsp;a&nbsp;given&nbsp;experiment,&nbsp;and&nbsp;subdividing&nbsp;those&nbsp;datasets&nbsp;according<br>
+to&nbsp;the&nbsp;day&nbsp;of&nbsp;the&nbsp;experiment,&nbsp;etc.<br>
+&nbsp;<br>
+The&nbsp;<a href="#V">V</a>&nbsp;API&nbsp;provides&nbsp;functions&nbsp;to&nbsp;find&nbsp;and&nbsp;access&nbsp;an&nbsp;existing&nbsp;vgroup,<br>
+create&nbsp;a&nbsp;new&nbsp;one,&nbsp;delete&nbsp;a&nbsp;vgroup,&nbsp;identify&nbsp;the&nbsp;members&nbsp;of&nbsp;a&nbsp;vgroup,&nbsp;add<br>
+and&nbsp;remove&nbsp;members&nbsp;to&nbsp;and&nbsp;from&nbsp;a&nbsp;vgroup,&nbsp;and&nbsp;set&nbsp;and&nbsp;query&nbsp;attributes<br>
+on&nbsp;a&nbsp;vgroup.&nbsp;The&nbsp;members&nbsp;of&nbsp;a&nbsp;vgroup&nbsp;are&nbsp;identified&nbsp;through&nbsp;their&nbsp;tags<br>
+and&nbsp;reference&nbsp;numbers.&nbsp;Tags&nbsp;are&nbsp;constants&nbsp;identifying&nbsp;each&nbsp;main&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;type<br>
+(dataset,&nbsp;vdata,&nbsp;vgroup).&nbsp;Reference&nbsp;numbers&nbsp;serve&nbsp;to&nbsp;distinguish&nbsp;among<br>
+objects&nbsp;of&nbsp;the&nbsp;same&nbsp;type.&nbsp;To&nbsp;add&nbsp;an&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;to&nbsp;a&nbsp;vgroup,&nbsp;one&nbsp;must&nbsp;first<br>
+initialize&nbsp;that&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;using&nbsp;the&nbsp;API&nbsp;proper&nbsp;to&nbsp;that&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;type&nbsp;(eg:&nbsp;SD&nbsp;for<br>
+a&nbsp;dataset)&nbsp;so&nbsp;as&nbsp;to&nbsp;create&nbsp;a&nbsp;reference&nbsp;number&nbsp;for&nbsp;that&nbsp;<a href="__builtin__.html#object">object</a>,&nbsp;and&nbsp;then<br>
+pass&nbsp;this&nbsp;reference&nbsp;number&nbsp;and&nbsp;the&nbsp;type&nbsp;tag&nbsp;to&nbsp;the&nbsp;<a href="#V">V</a>&nbsp;API.&nbsp;When&nbsp;reading&nbsp;the<br>
+contents&nbsp;of&nbsp;a&nbsp;vgroup,&nbsp;the&nbsp;<a href="#V">V</a>&nbsp;API&nbsp;returns&nbsp;the&nbsp;tags&nbsp;and&nbsp;reference&nbsp;numbers&nbsp;of<br>
+the&nbsp;objects&nbsp;composing&nbsp;the&nbsp;vgroup.&nbsp;The&nbsp;user&nbsp;program&nbsp;must&nbsp;then&nbsp;call&nbsp;the<br>
+proper&nbsp;API&nbsp;to&nbsp;process&nbsp;each&nbsp;<a href="__builtin__.html#object">object</a>,&nbsp;based&nbsp;on&nbsp;tag&nbsp;of&nbsp;this&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(eg:&nbsp;VS&nbsp;for<br>
+a&nbsp;tag&nbsp;identifying&nbsp;a&nbsp;vdata&nbsp;<a href="__builtin__.html#object">object</a>).<br>
+&nbsp;<br>
+Some&nbsp;limitations&nbsp;of&nbsp;the&nbsp;<a href="#V">V</a>&nbsp;API&nbsp;must&nbsp;be&nbsp;stressed.&nbsp;First,&nbsp;HDF&nbsp;imposes<br>
+no&nbsp;integrity&nbsp;constraint&nbsp;whatsoever&nbsp;on&nbsp;the&nbsp;contents&nbsp;of&nbsp;a&nbsp;vgroup,&nbsp;nor&nbsp;does&nbsp;it<br>
+help&nbsp;maintain&nbsp;such&nbsp;integrity.&nbsp;For&nbsp;example,&nbsp;a&nbsp;vgroup&nbsp;is&nbsp;not&nbsp;strictly<br>
+hierarchical,&nbsp;because&nbsp;an&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;can&nbsp;belong&nbsp;to&nbsp;more&nbsp;than&nbsp;one&nbsp;vgroup.&nbsp;It&nbsp;would<br>
+be&nbsp;easy&nbsp;to&nbsp;create&nbsp;vgroups&nbsp;showing&nbsp;cycles&nbsp;among&nbsp;their&nbsp;members.&nbsp;Also,&nbsp;a&nbsp;vgroup<br>
+member&nbsp;is&nbsp;simply&nbsp;a&nbsp;reference&nbsp;to&nbsp;an&nbsp;HDF&nbsp;<a href="__builtin__.html#object">object</a>.&nbsp;If&nbsp;this&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;is&nbsp;afterwards<br>
+deleted&nbsp;for&nbsp;any&nbsp;reason,&nbsp;the&nbsp;vgroup&nbsp;membership&nbsp;will&nbsp;not&nbsp;be&nbsp;automatically<br>
+updated.&nbsp;The&nbsp;vgroup&nbsp;will&nbsp;refer&nbsp;to&nbsp;a&nbsp;non-existent&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;and&nbsp;thus&nbsp;be&nbsp;left<br>
+in&nbsp;an&nbsp;inconsistent&nbsp;state.&nbsp;Nothing&nbsp;prevents&nbsp;adding&nbsp;the&nbsp;same&nbsp;member&nbsp;more&nbsp;than<br>
+once&nbsp;to&nbsp;a&nbsp;vgroup,&nbsp;and&nbsp;giving&nbsp;the&nbsp;same&nbsp;name&nbsp;to&nbsp;more&nbsp;than&nbsp;one&nbsp;vgroup.<br>
+Finally,&nbsp;the&nbsp;HDF&nbsp;library&nbsp;seems&nbsp;to&nbsp;make&nbsp;heavy&nbsp;use&nbsp;of&nbsp;vgroups&nbsp;for&nbsp;its&nbsp;own<br>
+internal&nbsp;needs,&nbsp;and&nbsp;creates&nbsp;vgroups&nbsp;"behind&nbsp;the&nbsp;scenes".&nbsp;This&nbsp;may&nbsp;make&nbsp;it<br>
+difficult&nbsp;to&nbsp;pick&nbsp;up&nbsp;"user&nbsp;defined"&nbsp;vgroups&nbsp;when&nbsp;browsing&nbsp;an&nbsp;HDF&nbsp;file.<br>
+&nbsp;<br>
+Accessing&nbsp;the&nbsp;<a href="#V">V</a>&nbsp;module<br>
+-----------------------<br>
+To&nbsp;access&nbsp;the&nbsp;<a href="#V">V</a>&nbsp;module&nbsp;a&nbsp;python&nbsp;program&nbsp;can&nbsp;say&nbsp;one&nbsp;of:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;import&nbsp;pyhdf.<a href="#V">V</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;must&nbsp;prefix&nbsp;names&nbsp;with&nbsp;"pyhdf.<a href="#V">V</a>."<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf&nbsp;import&nbsp;<a href="#V">V</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;must&nbsp;prefix&nbsp;names&nbsp;with&nbsp;"<a href="#V">V</a>."<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf.<a href="#V">V</a>&nbsp;import&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;names&nbsp;need&nbsp;no&nbsp;prefix<br>
+&nbsp;<br>
+This&nbsp;document&nbsp;assumes&nbsp;the&nbsp;last&nbsp;import&nbsp;style&nbsp;is&nbsp;used.<br>
+&nbsp;<br>
+<a href="#V">V</a>&nbsp;is&nbsp;not&nbsp;self-contained,&nbsp;and&nbsp;needs&nbsp;functionnality&nbsp;provided&nbsp;by&nbsp;another<br>
+pyhdf&nbsp;module,&nbsp;namely&nbsp;the&nbsp;HDF&nbsp;module.&nbsp;This&nbsp;module&nbsp;must&nbsp;thus&nbsp;be&nbsp;imported<br>
+also:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;HDF&nbsp;import&nbsp;*<br>
+&nbsp;<br>
+&nbsp;<br>
+Package&nbsp;components<br>
+------------------<br>
+pyhdf&nbsp;is&nbsp;a&nbsp;proper&nbsp;Python&nbsp;package,&nbsp;eg&nbsp;a&nbsp;collection&nbsp;of&nbsp;modules&nbsp;stored&nbsp;under<br>
+a&nbsp;directory&nbsp;whose&nbsp;name&nbsp;is&nbsp;that&nbsp;of&nbsp;the&nbsp;package&nbsp;and&nbsp;which&nbsp;stores&nbsp;an<br>
+__init__.py&nbsp;file.&nbsp;Following&nbsp;the&nbsp;normal&nbsp;installation&nbsp;procedure,&nbsp;this<br>
+directory&nbsp;will&nbsp;be&nbsp;&lt;python-lib&gt;/site-packages/pyhdf',&nbsp;where&nbsp;&lt;python-lib&gt;<br>
+stands&nbsp;for&nbsp;the&nbsp;python&nbsp;installation&nbsp;directory.<br>
+&nbsp;<br>
+For&nbsp;each&nbsp;HDF&nbsp;API&nbsp;exists&nbsp;a&nbsp;corresponding&nbsp;set&nbsp;of&nbsp;modules.<br>
+&nbsp;<br>
+The&nbsp;following&nbsp;modules&nbsp;are&nbsp;related&nbsp;to&nbsp;the&nbsp;<a href="#V">V</a>&nbsp;API.<br>
+&nbsp;<br>
+&nbsp;&nbsp;_hdfext&nbsp;&nbsp;&nbsp;C&nbsp;extension&nbsp;module&nbsp;responsible&nbsp;for&nbsp;wrapping&nbsp;the&nbsp;HDF<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;library&nbsp;for&nbsp;all&nbsp;python&nbsp;modules<br>
+&nbsp;&nbsp;hdfext&nbsp;&nbsp;&nbsp;&nbsp;python&nbsp;module&nbsp;implementing&nbsp;some&nbsp;utility&nbsp;functions<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;complementing&nbsp;the&nbsp;_hdfext&nbsp;extension&nbsp;module<br>
+&nbsp;&nbsp;error&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;defines&nbsp;the&nbsp;HDF4Error&nbsp;exception<br>
+&nbsp;&nbsp;HDF&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;python&nbsp;module&nbsp;providing&nbsp;support&nbsp;to&nbsp;the&nbsp;<a href="#V">V</a>&nbsp;module<br>
+&nbsp;&nbsp;<a href="#V">V</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;python&nbsp;module&nbsp;wrapping&nbsp;the&nbsp;<a href="#V">V</a>&nbsp;API&nbsp;routines&nbsp;inside<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;OOP&nbsp;framework<br>
+&nbsp;<br>
+_hdfext&nbsp;and&nbsp;hdfext&nbsp;were&nbsp;generated&nbsp;using&nbsp;the&nbsp;SWIG&nbsp;preprocessor.<br>
+SWIG&nbsp;is&nbsp;however&nbsp;*not*&nbsp;needed&nbsp;to&nbsp;run&nbsp;the&nbsp;package.&nbsp;Those&nbsp;two&nbsp;modules<br>
+are&nbsp;meant&nbsp;to&nbsp;do&nbsp;their&nbsp;work&nbsp;in&nbsp;the&nbsp;background,&nbsp;and&nbsp;should&nbsp;never&nbsp;be&nbsp;called<br>
+directly.&nbsp;Only&nbsp;HDF&nbsp;and&nbsp;<a href="#V">V</a>&nbsp;should&nbsp;be&nbsp;imported&nbsp;by&nbsp;the&nbsp;user&nbsp;program.<br>
+&nbsp;<br>
+&nbsp;<br>
+Prerequisites<br>
+-------------<br>
+The&nbsp;following&nbsp;software&nbsp;must&nbsp;be&nbsp;installed&nbsp;in&nbsp;order&nbsp;for&nbsp;the&nbsp;<a href="#V">V</a>&nbsp;module&nbsp;to<br>
+work.<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;HDF&nbsp;(v4)&nbsp;library<br>
+&nbsp;&nbsp;&nbsp;&nbsp;pyhdf&nbsp;does&nbsp;*not*&nbsp;include&nbsp;the&nbsp;HDF4&nbsp;library,&nbsp;which&nbsp;must<br>
+&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;installed&nbsp;separately.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;HDF&nbsp;is&nbsp;available&nbsp;at:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"<a href="http://hdf.ncsa.uiuc.edu/obtain.html">http://hdf.ncsa.uiuc.edu/obtain.html</a>".<br>
+&nbsp;<br>
+Numeric&nbsp;is&nbsp;also&nbsp;needed&nbsp;by&nbsp;the&nbsp;SD&nbsp;module.&nbsp;See&nbsp;the&nbsp;SD&nbsp;module&nbsp;documentation.<br>
+&nbsp;<br>
+&nbsp;<br>
+Summary&nbsp;of&nbsp;differences&nbsp;between&nbsp;the&nbsp;pyhdf&nbsp;and&nbsp;C&nbsp;<a href="#V">V</a>&nbsp;API<br>
+-----------------------------------------------------<br>
+Most&nbsp;of&nbsp;the&nbsp;differences&nbsp;between&nbsp;the&nbsp;pyhdf&nbsp;and&nbsp;C&nbsp;<a href="#V">V</a>&nbsp;API&nbsp;can<br>
+be&nbsp;summarized&nbsp;as&nbsp;follows.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;-In&nbsp;the&nbsp;C&nbsp;API,&nbsp;every&nbsp;function&nbsp;returns&nbsp;an&nbsp;integer&nbsp;status&nbsp;code,&nbsp;and&nbsp;values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;computed&nbsp;by&nbsp;the&nbsp;function&nbsp;are&nbsp;returned&nbsp;through&nbsp;one&nbsp;or&nbsp;more&nbsp;pointers<br>
+&nbsp;&nbsp;&nbsp;&nbsp;passed&nbsp;as&nbsp;arguments.<br>
+&nbsp;&nbsp;&nbsp;-In&nbsp;pyhdf,&nbsp;error&nbsp;statuses&nbsp;are&nbsp;returned&nbsp;through&nbsp;the&nbsp;Python&nbsp;exception<br>
+&nbsp;&nbsp;&nbsp;&nbsp;mechanism,&nbsp;and&nbsp;values&nbsp;are&nbsp;returned&nbsp;as&nbsp;the&nbsp;method&nbsp;result.&nbsp;When&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;API&nbsp;specifies&nbsp;that&nbsp;multiple&nbsp;values&nbsp;are&nbsp;returned,&nbsp;pyhdf&nbsp;returns&nbsp;a&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sequence&nbsp;of&nbsp;values,&nbsp;which&nbsp;are&nbsp;ordered&nbsp;similarly&nbsp;to&nbsp;the&nbsp;pointers&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;function&nbsp;argument&nbsp;list.<br>
+&nbsp;&nbsp;&nbsp;<br>
+Error&nbsp;handling<br>
+--------------<br>
+All&nbsp;errors&nbsp;reported&nbsp;by&nbsp;the&nbsp;C&nbsp;<a href="#V">V</a>&nbsp;API&nbsp;with&nbsp;a&nbsp;SUCCESS/FAIL&nbsp;error&nbsp;code<br>
+are&nbsp;reported&nbsp;by&nbsp;pyhdf&nbsp;using&nbsp;the&nbsp;Python&nbsp;exception&nbsp;mechanism.<br>
+When&nbsp;the&nbsp;C&nbsp;library&nbsp;reports&nbsp;a&nbsp;FAIL&nbsp;status,&nbsp;pyhdf&nbsp;raises&nbsp;an&nbsp;HDF4Error<br>
+exception&nbsp;(a&nbsp;subclass&nbsp;of&nbsp;Exception)&nbsp;with&nbsp;a&nbsp;descriptive&nbsp;message.&nbsp;<br>
+Unfortunately,&nbsp;the&nbsp;C&nbsp;library&nbsp;is&nbsp;rarely&nbsp;informative&nbsp;about&nbsp;the&nbsp;cause&nbsp;of&nbsp;<br>
+the&nbsp;error.&nbsp;pyhdf&nbsp;does&nbsp;its&nbsp;best&nbsp;to&nbsp;try&nbsp;to&nbsp;document&nbsp;the&nbsp;error,&nbsp;but&nbsp;most&nbsp;<br>
+of&nbsp;the&nbsp;time&nbsp;cannot&nbsp;do&nbsp;more&nbsp;than&nbsp;saying&nbsp;"execution&nbsp;error".<br>
+&nbsp;<br>
+<a href="#V">V</a>&nbsp;needs&nbsp;support&nbsp;from&nbsp;the&nbsp;HDF&nbsp;module<br>
+------------------------------------<br>
+The&nbsp;VS&nbsp;module&nbsp;is&nbsp;not&nbsp;self-contained&nbsp;(countrary&nbsp;to&nbsp;the&nbsp;SD&nbsp;module).<br>
+It&nbsp;requires&nbsp;help&nbsp;from&nbsp;the&nbsp;HDF&nbsp;module,&nbsp;namely:<br>
+&nbsp;&nbsp;-the&nbsp;HDF.HDF&nbsp;class&nbsp;to&nbsp;open&nbsp;and&nbsp;close&nbsp;the&nbsp;HDF&nbsp;file,&nbsp;and&nbsp;initialize&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;<a href="#V">V</a>&nbsp;interface<br>
+&nbsp;&nbsp;-the&nbsp;HDF.HC&nbsp;class&nbsp;to&nbsp;provide&nbsp;different&nbsp;sorts&nbsp;of&nbsp;constants&nbsp;(opening&nbsp;modes,<br>
+&nbsp;&nbsp;&nbsp;data&nbsp;types,&nbsp;etc).<br>
+&nbsp;<br>
+A&nbsp;program&nbsp;wanting&nbsp;to&nbsp;access&nbsp;HDF&nbsp;vgroups&nbsp;will&nbsp;almost&nbsp;always&nbsp;need&nbsp;to&nbsp;execute<br>
+the&nbsp;following&nbsp;minimal&nbsp;set&nbsp;of&nbsp;calls:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf.HDF&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf.<a href="#V">V</a>&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;hdfFile&nbsp;=&nbsp;HDF(name,&nbsp;HC.xxx)#&nbsp;open&nbsp;HDF&nbsp;file<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v&nbsp;=&nbsp;hdfFile.vgstart()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;initialize&nbsp;<a href="#V">V</a>&nbsp;interface&nbsp;on&nbsp;HDF&nbsp;file<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;manipulate&nbsp;vgroups<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v.end()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;terminate&nbsp;<a href="#V">V</a>&nbsp;interface<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;hdfFile.close()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;close&nbsp;HDF&nbsp;file<br>
+&nbsp;<br>
+&nbsp;<br>
+Classes&nbsp;summary<br>
+---------------<br>
+&nbsp;<br>
+pyhdf&nbsp;wraps&nbsp;the&nbsp;<a href="#V">V</a>&nbsp;API&nbsp;using&nbsp;the&nbsp;following&nbsp;python&nbsp;classes:<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#V">V</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HDF&nbsp;<a href="#V">V</a>&nbsp;interface<br>
+&nbsp;&nbsp;<a href="#VG">VG</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vgroup<br>
+&nbsp;&nbsp;<a href="#VGAttr">VGAttr</a>&nbsp;vgroup&nbsp;attribute<br>
+&nbsp;<br>
+In&nbsp;more&nbsp;detail:<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#V">V</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<a href="#V">V</a>&nbsp;class&nbsp;implements&nbsp;the&nbsp;<a href="#V">V</a>&nbsp;(Vgroup)&nbsp;interface&nbsp;applied&nbsp;to&nbsp;an<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HDF&nbsp;file.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To&nbsp;instantiate&nbsp;a&nbsp;<a href="#V">V</a>&nbsp;class,&nbsp;call&nbsp;the&nbsp;vgstart()&nbsp;method&nbsp;of&nbsp;an<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HDF&nbsp;instance.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methods:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructors<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attach()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;open&nbsp;an&nbsp;existing&nbsp;vgroup&nbsp;given&nbsp;its&nbsp;name&nbsp;or&nbsp;its<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reference&nbsp;number,&nbsp;or&nbsp;create&nbsp;a&nbsp;new&nbsp;vgroup,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returning&nbsp;a&nbsp;<a href="#VG">VG</a>&nbsp;instance&nbsp;for&nbsp;that&nbsp;vgroup<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;create()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;create&nbsp;a&nbsp;new&nbsp;vgroup,&nbsp;returning&nbsp;a&nbsp;<a href="#VG">VG</a>&nbsp;instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;that&nbsp;vgroup<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;closing&nbsp;the&nbsp;interface<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;close&nbsp;the&nbsp;<a href="#V">V</a>&nbsp;interface&nbsp;on&nbsp;the&nbsp;HDF&nbsp;file<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deleting&nbsp;a&nbsp;vgroup<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delete()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delete&nbsp;the&nbsp;vgroup&nbsp;identified&nbsp;by&nbsp;its&nbsp;name&nbsp;or<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;its&nbsp;reference&nbsp;number<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;searching<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;find()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;find&nbsp;a&nbsp;vgroup&nbsp;given&nbsp;its&nbsp;name,&nbsp;returning<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;vgroup&nbsp;reference&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;findclass()&nbsp;&nbsp;&nbsp;find&nbsp;a&nbsp;vgroup&nbsp;given&nbsp;its&nbsp;class&nbsp;name,&nbsp;returning<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;vgroup&nbsp;reference&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;getid()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;the&nbsp;reference&nbsp;number&nbsp;of&nbsp;the&nbsp;vgroup<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;following&nbsp;the&nbsp;one&nbsp;with&nbsp;the&nbsp;given&nbsp;reference&nbsp;number<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#VG">VG</a>&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<a href="#VG">VG</a>&nbsp;class&nbsp;encapsulates&nbsp;the&nbsp;functionnality&nbsp;of&nbsp;a&nbsp;vgroup.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To&nbsp;instantiate&nbsp;a&nbsp;<a href="#VG">VG</a>&nbsp;class,&nbsp;call&nbsp;the&nbsp;attach()&nbsp;or&nbsp;create()&nbsp;methods<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;a&nbsp;<a href="#V">V</a>&nbsp;class&nbsp;instance.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructors<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attr()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;a&nbsp;<a href="#VGAttr">VGAttr</a>&nbsp;instance&nbsp;representing&nbsp;an&nbsp;attribute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;vgroup<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;findattr()&nbsp;&nbsp;&nbsp;&nbsp;search&nbsp;the&nbsp;vgroup&nbsp;for&nbsp;a&nbsp;given&nbsp;attribute,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returning&nbsp;a&nbsp;<a href="#VGAttr">VGAttr</a>&nbsp;instance&nbsp;for&nbsp;that&nbsp;attribute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ending&nbsp;access&nbsp;to&nbsp;a&nbsp;vgroup<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;detach()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;terminate&nbsp;access&nbsp;to&nbsp;the&nbsp;vgroup<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adding&nbsp;a&nbsp;member&nbsp;to&nbsp;a&nbsp;vgroup<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add&nbsp;to&nbsp;the&nbsp;vgroup&nbsp;the&nbsp;HDF&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;identified&nbsp;by&nbsp;its<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tag&nbsp;and&nbsp;reference&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;insert()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;insert&nbsp;a&nbsp;vdata&nbsp;or&nbsp;a&nbsp;vgroup&nbsp;in&nbsp;the&nbsp;vgroup,&nbsp;given<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;vdata&nbsp;or&nbsp;vgroup&nbsp;instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deleting&nbsp;a&nbsp;member&nbsp;from&nbsp;a&nbsp;vgroup<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delete()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remove&nbsp;from&nbsp;the&nbsp;vgroup&nbsp;the&nbsp;HDF&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;identified<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;by&nbsp;the&nbsp;given&nbsp;tag&nbsp;and&nbsp;reference&nbsp;number<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;querying&nbsp;vgroup<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attrinfo()&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;info&nbsp;about&nbsp;all&nbsp;the&nbsp;vgroup&nbsp;attributes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inqtagref()&nbsp;&nbsp;&nbsp;determine&nbsp;if&nbsp;the&nbsp;HDF&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;the&nbsp;given<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tag&nbsp;and&nbsp;reference&nbsp;number&nbsp;belongs&nbsp;to&nbsp;the&nbsp;vgroup<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isvg()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;determine&nbsp;if&nbsp;the&nbsp;member&nbsp;with&nbsp;the&nbsp;given&nbsp;reference<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number&nbsp;is&nbsp;a&nbsp;vgroup&nbsp;<a href="__builtin__.html#object">object</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isvs()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;determine&nbsp;if&nbsp;the&nbsp;member&nbsp;with&nbsp;the&nbsp;given&nbsp;reference<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number&nbsp;is&nbsp;a&nbsp;vdata&nbsp;<a href="__builtin__.html#object">object</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nrefs()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;the&nbsp;number&nbsp;of&nbsp;vgroup&nbsp;members&nbsp;with&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;given&nbsp;tag<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tagref()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;tag&nbsp;and&nbsp;reference&nbsp;number&nbsp;of&nbsp;a&nbsp;vgroup<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;member,&nbsp;given&nbsp;the&nbsp;index&nbsp;number&nbsp;of&nbsp;that&nbsp;member<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tagrefs()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;tags&nbsp;and&nbsp;reference&nbsp;numbers&nbsp;of&nbsp;all&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vgroup&nbsp;members<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;<a href="#VGAttr">VGAttr</a>&nbsp;The&nbsp;<a href="#VGAttr">VGAttr</a>&nbsp;class&nbsp;provides&nbsp;methods&nbsp;to&nbsp;set&nbsp;and&nbsp;query&nbsp;vgroup<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attributes.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To&nbsp;create&nbsp;an&nbsp;instance&nbsp;of&nbsp;this&nbsp;class,&nbsp;call&nbsp;the&nbsp;attr()&nbsp;method<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;a&nbsp;<a href="#VG">VG</a>&nbsp;instance.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Remember&nbsp;that&nbsp;vgroup&nbsp;attributes&nbsp;can&nbsp;also&nbsp;be&nbsp;set&nbsp;and&nbsp;queried&nbsp;by<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;applying&nbsp;the&nbsp;standard&nbsp;python&nbsp;"dot&nbsp;notation"&nbsp;on&nbsp;a&nbsp;<a href="#VG">VG</a>&nbsp;instance.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;attibute&nbsp;value(s)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obtain&nbsp;the&nbsp;attribute&nbsp;value(s)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set&nbsp;attribute&nbsp;value(s)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set&nbsp;the&nbsp;attribute&nbsp;to&nbsp;the&nbsp;given&nbsp;value(s)&nbsp;of&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;given&nbsp;type,&nbsp;first&nbsp;creating&nbsp;the&nbsp;attribute&nbsp;if<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;necessary<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;query&nbsp;attribute&nbsp;info<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;info()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;retrieve&nbsp;attribute&nbsp;name,&nbsp;data&nbsp;type,&nbsp;order&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size<br>
+&nbsp;<br>
+Attribute&nbsp;access:&nbsp;low&nbsp;and&nbsp;high&nbsp;level<br>
+------------------------------------<br>
+The&nbsp;<a href="#V">V</a>&nbsp;API&nbsp;allows&nbsp;setting&nbsp;attributes&nbsp;on&nbsp;vgroups.&nbsp;Attributes&nbsp;can&nbsp;be&nbsp;of&nbsp;many<br>
+types&nbsp;(int,&nbsp;float,&nbsp;char)&nbsp;of&nbsp;different&nbsp;bit&nbsp;lengths&nbsp;(8,&nbsp;16,&nbsp;32,&nbsp;64&nbsp;bits),<br>
+and&nbsp;can&nbsp;be&nbsp;single&nbsp;or&nbsp;multi-valued.&nbsp;Values&nbsp;of&nbsp;a&nbsp;multi-valued&nbsp;attribute&nbsp;must<br>
+all&nbsp;be&nbsp;of&nbsp;the&nbsp;same&nbsp;type.<br>
+&nbsp;<br>
+Attributes&nbsp;can&nbsp;be&nbsp;set&nbsp;and&nbsp;queried&nbsp;in&nbsp;two&nbsp;different&nbsp;ways.&nbsp;First,&nbsp;given&nbsp;a<br>
+<a href="#VG">VG</a>&nbsp;instance&nbsp;(describing&nbsp;a&nbsp;vgroup&nbsp;<a href="__builtin__.html#object">object</a>),&nbsp;the&nbsp;attr()&nbsp;method&nbsp;of&nbsp;that&nbsp;instance<br>
+is&nbsp;called&nbsp;to&nbsp;create&nbsp;a&nbsp;<a href="#VGAttr">VGAttr</a>&nbsp;instance&nbsp;representing&nbsp;the&nbsp;wanted&nbsp;attribute<br>
+(possibly&nbsp;non&nbsp;existent).&nbsp;The&nbsp;set()&nbsp;method&nbsp;of&nbsp;this&nbsp;<a href="#VGAttr">VGAttr</a>&nbsp;instance&nbsp;is&nbsp;then<br>
+called&nbsp;to&nbsp;define&nbsp;the&nbsp;attribute&nbsp;value,&nbsp;creating&nbsp;it&nbsp;if&nbsp;it&nbsp;does&nbsp;not&nbsp;already<br>
+exist.&nbsp;The&nbsp;get()&nbsp;method&nbsp;returns&nbsp;the&nbsp;current&nbsp;attribute&nbsp;value.&nbsp;Here&nbsp;is&nbsp;an<br>
+example.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf.HDF&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf.<a href="#V">V</a>&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;f&nbsp;=&nbsp;HDF('test.hdf',&nbsp;HC.WRITE)&nbsp;#&nbsp;Open&nbsp;file&nbsp;'test.hdf'&nbsp;in&nbsp;write&nbsp;mode<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v&nbsp;=&nbsp;f.vgstart()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;init&nbsp;vgroup&nbsp;interface<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;vg&nbsp;=&nbsp;v.attach('vtest',&nbsp;1)&nbsp;&nbsp;#&nbsp;attach&nbsp;vgroup&nbsp;'vtest'&nbsp;in&nbsp;write&nbsp;mode<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;attr&nbsp;=&nbsp;vg.attr('version')&nbsp;&nbsp;#&nbsp;prepare&nbsp;to&nbsp;define&nbsp;the&nbsp;'version'&nbsp;attribute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;on&nbsp;the&nbsp;vdata<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;attr.set(HC.CHAR8,'1.0')&nbsp;&nbsp;&nbsp;#&nbsp;set&nbsp;attribute&nbsp;'version'&nbsp;to&nbsp;string&nbsp;'1.0'<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;attr.get()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;get&nbsp;and&nbsp;print&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;attr&nbsp;=&nbsp;vg&nbsp;.attr('range')&nbsp;&nbsp;&nbsp;#&nbsp;prepare&nbsp;to&nbsp;define&nbsp;attribute&nbsp;'range'<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;attr.set(HC.INT32,(-10,&nbsp;15))&nbsp;#&nbsp;set&nbsp;attribute&nbsp;'range'&nbsp;to&nbsp;a&nbsp;pair&nbsp;of&nbsp;ints<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;attr.get()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;get&nbsp;and&nbsp;print&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;vg.detach()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;"close"&nbsp;the&nbsp;vgroup<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v.end()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;terminate&nbsp;the&nbsp;vgroup&nbsp;interface<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;f.close()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;close&nbsp;the&nbsp;HDF&nbsp;file<br>
+&nbsp;<br>
+The&nbsp;second&nbsp;way&nbsp;consists&nbsp;of&nbsp;setting/querying&nbsp;an&nbsp;attribute&nbsp;as&nbsp;if&nbsp;it&nbsp;were&nbsp;a<br>
+normal&nbsp;python&nbsp;class&nbsp;attribute,&nbsp;using&nbsp;the&nbsp;usual&nbsp;dot&nbsp;notation.&nbsp;Above&nbsp;example<br>
+then&nbsp;becomes:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf.HDF&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf.<a href="#V">V</a>&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;f&nbsp;=&nbsp;HDF('test.hdf',&nbsp;HC.WRITE)&nbsp;#&nbsp;Open&nbsp;file&nbsp;'test.hdf'&nbsp;in&nbsp;write&nbsp;mode<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v&nbsp;=&nbsp;f.vgstart()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;init&nbsp;vgroup&nbsp;interface<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;vg&nbsp;=&nbsp;v.attach('vtest',&nbsp;1)&nbsp;&nbsp;#&nbsp;attach&nbsp;vdata&nbsp;'vtest'&nbsp;in&nbsp;write&nbsp;mode<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;vg.version&nbsp;=&nbsp;'1.0'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;create&nbsp;vdata&nbsp;attribute&nbsp;'version',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;setting&nbsp;it&nbsp;to&nbsp;string&nbsp;'1.0'<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;vg.version&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;print&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;vg.range&nbsp;=&nbsp;(-10,&nbsp;15)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;create&nbsp;attribute&nbsp;'range',&nbsp;setting<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;it&nbsp;to&nbsp;the&nbsp;pair&nbsp;of&nbsp;ints&nbsp;(-10,&nbsp;15)<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;vg.range&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;print&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;vg.detach()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;"close"&nbsp;the&nbsp;vdata<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v.end()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;terminate&nbsp;the&nbsp;vdata&nbsp;interface<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;f.close()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;close&nbsp;the&nbsp;HDF&nbsp;file<br>
+&nbsp;<br>
+Note&nbsp;how&nbsp;the&nbsp;dot&nbsp;notation&nbsp;greatly&nbsp;simplifies&nbsp;and&nbsp;clarifies&nbsp;the&nbsp;code.<br>
+Some&nbsp;latitude&nbsp;is&nbsp;however&nbsp;lost&nbsp;by&nbsp;manipulating&nbsp;attributes&nbsp;in&nbsp;that&nbsp;way,<br>
+because&nbsp;the&nbsp;pyhdf&nbsp;package,&nbsp;not&nbsp;the&nbsp;programmer,&nbsp;is&nbsp;then&nbsp;responsible&nbsp;of<br>
+setting&nbsp;the&nbsp;attribute&nbsp;type.&nbsp;The&nbsp;attribute&nbsp;type&nbsp;is&nbsp;chosen&nbsp;to&nbsp;be&nbsp;one&nbsp;of:<br>
+&nbsp;<br>
+&nbsp;&nbsp;HC.CHAR8&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;the&nbsp;attribute&nbsp;value&nbsp;is&nbsp;a&nbsp;string<br>
+&nbsp;&nbsp;HC.INT32&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;all&nbsp;attribute&nbsp;values&nbsp;are&nbsp;integers<br>
+&nbsp;&nbsp;HC.FLOAT64&nbsp;&nbsp;otherwise<br>
+&nbsp;<br>
+The&nbsp;first&nbsp;way&nbsp;of&nbsp;handling&nbsp;attribute&nbsp;values&nbsp;must&nbsp;be&nbsp;used&nbsp;if&nbsp;one&nbsp;wants&nbsp;to<br>
+define&nbsp;an&nbsp;attribute&nbsp;of&nbsp;any&nbsp;other&nbsp;type&nbsp;(for&nbsp;ex.&nbsp;8&nbsp;or&nbsp;16&nbsp;bit&nbsp;integers,<br>
+signed&nbsp;or&nbsp;unsigned).&nbsp;Also,&nbsp;only&nbsp;a&nbsp;VDAttr&nbsp;instance&nbsp;gives&nbsp;access&nbsp;to&nbsp;attribute<br>
+info,&nbsp;through&nbsp;its&nbsp;info()&nbsp;method.<br>
+&nbsp;<br>
+However,&nbsp;accessing&nbsp;HDF&nbsp;attributes&nbsp;as&nbsp;if&nbsp;they&nbsp;were&nbsp;python&nbsp;attributes&nbsp;raises<br>
+an&nbsp;important&nbsp;issue.&nbsp;There&nbsp;must&nbsp;exist&nbsp;a&nbsp;way&nbsp;to&nbsp;assign&nbsp;generic&nbsp;attributes<br>
+to&nbsp;the&nbsp;python&nbsp;objects&nbsp;without&nbsp;requiring&nbsp;those&nbsp;attributes&nbsp;to&nbsp;be&nbsp;converted<br>
+to&nbsp;HDF&nbsp;attributes.&nbsp;pyhdf&nbsp;uses&nbsp;the&nbsp;following&nbsp;rule:&nbsp;an&nbsp;attribute&nbsp;whose&nbsp;name<br>
+starts&nbsp;with&nbsp;an&nbsp;underscore&nbsp;('_')&nbsp;is&nbsp;either&nbsp;a&nbsp;"predefined"&nbsp;HDF&nbsp;attribute<br>
+(see&nbsp;below)&nbsp;or&nbsp;a&nbsp;standard&nbsp;python&nbsp;attribute.&nbsp;Otherwise,&nbsp;the&nbsp;attribute<br>
+is&nbsp;handled&nbsp;as&nbsp;an&nbsp;HDF&nbsp;attribute.&nbsp;Also,&nbsp;HDF&nbsp;attributes&nbsp;are&nbsp;not&nbsp;stored&nbsp;inside<br>
+the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;dictionnary:&nbsp;the&nbsp;python&nbsp;dir()&nbsp;function&nbsp;will&nbsp;not&nbsp;list&nbsp;them.<br>
+&nbsp;<br>
+Attribute&nbsp;values&nbsp;can&nbsp;be&nbsp;updated,&nbsp;but&nbsp;it&nbsp;is&nbsp;illegal&nbsp;to&nbsp;try&nbsp;to&nbsp;change&nbsp;the<br>
+value&nbsp;type,&nbsp;or&nbsp;the&nbsp;attribute&nbsp;order&nbsp;(number&nbsp;of&nbsp;values).&nbsp;This&nbsp;is&nbsp;important<br>
+for&nbsp;attributes&nbsp;holding&nbsp;string&nbsp;values.&nbsp;An&nbsp;attribute&nbsp;initialized&nbsp;with&nbsp;an<br>
+'n'&nbsp;character&nbsp;string&nbsp;is&nbsp;simply&nbsp;a&nbsp;character&nbsp;attribute&nbsp;of&nbsp;order&nbsp;'n'&nbsp;(eg&nbsp;a<br>
+character&nbsp;array&nbsp;of&nbsp;length&nbsp;'n').&nbsp;If&nbsp;'vg'&nbsp;is&nbsp;a&nbsp;vgroup&nbsp;and&nbsp;we&nbsp;initialize&nbsp;its<br>
+'a1'&nbsp;attribute&nbsp;as&nbsp;'vg.a1&nbsp;=&nbsp;"abcdef"',&nbsp;then&nbsp;a&nbsp;subsequent&nbsp;update&nbsp;attempt<br>
+like&nbsp;'vg.a1&nbsp;=&nbsp;"12"'&nbsp;will&nbsp;fail,&nbsp;because&nbsp;we&nbsp;then&nbsp;try&nbsp;to&nbsp;change&nbsp;the&nbsp;order<br>
+of&nbsp;the&nbsp;attribute&nbsp;(from&nbsp;6&nbsp;to&nbsp;2).&nbsp;It&nbsp;is&nbsp;mandatory&nbsp;to&nbsp;keep&nbsp;the&nbsp;length&nbsp;of&nbsp;string<br>
+attributes&nbsp;constant.&nbsp;<br>
+&nbsp;<br>
+Predefined&nbsp;attributes<br>
+---------------------<br>
+The&nbsp;<a href="#VG">VG</a>&nbsp;class&nbsp;supports&nbsp;predefined&nbsp;attributes&nbsp;to&nbsp;get&nbsp;(and&nbsp;occasionnaly&nbsp;set)<br>
+attribute&nbsp;values&nbsp;easily&nbsp;using&nbsp;the&nbsp;usual&nbsp;python&nbsp;"dot&nbsp;notation",&nbsp;without<br>
+having&nbsp;to&nbsp;call&nbsp;a&nbsp;class&nbsp;method.&nbsp;The&nbsp;names&nbsp;of&nbsp;predefined&nbsp;attributes&nbsp;all&nbsp;start<br>
+with&nbsp;an&nbsp;underscore&nbsp;('_').<br>
+&nbsp;<br>
+In&nbsp;the&nbsp;following&nbsp;table,&nbsp;the&nbsp;RW&nbsp;column&nbsp;holds&nbsp;an&nbsp;X&nbsp;if&nbsp;the&nbsp;attribute<br>
+is&nbsp;read/write.&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#VG">VG</a>&nbsp;predefined&nbsp;attributes<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RW&nbsp;&nbsp;description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;library&nbsp;routine<br>
+&nbsp;&nbsp;&nbsp;&nbsp;--------------------------------------------------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_class&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;class&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vgetclass/Vsetclass<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;vgroup&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vgetname/Vsetname<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_nattrs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number&nbsp;of&nbsp;vgroup&nbsp;attributes&nbsp;Vnattrs<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_nmembers&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number&nbsp;of&nbsp;vgroup&nbsp;members&nbsp;&nbsp;&nbsp;&nbsp;Vntagrefs<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_refnum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vgroup&nbsp;reference&nbsp;number&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VQueryref<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_tag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vgroup&nbsp;tag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VQuerytag<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_version&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vgroup&nbsp;version&nbsp;number&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vgetversion<br>
+&nbsp;<br>
+&nbsp;<br>
+Programming&nbsp;models<br>
+------------------<br>
+&nbsp;<br>
+Creating&nbsp;and&nbsp;initializing&nbsp;a&nbsp;vgroup<br>
+----------------------------------<br>
+The&nbsp;following&nbsp;program&nbsp;shows&nbsp;how&nbsp;to&nbsp;create&nbsp;and&nbsp;initialize&nbsp;a&nbsp;vgroup&nbsp;inside<br>
+an&nbsp;HDF&nbsp;file.&nbsp;It&nbsp;can&nbsp;serve&nbsp;as&nbsp;a&nbsp;model&nbsp;for&nbsp;any&nbsp;program&nbsp;wanting&nbsp;to&nbsp;create<br>
+a&nbsp;vgroup.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.HDF&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.<a href="#V">V</a>&nbsp;&nbsp;&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.VS&nbsp;&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.SD&nbsp;&nbsp;import&nbsp;*<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;vdatacreate(vs,&nbsp;name):<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Create&nbsp;vdata&nbsp;and&nbsp;define&nbsp;its&nbsp;structure<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vd&nbsp;=&nbsp;vs.create(name,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(('partid',HC.CHAR8,&nbsp;5),&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;5&nbsp;char&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('description',HC.CHAR8,&nbsp;10),&nbsp;#&nbsp;10&nbsp;char&nbsp;string&nbsp;field<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('qty',HC.INT16,&nbsp;1),&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;1&nbsp;16&nbsp;bit&nbsp;int&nbsp;field<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('wght',HC.FLOAT32,&nbsp;1),&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;1&nbsp;32&nbsp;bit&nbsp;float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('price',HC.FLOAT32,1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;1&nbsp;32&nbsp;bit&nbsp;float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;))<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Store&nbsp;records<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vd.write((('Q1234',&nbsp;'bolt',12,&nbsp;0.01,&nbsp;0.05),&nbsp;&nbsp;&nbsp;#&nbsp;record&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('B5432',&nbsp;'brush',&nbsp;10,&nbsp;0.4,&nbsp;4.25),&nbsp;&nbsp;#&nbsp;record&nbsp;2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('S7613',&nbsp;'scissor',&nbsp;2,&nbsp;0.2,&nbsp;3.75)&nbsp;&nbsp;#&nbsp;record&nbsp;3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;"close"&nbsp;vdata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vd.detach()<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;sdscreate(sd,&nbsp;name):<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Create&nbsp;a&nbsp;simple&nbsp;3x3&nbsp;float&nbsp;array.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sds&nbsp;=&nbsp;sd.create(name,&nbsp;SDC.FLOAT32,&nbsp;(3,3))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Initialize&nbsp;array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sds[:]&nbsp;=&nbsp;((0,1,2),(3,4,5),(6,7,8))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;"close"&nbsp;dataset.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sds.endaccess()<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Create&nbsp;HDF&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;filename&nbsp;=&nbsp;'inventory.hdf'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hdf&nbsp;=&nbsp;HDF(filename,&nbsp;HC.WRITE|HC.CREATE)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Initialize&nbsp;the&nbsp;SD,&nbsp;<a href="#V">V</a>&nbsp;and&nbsp;VS&nbsp;interfaces&nbsp;on&nbsp;the&nbsp;file.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sd&nbsp;=&nbsp;SD(filename,&nbsp;SDC.WRITE)&nbsp;&nbsp;#&nbsp;SD&nbsp;interface<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vs&nbsp;=&nbsp;hdf.vstart()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;vdata&nbsp;interface<br>
+&nbsp;&nbsp;&nbsp;&nbsp;v&nbsp;&nbsp;=&nbsp;hdf.vgstart()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;vgroup&nbsp;interface<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Create&nbsp;vdata&nbsp;named&nbsp;'INVENTORY'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vdatacreate(vs,&nbsp;'INVENTORY')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Create&nbsp;dataset&nbsp;named&nbsp;"ARR_3x3"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sdscreate(sd,&nbsp;'ARR_3x3')<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Attach&nbsp;the&nbsp;vdata&nbsp;and&nbsp;the&nbsp;dataset.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd&nbsp;=&nbsp;vs.attach('INVENTORY')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sds&nbsp;=&nbsp;sd.select('ARR_3x3')<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Create&nbsp;vgroup&nbsp;named&nbsp;'TOTAL'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vg&nbsp;=&nbsp;v.create('TOTAL')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Add&nbsp;vdata&nbsp;to&nbsp;the&nbsp;vgroup<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vg.insert(vd)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;We&nbsp;could&nbsp;also&nbsp;have&nbsp;written&nbsp;this:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;vgroup.add(vd._tag,&nbsp;vd._refnum)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;or&nbsp;this:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;vgroup.add(HC.DFTAG_VH,&nbsp;vd._refnum)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Add&nbsp;dataset&nbsp;to&nbsp;the&nbsp;vgroup<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vg.add(HC.DFTAG_NDG,&nbsp;sds.ref())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Close&nbsp;vgroup,&nbsp;vdata&nbsp;and&nbsp;dataset.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vg.detach()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;vgroup<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd.detach()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;vdata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sds.endaccess()&nbsp;&nbsp;&nbsp;#&nbsp;dataset<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Terminate&nbsp;<a href="#V">V</a>,&nbsp;VS&nbsp;and&nbsp;SD&nbsp;interfaces.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;v.end()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;<a href="#V">V</a>&nbsp;interface<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vs.end()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;VS&nbsp;interface<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sd.end()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;SD&nbsp;interface<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Close&nbsp;HDF&nbsp;file.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hdf.close()<br>
+&nbsp;<br>
+The&nbsp;program&nbsp;starts&nbsp;by&nbsp;defining&nbsp;two&nbsp;functions&nbsp;vdatacreate()&nbsp;and&nbsp;sdscreate(),<br>
+which&nbsp;will&nbsp;serve&nbsp;to&nbsp;create&nbsp;the&nbsp;vdata&nbsp;and&nbsp;dataset&nbsp;objects&nbsp;we&nbsp;need.&nbsp;Those<br>
+functions&nbsp;are&nbsp;not&nbsp;essential&nbsp;to&nbsp;the&nbsp;example.&nbsp;They&nbsp;simply&nbsp;help&nbsp;to&nbsp;make&nbsp;the<br>
+example&nbsp;self-contained.&nbsp;Refer&nbsp;to&nbsp;the&nbsp;VS&nbsp;and&nbsp;SD&nbsp;module&nbsp;documentation&nbsp;for<br>
+additional&nbsp;explanations&nbsp;about&nbsp;how&nbsp;these&nbsp;functions&nbsp;work.<br>
+&nbsp;<br>
+After&nbsp;opening&nbsp;the&nbsp;HDF&nbsp;file&nbsp;in&nbsp;write&nbsp;mode,&nbsp;the&nbsp;SD,&nbsp;<a href="#V">V</a>&nbsp;and&nbsp;VS&nbsp;interfaces&nbsp;are<br>
+initialized&nbsp;on&nbsp;the&nbsp;file.&nbsp;Next&nbsp;vdatacreate()&nbsp;is&nbsp;called&nbsp;to&nbsp;create&nbsp;a&nbsp;new&nbsp;vdata<br>
+named&nbsp;'INVENTORY'&nbsp;on&nbsp;the&nbsp;VS&nbsp;instance,&nbsp;and&nbsp;sdscreate()&nbsp;to&nbsp;create&nbsp;a&nbsp;new<br>
+dataset&nbsp;named&nbsp;'ARR_3x3'&nbsp;on&nbsp;the&nbsp;SD&nbsp;instance.&nbsp;This&nbsp;is&nbsp;done&nbsp;so&nbsp;that&nbsp;we&nbsp;have&nbsp;a<br>
+vdata&nbsp;and&nbsp;a&nbsp;dataset&nbsp;to&nbsp;play&nbsp;with.<br>
+&nbsp;<br>
+The&nbsp;vdata&nbsp;and&nbsp;the&nbsp;dataset&nbsp;are&nbsp;then&nbsp;attached&nbsp;("opened").&nbsp;The&nbsp;create()<br>
+method&nbsp;of&nbsp;the&nbsp;<a href="#V">V</a>&nbsp;instance&nbsp;is&nbsp;then&nbsp;called&nbsp;to&nbsp;create&nbsp;a&nbsp;new&nbsp;vgroup&nbsp;named<br>
+'TOTAL'.&nbsp;The&nbsp;vgroup&nbsp;is&nbsp;then&nbsp;populated&nbsp;by&nbsp;calling&nbsp;its&nbsp;insert()&nbsp;method&nbsp;to&nbsp;add<br>
+the&nbsp;vdata&nbsp;'INVENTORY',&nbsp;and&nbsp;its&nbsp;add()&nbsp;method&nbsp;to&nbsp;add&nbsp;the&nbsp;'ARR_3x3'&nbsp;dataset.<br>
+Note&nbsp;that&nbsp;insert()&nbsp;is&nbsp;just&nbsp;a&nbsp;commodity&nbsp;method&nbsp;that&nbsp;simplifies&nbsp;adding&nbsp;a<br>
+vdata&nbsp;or&nbsp;a&nbsp;vgroup&nbsp;to&nbsp;a&nbsp;vgroup,&nbsp;avoiding&nbsp;the&nbsp;need&nbsp;to&nbsp;pass&nbsp;an&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;tag&nbsp;and<br>
+reference&nbsp;number.&nbsp;There&nbsp;is&nbsp;no&nbsp;such&nbsp;commodity&nbsp;method&nbsp;for&nbsp;adding&nbsp;a&nbsp;dataset<br>
+to&nbsp;a&nbsp;vgroup.&nbsp;The&nbsp;dataset&nbsp;must&nbsp;be&nbsp;added&nbsp;by&nbsp;specifying&nbsp;its&nbsp;tag&nbsp;and&nbsp;reference<br>
+number.&nbsp;Note&nbsp;that&nbsp;the&nbsp;tags&nbsp;to&nbsp;be&nbsp;used&nbsp;are&nbsp;defined&nbsp;inside&nbsp;the&nbsp;HDF&nbsp;module&nbsp;as<br>
+constants&nbsp;of&nbsp;the&nbsp;HC&nbsp;class:&nbsp;DFTAG_NDG&nbsp;for&nbsp;a&nbsp;dataset,&nbsp;DFTAG_VG&nbsp;for&nbsp;a&nbsp;vgroup,<br>
+DFTAG_VH&nbsp;for&nbsp;a&nbsp;vdata.<br>
+&nbsp;<br>
+The&nbsp;program&nbsp;ends&nbsp;by&nbsp;detaching&nbsp;("closing")&nbsp;the&nbsp;HDF&nbsp;objects&nbsp;created&nbsp;above,<br>
+terminating&nbsp;the&nbsp;three&nbsp;interfaces&nbsp;initialized,&nbsp;and&nbsp;closing&nbsp;the&nbsp;HDF&nbsp;file.<br>
+&nbsp;<br>
+&nbsp;<br>
+Reading&nbsp;a&nbsp;vgroup<br>
+----------------<br>
+The&nbsp;following&nbsp;program&nbsp;shows&nbsp;the&nbsp;contents&nbsp;of&nbsp;the&nbsp;vgroups&nbsp;contained&nbsp;inside<br>
+any&nbsp;HDF&nbsp;file.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.HDF&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.<a href="#V">V</a>&nbsp;&nbsp;&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.VS&nbsp;&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.SD&nbsp;&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;import&nbsp;sys<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;describevg(refnum):<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Describe&nbsp;the&nbsp;vgroup&nbsp;with&nbsp;the&nbsp;given&nbsp;refnum.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Open&nbsp;vgroup&nbsp;in&nbsp;read&nbsp;mode.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vg&nbsp;=&nbsp;v.attach(refnum)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"----------------"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"name:",&nbsp;vg._name,&nbsp;"class:",vg._class,&nbsp;"tag,ref:",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;vg._tag,&nbsp;vg._refnum<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Show&nbsp;the&nbsp;number&nbsp;of&nbsp;members&nbsp;of&nbsp;each&nbsp;main&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;type.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"members:&nbsp;",&nbsp;vg._nmembers,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"datasets:",&nbsp;vg.nrefs(HC.DFTAG_NDG),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"vdatas:&nbsp;&nbsp;",&nbsp;vg.nrefs(HC.DFTAG_VH),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"vgroups:&nbsp;",&nbsp;vg.nrefs(HC.DFTAG_VG)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Read&nbsp;the&nbsp;contents&nbsp;of&nbsp;the&nbsp;vgroup.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;members&nbsp;=&nbsp;vg.tagrefs()<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Display&nbsp;info&nbsp;about&nbsp;each&nbsp;member.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;index&nbsp;=&nbsp;-1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;tag,&nbsp;ref&nbsp;in&nbsp;members:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;index&nbsp;+=&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"member&nbsp;index",&nbsp;index<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Vdata&nbsp;tag<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;tag&nbsp;==&nbsp;HC.DFTAG_VH:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vd&nbsp;=&nbsp;vs.attach(ref)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nrecs,&nbsp;intmode,&nbsp;fields,&nbsp;size,&nbsp;name&nbsp;=&nbsp;vd.inquire()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"&nbsp;&nbsp;vdata:",name,&nbsp;"tag,ref:",tag,&nbsp;ref<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"&nbsp;&nbsp;&nbsp;&nbsp;fields:",fields<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"&nbsp;&nbsp;&nbsp;&nbsp;nrecs:",nrecs<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vd.detach()<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;SDS&nbsp;tag<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elif&nbsp;tag&nbsp;==&nbsp;HC.DFTAG_NDG:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sds&nbsp;=&nbsp;sd.select(sd.reftoindex(ref))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name,&nbsp;rank,&nbsp;dims,&nbsp;type,&nbsp;nattrs&nbsp;=&nbsp;sds.info()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"&nbsp;&nbsp;dataset:",name,&nbsp;"tag,ref:",&nbsp;tag,&nbsp;ref<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"&nbsp;&nbsp;&nbsp;&nbsp;dims:",dims<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"&nbsp;&nbsp;&nbsp;&nbsp;type:",type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sds.endaccess()<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;VS&nbsp;tag<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elif&nbsp;tag&nbsp;==&nbsp;HC.DFTAG_VG:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vg0&nbsp;=&nbsp;v.attach(ref)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"&nbsp;&nbsp;vgroup:",&nbsp;vg0._name,&nbsp;"tag,ref:",&nbsp;tag,&nbsp;ref<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vg0.detach()<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Unhandled&nbsp;tag<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"unhandled&nbsp;tag,ref",tag,ref<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Close&nbsp;vgroup<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vg.detach()<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Open&nbsp;HDF&nbsp;file&nbsp;in&nbsp;readonly&nbsp;mode.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;filename&nbsp;=&nbsp;sys.argv[1]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hdf&nbsp;=&nbsp;HDF(filename)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Initialize&nbsp;the&nbsp;SD,&nbsp;<a href="#V">V</a>&nbsp;and&nbsp;VS&nbsp;interfaces&nbsp;on&nbsp;the&nbsp;file.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sd&nbsp;=&nbsp;SD(filename)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vs&nbsp;=&nbsp;hdf.vstart()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;v&nbsp;&nbsp;=&nbsp;hdf.vgstart()<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Scan&nbsp;all&nbsp;vgroups&nbsp;in&nbsp;the&nbsp;file.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ref&nbsp;=&nbsp;-1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;1:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ref&nbsp;=&nbsp;v.getid(ref)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;except&nbsp;HDF4Error,msg:&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;no&nbsp;more&nbsp;vgroup<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;describevg(ref)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Terminate&nbsp;<a href="#V">V</a>,&nbsp;VS&nbsp;and&nbsp;SD&nbsp;interfaces.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;v.end()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vs.end()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sd.end()<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Close&nbsp;HDF&nbsp;file.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hdf.close()<br>
+&nbsp;<br>
+The&nbsp;program&nbsp;starts&nbsp;by&nbsp;defining&nbsp;function&nbsp;describevg(),&nbsp;which&nbsp;is&nbsp;passed&nbsp;the<br>
+reference&nbsp;number&nbsp;of&nbsp;the&nbsp;vgroup&nbsp;to&nbsp;display.&nbsp;The&nbsp;function&nbsp;assumes&nbsp;that&nbsp;the<br>
+SD,&nbsp;VS&nbsp;and&nbsp;<a href="#V">V</a>&nbsp;interfaces&nbsp;have&nbsp;been&nbsp;previously&nbsp;initialized.<br>
+&nbsp;<br>
+The&nbsp;function&nbsp;starts&nbsp;by&nbsp;attaching&nbsp;("opening")&nbsp;the&nbsp;vgroup,&nbsp;and&nbsp;displaying<br>
+its&nbsp;name,&nbsp;class,&nbsp;tag&nbsp;and&nbsp;reference&nbsp;number.&nbsp;The&nbsp;number&nbsp;of&nbsp;members&nbsp;of&nbsp;the<br>
+three&nbsp;most&nbsp;important&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;types&nbsp;is&nbsp;then&nbsp;displayed,&nbsp;by&nbsp;calling&nbsp;the&nbsp;nrefs()<br>
+method&nbsp;with&nbsp;the&nbsp;predefined&nbsp;tags&nbsp;found&nbsp;inside&nbsp;the&nbsp;HDF.HC&nbsp;class.<br>
+&nbsp;<br>
+The&nbsp;tagrefs()&nbsp;method&nbsp;is&nbsp;then&nbsp;called&nbsp;to&nbsp;get&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;the&nbsp;vgroup&nbsp;members,<br>
+each&nbsp;member&nbsp;being&nbsp;identified&nbsp;by&nbsp;its&nbsp;tag&nbsp;and&nbsp;reference&nbsp;number.&nbsp;A&nbsp;'for'<br>
+statement&nbsp;is&nbsp;entered&nbsp;to&nbsp;loop&nbsp;over&nbsp;each&nbsp;element&nbsp;of&nbsp;this&nbsp;list.&nbsp;The&nbsp;tag&nbsp;is<br>
+tested&nbsp;against&nbsp;the&nbsp;known&nbsp;values&nbsp;defined&nbsp;in&nbsp;the&nbsp;HDF.HC&nbsp;class:&nbsp;the&nbsp;outcome&nbsp;of<br>
+this&nbsp;test&nbsp;indicates&nbsp;how&nbsp;to&nbsp;process&nbsp;the&nbsp;member&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+&nbsp;<br>
+A&nbsp;DFTAG_VH&nbsp;tag&nbsp;indicates&nbsp;we&nbsp;deal&nbsp;with&nbsp;a&nbsp;vdata.&nbsp;The&nbsp;vdata&nbsp;is&nbsp;attached,&nbsp;its<br>
+inquire()&nbsp;method&nbsp;called&nbsp;to&nbsp;display&nbsp;info&nbsp;about&nbsp;it,&nbsp;and&nbsp;the&nbsp;vdata&nbsp;is&nbsp;detached.<br>
+In&nbsp;the&nbsp;case&nbsp;of&nbsp;a&nbsp;DFTAG_NFG,&nbsp;we&nbsp;are&nbsp;facing&nbsp;a&nbsp;dataset.&nbsp;The&nbsp;dataset&nbsp;is<br>
+selected,&nbsp;info&nbsp;is&nbsp;obtained&nbsp;by&nbsp;calling&nbsp;the&nbsp;dataset&nbsp;info()&nbsp;method,&nbsp;and&nbsp;the<br>
+dataset&nbsp;is&nbsp;released.&nbsp;A&nbsp;DFTAG_VG&nbsp;indicates&nbsp;that&nbsp;the&nbsp;member&nbsp;is&nbsp;a&nbsp;vgroup.&nbsp;We<br>
+attach&nbsp;it,&nbsp;print&nbsp;its&nbsp;name,&nbsp;tag&nbsp;and&nbsp;reference&nbsp;number,&nbsp;then&nbsp;detach&nbsp;the<br>
+member&nbsp;vgroup.&nbsp;A&nbsp;warning&nbsp;is&nbsp;finally&nbsp;displayed&nbsp;if&nbsp;we&nbsp;hit&nbsp;upon&nbsp;a&nbsp;member&nbsp;of<br>
+an&nbsp;unknown&nbsp;type.<br>
+&nbsp;<br>
+The&nbsp;function&nbsp;releases&nbsp;the&nbsp;vgroup&nbsp;just&nbsp;displayed&nbsp;and&nbsp;returns.<br>
+&nbsp;<br>
+The&nbsp;main&nbsp;program&nbsp;starts&nbsp;by&nbsp;opening&nbsp;in&nbsp;readonly&nbsp;mode&nbsp;the&nbsp;HDF&nbsp;file&nbsp;passed<br>
+as&nbsp;argument&nbsp;on&nbsp;the&nbsp;command&nbsp;line.&nbsp;The&nbsp;SD,&nbsp;VS&nbsp;and&nbsp;<a href="#V">V</a>&nbsp;interfaces&nbsp;are<br>
+initialized,&nbsp;and&nbsp;the&nbsp;corresponding&nbsp;class&nbsp;instances&nbsp;are&nbsp;stored&nbsp;inside&nbsp;'sd',<br>
+'vs'&nbsp;and&nbsp;'v'&nbsp;global&nbsp;variables,&nbsp;respectively,&nbsp;for&nbsp;the&nbsp;use&nbsp;of&nbsp;the<br>
+describevg()&nbsp;function.<br>
+&nbsp;<br>
+A&nbsp;while&nbsp;loop&nbsp;is&nbsp;then&nbsp;entered&nbsp;to&nbsp;access&nbsp;each&nbsp;vgroup&nbsp;in&nbsp;the&nbsp;file.&nbsp;A&nbsp;reference<br>
+number&nbsp;of&nbsp;-1&nbsp;is&nbsp;passed&nbsp;on&nbsp;the&nbsp;first&nbsp;call&nbsp;to&nbsp;getid()&nbsp;to&nbsp;obtain&nbsp;the&nbsp;reference<br>
+number&nbsp;of&nbsp;the&nbsp;first&nbsp;vgroup.&nbsp;getid()&nbsp;returns&nbsp;a&nbsp;new&nbsp;reference&nbsp;number&nbsp;on&nbsp;each<br>
+subsequent&nbsp;call,&nbsp;and&nbsp;raises&nbsp;an&nbsp;exception&nbsp;when&nbsp;the&nbsp;last&nbsp;vgroup&nbsp;has&nbsp;been<br>
+retrieved.&nbsp;This&nbsp;exception&nbsp;is&nbsp;caught&nbsp;to&nbsp;break&nbsp;out&nbsp;of&nbsp;the&nbsp;loop,&nbsp;otherwise<br>
+describevg()&nbsp;is&nbsp;called&nbsp;to&nbsp;display&nbsp;the&nbsp;vgroup&nbsp;we&nbsp;have&nbsp;on&nbsp;hand.<br>
+&nbsp;<br>
+Once&nbsp;the&nbsp;loop&nbsp;is&nbsp;over,&nbsp;the&nbsp;interfaces&nbsp;initialized&nbsp;before&nbsp;are&nbsp;terminated,<br>
+and&nbsp;the&nbsp;HDF&nbsp;file&nbsp;is&nbsp;closed.<br>
+&nbsp;<br>
+You&nbsp;will&nbsp;notice&nbsp;that&nbsp;this&nbsp;program&nbsp;will&nbsp;display&nbsp;vgroups&nbsp;other&nbsp;than&nbsp;those<br>
+you&nbsp;have&nbsp;explicitly&nbsp;created.&nbsp;Those&nbsp;supplementary&nbsp;vgroups&nbsp;are&nbsp;created<br>
+by&nbsp;the&nbsp;HDF&nbsp;library&nbsp;for&nbsp;its&nbsp;own&nbsp;internal&nbsp;needs.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="pyhdf.hdfext.html">pyhdf.hdfext</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top><a href="types.html">types</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="pyhdf.V.html#V">V</a>
+</font></dt><dt><font face="helvetica, arial"><a href="pyhdf.V.html#VG">VG</a>
+</font></dt><dt><font face="helvetica, arial"><a href="pyhdf.V.html#VGAttr">VGAttr</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="V">class <strong>V</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="#V">V</a>&nbsp;class&nbsp;implements&nbsp;the&nbsp;<a href="#V">V</a>&nbsp;(Vgroup)&nbsp;interface&nbsp;applied&nbsp;to&nbsp;an<br>
+HDF&nbsp;file.<br>
+To&nbsp;instantiate&nbsp;a&nbsp;<a href="#V">V</a>&nbsp;class,&nbsp;call&nbsp;the&nbsp;vgstart()&nbsp;method&nbsp;of&nbsp;an<br>
+HDF&nbsp;instance.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="V-__del__"><strong>__del__</strong></a>(self)</dt><dd><tt>Delete&nbsp;the&nbsp;instance,&nbsp;first&nbsp;calling&nbsp;the&nbsp;<a href="#V-end">end</a>()&nbsp;method&nbsp;<br>
+if&nbsp;not&nbsp;already&nbsp;done.</tt></dd></dl>
+
+<dl><dt><a name="V-__init__"><strong>__init__</strong></a>(self, hinst)</dt></dl>
+
+<dl><dt><a name="V-attach"><strong>attach</strong></a>(self, num_name, write<font color="#909090">=0</font>)</dt><dd><tt>Open&nbsp;an&nbsp;existing&nbsp;vgroup&nbsp;given&nbsp;its&nbsp;name&nbsp;or&nbsp;its&nbsp;reference<br>
+number,&nbsp;or&nbsp;create&nbsp;a&nbsp;new&nbsp;vgroup,&nbsp;returning&nbsp;a&nbsp;<a href="#VG">VG</a>&nbsp;instance&nbsp;for<br>
+that&nbsp;vgroup.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;num_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reference&nbsp;number&nbsp;or&nbsp;name&nbsp;of&nbsp;the&nbsp;vgroup&nbsp;to&nbsp;open,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;-1&nbsp;to&nbsp;create&nbsp;a&nbsp;new&nbsp;vgroup;&nbsp;vcreate()&nbsp;can&nbsp;also<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;called&nbsp;to&nbsp;create&nbsp;and&nbsp;name&nbsp;a&nbsp;new&nbsp;vgroup<br>
+&nbsp;&nbsp;write&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set&nbsp;to&nbsp;non-zero&nbsp;to&nbsp;open&nbsp;the&nbsp;vgroup&nbsp;in&nbsp;write&nbsp;mode<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;to&nbsp;0&nbsp;to&nbsp;open&nbsp;it&nbsp;in&nbsp;readonly&nbsp;mode&nbsp;(default)<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;<a href="#VG">VG</a>&nbsp;instance&nbsp;for&nbsp;the&nbsp;vgroup<br>
+&nbsp;<br>
+An&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;an&nbsp;attempt&nbsp;is&nbsp;made&nbsp;to&nbsp;open<br>
+a&nbsp;non-existent&nbsp;vgroup.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Vattach</tt></dd></dl>
+
+<dl><dt><a name="V-create"><strong>create</strong></a>(self, name)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;vgroup,&nbsp;and&nbsp;assign&nbsp;it&nbsp;a&nbsp;name.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;name&nbsp;to&nbsp;assign&nbsp;to&nbsp;the&nbsp;new&nbsp;vgroup<br>
+Returns:<br>
+&nbsp;&nbsp;<a href="#VG">VG</a>&nbsp;instance&nbsp;for&nbsp;the&nbsp;new&nbsp;vgroup<br>
+&nbsp;<br>
+A&nbsp;<a href="#V-create">create</a>(name)&nbsp;call&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;an&nbsp;<a href="#V-attach">attach</a>(-1,&nbsp;1)&nbsp;call,<br>
+followed&nbsp;by&nbsp;a&nbsp;call&nbsp;to&nbsp;the&nbsp;setname(name)&nbsp;method&nbsp;of&nbsp;the&nbsp;instance.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="V-delete"><strong>delete</strong></a>(self, num_name)</dt><dd><tt>Delete&nbsp;from&nbsp;the&nbsp;HDF&nbsp;file&nbsp;the&nbsp;vgroup&nbsp;identified&nbsp;by&nbsp;its<br>
+reference&nbsp;number&nbsp;or&nbsp;its&nbsp;name.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;num_name&nbsp;&nbsp;&nbsp;&nbsp;either&nbsp;the&nbsp;reference&nbsp;number&nbsp;or&nbsp;the&nbsp;name&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;vgroup&nbsp;to&nbsp;delete<br>
+Return<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Vdelete</tt></dd></dl>
+
+<dl><dt><a name="V-end"><strong>end</strong></a>(self)</dt><dd><tt>Close&nbsp;the&nbsp;<a href="#V">V</a>&nbsp;interface.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;No&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Vend</tt></dd></dl>
+
+<dl><dt><a name="V-find"><strong>find</strong></a>(self, name)</dt><dd><tt>Find&nbsp;a&nbsp;vgroup&nbsp;given&nbsp;its&nbsp;name,&nbsp;returning&nbsp;its&nbsp;reference<br>
+number&nbsp;if&nbsp;found.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;of&nbsp;the&nbsp;vgroup&nbsp;to&nbsp;find<br>
+Returns:<br>
+&nbsp;&nbsp;vgroup&nbsp;reference&nbsp;number<br>
+&nbsp;<br>
+An&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;the&nbsp;vgroup&nbsp;is&nbsp;not&nbsp;found.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent:&nbsp;Vfind</tt></dd></dl>
+
+<dl><dt><a name="V-findclass"><strong>findclass</strong></a>(self, name)</dt><dd><tt>Find&nbsp;a&nbsp;vgroup&nbsp;given&nbsp;its&nbsp;class&nbsp;name,&nbsp;returning&nbsp;its&nbsp;reference<br>
+number&nbsp;if&nbsp;found.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;name&nbsp;of&nbsp;the&nbsp;vgroup&nbsp;to&nbsp;find<br>
+Returns:<br>
+&nbsp;&nbsp;vgroup&nbsp;reference&nbsp;number<br>
+&nbsp;<br>
+An&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;the&nbsp;vgroup&nbsp;is&nbsp;not&nbsp;found.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent:&nbsp;Vfind</tt></dd></dl>
+
+<dl><dt><a name="V-getid"><strong>getid</strong></a>(self, ref)</dt><dd><tt>Obtain&nbsp;the&nbsp;reference&nbsp;number&nbsp;of&nbsp;the&nbsp;vgroup&nbsp;following&nbsp;the<br>
+vgroup&nbsp;with&nbsp;the&nbsp;given&nbsp;reference&nbsp;number&nbsp;.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;ref&nbsp;&nbsp;&nbsp;&nbsp;reference&nbsp;number&nbsp;of&nbsp;the&nbsp;vgroup&nbsp;after&nbsp;which&nbsp;to&nbsp;search;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set&nbsp;to&nbsp;-1&nbsp;to&nbsp;start&nbsp;the&nbsp;search&nbsp;at&nbsp;the&nbsp;start&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;HDF&nbsp;file<br>
+Return:<br>
+&nbsp;&nbsp;reference&nbsp;number&nbsp;of&nbsp;the&nbsp;vgroup&nbsp;past&nbsp;the&nbsp;one&nbsp;identified&nbsp;by&nbsp;'ref'<br>
+&nbsp;<br>
+An&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;vgroup&nbsp;is&nbsp;reached.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Vgetid</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'V' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="VG">class <strong>VG</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="#VG">VG</a>&nbsp;class&nbsp;encapsulates&nbsp;the&nbsp;functionnality&nbsp;of&nbsp;a&nbsp;vgroup.<br>
+To&nbsp;instantiate&nbsp;a&nbsp;<a href="#VG">VG</a>&nbsp;class,&nbsp;call&nbsp;the&nbsp;attach()&nbsp;or&nbsp;create()&nbsp;methods<br>
+of&nbsp;a&nbsp;<a href="#V">V</a>&nbsp;class&nbsp;instance.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="VG-__del__"><strong>__del__</strong></a>(self)</dt><dd><tt>Delete&nbsp;the&nbsp;instance,&nbsp;first&nbsp;calling&nbsp;the&nbsp;<a href="#VG-detach">detach</a>()&nbsp;method&nbsp;<br>
+if&nbsp;not&nbsp;already&nbsp;done.</tt></dd></dl>
+
+<dl><dt><a name="VG-__getattr__"><strong>__getattr__</strong></a>(self, name)</dt><dd><tt>Some&nbsp;vgroup&nbsp;properties&nbsp;can&nbsp;be&nbsp;queried/set&nbsp;through&nbsp;the&nbsp;following<br>
+attributes.&nbsp;Their&nbsp;names&nbsp;all&nbsp;start&nbsp;with&nbsp;an&nbsp;"_"&nbsp;to&nbsp;avoid<br>
+clashes&nbsp;with&nbsp;user-defined&nbsp;attributes.&nbsp;Most&nbsp;are&nbsp;read-only.<br>
+Only&nbsp;the&nbsp;_class&nbsp;and&nbsp;_name&nbsp;attributes&nbsp;can&nbsp;be&nbsp;modified.<br>
+&nbsp;<br>
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RO&nbsp;&nbsp;Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;library&nbsp;routine<br>
+-----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;&nbsp;-----------------&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-----------------<br>
+_class&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vgetclass/Vsetlass<br>
+_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vgetname/Vsetname<br>
+_nattrs&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;number&nbsp;of&nbsp;attributes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vnattrs<br>
+_nmembers&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;number&nbsp;of&nbsp;vgroup&nbsp;members&nbsp;Vntagrefs<br>
+_refnum&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;reference&nbsp;number&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VQueryref<br>
+_tag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;tag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VQuerytag<br>
+_version&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;version&nbsp;number&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vgetversion</tt></dd></dl>
+
+<dl><dt><a name="VG-__init__"><strong>__init__</strong></a>(self, vinst, id)</dt></dl>
+
+<dl><dt><a name="VG-__setattr__"><strong>__setattr__</strong></a>(self, name, value)</dt></dl>
+
+<dl><dt><a name="VG-add"><strong>add</strong></a>(self, tag, ref)</dt><dd><tt>Add&nbsp;to&nbsp;the&nbsp;vgroup&nbsp;an&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;identified&nbsp;by&nbsp;its&nbsp;tag&nbsp;and<br>
+reference&nbsp;number.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tag&nbsp;of&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;to&nbsp;add<br>
+&nbsp;&nbsp;ref&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reference&nbsp;number&nbsp;of&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;to&nbsp;add<br>
+Return:<br>
+&nbsp;&nbsp;total&nbsp;number&nbsp;of&nbsp;objects&nbsp;in&nbsp;the&nbsp;vgroup&nbsp;after&nbsp;the&nbsp;addition<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Vaddtagref</tt></dd></dl>
+
+<dl><dt><a name="VG-attr"><strong>attr</strong></a>(self, name_index)</dt><dd><tt>Create&nbsp;a&nbsp;<a href="#VGAttr">VGAttr</a>&nbsp;instance&nbsp;representing&nbsp;a&nbsp;vgroup&nbsp;attribute.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name_index&nbsp;&nbsp;attribute&nbsp;name&nbsp;or&nbsp;attribute&nbsp;index&nbsp;number;&nbsp;if&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;is&nbsp;given&nbsp;the&nbsp;attribute&nbsp;may&nbsp;not&nbsp;exist;&nbsp;in&nbsp;that<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case,&nbsp;it&nbsp;will&nbsp;be&nbsp;created&nbsp;when&nbsp;the&nbsp;<a href="#VGAttr">VGAttr</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;instance&nbsp;set()&nbsp;method&nbsp;is&nbsp;called<br>
+&nbsp;<br>
+Return:<br>
+&nbsp;&nbsp;<a href="#VGAttr">VGAttr</a>&nbsp;instance&nbsp;for&nbsp;the&nbsp;attribute.&nbsp;Call&nbsp;the&nbsp;methods&nbsp;of&nbsp;this<br>
+&nbsp;&nbsp;class&nbsp;to&nbsp;query,&nbsp;read&nbsp;or&nbsp;set&nbsp;the&nbsp;attribute.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="VG-attrinfo"><strong>attrinfo</strong></a>(self)</dt><dd><tt>Return&nbsp;info&nbsp;about&nbsp;all&nbsp;the&nbsp;vgroup&nbsp;attributes.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;dictionnary&nbsp;describing&nbsp;each&nbsp;vgroup&nbsp;attribute;&nbsp;for&nbsp;each&nbsp;attribute,<br>
+&nbsp;&nbsp;a&nbsp;(name,data)&nbsp;pair&nbsp;is&nbsp;added&nbsp;to&nbsp;the&nbsp;dictionary,&nbsp;where&nbsp;'data'&nbsp;is<br>
+&nbsp;&nbsp;a&nbsp;tuple&nbsp;holding:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;data&nbsp;type&nbsp;(one&nbsp;of&nbsp;HC.xxx&nbsp;constants)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;order<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;size&nbsp;in&nbsp;bytes<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="VG-delete"><strong>delete</strong></a>(self, tag, ref)</dt><dd><tt>Delete&nbsp;from&nbsp;the&nbsp;vgroup&nbsp;the&nbsp;member&nbsp;identified&nbsp;by&nbsp;its&nbsp;tag<br>
+and&nbsp;reference&nbsp;number.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag&nbsp;&nbsp;&nbsp;&nbsp;tag&nbsp;of&nbsp;the&nbsp;member&nbsp;to&nbsp;delete<br>
+&nbsp;&nbsp;ref&nbsp;&nbsp;&nbsp;&nbsp;reference&nbsp;number&nbsp;of&nbsp;the&nbsp;member&nbsp;to&nbsp;delete<br>
+&nbsp;<br>
+Return:<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+Only&nbsp;the&nbsp;link&nbsp;of&nbsp;the&nbsp;member&nbsp;with&nbsp;the&nbsp;vgroup&nbsp;is&nbsp;deleted.<br>
+The&nbsp;member&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;is&nbsp;not&nbsp;deleted.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Vdeletatagref</tt></dd></dl>
+
+<dl><dt><a name="VG-detach"><strong>detach</strong></a>(self)</dt><dd><tt>Terminate&nbsp;access&nbsp;to&nbsp;the&nbsp;vgroup.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Vdetach</tt></dd></dl>
+
+<dl><dt><a name="VG-findattr"><strong>findattr</strong></a>(self, name)</dt><dd><tt>Search&nbsp;the&nbsp;vgroup&nbsp;for&nbsp;a&nbsp;given&nbsp;attribute.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;attribute&nbsp;name<br>
+Returns:<br>
+&nbsp;&nbsp;if&nbsp;found,&nbsp;<a href="#VGAttr">VGAttr</a>&nbsp;instance&nbsp;describing&nbsp;the&nbsp;attribute<br>
+&nbsp;&nbsp;None&nbsp;otherwise<br>
+&nbsp;<br>
+&nbsp;C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Vfindattr</tt></dd></dl>
+
+<dl><dt><a name="VG-inqtagref"><strong>inqtagref</strong></a>(self, tag, ref)</dt><dd><tt>Determines&nbsp;if&nbsp;an&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;identified&nbsp;by&nbsp;its&nbsp;tag&nbsp;and&nbsp;reference<br>
+number&nbsp;belongs&nbsp;to&nbsp;the&nbsp;vgroup.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tag&nbsp;of&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;to&nbsp;check<br>
+&nbsp;&nbsp;ref&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reference&nbsp;number&nbsp;of&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;to&nbsp;check<br>
+&nbsp;<br>
+Return:<br>
+&nbsp;&nbsp;False&nbsp;(0)&nbsp;if&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;does&nbsp;not&nbsp;belong&nbsp;to&nbsp;the&nbsp;vgroup,<br>
+&nbsp;&nbsp;True&nbsp;&nbsp;(1)&nbsp;otherwise<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Vinqtagref</tt></dd></dl>
+
+<dl><dt><a name="VG-insert"><strong>insert</strong></a>(self, inst)</dt><dd><tt>Insert&nbsp;a&nbsp;vdata&nbsp;or&nbsp;a&nbsp;vgroup&nbsp;in&nbsp;the&nbsp;vgroup.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;inst&nbsp;&nbsp;vdata&nbsp;or&nbsp;vgroup&nbsp;instance&nbsp;to&nbsp;add<br>
+Return:<br>
+&nbsp;&nbsp;index&nbsp;of&nbsp;the&nbsp;inserted&nbsp;vdata&nbsp;or&nbsp;vgroup&nbsp;(0&nbsp;based)<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Vinsert</tt></dd></dl>
+
+<dl><dt><a name="VG-isvg"><strong>isvg</strong></a>(self, ref)</dt><dd><tt>Determines&nbsp;if&nbsp;the&nbsp;member&nbsp;of&nbsp;a&nbsp;vgoup&nbsp;is&nbsp;a&nbsp;vgroup.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;ref&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reference&nbsp;number&nbsp;of&nbsp;the&nbsp;member&nbsp;to&nbsp;check<br>
+&nbsp;<br>
+Return:<br>
+&nbsp;&nbsp;False&nbsp;(0)&nbsp;if&nbsp;the&nbsp;member&nbsp;is&nbsp;not&nbsp;a&nbsp;vgroup<br>
+&nbsp;&nbsp;True&nbsp;&nbsp;(1)&nbsp;otherwise<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Visvg</tt></dd></dl>
+
+<dl><dt><a name="VG-isvs"><strong>isvs</strong></a>(self, ref)</dt><dd><tt>Determines&nbsp;if&nbsp;the&nbsp;member&nbsp;of&nbsp;a&nbsp;vgoup&nbsp;is&nbsp;a&nbsp;vdata.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;ref&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reference&nbsp;number&nbsp;of&nbsp;the&nbsp;member&nbsp;to&nbsp;check<br>
+&nbsp;<br>
+Return:<br>
+&nbsp;&nbsp;False&nbsp;(0)&nbsp;if&nbsp;the&nbsp;member&nbsp;is&nbsp;not&nbsp;a&nbsp;vdata,<br>
+&nbsp;&nbsp;True&nbsp;&nbsp;(1)&nbsp;otherwise<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Visvs</tt></dd></dl>
+
+<dl><dt><a name="VG-nrefs"><strong>nrefs</strong></a>(self, tag)</dt><dd><tt>Determine&nbsp;the&nbsp;number&nbsp;of&nbsp;tags&nbsp;of&nbsp;a&nbsp;given&nbsp;type&nbsp;in&nbsp;a&nbsp;vgroup.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag&nbsp;&nbsp;&nbsp;&nbsp;tag&nbsp;type&nbsp;to&nbsp;look&nbsp;for&nbsp;in&nbsp;the&nbsp;vgroup<br>
+Return:<br>
+&nbsp;&nbsp;number&nbsp;of&nbsp;members&nbsp;identified&nbsp;by&nbsp;this&nbsp;tag&nbsp;type<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Vnrefs</tt></dd></dl>
+
+<dl><dt><a name="VG-tagref"><strong>tagref</strong></a>(self, index)</dt><dd><tt>Get&nbsp;the&nbsp;tag&nbsp;and&nbsp;reference&nbsp;number&nbsp;of&nbsp;a&nbsp;vgroup&nbsp;member,<br>
+given&nbsp;the&nbsp;index&nbsp;number&nbsp;of&nbsp;that&nbsp;member.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;index&nbsp;&nbsp;&nbsp;member&nbsp;index&nbsp;(0&nbsp;based)<br>
+Return:<br>
+&nbsp;&nbsp;2-element&nbsp;tuple:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;member&nbsp;tag<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;member&nbsp;reference&nbsp;number<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Vgettagref</tt></dd></dl>
+
+<dl><dt><a name="VG-tagrefs"><strong>tagrefs</strong></a>(self)</dt><dd><tt>Get&nbsp;the&nbsp;tags&nbsp;and&nbsp;reference&nbsp;numbers&nbsp;of&nbsp;all&nbsp;the&nbsp;vgroup<br>
+members.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Return:<br>
+&nbsp;&nbsp;list&nbsp;of&nbsp;(tag,ref)&nbsp;tuples,&nbsp;one&nbsp;for&nbsp;each&nbsp;vgroup&nbsp;member<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Vgettagrefs</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'VG' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="VGAttr">class <strong>VGAttr</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="#VGAttr">VGAttr</a>&nbsp;class&nbsp;encapsulates&nbsp;methods&nbsp;used&nbsp;to&nbsp;set&nbsp;and&nbsp;query<br>
+attributes&nbsp;defined&nbsp;on&nbsp;a&nbsp;vgroup.&nbsp;To&nbsp;create&nbsp;an&nbsp;instance&nbsp;of&nbsp;this&nbsp;class,<br>
+call&nbsp;the&nbsp;attr()&nbsp;method&nbsp;of&nbsp;a&nbsp;<a href="#VG">VG</a>&nbsp;class.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="VGAttr-__init__"><strong>__init__</strong></a>(self, obj, name_or_index)</dt></dl>
+
+<dl><dt><a name="VGAttr-get"><strong>get</strong></a>(self)</dt><dd><tt>Retrieve&nbsp;the&nbsp;attribute&nbsp;value.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;attribute&nbsp;value(s);&nbsp;a&nbsp;list&nbsp;is&nbsp;returned&nbsp;if&nbsp;the&nbsp;attribute<br>
+&nbsp;&nbsp;is&nbsp;made&nbsp;up&nbsp;of&nbsp;more&nbsp;than&nbsp;one&nbsp;value,&nbsp;except&nbsp;in&nbsp;the&nbsp;case&nbsp;of&nbsp;a&nbsp;<br>
+&nbsp;&nbsp;string-valued&nbsp;attribute&nbsp;(data&nbsp;type&nbsp;HC.CHAR8)&nbsp;where&nbsp;the&nbsp;<br>
+&nbsp;&nbsp;values&nbsp;are&nbsp;returned&nbsp;as&nbsp;a&nbsp;string<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;a&nbsp;vgroup&nbsp;attribute&nbsp;can&nbsp;also&nbsp;be&nbsp;queried&nbsp;like&nbsp;a&nbsp;standard<br>
+python&nbsp;class&nbsp;attribute&nbsp;by&nbsp;applying&nbsp;the&nbsp;usual&nbsp;"dot&nbsp;notation"&nbsp;to&nbsp;a<br>
+<a href="#VG">VG</a>&nbsp;instance.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Vgetattr</tt></dd></dl>
+
+<dl><dt><a name="VGAttr-info"><strong>info</strong></a>(self)</dt><dd><tt>Retrieve&nbsp;info&nbsp;about&nbsp;the&nbsp;attribute.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;4-element&nbsp;tuple&nbsp;with&nbsp;the&nbsp;following&nbsp;components:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;data&nbsp;type&nbsp;(one&nbsp;of&nbsp;HC.xxx&nbsp;constants)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;order&nbsp;(number&nbsp;of&nbsp;values)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;size&nbsp;in&nbsp;bytes<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Vattrinfo</tt></dd></dl>
+
+<dl><dt><a name="VGAttr-set"><strong>set</strong></a>(self, data_type, values)</dt><dd><tt>Set&nbsp;the&nbsp;attribute&nbsp;value.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;data_type&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;attribute&nbsp;data&nbsp;type&nbsp;(see&nbsp;constants&nbsp;HC.xxx)<br>
+&nbsp;&nbsp;values&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;attribute&nbsp;value(s);&nbsp;specify&nbsp;a&nbsp;list&nbsp;to&nbsp;create<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;multi-valued&nbsp;attribute;&nbsp;a&nbsp;string&nbsp;valued<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attribute&nbsp;can&nbsp;be&nbsp;created&nbsp;by&nbsp;setting&nbsp;'data_type'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;HC.CHAR8&nbsp;and&nbsp;'values'&nbsp;to&nbsp;the&nbsp;corresponding<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;the&nbsp;attribute&nbsp;already&nbsp;exists,&nbsp;it&nbsp;will&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;updated.&nbsp;However,&nbsp;it&nbsp;is&nbsp;illegal&nbsp;to&nbsp;try&nbsp;to&nbsp;change<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;its&nbsp;data&nbsp;type&nbsp;or&nbsp;its&nbsp;order&nbsp;(number&nbsp;of&nbsp;values).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;a&nbsp;vgroup&nbsp;attribute&nbsp;can&nbsp;also&nbsp;be&nbsp;set&nbsp;like&nbsp;a&nbsp;standard<br>
+python&nbsp;class&nbsp;attribute&nbsp;by&nbsp;applying&nbsp;the&nbsp;usual&nbsp;"dot&nbsp;notation"&nbsp;to&nbsp;a<br>
+<a href="#VG">VG</a>&nbsp;instance.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Vsetattr</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'VGAttr' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__all__</strong> = ['V', 'VG', 'VGAttr']</td></tr></table>
+</body></html>

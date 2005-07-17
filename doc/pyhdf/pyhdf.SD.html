@@ -1,0 +1,2045 @@
+wrote pyhdf.SD.html
+IC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module pyhdf.SD</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="pyhdf.html"><font color="#ffffff">pyhdf</font></a>.SD</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python2.4/site-packages/pyhdf/SD.py">/usr/lib/python2.4/site-packages/pyhdf/SD.py</a></font></td></tr></table>
+    <p><tt>A&nbsp;module&nbsp;of&nbsp;the&nbsp;pyhdf&nbsp;package&nbsp;implementing&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;(scientific<br>
+dataset)&nbsp;API&nbsp;of&nbsp;the&nbsp;NCSA&nbsp;HDF4&nbsp;library.<br>
+(see:&nbsp;hdf.ncsa.uiuc.edu)<br>
+&nbsp;<br>
+Author:&nbsp;Andre&nbsp;Gosselin<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maurice-Lamontagne&nbsp;Institute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gosselina@dfo-mpo.gc.ca<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Version:&nbsp;0.7-3<br>
+Date:&nbsp;&nbsp;&nbsp;&nbsp;July&nbsp;13&nbsp;2005<br>
+&nbsp;<br>
+Table&nbsp;of&nbsp;contents<br>
+-----------------<br>
+&nbsp;&nbsp;Introduction<br>
+&nbsp;&nbsp;<a href="#SD">SD</a>&nbsp;module&nbsp;key&nbsp;features<br>
+&nbsp;&nbsp;Accessing&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;module<br>
+&nbsp;&nbsp;Package&nbsp;components<br>
+&nbsp;&nbsp;Prerequisites<br>
+&nbsp;&nbsp;Documentation<br>
+&nbsp;&nbsp;Summary&nbsp;of&nbsp;differences&nbsp;between&nbsp;the&nbsp;pyhdf&nbsp;and&nbsp;C&nbsp;<a href="#SD">SD</a>&nbsp;API<br>
+&nbsp;&nbsp;Error&nbsp;handling<br>
+&nbsp;&nbsp;Attribute&nbsp;access:&nbsp;low&nbsp;and&nbsp;high&nbsp;level<br>
+&nbsp;&nbsp;Variable&nbsp;access:&nbsp;low&nbsp;and&nbsp;high&nbsp;level<br>
+&nbsp;&nbsp;Reading/setting&nbsp;multivalued&nbsp;HDF&nbsp;attributes&nbsp;and&nbsp;variables<br>
+&nbsp;&nbsp;netCDF&nbsp;files<br>
+&nbsp;&nbsp;Classes&nbsp;summary<br>
+&nbsp;&nbsp;Data&nbsp;types<br>
+&nbsp;&nbsp;Programming&nbsp;models<br>
+&nbsp;&nbsp;Examples<br>
+&nbsp;&nbsp;Module&nbsp;documentation<br>
+&nbsp;<br>
+Introduction<br>
+------------<br>
+<a href="#SD">SD</a>&nbsp;is&nbsp;one&nbsp;of&nbsp;the&nbsp;modules&nbsp;composing&nbsp;pyhdf,&nbsp;a&nbsp;python&nbsp;package&nbsp;implementing<br>
+the&nbsp;NCSA&nbsp;HDF&nbsp;library&nbsp;and&nbsp;letting&nbsp;one&nbsp;manage&nbsp;HDF&nbsp;files&nbsp;from&nbsp;within&nbsp;a&nbsp;python<br>
+program.&nbsp;Two&nbsp;versions&nbsp;of&nbsp;the&nbsp;HDF&nbsp;library&nbsp;currently&nbsp;exist,&nbsp;version&nbsp;4&nbsp;and<br>
+version&nbsp;5.&nbsp;pyhdf&nbsp;only&nbsp;implements&nbsp;version&nbsp;4&nbsp;of&nbsp;the&nbsp;library.&nbsp;Many<br>
+different&nbsp;APIs&nbsp;are&nbsp;to&nbsp;be&nbsp;found&nbsp;inside&nbsp;the&nbsp;HDF4&nbsp;specification.<br>
+Currently,&nbsp;pyhdf&nbsp;implements&nbsp;just&nbsp;a&nbsp;few&nbsp;of&nbsp;those:&nbsp;the&nbsp;<a href="#SD">SD</a>,&nbsp;VS&nbsp;and&nbsp;V&nbsp;APIs.<br>
+Other&nbsp;APIs&nbsp;should&nbsp;be&nbsp;added&nbsp;in&nbsp;the&nbsp;future&nbsp;(GR,&nbsp;AN,&nbsp;etc).<br>
+&nbsp;<br>
+The&nbsp;<a href="#SD">SD</a>&nbsp;module&nbsp;implements&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;API&nbsp;of&nbsp;the&nbsp;HDF4&nbsp;library,&nbsp;supporting&nbsp;what<br>
+are&nbsp;known&nbsp;as&nbsp;"scientific&nbsp;datasets".&nbsp;The&nbsp;HDF&nbsp;<a href="#SD">SD</a>&nbsp;API&nbsp;has&nbsp;many&nbsp;similarities<br>
+with&nbsp;the&nbsp;netCDF&nbsp;API,&nbsp;another&nbsp;popular&nbsp;API&nbsp;for&nbsp;dealing&nbsp;with&nbsp;scientific<br>
+datasets.&nbsp;netCDF&nbsp;files&nbsp;can&nbsp;be&nbsp;in&nbsp;fact&nbsp;read&nbsp;and&nbsp;modified&nbsp;using&nbsp;the&nbsp;<a href="#SD">SD</a><br>
+module&nbsp;(but&nbsp;cannot&nbsp;be&nbsp;created&nbsp;from&nbsp;scratch).<br>
+&nbsp;<br>
+<a href="#SD">SD</a>&nbsp;module&nbsp;key&nbsp;features<br>
+----------------------<br>
+<a href="#SD">SD</a>&nbsp;key&nbsp;features&nbsp;are&nbsp;as&nbsp;follows.<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;-Almost&nbsp;every&nbsp;routine&nbsp;of&nbsp;the&nbsp;original&nbsp;<a href="#SD">SD</a>&nbsp;API&nbsp;has&nbsp;been&nbsp;implemented&nbsp;inside<br>
+&nbsp;&nbsp;&nbsp;pyhdf.&nbsp;Only&nbsp;a&nbsp;few&nbsp;have&nbsp;been&nbsp;ignored,&nbsp;most&nbsp;of&nbsp;them&nbsp;being&nbsp;of&nbsp;a&nbsp;rare&nbsp;use:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;SDsetnbitdataset()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;All&nbsp;chunking/tiling&nbsp;routines&nbsp;:&nbsp;SDgetchunkinfo(),&nbsp;SDreadchunk(),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SDsetchunk(),&nbsp;SDsetchunkcache(),&nbsp;SDwritechunk()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;SDsetblocksize()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;SDisdimval_bwcomp(),&nbsp;SDsetdimval_comp()<br>
+&nbsp;<br>
+&nbsp;&nbsp;-It&nbsp;is&nbsp;quite&nbsp;straightforward&nbsp;to&nbsp;go&nbsp;from&nbsp;a&nbsp;C&nbsp;version&nbsp;to&nbsp;a&nbsp;python&nbsp;version<br>
+&nbsp;&nbsp;&nbsp;of&nbsp;a&nbsp;program&nbsp;accessing&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;API,&nbsp;and&nbsp;to&nbsp;learn&nbsp;<a href="#SD">SD</a>&nbsp;usage&nbsp;by&nbsp;refering&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;the&nbsp;C&nbsp;API&nbsp;documentation.<br>
+&nbsp;<br>
+&nbsp;&nbsp;-A&nbsp;few&nbsp;high-level&nbsp;python&nbsp;methods&nbsp;have&nbsp;been&nbsp;developped&nbsp;to&nbsp;ease<br>
+&nbsp;&nbsp;&nbsp;programmers&nbsp;task.&nbsp;Of&nbsp;greatest&nbsp;interest&nbsp;are&nbsp;those&nbsp;allowing&nbsp;access<br>
+&nbsp;&nbsp;&nbsp;to&nbsp;<a href="#SD">SD</a>&nbsp;datasets&nbsp;through&nbsp;familiar&nbsp;python&nbsp;idioms.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Attributes&nbsp;can&nbsp;be&nbsp;read/written&nbsp;like&nbsp;ordinary&nbsp;python&nbsp;class<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attributes.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Datasets&nbsp;can&nbsp;be&nbsp;read/written&nbsp;like&nbsp;ordinary&nbsp;python&nbsp;lists&nbsp;using<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multidimensional&nbsp;indices&nbsp;and&nbsp;so-called&nbsp;"extended&nbsp;slice&nbsp;syntax",&nbsp;with<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strides&nbsp;allowed.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;See&nbsp;"High&nbsp;level&nbsp;attribute&nbsp;access"&nbsp;and&nbsp;"High&nbsp;level&nbsp;variable&nbsp;access"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sections&nbsp;for&nbsp;details.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-<a href="#SD">SD</a>&nbsp;offers&nbsp;methods&nbsp;to&nbsp;retrieve&nbsp;a&nbsp;dictionnary&nbsp;of&nbsp;the&nbsp;attributes,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimensions&nbsp;and&nbsp;variables&nbsp;defined&nbsp;on&nbsp;a&nbsp;dataset,&nbsp;and&nbsp;of&nbsp;the&nbsp;attributes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set&nbsp;on&nbsp;a&nbsp;variable&nbsp;and&nbsp;a&nbsp;dimension.&nbsp;Querying&nbsp;a&nbsp;dataset&nbsp;is&nbsp;thus&nbsp;geatly<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;simplified.<br>
+&nbsp;<br>
+&nbsp;&nbsp;-<a href="#SD">SD</a>&nbsp;datasets&nbsp;are&nbsp;read/written&nbsp;through&nbsp;"Numeric",&nbsp;a&nbsp;sophisticated<br>
+&nbsp;&nbsp;&nbsp;python&nbsp;package&nbsp;for&nbsp;efficiently&nbsp;handling&nbsp;multi-dimensional&nbsp;arrays&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;numbers.&nbsp;Numeric&nbsp;can&nbsp;nicely&nbsp;extend&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;functionnality,&nbsp;eg.<br>
+&nbsp;&nbsp;&nbsp;adding/subtracting&nbsp;arrays&nbsp;with&nbsp;the&nbsp;'+/-'&nbsp;operators.<br>
+&nbsp;<br>
+Accessing&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;module<br>
+-----------------------<br>
+To&nbsp;access&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;API&nbsp;a&nbsp;python&nbsp;program&nbsp;can&nbsp;say&nbsp;one&nbsp;of:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;import&nbsp;pyhdf.<a href="#SD">SD</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;must&nbsp;prefix&nbsp;names&nbsp;with&nbsp;"pyhdf.<a href="#SD">SD</a>."<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf&nbsp;import&nbsp;<a href="#SD">SD</a>&nbsp;&nbsp;&nbsp;#&nbsp;must&nbsp;prefix&nbsp;names&nbsp;with&nbsp;"<a href="#SD">SD</a>."<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf.<a href="#SD">SD</a>&nbsp;import&nbsp;*&nbsp;#&nbsp;names&nbsp;need&nbsp;no&nbsp;prefix<br>
+&nbsp;<br>
+This&nbsp;document&nbsp;assumes&nbsp;the&nbsp;last&nbsp;import&nbsp;style&nbsp;is&nbsp;used.<br>
+&nbsp;<br>
+Numeric&nbsp;will&nbsp;also&nbsp;need&nbsp;to&nbsp;be&nbsp;imported:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;Numeric&nbsp;import&nbsp;*<br>
+&nbsp;<br>
+Package&nbsp;components<br>
+------------------<br>
+pyhdf&nbsp;is&nbsp;a&nbsp;proper&nbsp;Python&nbsp;package,&nbsp;eg&nbsp;a&nbsp;collection&nbsp;of&nbsp;modules&nbsp;stored&nbsp;under<br>
+a&nbsp;directory&nbsp;whose&nbsp;name&nbsp;is&nbsp;that&nbsp;of&nbsp;the&nbsp;package&nbsp;and&nbsp;which&nbsp;stores&nbsp;an<br>
+__init__.py&nbsp;file.&nbsp;Following&nbsp;the&nbsp;normal&nbsp;installation&nbsp;procedure,&nbsp;this<br>
+directory&nbsp;will&nbsp;be&nbsp;&lt;python-lib&gt;/site-packages/pyhdf',&nbsp;where&nbsp;&lt;python-lib&gt;<br>
+stands&nbsp;for&nbsp;the&nbsp;python&nbsp;installation&nbsp;directory.<br>
+&nbsp;<br>
+For&nbsp;each&nbsp;HDF&nbsp;API&nbsp;exists&nbsp;a&nbsp;corresponding&nbsp;set&nbsp;of&nbsp;modules.<br>
+&nbsp;<br>
+The&nbsp;following&nbsp;modules&nbsp;are&nbsp;related&nbsp;to&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;API.<br>
+&nbsp;<br>
+&nbsp;&nbsp;_hdfext&nbsp;&nbsp;&nbsp;C&nbsp;extension&nbsp;module&nbsp;responsible&nbsp;for&nbsp;wrapping&nbsp;the&nbsp;HDF<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C-library&nbsp;for&nbsp;all&nbsp;python&nbsp;modules<br>
+&nbsp;&nbsp;hdfext&nbsp;&nbsp;&nbsp;&nbsp;python&nbsp;module&nbsp;implementing&nbsp;some&nbsp;utility&nbsp;functions<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;complementing&nbsp;the&nbsp;_hdfext&nbsp;extension&nbsp;module<br>
+&nbsp;&nbsp;error&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;defines&nbsp;the&nbsp;<a href="#HDF4Error">HDF4Error</a>&nbsp;exception<br>
+&nbsp;&nbsp;<a href="#SD">SD</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;python&nbsp;module&nbsp;wrapping&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;API&nbsp;routines&nbsp;inside<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;OOP&nbsp;framework<br>
+&nbsp;<br>
+_hdfext&nbsp;and&nbsp;hdfext&nbsp;were&nbsp;generated&nbsp;using&nbsp;the&nbsp;SWIG&nbsp;preprocessor.<br>
+SWIG&nbsp;is&nbsp;however&nbsp;*not*&nbsp;needed&nbsp;to&nbsp;run&nbsp;the&nbsp;package.&nbsp;Those&nbsp;two&nbsp;modules<br>
+are&nbsp;meant&nbsp;to&nbsp;do&nbsp;their&nbsp;work&nbsp;in&nbsp;the&nbsp;background,&nbsp;and&nbsp;should&nbsp;never&nbsp;be&nbsp;called<br>
+directly.&nbsp;Only&nbsp;'pyhdf.<a href="#SD">SD</a>'&nbsp;should&nbsp;be&nbsp;imported&nbsp;by&nbsp;the&nbsp;user&nbsp;program.<br>
+&nbsp;<br>
+Prerequisites<br>
+-------------<br>
+The&nbsp;following&nbsp;software&nbsp;must&nbsp;be&nbsp;installed&nbsp;in&nbsp;order&nbsp;for&nbsp;pyhdf&nbsp;release&nbsp;0.7-3&nbsp;to<br>
+work.<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;HDF&nbsp;(v4)&nbsp;library,&nbsp;release&nbsp;4.2r1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;pyhdf&nbsp;does&nbsp;*not*&nbsp;include&nbsp;the&nbsp;HDF4&nbsp;library,&nbsp;which&nbsp;must<br>
+&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;installed&nbsp;separately.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;HDF&nbsp;is&nbsp;available&nbsp;at:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"<a href="http://hdf.ncsa.uiuc.edu/obtain.html">http://hdf.ncsa.uiuc.edu/obtain.html</a>".<br>
+&nbsp;<br>
+&nbsp;&nbsp;HDF4.2r1&nbsp;in&nbsp;turn&nbsp;needs&nbsp;the&nbsp;following&nbsp;packages&nbsp;:<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;libjpeg&nbsp;(jpeg&nbsp;library)&nbsp;release&nbsp;6b<br>
+&nbsp;&nbsp;&nbsp;&nbsp;libz&nbsp;&nbsp;&nbsp;&nbsp;(zlib&nbsp;library)&nbsp;release&nbsp;1.1.4&nbsp;or&nbsp;above<br>
+&nbsp;&nbsp;&nbsp;&nbsp;libsz&nbsp;&nbsp;&nbsp;(SZIP&nbsp;library)&nbsp;release&nbsp;2.0<br>
+&nbsp;<br>
+The&nbsp;<a href="#SD">SD</a>&nbsp;module&nbsp;also&nbsp;needs:<br>
+&nbsp;<br>
+&nbsp;&nbsp;Numeric&nbsp;python&nbsp;package<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SD">SD</a>&nbsp;variables&nbsp;are&nbsp;read/written&nbsp;using&nbsp;the&nbsp;array&nbsp;data&nbsp;type&nbsp;provided<br>
+&nbsp;&nbsp;&nbsp;&nbsp;by&nbsp;the&nbsp;python&nbsp;Numeric&nbsp;package.&nbsp;Note&nbsp;that&nbsp;since&nbsp;version&nbsp;0.6-1&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;pyhdf,&nbsp;version&nbsp;22&nbsp;or&nbsp;above&nbsp;of&nbsp;Numeric&nbsp;is&nbsp;needed&nbsp;for&nbsp;the&nbsp;support<br>
+&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;unsigned&nbsp;integer&nbsp;types.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Numeric&nbsp;is&nbsp;available&nbsp;at:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"<a href="http://numpy.sourceforge.net">http://numpy.sourceforge.net</a>".<br>
+&nbsp;<br>
+Documentation<br>
+-------------<br>
+pyhdf&nbsp;has&nbsp;been&nbsp;written&nbsp;so&nbsp;as&nbsp;to&nbsp;stick&nbsp;as&nbsp;closely&nbsp;as&nbsp;possible&nbsp;to&nbsp;<br>
+the&nbsp;naming&nbsp;conventions&nbsp;and&nbsp;calling&nbsp;sequences&nbsp;documented&nbsp;inside&nbsp;the<br>
+"HDF&nbsp;User&nbsp;s&nbsp;Guide"&nbsp;manual.&nbsp;Even&nbsp;if&nbsp;pyhdf&nbsp;gives&nbsp;an&nbsp;OOP&nbsp;twist<br>
+to&nbsp;the&nbsp;C&nbsp;API,&nbsp;the&nbsp;manual&nbsp;can&nbsp;be&nbsp;easily&nbsp;used&nbsp;as&nbsp;a&nbsp;documentary&nbsp;source<br>
+for&nbsp;pyhdf,&nbsp;once&nbsp;the&nbsp;class&nbsp;to&nbsp;which&nbsp;a&nbsp;function&nbsp;belongs&nbsp;has&nbsp;been<br>
+identified,&nbsp;and&nbsp;of&nbsp;course&nbsp;once&nbsp;requirements&nbsp;imposed&nbsp;by&nbsp;the&nbsp;Python<br>
+langage&nbsp;have&nbsp;been&nbsp;taken&nbsp;into&nbsp;account.&nbsp;Consequently,&nbsp;this&nbsp;documentation<br>
+will&nbsp;not&nbsp;attempt&nbsp;to&nbsp;provide&nbsp;an&nbsp;exhaustive&nbsp;coverage&nbsp;of&nbsp;the&nbsp;HDF&nbsp;<a href="#SD">SD</a><br>
+API.&nbsp;For&nbsp;this,&nbsp;the&nbsp;user&nbsp;is&nbsp;referred&nbsp;to&nbsp;the&nbsp;above&nbsp;manual.<br>
+The&nbsp;documentation&nbsp;of&nbsp;each&nbsp;pyhdf&nbsp;method&nbsp;will&nbsp;indicate&nbsp;the&nbsp;name<br>
+of&nbsp;the&nbsp;equivalent&nbsp;routine&nbsp;inside&nbsp;the&nbsp;C&nbsp;API.<br>
+&nbsp;&nbsp;<br>
+This&nbsp;document&nbsp;(in&nbsp;both&nbsp;its&nbsp;text&nbsp;and&nbsp;html&nbsp;versions)&nbsp;has&nbsp;been&nbsp;completely<br>
+produced&nbsp;using&nbsp;"pydoc",&nbsp;the&nbsp;Python&nbsp;documentation&nbsp;generator&nbsp;(which<br>
+made&nbsp;its&nbsp;debut&nbsp;in&nbsp;the&nbsp;2.1&nbsp;Python&nbsp;release).&nbsp;pydoc&nbsp;can&nbsp;also&nbsp;be&nbsp;used<br>
+as&nbsp;an&nbsp;on-line&nbsp;help&nbsp;tool.&nbsp;For&nbsp;example,&nbsp;to&nbsp;know&nbsp;everything&nbsp;about<br>
+the&nbsp;<a href="#SD">SD</a>.<a href="#SDS">SDS</a>&nbsp;class,&nbsp;say:<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pydoc&nbsp;import&nbsp;help<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf.<a href="#SD">SD</a>&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;help(<a href="#SDS">SDS</a>)<br>
+&nbsp;<br>
+To&nbsp;be&nbsp;more&nbsp;specific&nbsp;and&nbsp;get&nbsp;help&nbsp;only&nbsp;for&nbsp;the&nbsp;get()&nbsp;method&nbsp;of&nbsp;the<br>
+<a href="#SDS">SDS</a>&nbsp;class:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;help(<a href="#SDS">SDS</a>.get)&nbsp;&nbsp;&nbsp;#&nbsp;or...<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;help(vinst.get)&nbsp;#&nbsp;if&nbsp;vinst&nbsp;is&nbsp;an&nbsp;<a href="#SDS">SDS</a>&nbsp;instance<br>
+&nbsp;<br>
+pydoc&nbsp;can&nbsp;also&nbsp;be&nbsp;called&nbsp;from&nbsp;the&nbsp;command&nbsp;line,&nbsp;as&nbsp;in:<br>
+&nbsp;<br>
+&nbsp;&nbsp;%&nbsp;pydoc&nbsp;pyhdf.<a href="#SD">SD</a>.<a href="#SDS">SDS</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;doc&nbsp;for&nbsp;the&nbsp;whole&nbsp;<a href="#SDS">SDS</a>&nbsp;class<br>
+&nbsp;&nbsp;%&nbsp;pydoc&nbsp;pyhdf.<a href="#SD">SD</a>.<a href="#SDS">SDS</a>.get&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;doc&nbsp;for&nbsp;the&nbsp;<a href="#SDS">SDS</a>.get&nbsp;method<br>
+&nbsp;&nbsp;<br>
+Summary&nbsp;of&nbsp;differences&nbsp;between&nbsp;the&nbsp;pyhdf&nbsp;and&nbsp;C&nbsp;<a href="#SD">SD</a>&nbsp;API<br>
+-----------------------------------------------------<br>
+Most&nbsp;of&nbsp;the&nbsp;differences&nbsp;between&nbsp;the&nbsp;pyhdf&nbsp;and&nbsp;C&nbsp;<a href="#SD">SD</a>&nbsp;API&nbsp;can<br>
+be&nbsp;summarized&nbsp;as&nbsp;follows.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;-In&nbsp;the&nbsp;C&nbsp;API,&nbsp;every&nbsp;function&nbsp;returns&nbsp;an&nbsp;integer&nbsp;status&nbsp;code,&nbsp;and&nbsp;values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;computed&nbsp;by&nbsp;the&nbsp;function&nbsp;are&nbsp;returned&nbsp;through&nbsp;one&nbsp;or&nbsp;more&nbsp;pointers<br>
+&nbsp;&nbsp;&nbsp;&nbsp;passed&nbsp;as&nbsp;arguments.<br>
+&nbsp;&nbsp;&nbsp;-In&nbsp;pyhdf,&nbsp;error&nbsp;statuses&nbsp;are&nbsp;returned&nbsp;through&nbsp;the&nbsp;Python&nbsp;exception<br>
+&nbsp;&nbsp;&nbsp;&nbsp;mechanism,&nbsp;and&nbsp;values&nbsp;are&nbsp;returned&nbsp;as&nbsp;the&nbsp;method&nbsp;result.&nbsp;When&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;API&nbsp;specifies&nbsp;that&nbsp;multiple&nbsp;values&nbsp;are&nbsp;returned,&nbsp;pyhdf&nbsp;returns&nbsp;a&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tuple&nbsp;of&nbsp;values,&nbsp;which&nbsp;are&nbsp;ordered&nbsp;similarly&nbsp;to&nbsp;the&nbsp;pointers&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;function&nbsp;argument&nbsp;list.<br>
+&nbsp;&nbsp;&nbsp;<br>
+Error&nbsp;handling<br>
+--------------<br>
+All&nbsp;errors&nbsp;that&nbsp;the&nbsp;C&nbsp;<a href="#SD">SD</a>&nbsp;API&nbsp;reports&nbsp;with&nbsp;a&nbsp;SUCCESS/FAIL&nbsp;error&nbsp;code<br>
+are&nbsp;reported&nbsp;by&nbsp;pyhdf&nbsp;using&nbsp;the&nbsp;Python&nbsp;exception&nbsp;mechanism.<br>
+When&nbsp;the&nbsp;C&nbsp;library&nbsp;reports&nbsp;a&nbsp;FAIL&nbsp;status,&nbsp;pyhdf&nbsp;raises&nbsp;an&nbsp;<a href="#HDF4Error">HDF4Error</a><br>
+exception&nbsp;(a&nbsp;subclass&nbsp;of&nbsp;<a href="exceptions.html#Exception">Exception</a>)&nbsp;with&nbsp;a&nbsp;descriptive&nbsp;message.&nbsp;<br>
+Unfortunately,&nbsp;the&nbsp;C&nbsp;library&nbsp;is&nbsp;rarely&nbsp;informative&nbsp;about&nbsp;the&nbsp;cause&nbsp;of&nbsp;<br>
+the&nbsp;error.&nbsp;pyhdf&nbsp;does&nbsp;its&nbsp;best&nbsp;to&nbsp;try&nbsp;to&nbsp;document&nbsp;the&nbsp;error,&nbsp;but&nbsp;most&nbsp;<br>
+of&nbsp;the&nbsp;time&nbsp;cannot&nbsp;do&nbsp;more&nbsp;than&nbsp;saying&nbsp;"execution&nbsp;error".<br>
+&nbsp;<br>
+Attribute&nbsp;access:&nbsp;low&nbsp;and&nbsp;high&nbsp;level<br>
+------------------------------------<br>
+In&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;API,&nbsp;attributes&nbsp;can&nbsp;be&nbsp;of&nbsp;many&nbsp;types&nbsp;(integer,&nbsp;float,&nbsp;string,<br>
+etc)&nbsp;and&nbsp;can&nbsp;be&nbsp;single&nbsp;or&nbsp;multi-valued.&nbsp;Attributes&nbsp;can&nbsp;be&nbsp;set&nbsp;either&nbsp;at<br>
+the&nbsp;dataset,&nbsp;the&nbsp;variable&nbsp;or&nbsp;the&nbsp;dimension&nbsp;level.&nbsp;This&nbsp;can&nbsp;can&nbsp;be&nbsp;achieved<br>
+in&nbsp;two&nbsp;ways.<br>
+&nbsp;<br>
+&nbsp;&nbsp;-By&nbsp;calling&nbsp;the&nbsp;get()/set()&nbsp;method&nbsp;of&nbsp;an&nbsp;attribute&nbsp;instance.&nbsp;In&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;following&nbsp;example,&nbsp;HDF&nbsp;file&nbsp;'example.hdf'&nbsp;is&nbsp;created,&nbsp;and&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;attribute&nbsp;'title'&nbsp;is&nbsp;attached&nbsp;to&nbsp;the&nbsp;file&nbsp;and&nbsp;given&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;'example'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf.<a href="#SD">SD</a>&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;d&nbsp;=&nbsp;<a href="#SD">SD</a>('example.hdf',<a href="#SDC">SDC</a>.WRITE|<a href="#SDC">SDC</a>.CREATE)&nbsp;&nbsp;#&nbsp;create&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;att&nbsp;=&nbsp;d.attr('title')&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;create&nbsp;attribute&nbsp;instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;att.set(<a href="#SDC">SDC</a>.CHAR,&nbsp;'example')&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;set&nbsp;attribute&nbsp;type&nbsp;and&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;att.get()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;get&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;<br>
+&nbsp;<br>
+&nbsp;&nbsp;-By&nbsp;handling&nbsp;the&nbsp;attribute&nbsp;like&nbsp;an&nbsp;ordinary&nbsp;Python&nbsp;class&nbsp;attribute.<br>
+&nbsp;&nbsp;&nbsp;The&nbsp;above&nbsp;example&nbsp;can&nbsp;then&nbsp;be&nbsp;rewritten&nbsp;as&nbsp;follows:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf.<a href="#SD">SD</a>&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;d&nbsp;=&nbsp;<a href="#SD">SD</a>('example.hdf',<a href="#SDC">SDC</a>.WRITE|<a href="#SDC">SDC</a>.CREATE)&nbsp;&nbsp;#&nbsp;create&nbsp;dataset<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;d.title&nbsp;=&nbsp;'example'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;set&nbsp;attribute&nbsp;type&nbsp;and&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;d.title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;get&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;<br>
+&nbsp;<br>
+What&nbsp;has&nbsp;been&nbsp;said&nbsp;above&nbsp;applies&nbsp;as&nbsp;well&nbsp;to&nbsp;multi-valued&nbsp;attributes.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;att&nbsp;=&nbsp;d.attr('values')&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;With&nbsp;an&nbsp;attribute&nbsp;instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;att.set(<a href="#SDC">SDC</a>.INT32,&nbsp;(1,2,3,4,5))&nbsp;&nbsp;&nbsp;#&nbsp;Assign&nbsp;5&nbsp;ints&nbsp;as&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;att.get()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Get&nbsp;attribute&nbsp;values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[1,&nbsp;2,&nbsp;3,&nbsp;4,&nbsp;5]<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;d.values&nbsp;=&nbsp;(1,2,3,4,5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;As&nbsp;a&nbsp;Python&nbsp;class&nbsp;attribute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;d.values&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Get&nbsp;attribute&nbsp;values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[1,&nbsp;2,&nbsp;3,&nbsp;4,&nbsp;5]<br>
+&nbsp;<br>
+When&nbsp;the&nbsp;attribute&nbsp;is&nbsp;known&nbsp;by&nbsp;its&nbsp;name&nbsp;,&nbsp;standard&nbsp;functions&nbsp;'setattr()'<br>
+and&nbsp;'getattr()'&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;replace&nbsp;the&nbsp;dot&nbsp;notation.<br>
+Above&nbsp;example&nbsp;becomes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;setattr(d,&nbsp;'values',&nbsp;(1,2,3,4,5))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;getattr(d,&nbsp;'values')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[1,&nbsp;2,&nbsp;3,&nbsp;4,&nbsp;5]<br>
+&nbsp;<br>
+Handling&nbsp;a&nbsp;<a href="#SD">SD</a>&nbsp;attribute&nbsp;like&nbsp;a&nbsp;Python&nbsp;class&nbsp;attribute&nbsp;is&nbsp;admittedly<br>
+more&nbsp;natural,&nbsp;and&nbsp;also&nbsp;much&nbsp;simpler.&nbsp;Some&nbsp;control&nbsp;is&nbsp;however&nbsp;lost&nbsp;in<br>
+doing&nbsp;so.<br>
+&nbsp;&nbsp;-Attribute&nbsp;type&nbsp;cannot&nbsp;be&nbsp;specified.&nbsp;pyhdf&nbsp;automatically&nbsp;selects&nbsp;one&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;three&nbsp;types&nbsp;according&nbsp;to&nbsp;the&nbsp;value(s)&nbsp;assigned&nbsp;to&nbsp;the&nbsp;attribute:<br>
+&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.CHAR&nbsp;if&nbsp;value&nbsp;is&nbsp;a&nbsp;string,&nbsp;<a href="#SDC">SDC</a>.INT32&nbsp;if&nbsp;all&nbsp;values&nbsp;are&nbsp;integral,<br>
+&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.DOUBLE&nbsp;if&nbsp;one&nbsp;value&nbsp;is&nbsp;a&nbsp;float.&nbsp;<br>
+&nbsp;&nbsp;-Consequently,&nbsp;byte&nbsp;values&nbsp;cannot&nbsp;be&nbsp;assigned.<br>
+&nbsp;&nbsp;-Attribute&nbsp;properties&nbsp;(length,&nbsp;type,&nbsp;index&nbsp;number)&nbsp;can&nbsp;only&nbsp;be&nbsp;queried<br>
+&nbsp;&nbsp;&nbsp;through&nbsp;methods&nbsp;of&nbsp;an&nbsp;attribute&nbsp;instance.<br>
+&nbsp;<br>
+Variable&nbsp;access:&nbsp;low&nbsp;and&nbsp;high&nbsp;level<br>
+-----------------------------------<br>
+Similarly&nbsp;to&nbsp;attributes,&nbsp;datasets&nbsp;can&nbsp;be&nbsp;read/written&nbsp;in&nbsp;two&nbsp;ways.<br>
+&nbsp;<br>
+The&nbsp;first&nbsp;way&nbsp;is&nbsp;through&nbsp;the&nbsp;get()/set()&nbsp;methods&nbsp;of&nbsp;a&nbsp;dataset&nbsp;instance.<br>
+Those&nbsp;methods&nbsp;accept&nbsp;parameters&nbsp;to&nbsp;specify&nbsp;the&nbsp;starting&nbsp;indices,&nbsp;the&nbsp;count<br>
+of&nbsp;values&nbsp;to&nbsp;read/write,&nbsp;and&nbsp;the&nbsp;strides&nbsp;along&nbsp;each&nbsp;dimension.&nbsp;For&nbsp;example,<br>
+if&nbsp;'v'&nbsp;is&nbsp;a&nbsp;4x4&nbsp;array:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v.get()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;complete&nbsp;array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v.get(start=(0,0),count=(1,4))&nbsp;&nbsp;#&nbsp;first&nbsp;row<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v.get(start=(0,1),count=(2,2),&nbsp;&nbsp;#&nbsp;second&nbsp;and&nbsp;third&nbsp;columns&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stride=(2,1))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;and&nbsp;third&nbsp;row<br>
+&nbsp;<br>
+The&nbsp;second&nbsp;way&nbsp;is&nbsp;by&nbsp;indexing&nbsp;and&nbsp;slicing&nbsp;the&nbsp;variable&nbsp;like&nbsp;a&nbsp;Python<br>
+sequence.&nbsp;pyhdf&nbsp;here&nbsp;follows&nbsp;most&nbsp;of&nbsp;the&nbsp;rules&nbsp;used&nbsp;to&nbsp;index&nbsp;and&nbsp;slice<br>
+Numeric&nbsp;arrays.&nbsp;Thus&nbsp;an&nbsp;HDF&nbsp;dataset&nbsp;can&nbsp;be&nbsp;seen&nbsp;almost&nbsp;as&nbsp;a&nbsp;Numeric,<br>
+array,&nbsp;except&nbsp;that&nbsp;data&nbsp;is&nbsp;read&nbsp;from/written&nbsp;to&nbsp;a&nbsp;file&nbsp;instead&nbsp;of&nbsp;memory.<br>
+&nbsp;<br>
+Extended&nbsp;indexing&nbsp;let&nbsp;you&nbsp;access&nbsp;variable&nbsp;elements&nbsp;with&nbsp;the&nbsp;familiar<br>
+[i,j,...]&nbsp;notation,&nbsp;with&nbsp;one&nbsp;index&nbsp;per&nbsp;dimension.&nbsp;For&nbsp;example,&nbsp;if&nbsp;'m'&nbsp;is&nbsp;a<br>
+rank&nbsp;3&nbsp;dataset,&nbsp;one&nbsp;could&nbsp;write:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;m[0,3,5]&nbsp;=&nbsp;m[0,5,3]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+When&nbsp;indexing&nbsp;is&nbsp;used&nbsp;to&nbsp;select&nbsp;a&nbsp;dimension&nbsp;in&nbsp;a&nbsp;'get'&nbsp;operation,&nbsp;this<br>
+dimension&nbsp;is&nbsp;removed&nbsp;from&nbsp;the&nbsp;output&nbsp;array,&nbsp;thus&nbsp;reducing&nbsp;its&nbsp;rank&nbsp;by&nbsp;1.&nbsp;A<br>
+rank&nbsp;0&nbsp;array&nbsp;is&nbsp;converted&nbsp;to&nbsp;a&nbsp;scalar.&nbsp;Thus,&nbsp;for&nbsp;a&nbsp;3x3x3&nbsp;'m'&nbsp;dataset<br>
+(rank&nbsp;3)&nbsp;of&nbsp;integer&nbsp;type&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;a&nbsp;=&nbsp;m[0]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;a&nbsp;is&nbsp;a&nbsp;3x3&nbsp;array&nbsp;(rank&nbsp;2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;a&nbsp;=&nbsp;m[0,0]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;a&nbsp;is&nbsp;a&nbsp;3&nbsp;element&nbsp;array&nbsp;(rank&nbsp;1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;a&nbsp;=&nbsp;m[0,0,0]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;a&nbsp;is&nbsp;an&nbsp;integer&nbsp;(rank&nbsp;0&nbsp;array&nbsp;becomes&nbsp;a&nbsp;scalar)<br>
+&nbsp;<br>
+Had&nbsp;this&nbsp;rule&nbsp;not&nbsp;be&nbsp;followed,&nbsp;m[0,0,0]&nbsp;would&nbsp;have&nbsp;resulted&nbsp;in&nbsp;a&nbsp;single<br>
+element&nbsp;array,&nbsp;which&nbsp;could&nbsp;complicate&nbsp;computations.<br>
+&nbsp;<br>
+Extended&nbsp;slice&nbsp;syntax&nbsp;allows&nbsp;slicing&nbsp;HDF&nbsp;datasets&nbsp;along&nbsp;each&nbsp;of&nbsp;its<br>
+dimensions,&nbsp;with&nbsp;the&nbsp;specification&nbsp;of&nbsp;optional&nbsp;strides&nbsp;to&nbsp;step&nbsp;through<br>
+dimensions&nbsp;at&nbsp;regular&nbsp;intervals.&nbsp;For&nbsp;each&nbsp;dimension,&nbsp;the&nbsp;slice&nbsp;syntax<br>
+is:&nbsp;"i:j[:stride]",&nbsp;the&nbsp;stride&nbsp;being&nbsp;optional.&nbsp;As&nbsp;with&nbsp;ordinary&nbsp;slices,<br>
+the&nbsp;starting&nbsp;and&nbsp;ending&nbsp;values&nbsp;of&nbsp;a&nbsp;slice&nbsp;can&nbsp;be&nbsp;omitted&nbsp;to&nbsp;refer&nbsp;to&nbsp;the<br>
+first&nbsp;and&nbsp;last&nbsp;element,&nbsp;respectively,&nbsp;and&nbsp;the&nbsp;end&nbsp;value&nbsp;can&nbsp;be&nbsp;negative&nbsp;to<br>
+indicate&nbsp;that&nbsp;the&nbsp;index&nbsp;is&nbsp;measured&nbsp;relative&nbsp;to&nbsp;the&nbsp;tail&nbsp;instead&nbsp;of&nbsp;the<br>
+beginning.&nbsp;Omitted&nbsp;dimensions&nbsp;are&nbsp;assumed&nbsp;to&nbsp;be&nbsp;sliced&nbsp;from&nbsp;beginning&nbsp;to<br>
+end.&nbsp;Thus:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;m[0]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;treated&nbsp;as&nbsp;'m[0,:,:]'.<br>
+&nbsp;<br>
+Example&nbsp;above&nbsp;with&nbsp;get()/set()&nbsp;methods&nbsp;can&nbsp;thus&nbsp;be&nbsp;rewritten&nbsp;as&nbsp;follows:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v[:]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;complete&nbsp;array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v[:1]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;row<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v[::2,1:3]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;and&nbsp;third&nbsp;columns&nbsp;of&nbsp;first&nbsp;and&nbsp;third&nbsp;row<br>
+&nbsp;<br>
+Indexes&nbsp;and&nbsp;slices&nbsp;can&nbsp;be&nbsp;freely&nbsp;mixed,&nbsp;eg:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;m[:2,3,1:3:2]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Note&nbsp;that,&nbsp;countrary&nbsp;to&nbsp;indexing,&nbsp;a&nbsp;slice&nbsp;never&nbsp;reduces&nbsp;the&nbsp;rank&nbsp;of&nbsp;the<br>
+output&nbsp;array,&nbsp;even&nbsp;if&nbsp;its&nbsp;length&nbsp;is&nbsp;1.&nbsp;For&nbsp;example,&nbsp;given&nbsp;a&nbsp;3x3x3&nbsp;'m'<br>
+dataset:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;a&nbsp;=&nbsp;m[0]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;indexing:&nbsp;a&nbsp;is&nbsp;a&nbsp;3x3&nbsp;array&nbsp;(rank&nbsp;2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;a&nbsp;=&nbsp;m[0:1]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;slicing:&nbsp;a&nbsp;is&nbsp;a&nbsp;1x3x3&nbsp;array&nbsp;(rank&nbsp;3)<br>
+&nbsp;<br>
+As&nbsp;can&nbsp;easily&nbsp;be&nbsp;seen,&nbsp;extended&nbsp;slice&nbsp;syntax&nbsp;is&nbsp;much&nbsp;more&nbsp;elegant&nbsp;and<br>
+compact,&nbsp;and&nbsp;offers&nbsp;a&nbsp;few&nbsp;possibilities&nbsp;not&nbsp;easy&nbsp;to&nbsp;achieve&nbsp;with&nbsp;the<br>
+get()/sett()&nbsp;methods.&nbsp;Negative&nbsp;indices&nbsp;offer&nbsp;a&nbsp;nice&nbsp;example:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v[-2:]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;last&nbsp;two&nbsp;rows<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v[-3:-1]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;and&nbsp;third&nbsp;row<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v[:,-1]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;last&nbsp;column<br>
+&nbsp;<br>
+Reading/setting&nbsp;multivalued&nbsp;HDF&nbsp;attributes&nbsp;and&nbsp;variables<br>
+--------------------------------------------------------<br>
+Multivalued&nbsp;HDF&nbsp;attributes&nbsp;are&nbsp;set&nbsp;using&nbsp;a&nbsp;python&nbsp;sequence&nbsp;(tuple&nbsp;or<br>
+list).&nbsp;Reading&nbsp;such&nbsp;an&nbsp;attribute&nbsp;returns&nbsp;a&nbsp;python&nbsp;list.&nbsp;The&nbsp;easiest&nbsp;way&nbsp;to<br>
+read/set&nbsp;an&nbsp;attribute&nbsp;is&nbsp;by&nbsp;handling&nbsp;it&nbsp;like&nbsp;a&nbsp;Python&nbsp;class&nbsp;attribute<br>
+(see&nbsp;"High&nbsp;level&nbsp;attribute&nbsp;access").&nbsp;For&nbsp;example:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;d=<a href="#SD">SD</a>('test.hdf',<a href="#SDC">SDC</a>.WRITE|<a href="#SDC">SDC</a>.CREATE)&nbsp;&nbsp;#&nbsp;create&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;d.integers&nbsp;=&nbsp;(1,2,3,4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;define&nbsp;multivalued&nbsp;integer&nbsp;attr<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;d.integers&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;get&nbsp;the&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[1,&nbsp;2,&nbsp;3,&nbsp;4]<br>
+&nbsp;<br>
+The&nbsp;easiest&nbsp;way&nbsp;to&nbsp;set&nbsp;multivalued&nbsp;HDF&nbsp;datasets&nbsp;is&nbsp;to&nbsp;assign&nbsp;to&nbsp;a<br>
+subset&nbsp;of&nbsp;the&nbsp;dataset,&nbsp;using&nbsp;"[:]"&nbsp;to&nbsp;assign&nbsp;to&nbsp;the&nbsp;whole&nbsp;dataset<br>
+(see&nbsp;"High&nbsp;level&nbsp;variable&nbsp;access").&nbsp;The&nbsp;assigned&nbsp;value&nbsp;can&nbsp;be&nbsp;a&nbsp;python<br>
+sequence,&nbsp;which&nbsp;can&nbsp;be&nbsp;multi-leveled&nbsp;when&nbsp;assigning&nbsp;to&nbsp;a&nbsp;multdimensional<br>
+dataset.&nbsp;For&nbsp;example:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;d=<a href="#SD">SD</a>('test.hdf',<a href="#SDC">SDC</a>.WRITE|<a href="#SDC">SDC</a>.CREATE)&nbsp;#&nbsp;create&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v1=d.create('v1',<a href="#SDC">SDC</a>.INT32,3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;3-elem&nbsp;vector<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v1[:]=[1,2,3]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;assign&nbsp;3-elem&nbsp;python&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v2=d.create('d2',<a href="#SDC">SDC</a>.INT32,(3,3))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;create&nbsp;3x3&nbsp;variable<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;The&nbsp;list&nbsp;assigned&nbsp;to&nbsp;v2&nbsp;is&nbsp;composed<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;of&nbsp;3&nbsp;lists,&nbsp;each&nbsp;representing&nbsp;a&nbsp;row&nbsp;of&nbsp;v2.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v2[:]=[[1,2,3],[11,12,13],[21,22,23]]<br>
+&nbsp;<br>
+The&nbsp;assigned&nbsp;value&nbsp;can&nbsp;also&nbsp;be&nbsp;a&nbsp;Numeric&nbsp;array.&nbsp;Rewriting&nbsp;example&nbsp;above:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v1=array([1,2,3])<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v2=array([[1,2,3],[11,12,13],[21,22,23])<br>
+&nbsp;<br>
+Note&nbsp;how&nbsp;we&nbsp;use&nbsp;indexing&nbsp;expressions&nbsp;'v1[:]'&nbsp;and&nbsp;'v2[:]'&nbsp;when&nbsp;assigning<br>
+using&nbsp;python&nbsp;sequences,&nbsp;and&nbsp;just&nbsp;the&nbsp;variable&nbsp;names&nbsp;when&nbsp;assigning&nbsp;Numeric<br>
+arrays.<br>
+&nbsp;<br>
+Reading&nbsp;an&nbsp;HDF&nbsp;dataset&nbsp;always&nbsp;returns&nbsp;a&nbsp;Numeric&nbsp;array,&nbsp;except&nbsp;if<br>
+indexing&nbsp;is&nbsp;used&nbsp;and&nbsp;produces&nbsp;a&nbsp;rank-0&nbsp;array,&nbsp;in&nbsp;which&nbsp;case&nbsp;a&nbsp;scalar&nbsp;is<br>
+returned.<br>
+&nbsp;<br>
+netCDF&nbsp;files<br>
+------------<br>
+Files&nbsp;written&nbsp;in&nbsp;the&nbsp;popular&nbsp;Unidata&nbsp;netCDF&nbsp;format&nbsp;can&nbsp;be&nbsp;read&nbsp;and&nbsp;updated<br>
+using&nbsp;the&nbsp;HDF&nbsp;<a href="#SD">SD</a>&nbsp;API.&nbsp;However,&nbsp;pyhdf&nbsp;cannot&nbsp;create&nbsp;netCDF&nbsp;formatted<br>
+files&nbsp;from&nbsp;scratch.&nbsp;The&nbsp;python&nbsp;'pycdf'&nbsp;package&nbsp;can&nbsp;be&nbsp;used&nbsp;for&nbsp;that.<br>
+&nbsp;<br>
+When&nbsp;accessing&nbsp;netCDF&nbsp;files&nbsp;through&nbsp;pyhdf,&nbsp;one&nbsp;should&nbsp;be&nbsp;aware&nbsp;of&nbsp;the<br>
+following&nbsp;differences&nbsp;between&nbsp;the&nbsp;netCDF&nbsp;and&nbsp;the&nbsp;HDF&nbsp;<a href="#SD">SD</a>&nbsp;libraries.<br>
+&nbsp;<br>
+&nbsp;&nbsp;-Differences&nbsp;in&nbsp;terminology&nbsp;can&nbsp;be&nbsp;confusing.&nbsp;What&nbsp;netCDF&nbsp;calls&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;'dataset'&nbsp;is&nbsp;called&nbsp;a&nbsp;'file'&nbsp;or&nbsp;'<a href="#SD">SD</a>&nbsp;interface'&nbsp;in&nbsp;HDF.&nbsp;What&nbsp;HDF&nbsp;calls<br>
+&nbsp;&nbsp;&nbsp;a&nbsp;dataset&nbsp;is&nbsp;called&nbsp;a&nbsp;'variable'&nbsp;in&nbsp;netCDF&nbsp;parlance.<br>
+&nbsp;&nbsp;-In&nbsp;the&nbsp;netCDF&nbsp;API,&nbsp;dimensions&nbsp;are&nbsp;defined&nbsp;at&nbsp;the&nbsp;global&nbsp;(netCDF&nbsp;dataset)<br>
+&nbsp;&nbsp;&nbsp;level.&nbsp;Thus,&nbsp;two&nbsp;netCDF&nbsp;variables&nbsp;defined&nbsp;over&nbsp;dimensions&nbsp;X&nbsp;and&nbsp;Y<br>
+&nbsp;&nbsp;&nbsp;necessarily&nbsp;have&nbsp;the&nbsp;same&nbsp;rank&nbsp;and&nbsp;shape.<br>
+&nbsp;&nbsp;-In&nbsp;the&nbsp;HDF&nbsp;<a href="#SD">SD</a>&nbsp;API,&nbsp;dimensions&nbsp;are&nbsp;defined&nbsp;at&nbsp;the&nbsp;HDF&nbsp;dataset&nbsp;level,<br>
+&nbsp;&nbsp;&nbsp;except&nbsp;when&nbsp;they&nbsp;are&nbsp;named.&nbsp;Dimensions&nbsp;with&nbsp;the&nbsp;same&nbsp;name&nbsp;are&nbsp;considered<br>
+&nbsp;&nbsp;&nbsp;to&nbsp;be&nbsp;"shared"&nbsp;between&nbsp;all&nbsp;the&nbsp;file&nbsp;datasets.&nbsp;They&nbsp;must&nbsp;be&nbsp;of&nbsp;the&nbsp;same<br>
+&nbsp;&nbsp;&nbsp;length,&nbsp;and&nbsp;they&nbsp;share&nbsp;all&nbsp;their&nbsp;scales&nbsp;and&nbsp;attributes.&nbsp;For&nbsp;example,<br>
+&nbsp;&nbsp;&nbsp;setting&nbsp;an&nbsp;attribute&nbsp;on&nbsp;a&nbsp;shared&nbsp;dimension&nbsp;affects&nbsp;all&nbsp;datasets&nbsp;sharing<br>
+&nbsp;&nbsp;&nbsp;that&nbsp;dimension.<br>
+&nbsp;&nbsp;-When&nbsp;two&nbsp;or&nbsp;more&nbsp;netCDF&nbsp;variables&nbsp;are&nbsp;based&nbsp;on&nbsp;the&nbsp;unlimited&nbsp;dimension,<br>
+&nbsp;&nbsp;&nbsp;they&nbsp;automatically&nbsp;grow&nbsp;in&nbsp;sync.&nbsp;If&nbsp;variables&nbsp;A&nbsp;and&nbsp;B&nbsp;use&nbsp;the&nbsp;unlimited<br>
+&nbsp;&nbsp;&nbsp;dimension,&nbsp;adding&nbsp;"records"&nbsp;to&nbsp;A&nbsp;along&nbsp;its&nbsp;unlimited&nbsp;dimension<br>
+&nbsp;&nbsp;&nbsp;implicitly&nbsp;adds&nbsp;records&nbsp;in&nbsp;B&nbsp;(which&nbsp;are&nbsp;left&nbsp;in&nbsp;an&nbsp;undefined&nbsp;state&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;filled&nbsp;with&nbsp;the&nbsp;fill_value&nbsp;when&nbsp;the&nbsp;file&nbsp;is&nbsp;refreshed).<br>
+&nbsp;&nbsp;-In&nbsp;HDF,&nbsp;unlimited&nbsp;dimensions&nbsp;behave&nbsp;independently.&nbsp;If&nbsp;HDF&nbsp;datasets&nbsp;A&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;B&nbsp;are&nbsp;based&nbsp;on&nbsp;an&nbsp;unlimited&nbsp;dimension,&nbsp;adding&nbsp;records&nbsp;to&nbsp;A&nbsp;does&nbsp;not<br>
+&nbsp;&nbsp;&nbsp;affect&nbsp;the&nbsp;number&nbsp;of&nbsp;records&nbsp;to&nbsp;B.&nbsp;This&nbsp;is&nbsp;true&nbsp;even&nbsp;if&nbsp;the&nbsp;unlimited<br>
+&nbsp;&nbsp;&nbsp;dimensions&nbsp;bear&nbsp;the&nbsp;same&nbsp;name&nbsp;(they&nbsp;do&nbsp;not&nbsp;appear&nbsp;to&nbsp;be&nbsp;"shared"&nbsp;as&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;the&nbsp;case&nbsp;when&nbsp;the&nbsp;dimensions&nbsp;are&nbsp;fixed).<br>
+&nbsp;<br>
+&nbsp;<br>
+Classes&nbsp;summary<br>
+---------------<br>
+pyhdf&nbsp;wraps&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;API&nbsp;using&nbsp;different&nbsp;types&nbsp;of&nbsp;python&nbsp;classes:<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#SD">SD</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HDF&nbsp;<a href="#SD">SD</a>&nbsp;interface&nbsp;(almost&nbsp;synonymous&nbsp;with&nbsp;the&nbsp;subset&nbsp;of&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HDF&nbsp;file&nbsp;holding&nbsp;all&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;datasets)<br>
+&nbsp;&nbsp;<a href="#SDS">SDS</a>&nbsp;&nbsp;&nbsp;&nbsp;scientific&nbsp;dataset<br>
+&nbsp;&nbsp;<a href="#SDim">SDim</a>&nbsp;&nbsp;&nbsp;dataset&nbsp;dimension<br>
+&nbsp;&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;attribute&nbsp;(either&nbsp;at&nbsp;the&nbsp;file,&nbsp;dataset&nbsp;or&nbsp;dimension&nbsp;level)<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>&nbsp;&nbsp;&nbsp;&nbsp;constants&nbsp;(opening&nbsp;modes,&nbsp;data&nbsp;types,&nbsp;etc)<br>
+&nbsp;<br>
+In&nbsp;more&nbsp;detail:<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#SD">SD</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<a href="#SD">SD</a>&nbsp;class&nbsp;implements&nbsp;the&nbsp;HDF&nbsp;<a href="#SD">SD</a>&nbsp;interface&nbsp;as&nbsp;applied&nbsp;to&nbsp;a&nbsp;given<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;file.&nbsp;This&nbsp;class&nbsp;encapsulates&nbsp;the&nbsp;"<a href="#SD">SD</a>&nbsp;interface"&nbsp;identifier<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(referred&nbsp;to&nbsp;as&nbsp;"sd_id"&nbsp;in&nbsp;the&nbsp;C&nbsp;API&nbsp;documentation),&nbsp;and&nbsp;all<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;API&nbsp;top-level&nbsp;functions.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To&nbsp;create&nbsp;an&nbsp;<a href="#SD">SD</a>&nbsp;instance,&nbsp;call&nbsp;the&nbsp;<a href="#SD">SD</a>()&nbsp;constructor.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methods:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructors:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SD">SD</a>()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;open&nbsp;an&nbsp;existing&nbsp;HDF&nbsp;file&nbsp;or&nbsp;create&nbsp;a&nbsp;new&nbsp;one,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returning&nbsp;an&nbsp;<a href="#SD">SD</a>&nbsp;instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attr()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;create&nbsp;an&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;(attribute)&nbsp;instance&nbsp;to&nbsp;access<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;existing&nbsp;file&nbsp;attribute&nbsp;or&nbsp;create&nbsp;a&nbsp;new&nbsp;one;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"dot&nbsp;notation"&nbsp;can&nbsp;also&nbsp;be&nbsp;used&nbsp;to&nbsp;get&nbsp;and&nbsp;set<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;attribute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;create()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;create&nbsp;a&nbsp;new&nbsp;dataset,&nbsp;returning&nbsp;an&nbsp;<a href="#SDS">SDS</a>&nbsp;instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;select()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;locate&nbsp;an&nbsp;existing&nbsp;dataset&nbsp;given&nbsp;its&nbsp;name&nbsp;or<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;index&nbsp;number,&nbsp;returning&nbsp;an&nbsp;<a href="#SDS">SDS</a>&nbsp;instance<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;closing<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;access&nbsp;to&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;interface&nbsp;and&nbsp;close&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HDF&nbsp;file<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inquiry<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attributes()&nbsp;&nbsp;return&nbsp;a&nbsp;dictionnary&nbsp;describing&nbsp;every&nbsp;global<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attribute&nbsp;attached&nbsp;to&nbsp;the&nbsp;HDF&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;datasets()&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;a&nbsp;dictionnary&nbsp;describing&nbsp;every&nbsp;dataset<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stored&nbsp;inside&nbsp;the&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;info()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;number&nbsp;of&nbsp;datasets&nbsp;stored&nbsp;in&nbsp;the&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;the&nbsp;number&nbsp;of&nbsp;attributes&nbsp;attached&nbsp;to&nbsp;it<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nametoindex()&nbsp;get&nbsp;a&nbsp;dataset&nbsp;index&nbsp;number&nbsp;given&nbsp;the&nbsp;dataset<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reftoindex()&nbsp;&nbsp;get&nbsp;a&nbsp;dataset&nbsp;index&nbsp;number&nbsp;given&nbsp;the&nbsp;dataset<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reference&nbsp;number<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;misc<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setfillmode()&nbsp;set&nbsp;the&nbsp;fill&nbsp;mode&nbsp;for&nbsp;all&nbsp;the&nbsp;datasets&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;The&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;class&nbsp;defines&nbsp;an&nbsp;attribute,&nbsp;either&nbsp;at&nbsp;the&nbsp;file&nbsp;(<a href="#SD">SD</a>),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataset&nbsp;(<a href="#SDS">SDS</a>)&nbsp;or&nbsp;dimension&nbsp;(<a href="#SDim">SDim</a>)&nbsp;level.&nbsp;The&nbsp;class&nbsp;encapsulates<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;to&nbsp;which&nbsp;the&nbsp;attribute&nbsp;is&nbsp;attached,&nbsp;and&nbsp;the&nbsp;attribute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To&nbsp;create&nbsp;an&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;instance,&nbsp;obtain&nbsp;an&nbsp;instance&nbsp;for&nbsp;an&nbsp;<a href="#SD">SD</a>&nbsp;(file),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDS">SDS</a>&nbsp;(dataset)&nbsp;or&nbsp;dimension&nbsp;(<a href="#SDim">SDim</a>)&nbsp;<a href="__builtin__.html#object">object</a>,&nbsp;and&nbsp;call&nbsp;its&nbsp;attr()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NOTE.&nbsp;An&nbsp;attribute&nbsp;can&nbsp;also&nbsp;be&nbsp;read/written&nbsp;like<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;python&nbsp;class&nbsp;attribute,&nbsp;using&nbsp;the&nbsp;familiar<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dot&nbsp;notation.&nbsp;See&nbsp;"High&nbsp;level&nbsp;attribute&nbsp;access".<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methods:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;read/write&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set&nbsp;the&nbsp;attribute&nbsp;value<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inquiry<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;index()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;attribute&nbsp;index&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;info()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;attribute&nbsp;name,&nbsp;type&nbsp;and&nbsp;number&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;values<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<a href="#SDC">SDC</a>&nbsp;class&nbsp;holds&nbsp;contants&nbsp;defining&nbsp;file&nbsp;opening&nbsp;modes&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;types.&nbsp;Constants&nbsp;are&nbsp;named&nbsp;after&nbsp;their&nbsp;C&nbsp;API&nbsp;counterparts.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;opening&nbsp;modes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.CREATE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;create&nbsp;file&nbsp;if&nbsp;non&nbsp;existent<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.READ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;read-only&nbsp;mode<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.TRUNC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;truncate&nbsp;file&nbsp;if&nbsp;already&nbsp;exists<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.WRITE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;read-write&nbsp;mode<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;types:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.CHAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8-bit&nbsp;character<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.CHAR8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8-bit&nbsp;character<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.UCHAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;8-bit&nbsp;integer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.UCHAR8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;8-bit&nbsp;integer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.INT8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;signed&nbsp;8-bit&nbsp;integer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.UINT8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;8-bit&nbsp;integer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.INT16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;signed&nbsp;16-bit&nbsp;integer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.UINT16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;16-bit&nbsp;intege<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.INT32&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;signed&nbsp;32-bit&nbsp;integer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.UINT32&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;32-bit&nbsp;integer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.FLOAT32&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;32-bit&nbsp;floating&nbsp;point<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.FLOAT64&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;64-bit&nbsp;floaring&nbsp;point<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataset&nbsp;fill&nbsp;mode:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.FILL<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.NOFILL<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimension:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.UNLIMITED&nbsp;&nbsp;&nbsp;dimension&nbsp;can&nbsp;grow&nbsp;dynamically<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;compression:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_NONE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_RLE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_NBIT<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SKPHUFF<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_DEFLATE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_EC<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_NN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_RAW<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#SDS">SDS</a>&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<a href="#SDS">SDS</a>&nbsp;class&nbsp;implements&nbsp;an&nbsp;HDF&nbsp;scientific&nbsp;dataset&nbsp;(<a href="#SDS">SDS</a>)&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To&nbsp;create&nbsp;an&nbsp;<a href="#SDS">SDS</a>&nbsp;instance,&nbsp;call&nbsp;the&nbsp;create()&nbsp;or&nbsp;select()&nbsp;methods<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;an&nbsp;<a href="#SD">SD</a>&nbsp;instance.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methods:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructors<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attr()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;create&nbsp;an&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;(attribute)&nbsp;instance&nbsp;to&nbsp;access<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;existing&nbsp;dataset&nbsp;attribute&nbsp;or&nbsp;create&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;one;&nbsp;"dot&nbsp;notation"&nbsp;can&nbsp;also&nbsp;be&nbsp;used&nbsp;to&nbsp;get<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;set&nbsp;an&nbsp;attribute<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dim()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;an&nbsp;<a href="#SDim">SDim</a>&nbsp;(dimension)&nbsp;instance&nbsp;for&nbsp;a&nbsp;given<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataset&nbsp;dimension,&nbsp;given&nbsp;the&nbsp;dimension&nbsp;index<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataset&nbsp;closing<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;endaccess()&nbsp;&nbsp;&nbsp;terminate&nbsp;access&nbsp;to&nbsp;the&nbsp;dataset<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inquiry<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attributes()&nbsp;&nbsp;return&nbsp;a&nbsp;dictionnary&nbsp;describing&nbsp;every&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attribute&nbsp;defined&nbsp;on&nbsp;the&nbsp;dataset<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;checkempty()&nbsp;&nbsp;determine&nbsp;whether&nbsp;the&nbsp;dataset&nbsp;is&nbsp;empty<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimensions()&nbsp;&nbsp;return&nbsp;a&nbsp;dictionnary&nbsp;describing&nbsp;all&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataset&nbsp;dimensions<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;info()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;dataset&nbsp;name,&nbsp;rank,&nbsp;dimension&nbsp;lengths,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;type&nbsp;and&nbsp;number&nbsp;of&nbsp;attributes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iscoordvar()&nbsp;&nbsp;determine&nbsp;whether&nbsp;the&nbsp;dataset&nbsp;is&nbsp;a&nbsp;coordinate<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;variable&nbsp;(holds&nbsp;a&nbsp;dimension&nbsp;scale)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isrecord()&nbsp;&nbsp;&nbsp;&nbsp;determine&nbsp;whether&nbsp;the&nbsp;dataset&nbsp;is&nbsp;appendable<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(the&nbsp;dataset&nbsp;dimension&nbsp;0&nbsp;is&nbsp;unlimited)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ref()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;dataset&nbsp;reference&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reading/writing&nbsp;data&nbsp;values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;read&nbsp;data&nbsp;from&nbsp;the&nbsp;dataset<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;write&nbsp;data&nbsp;to&nbsp;the&nbsp;dataset<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;dataset&nbsp;can&nbsp;also&nbsp;be&nbsp;read/written&nbsp;using&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;familiar&nbsp;index&nbsp;and&nbsp;slice&nbsp;notation&nbsp;used&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;access&nbsp;python&nbsp;sequences.&nbsp;See&nbsp;"High&nbsp;level<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;variable&nbsp;access".<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reading/writing&nbsp;&nbsp;standard&nbsp;attributes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;getcal()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;dataset&nbsp;calibration&nbsp;coefficients:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scale_factor,&nbsp;scale_factor_err,&nbsp;add_offset,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add_offset_err,&nbsp;calibrated_nt<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;getdatastrs()&nbsp;&nbsp;get&nbsp;the&nbsp;dataset&nbsp;standard&nbsp;string&nbsp;attributes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;long_name,&nbsp;units,&nbsp;format,&nbsp;coordsys<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;getfillvalue()&nbsp;get&nbsp;the&nbsp;dataset&nbsp;fill&nbsp;value:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_FillValue<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;getrange()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;dataset&nbsp;min&nbsp;and&nbsp;max&nbsp;values:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;valid_range<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setcal()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set&nbsp;the&nbsp;dataset&nbsp;calibration&nbsp;coefficients<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setdatastrs()&nbsp;&nbsp;set&nbsp;the&nbsp;dataset&nbsp;standard&nbsp;string&nbsp;attributes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setfillvalue()&nbsp;set&nbsp;the&nbsp;dataset&nbsp;fill&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setrange()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set&nbsp;the&nbsp;dataset&nbsp;min&nbsp;and&nbsp;max&nbsp;values<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;compression<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;getcompress()&nbsp;&nbsp;get&nbsp;info&nbsp;about&nbsp;the&nbsp;dataset&nbsp;compression&nbsp;type&nbsp;and&nbsp;mode<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setcompress()&nbsp;&nbsp;set&nbsp;the&nbsp;dataset&nbsp;compression&nbsp;type&nbsp;and&nbsp;mode<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;misc<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setexternalfile()&nbsp;&nbsp;store&nbsp;the&nbsp;dataset&nbsp;in&nbsp;an&nbsp;external&nbsp;file<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#SDim">SDim</a>&nbsp;&nbsp;&nbsp;The&nbsp;SDdim&nbsp;class&nbsp;implements&nbsp;a&nbsp;dimension&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To&nbsp;create&nbsp;an&nbsp;<a href="#SDim">SDim</a>&nbsp;instance,&nbsp;call&nbsp;the&nbsp;dim()&nbsp;method&nbsp;of&nbsp;an&nbsp;<a href="#SDS">SDS</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(dataset)&nbsp;instance.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Methods:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructors<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attr()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;create&nbsp;an&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;(attribute)&nbsp;instance&nbsp;to&nbsp;access<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;existing&nbsp;dimension&nbsp;attribute&nbsp;or&nbsp;create&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;one;&nbsp;"dot&nbsp;notation"&nbsp;can&nbsp;also&nbsp;be&nbsp;used&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;and&nbsp;set&nbsp;an&nbsp;attribute<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inquiry<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attributes()&nbsp;&nbsp;&nbsp;return&nbsp;a&nbsp;dictionnary&nbsp;describing&nbsp;every&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attribute&nbsp;defined&nbsp;on&nbsp;the&nbsp;dimension<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;info()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;dimension&nbsp;name,&nbsp;length,&nbsp;scale&nbsp;data&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;number&nbsp;of&nbsp;attributes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;length()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;the&nbsp;current&nbsp;dimension&nbsp;length<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reading/writing&nbsp;dimension&nbsp;data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;getscale()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;dimension&nbsp;scale&nbsp;values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setname()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set&nbsp;the&nbsp;dimension&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setscale()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set&nbsp;the&nbsp;dimension&nbsp;scale&nbsp;values<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reading/writing&nbsp;standard&nbsp;attributes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;getstrs()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;dimension&nbsp;standard&nbsp;string&nbsp;attributes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;long_name,&nbsp;units,&nbsp;format<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setstrs()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set&nbsp;the&nbsp;dimension&nbsp;standard&nbsp;string&nbsp;attributes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Data&nbsp;types<br>
+----------<br>
+Data&nbsp;types&nbsp;come&nbsp;into&nbsp;play&nbsp;when&nbsp;first&nbsp;defining&nbsp;datasets&nbsp;and&nbsp;their&nbsp;attributes,<br>
+and&nbsp;later&nbsp;when&nbsp;querying&nbsp;the&nbsp;definition&nbsp;of&nbsp;those&nbsp;objects.<br>
+Data&nbsp;types&nbsp;are&nbsp;specified&nbsp;using&nbsp;the&nbsp;symbolic&nbsp;constants&nbsp;defined&nbsp;inside&nbsp;the<br>
+<a href="#SDC">SDC</a>&nbsp;class&nbsp;of&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;module.<br>
+&nbsp;<br>
+&nbsp;&nbsp;-&nbsp;CHAR&nbsp;and&nbsp;CHAR8&nbsp;(equivalent):&nbsp;an&nbsp;8-bit&nbsp;character.&nbsp;<br>
+&nbsp;&nbsp;-&nbsp;UCHAR,&nbsp;UCHAR8&nbsp;and&nbsp;UINT8&nbsp;(equivalent):&nbsp;unsigned&nbsp;8-bit&nbsp;values&nbsp;(0&nbsp;to&nbsp;255)<br>
+&nbsp;&nbsp;-&nbsp;INT8:&nbsp;&nbsp;&nbsp;&nbsp;signed&nbsp;8-bit&nbsp;values&nbsp;(-128&nbsp;to&nbsp;127)<br>
+&nbsp;&nbsp;-&nbsp;INT16:&nbsp;&nbsp;&nbsp;signed&nbsp;16-bit&nbsp;values<br>
+&nbsp;&nbsp;-&nbsp;UINT16:&nbsp;&nbsp;unsigned&nbsp;16&nbsp;bit&nbsp;values<br>
+&nbsp;&nbsp;-&nbsp;INT32:&nbsp;&nbsp;&nbsp;signed&nbsp;32&nbsp;bit&nbsp;values<br>
+&nbsp;&nbsp;-&nbsp;UINT32:&nbsp;&nbsp;unsigned&nbsp;32&nbsp;bit&nbsp;values<br>
+&nbsp;&nbsp;-&nbsp;FLOAT32:&nbsp;32&nbsp;bit&nbsp;floating&nbsp;point&nbsp;values&nbsp;(C&nbsp;floats)<br>
+&nbsp;&nbsp;-&nbsp;FLOAT64:&nbsp;64&nbsp;bit&nbsp;floating&nbsp;point&nbsp;values&nbsp;(C&nbsp;doubles)<br>
+&nbsp;<br>
+There&nbsp;is&nbsp;no&nbsp;explicit&nbsp;"string"&nbsp;type.&nbsp;To&nbsp;simulate&nbsp;a&nbsp;string,&nbsp;set&nbsp;the&nbsp;<br>
+type&nbsp;to&nbsp;CHAR,&nbsp;and&nbsp;set&nbsp;the&nbsp;length&nbsp;to&nbsp;a&nbsp;value&nbsp;of&nbsp;'n'&nbsp;&gt;&nbsp;1.&nbsp;This&nbsp;creates&nbsp;and<br>
+"array&nbsp;of&nbsp;characters",&nbsp;close&nbsp;to&nbsp;a&nbsp;string&nbsp;(except&nbsp;that&nbsp;strings&nbsp;will&nbsp;always<br>
+be&nbsp;of&nbsp;length&nbsp;'n',&nbsp;right-padded&nbsp;with&nbsp;spaces&nbsp;if&nbsp;necessary).<br>
+&nbsp;<br>
+&nbsp;<br>
+Programming&nbsp;models<br>
+------------------<br>
+&nbsp;<br>
+Writing<br>
+-------<br>
+The&nbsp;following&nbsp;code&nbsp;can&nbsp;be&nbsp;used&nbsp;as&nbsp;a&nbsp;model&nbsp;to&nbsp;create&nbsp;an&nbsp;<a href="#SD">SD</a>&nbsp;dataset.<br>
+It&nbsp;shows&nbsp;how&nbsp;to&nbsp;use&nbsp;the&nbsp;most&nbsp;important&nbsp;functionnalities<br>
+of&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;interface&nbsp;needed&nbsp;to&nbsp;initialize&nbsp;a&nbsp;dataset.<br>
+A&nbsp;real&nbsp;program&nbsp;should&nbsp;of&nbsp;course&nbsp;add&nbsp;error&nbsp;handling.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Import&nbsp;<a href="#SD">SD</a>&nbsp;and&nbsp;Numeric.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.<a href="#SD">SD</a>&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;Numeric&nbsp;import&nbsp;*<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;fileName&nbsp;=&nbsp;'template.hdf'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Create&nbsp;HDF&nbsp;file.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hdfFile&nbsp;=&nbsp;<a href="#SD">SD</a>(fileName&nbsp;,<a href="#SDC">SDC</a>.WRITE|<a href="#SDC">SDC</a>.CREATE)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Assign&nbsp;a&nbsp;few&nbsp;attributes&nbsp;at&nbsp;the&nbsp;file&nbsp;level<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hdfFile.author&nbsp;=&nbsp;'It&nbsp;is&nbsp;me...'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hdfFile.priority&nbsp;=&nbsp;2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Create&nbsp;a&nbsp;dataset&nbsp;named&nbsp;'d1'&nbsp;to&nbsp;hold&nbsp;a&nbsp;3x3&nbsp;float&nbsp;array.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;d1&nbsp;=&nbsp;hdfFile.create('d1',&nbsp;<a href="#SDC">SDC</a>.FLOAT32,&nbsp;(3,3))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Set&nbsp;some&nbsp;attributs&nbsp;on&nbsp;'d1'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;d1.description&nbsp;=&nbsp;'Sample&nbsp;3x3&nbsp;float&nbsp;array'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;d1.units&nbsp;=&nbsp;'celsius'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Name&nbsp;'d1'&nbsp;dimensions&nbsp;and&nbsp;assign&nbsp;them&nbsp;attributes.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dim1&nbsp;=&nbsp;d1.dim(0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dim2&nbsp;=&nbsp;d1.dim(1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dim1.setname('width')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dim2.setname('height')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dim1.units&nbsp;=&nbsp;'m'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dim2.units&nbsp;=&nbsp;'cm'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Assign&nbsp;values&nbsp;to&nbsp;'d1'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;d1[0]&nbsp;&nbsp;=&nbsp;(14.5,&nbsp;12.8,&nbsp;13.0)&nbsp;&nbsp;#&nbsp;row&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;d1[1:]&nbsp;=&nbsp;((-1.3,&nbsp;0.5,&nbsp;4.8),&nbsp;&nbsp;#&nbsp;row&nbsp;2&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(3.1,&nbsp;0.0,&nbsp;13.8))&nbsp;&nbsp;#&nbsp;row&nbsp;3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Close&nbsp;dataset<br>
+&nbsp;&nbsp;&nbsp;&nbsp;d1.endaccess()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Close&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hdfFile.end()<br>
+&nbsp;<br>
+Reading<br>
+-------<br>
+The&nbsp;following&nbsp;code,&nbsp;which&nbsp;reads&nbsp;the&nbsp;dataset&nbsp;created&nbsp;above,&nbsp;can&nbsp;also&nbsp;serve&nbsp;as<br>
+a&nbsp;model&nbsp;for&nbsp;any&nbsp;program&nbsp;which&nbsp;needs&nbsp;to&nbsp;access&nbsp;an&nbsp;<a href="#SD">SD</a>&nbsp;dataset.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Import&nbsp;<a href="#SD">SD</a>&nbsp;and&nbsp;Numeric.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.<a href="#SD">SD</a>&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;Numeric&nbsp;import&nbsp;*<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;fileName&nbsp;=&nbsp;'template.hdf'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Open&nbsp;file&nbsp;in&nbsp;read-only&nbsp;mode&nbsp;(default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hdfFile&nbsp;=&nbsp;<a href="#SD">SD</a>(fileName)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Display&nbsp;attributes.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"file:",&nbsp;fileName<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"author:",&nbsp;hdfFile.author<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"priority:",&nbsp;hdfFile.priority<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Open&nbsp;dataset&nbsp;'d1'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;d1&nbsp;=&nbsp;hdfFile.select('d1')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Display&nbsp;dataset&nbsp;attributes.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"dataset:",&nbsp;'d1'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"description:",d1.description<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"units:",&nbsp;d1.units<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Display&nbsp;dimensions&nbsp;info.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dim1&nbsp;=&nbsp;d1.dim(0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dim2&nbsp;=&nbsp;d1.dim(1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"dimensions:"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"dim1:&nbsp;name=",&nbsp;dim1.info()[0],&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"length=",&nbsp;dim1.length(),&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"units=",&nbsp;dim1.units<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"dim2:&nbsp;name=",&nbsp;dim2.info()[0],&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"length=",&nbsp;dim2.length(),&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"units=",&nbsp;dim2.units<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Show&nbsp;dataset&nbsp;values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;d1[:]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Close&nbsp;dataset<br>
+&nbsp;&nbsp;&nbsp;&nbsp;d1.endaccess()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Close&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hdfFile.end()<br>
+&nbsp;<br>
+&nbsp;<br>
+Examples<br>
+--------<br>
+&nbsp;<br>
+Example-1<br>
+---------<br>
+The&nbsp;following&nbsp;simple&nbsp;example&nbsp;exercises&nbsp;some&nbsp;important&nbsp;pyhdf.<a href="#SD">SD</a>&nbsp;methods.&nbsp;It<br>
+shows&nbsp;how&nbsp;to&nbsp;create&nbsp;an&nbsp;HDF&nbsp;dataset,&nbsp;define&nbsp;attributes&nbsp;and&nbsp;dimensions,<br>
+create&nbsp;variables,&nbsp;and&nbsp;assign&nbsp;their&nbsp;contents.<br>
+&nbsp;<br>
+Suppose&nbsp;we&nbsp;have&nbsp;a&nbsp;series&nbsp;of&nbsp;text&nbsp;files&nbsp;each&nbsp;defining&nbsp;a&nbsp;2-dimensional&nbsp;real-<br>
+valued&nbsp;matrix.&nbsp;First&nbsp;line&nbsp;holds&nbsp;the&nbsp;matrix&nbsp;dimensions,&nbsp;and&nbsp;following&nbsp;lines<br>
+hold&nbsp;matrix&nbsp;values,&nbsp;one&nbsp;row&nbsp;per&nbsp;line.&nbsp;The&nbsp;following&nbsp;procedure&nbsp;will&nbsp;load<br>
+into&nbsp;an&nbsp;HDF&nbsp;dataset&nbsp;the&nbsp;contents&nbsp;of&nbsp;any&nbsp;one&nbsp;of&nbsp;those&nbsp;text&nbsp;files.&nbsp;The<br>
+procedure&nbsp;computes&nbsp;the&nbsp;matrix&nbsp;min&nbsp;and&nbsp;max&nbsp;values,&nbsp;storing&nbsp;them&nbsp;as<br>
+dataset&nbsp;attributes.&nbsp;It&nbsp;also&nbsp;assigns&nbsp;to&nbsp;the&nbsp;variable&nbsp;the&nbsp;group&nbsp;of<br>
+attributes&nbsp;passed&nbsp;as&nbsp;a&nbsp;dictionnary&nbsp;by&nbsp;the&nbsp;calling&nbsp;program.&nbsp;Note&nbsp;how&nbsp;simple<br>
+such&nbsp;an&nbsp;assignment&nbsp;becomes&nbsp;with&nbsp;pyhdf:&nbsp;the&nbsp;dictionnary&nbsp;can&nbsp;contain&nbsp;any<br>
+number&nbsp;of&nbsp;attributes,&nbsp;of&nbsp;different&nbsp;types,&nbsp;single&nbsp;or&nbsp;multi-valued.&nbsp;Doing<br>
+the&nbsp;same&nbsp;in&nbsp;a&nbsp;conventional&nbsp;language&nbsp;would&nbsp;be&nbsp;a&nbsp;much&nbsp;more&nbsp;challenging&nbsp;task.<br>
+&nbsp;<br>
+Error&nbsp;checking&nbsp;is&nbsp;minimal,&nbsp;to&nbsp;keep&nbsp;example&nbsp;as&nbsp;simple&nbsp;as&nbsp;possible<br>
+(admittedly&nbsp;a&nbsp;rather&nbsp;poor&nbsp;excuse&nbsp;...).<br>
+&nbsp;<br>
+&nbsp;<br>
+from&nbsp;Numeric&nbsp;import&nbsp;*<br>
+from&nbsp;pyhdf.<a href="#SD">SD</a>&nbsp;import&nbsp;*<br>
+&nbsp;<br>
+import&nbsp;os<br>
+&nbsp;<br>
+def&nbsp;txtToHDF(txtFile,&nbsp;hdfFile,&nbsp;varName,&nbsp;attr):<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;try:&nbsp;&nbsp;#&nbsp;Catch&nbsp;pyhdf&nbsp;errors<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Open&nbsp;HDF&nbsp;file&nbsp;in&nbsp;update&nbsp;mode,&nbsp;creating&nbsp;it&nbsp;if&nbsp;non&nbsp;existent.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d&nbsp;=&nbsp;<a href="#SD">SD</a>(hdfFile,&nbsp;<a href="#SDC">SDC</a>.WRITE|<a href="#SDC">SDC</a>.CREATE)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Open&nbsp;text&nbsp;file&nbsp;and&nbsp;get&nbsp;matrix&nbsp;dimensions&nbsp;on&nbsp;first&nbsp;line.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txt&nbsp;=&nbsp;open(txtFile)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ni,&nbsp;nj&nbsp;=&nbsp;map(int,&nbsp;txt.readline().split())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Define&nbsp;an&nbsp;HDF&nbsp;dataset&nbsp;of&nbsp;32-bit&nbsp;floating&nbsp;type&nbsp;(<a href="#SDC">SDC</a>.FLOAT32)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;with&nbsp;those&nbsp;dimensions.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v&nbsp;=&nbsp;d.create(varName,&nbsp;<a href="#SDC">SDC</a>.FLOAT32,&nbsp;(ni,&nbsp;nj))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Assign&nbsp;attributes&nbsp;passed&nbsp;as&nbsp;argument&nbsp;inside&nbsp;dict&nbsp;'attr'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;attrName&nbsp;in&nbsp;attr.keys():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setattr(v,&nbsp;attrName,&nbsp;attr[attrName])<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Load&nbsp;variable&nbsp;with&nbsp;lines&nbsp;of&nbsp;data.&nbsp;Compute&nbsp;min&nbsp;and&nbsp;max<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;over&nbsp;the&nbsp;whole&nbsp;matrix.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i&nbsp;=&nbsp;0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;i&nbsp;&lt;&nbsp;ni:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elems&nbsp;=&nbsp;map(float,&nbsp;txt.readline().split())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v[i]&nbsp;=&nbsp;elems&nbsp;&nbsp;#&nbsp;load&nbsp;row&nbsp;i<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minE&nbsp;=&nbsp;min(elems)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxE&nbsp;=&nbsp;max(elems)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;i:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minVal&nbsp;=&nbsp;min(minVal,&nbsp;minE)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxVal&nbsp;=&nbsp;max(maxVal,&nbsp;maxE)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minVal&nbsp;=&nbsp;minE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxVal&nbsp;=&nbsp;maxE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i&nbsp;+=&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Set&nbsp;variable&nbsp;min&nbsp;and&nbsp;max&nbsp;attributes.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v.minVal&nbsp;=&nbsp;minVal<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v.maxVal&nbsp;=&nbsp;maxVal<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Close&nbsp;dataset&nbsp;and&nbsp;file&nbsp;objects&nbsp;(not&nbsp;really&nbsp;necessary,&nbsp;since<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;closing&nbsp;is&nbsp;automatic&nbsp;when&nbsp;objects&nbsp;go&nbsp;out&nbsp;of&nbsp;scope.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v.endaccess()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d.end()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txt.close()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;except&nbsp;<a href="#HDF4Error">HDF4Error</a>,&nbsp;msg:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"<a href="#HDF4Error">HDF4Error</a>:",&nbsp;msg<br>
+&nbsp;<br>
+&nbsp;<br>
+We&nbsp;could&nbsp;now&nbsp;call&nbsp;the&nbsp;procedure&nbsp;as&nbsp;follows:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hdfFile&nbsp;&nbsp;=&nbsp;'table.hdf'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;try:&nbsp;&nbsp;#&nbsp;Delete&nbsp;if&nbsp;exists.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;os.remove(hdfFile)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;except:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Load&nbsp;contents&nbsp;of&nbsp;file&nbsp;'temp.txt'&nbsp;into&nbsp;dataset&nbsp;'temperature'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;an&nbsp;assign&nbsp;the&nbsp;attributes&nbsp;'title',&nbsp;'units'&nbsp;and&nbsp;'valid_range'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;txtToHDF('temp.txt',&nbsp;hdfFile,&nbsp;'temperature',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{'title'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;'temperature&nbsp;matrix',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'units'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;'celsius',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'valid_range':&nbsp;(-2.8,27.0)})<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Load&nbsp;contents&nbsp;of&nbsp;file&nbsp;'depth.txt'&nbsp;into&nbsp;dataset&nbsp;'depth'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;and&nbsp;assign&nbsp;the&nbsp;same&nbsp;attributes&nbsp;as&nbsp;above.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;txtToHDF('depth.txt',&nbsp;hdfFile,&nbsp;'depth',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{'title'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;'depth&nbsp;matrix',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'units'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;'meters',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'valid_range':&nbsp;(0,&nbsp;500.0)})<br>
+&nbsp;<br>
+&nbsp;<br>
+Example&nbsp;2<br>
+---------<br>
+This&nbsp;example&nbsp;shows&nbsp;a&nbsp;usefull&nbsp;python&nbsp;program&nbsp;that&nbsp;will&nbsp;display&nbsp;the<br>
+structure&nbsp;of&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;component&nbsp;of&nbsp;any&nbsp;HDF&nbsp;file&nbsp;whose&nbsp;name&nbsp;is&nbsp;given&nbsp;on<br>
+the&nbsp;command&nbsp;line.&nbsp;After&nbsp;the&nbsp;HDF&nbsp;file&nbsp;is&nbsp;opened,&nbsp;high&nbsp;level&nbsp;inquiry&nbsp;methods<br>
+are&nbsp;called&nbsp;to&nbsp;obtain&nbsp;dictionnaries&nbsp;descrybing&nbsp;attributes,&nbsp;dimensions&nbsp;and<br>
+datasets.&nbsp;The&nbsp;rest&nbsp;of&nbsp;the&nbsp;program&nbsp;mostly&nbsp;consists&nbsp;in&nbsp;nicely&nbsp;formatting<br>
+the&nbsp;contents&nbsp;of&nbsp;those&nbsp;dictionaries.<br>
+&nbsp;<br>
+import&nbsp;sys<br>
+from&nbsp;pyhdf.<a href="#SD">SD</a>&nbsp;import&nbsp;*<br>
+from&nbsp;Numeric&nbsp;import&nbsp;*<br>
+&nbsp;<br>
+#&nbsp;Dictionnary&nbsp;used&nbsp;to&nbsp;convert&nbsp;from&nbsp;a&nbsp;numeric&nbsp;data&nbsp;type&nbsp;to&nbsp;its&nbsp;symbolic<br>
+#&nbsp;representation<br>
+typeTab&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.CHAR:&nbsp;&nbsp;&nbsp;&nbsp;'CHAR',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.CHAR8:&nbsp;&nbsp;&nbsp;'CHAR8',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.UCHAR8:&nbsp;&nbsp;'UCHAR8',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.INT8:&nbsp;&nbsp;&nbsp;&nbsp;'INT8',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.UINT8:&nbsp;&nbsp;&nbsp;'UINT8',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.INT16:&nbsp;&nbsp;&nbsp;'INT16',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.UINT16:&nbsp;&nbsp;'UINT16',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.INT32:&nbsp;&nbsp;&nbsp;'INT32',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.UINT32:&nbsp;&nbsp;'UINT32',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.FLOAT32:&nbsp;'FLOAT32',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.FLOAT64:&nbsp;'FLOAT64'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;<br>
+printf&nbsp;=&nbsp;sys.stdout.write<br>
+&nbsp;<br>
+def&nbsp;eol(n=1):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;printf("%s"&nbsp;%&nbsp;chr(10)&nbsp;*&nbsp;n)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+hdfFile&nbsp;=&nbsp;sys.argv[1]&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Get&nbsp;first&nbsp;command&nbsp;line&nbsp;argument<br>
+&nbsp;<br>
+try:&nbsp;&nbsp;#&nbsp;Catch&nbsp;pyhdf.<a href="#SD">SD</a>&nbsp;errors<br>
+&nbsp;&nbsp;#&nbsp;Open&nbsp;HDF&nbsp;file&nbsp;named&nbsp;on&nbsp;the&nbsp;command&nbsp;line<br>
+&nbsp;&nbsp;f&nbsp;=&nbsp;<a href="#SD">SD</a>(hdfFile)<br>
+&nbsp;&nbsp;#&nbsp;Get&nbsp;global&nbsp;attribute&nbsp;dictionnary<br>
+&nbsp;&nbsp;attr&nbsp;=&nbsp;f.attributes(full=1)<br>
+&nbsp;&nbsp;#&nbsp;Get&nbsp;dataset&nbsp;dictionnary<br>
+&nbsp;&nbsp;dsets&nbsp;=&nbsp;f.datasets()<br>
+&nbsp;<br>
+&nbsp;&nbsp;#&nbsp;File&nbsp;name,&nbsp;number&nbsp;of&nbsp;attributes&nbsp;and&nbsp;number&nbsp;of&nbsp;variables.<br>
+&nbsp;&nbsp;printf("FILE&nbsp;INFO");&nbsp;eol()<br>
+&nbsp;&nbsp;printf("-------------");&nbsp;eol()<br>
+&nbsp;&nbsp;printf("%-25s%s"&nbsp;%&nbsp;("File:",&nbsp;hdfFile));&nbsp;eol()<br>
+&nbsp;&nbsp;printf("%-25s%d"&nbsp;%&nbsp;("&nbsp;&nbsp;file&nbsp;attributes:",&nbsp;len(attr)));&nbsp;eol()<br>
+&nbsp;&nbsp;printf("%-25s%d"&nbsp;%&nbsp;("&nbsp;&nbsp;datasets:",&nbsp;len(dsets)));&nbsp;eol()<br>
+&nbsp;&nbsp;eol();<br>
+&nbsp;<br>
+&nbsp;&nbsp;#&nbsp;Global&nbsp;attribute&nbsp;table.<br>
+&nbsp;&nbsp;if&nbsp;len(attr)&nbsp;&gt;&nbsp;0:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("File&nbsp;attributes");&nbsp;eol(2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;idx&nbsp;type&nbsp;&nbsp;&nbsp;&nbsp;len&nbsp;value");&nbsp;eol()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("&nbsp;&nbsp;--------------------&nbsp;---&nbsp;-------&nbsp;---&nbsp;-----");&nbsp;eol()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Get&nbsp;list&nbsp;of&nbsp;attribute&nbsp;names&nbsp;and&nbsp;sort&nbsp;them&nbsp;lexically<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attNames&nbsp;=&nbsp;attr.keys()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attNames.sort()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;name&nbsp;in&nbsp;attNames:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t&nbsp;=&nbsp;attr[name]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;t[0]&nbsp;is&nbsp;the&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;t[1]&nbsp;is&nbsp;the&nbsp;attribute&nbsp;index&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;t[2]&nbsp;is&nbsp;the&nbsp;attribute&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;t[3]&nbsp;is&nbsp;the&nbsp;attribute&nbsp;length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("&nbsp;&nbsp;%-20s&nbsp;%3d&nbsp;%-7s&nbsp;%3d&nbsp;%s"&nbsp;%<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(name,&nbsp;t[1],&nbsp;typeTab[t[2]],&nbsp;t[3],&nbsp;t[0]));&nbsp;eol()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eol()<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;#&nbsp;Dataset&nbsp;table<br>
+&nbsp;&nbsp;if&nbsp;len(dsets)&nbsp;&gt;&nbsp;0:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("Datasets&nbsp;(idx:index&nbsp;num,&nbsp;na:n&nbsp;attributes,&nbsp;cv:coord&nbsp;var)");&nbsp;eol(2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;idx&nbsp;type&nbsp;&nbsp;&nbsp;&nbsp;na&nbsp;cv&nbsp;dimension(s)");&nbsp;eol()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("&nbsp;&nbsp;--------------------&nbsp;---&nbsp;-------&nbsp;--&nbsp;--&nbsp;------------");&nbsp;eol()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Get&nbsp;list&nbsp;of&nbsp;dataset&nbsp;names&nbsp;and&nbsp;sort&nbsp;them&nbsp;lexically<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dsNames&nbsp;=&nbsp;dsets.keys()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dsNames.sort()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;name&nbsp;in&nbsp;dsNames:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Get&nbsp;dataset&nbsp;instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ds&nbsp;=&nbsp;f.select(name)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Retrieve&nbsp;the&nbsp;dictionary&nbsp;of&nbsp;dataset&nbsp;attributes&nbsp;so&nbsp;as<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;to&nbsp;display&nbsp;their&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vAttr&nbsp;=&nbsp;ds.attributes()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t&nbsp;=&nbsp;dsets[name]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;t[0]&nbsp;is&nbsp;a&nbsp;tuple&nbsp;of&nbsp;dimension&nbsp;names<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;t[1]&nbsp;is&nbsp;a&nbsp;tuple&nbsp;of&nbsp;dimension&nbsp;lengths<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;t[2]&nbsp;is&nbsp;the&nbsp;dataset&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;t[3]&nbsp;is&nbsp;the&nbsp;dataset&nbsp;index&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("&nbsp;&nbsp;%-20s&nbsp;%3d&nbsp;%-7s&nbsp;%2d&nbsp;%-2s&nbsp;"&nbsp;%<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(name,&nbsp;t[3],&nbsp;typeTab[t[2]],&nbsp;len(vAttr),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ds.iscoordvar()&nbsp;and&nbsp;'X'&nbsp;or&nbsp;''))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Display&nbsp;dimension&nbsp;info.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n&nbsp;=&nbsp;0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;d&nbsp;in&nbsp;t[0]:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("%s%s(%d)"&nbsp;%&nbsp;(n&nbsp;&gt;&nbsp;0&nbsp;and&nbsp;',&nbsp;'&nbsp;or&nbsp;'',&nbsp;d,&nbsp;t[1][n]))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n&nbsp;+=&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eol()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eol()<br>
+&nbsp;<br>
+&nbsp;&nbsp;#&nbsp;Dataset&nbsp;info.<br>
+&nbsp;&nbsp;if&nbsp;len(dsNames)&nbsp;&gt;&nbsp;0:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("DATASET&nbsp;INFO");&nbsp;eol()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("-------------");&nbsp;eol(2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;name&nbsp;in&nbsp;dsNames:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Access&nbsp;the&nbsp;dataset<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dsObj&nbsp;=&nbsp;f.select(name)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Get&nbsp;dataset&nbsp;attribute&nbsp;dictionnary<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dsAttr&nbsp;=&nbsp;dsObj.attributes(full=1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;len(dsAttr)&nbsp;&gt;&nbsp;0:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("%s&nbsp;attributes"&nbsp;%&nbsp;name);&nbsp;eol(2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;idx&nbsp;type&nbsp;&nbsp;&nbsp;&nbsp;len&nbsp;value");&nbsp;eol()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("&nbsp;&nbsp;--------------------&nbsp;---&nbsp;-------&nbsp;---&nbsp;-----");&nbsp;eol()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Get&nbsp;the&nbsp;list&nbsp;of&nbsp;attribute&nbsp;names&nbsp;and&nbsp;sort&nbsp;them&nbsp;alphabetically.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attNames&nbsp;=&nbsp;dsAttr.keys()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attNames.sort()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;nm&nbsp;in&nbsp;attNames:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t&nbsp;=&nbsp;dsAttr[nm]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;t[0]&nbsp;is&nbsp;the&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;t[1]&nbsp;is&nbsp;the&nbsp;attribute&nbsp;index&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;t[2]&nbsp;is&nbsp;the&nbsp;attribute&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;t[3]&nbsp;is&nbsp;the&nbsp;attribute&nbsp;length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("&nbsp;&nbsp;%-20s&nbsp;%3d&nbsp;%-7s&nbsp;%3d&nbsp;%s"&nbsp;%<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(nm,&nbsp;t[1],&nbsp;typeTab[t[2]],&nbsp;t[3],&nbsp;t[0]));&nbsp;eol()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eol()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Get&nbsp;dataset&nbsp;dimension&nbsp;dictionnary<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dsDim&nbsp;=&nbsp;dsObj.dimensions(full=1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;len(dsDim)&nbsp;&gt;&nbsp;0:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;("%s&nbsp;dimensions"&nbsp;%&nbsp;name);&nbsp;eol(2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;idx&nbsp;len&nbsp;&nbsp;&nbsp;unl&nbsp;type&nbsp;&nbsp;&nbsp;&nbsp;natt");eol()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("&nbsp;&nbsp;--------------------&nbsp;---&nbsp;-----&nbsp;---&nbsp;-------&nbsp;----");eol()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Get&nbsp;the&nbsp;list&nbsp;of&nbsp;dimension&nbsp;names&nbsp;and&nbsp;sort&nbsp;them&nbsp;alphabetically.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimNames&nbsp;=&nbsp;dsDim.keys()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimNames.sort()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;nm&nbsp;in&nbsp;dimNames:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t&nbsp;=&nbsp;dsDim[nm]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;t[0]&nbsp;is&nbsp;the&nbsp;dimension&nbsp;length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;t[1]&nbsp;is&nbsp;the&nbsp;dimension&nbsp;index&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;t[2]&nbsp;is&nbsp;1&nbsp;if&nbsp;the&nbsp;dimension&nbsp;is&nbsp;unlimited,&nbsp;0&nbsp;if&nbsp;not<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;t[3]&nbsp;is&nbsp;the&nbsp;the&nbsp;dimension&nbsp;scale&nbsp;type,&nbsp;0&nbsp;if&nbsp;no&nbsp;scale<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;t[4]&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;attributes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("&nbsp;&nbsp;%-20s&nbsp;%3d&nbsp;%5d&nbsp;&nbsp;%s&nbsp;&nbsp;%-7s&nbsp;%4d"&nbsp;%<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(nm,&nbsp;t[1],&nbsp;t[0],&nbsp;t[2]&nbsp;and&nbsp;"X"&nbsp;or&nbsp;"&nbsp;",&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t[3]&nbsp;and&nbsp;typeTab[t[3]]&nbsp;or&nbsp;"",&nbsp;t[4]));&nbsp;eol()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eol()<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+except&nbsp;<a href="#HDF4Error">HDF4Error</a>,&nbsp;msg:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"<a href="#HDF4Error">HDF4Error</a>",&nbsp;msg</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="pyhdf.hdfext.html">pyhdf.hdfext</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top><a href="types.html">types</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="pyhdf.SD.html#SD">SD</a>
+</font></dt><dt><font face="helvetica, arial"><a href="pyhdf.SD.html#SDAttr">SDAttr</a>
+</font></dt><dt><font face="helvetica, arial"><a href="pyhdf.SD.html#SDC">SDC</a>
+</font></dt><dt><font face="helvetica, arial"><a href="pyhdf.SD.html#SDS">SDS</a>
+</font></dt><dt><font face="helvetica, arial"><a href="pyhdf.SD.html#SDim">SDim</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="exceptions.html#Exception">exceptions.Exception</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="pyhdf.error.html#HDF4Error">pyhdf.error.HDF4Error</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="HDF4Error">class <strong>HDF4Error</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="HDF4Error-__init__"><strong>__init__</strong></a>(self, args<font color="#909090">=None</font>)</dt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="HDF4Error-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="HDF4Error-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SD">class <strong>SD</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="#SD">SD</a>&nbsp;class&nbsp;implements&nbsp;an&nbsp;HDF&nbsp;<a href="#SD">SD</a>&nbsp;interface.<br>
+To&nbsp;instantiate&nbsp;an&nbsp;<a href="#SD">SD</a>&nbsp;class,&nbsp;call&nbsp;the&nbsp;<a href="#SD">SD</a>()&nbsp;constructor.<br>
+To&nbsp;set&nbsp;attributes&nbsp;on&nbsp;an&nbsp;<a href="#SD">SD</a>&nbsp;instance,&nbsp;call&nbsp;the&nbsp;<a href="#SD">SD</a>.<a href="#SD-attr">attr</a>()<br>
+method&nbsp;to&nbsp;create&nbsp;an&nbsp;attribute&nbsp;instance,&nbsp;then&nbsp;call&nbsp;the&nbsp;methods<br>
+of&nbsp;this&nbsp;instance.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="SD-__del__"><strong>__del__</strong></a>(self)</dt><dd><tt>Delete&nbsp;the&nbsp;instance,&nbsp;first&nbsp;calling&nbsp;the&nbsp;<a href="#SD-end">end</a>()&nbsp;method&nbsp;<br>
+if&nbsp;not&nbsp;already&nbsp;done.</tt></dd></dl>
+
+<dl><dt><a name="SD-__getattr__"><strong>__getattr__</strong></a>(self, name)</dt></dl>
+
+<dl><dt><a name="SD-__init__"><strong>__init__</strong></a>(self, path, mode<font color="#909090">=1</font>)</dt><dd><tt><a href="#SD">SD</a>&nbsp;constructor.&nbsp;Initialize&nbsp;an&nbsp;<a href="#SD">SD</a>&nbsp;interface&nbsp;on&nbsp;an&nbsp;HDF&nbsp;file,<br>
+creating&nbsp;the&nbsp;file&nbsp;if&nbsp;necessary.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;path&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;of&nbsp;the&nbsp;HDF&nbsp;file&nbsp;on&nbsp;which&nbsp;to&nbsp;open&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;interface<br>
+&nbsp;&nbsp;mode&nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;opening&nbsp;mode;&nbsp;this&nbsp;mode&nbsp;is&nbsp;a&nbsp;set&nbsp;of&nbsp;binary&nbsp;flags<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;which&nbsp;can&nbsp;be&nbsp;ored&nbsp;together<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.CREATE&nbsp;&nbsp;combined&nbsp;with&nbsp;<a href="#SDC">SDC</a>.WRITE&nbsp;to&nbsp;create&nbsp;file&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;it&nbsp;does&nbsp;not&nbsp;exist<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.READ&nbsp;&nbsp;&nbsp;&nbsp;open&nbsp;file&nbsp;in&nbsp;read-only&nbsp;access&nbsp;(default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.TRUNC&nbsp;&nbsp;&nbsp;if&nbsp;combined&nbsp;with&nbsp;<a href="#SDC">SDC</a>.WRITE,&nbsp;overwrite<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;if&nbsp;it&nbsp;already&nbsp;exists<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.WRITE&nbsp;&nbsp;&nbsp;open&nbsp;file&nbsp;in&nbsp;read-write&nbsp;mode;&nbsp;if&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exists&nbsp;it&nbsp;is&nbsp;updated,&nbsp;unless&nbsp;<a href="#SDC">SDC</a>.TRUNC&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set,&nbsp;in&nbsp;which&nbsp;case&nbsp;it&nbsp;is&nbsp;erased&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;recreated;&nbsp;if&nbsp;file&nbsp;does&nbsp;not&nbsp;exist,&nbsp;an<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error&nbsp;is&nbsp;raised&nbsp;unless&nbsp;<a href="#SDC">SDC</a>.CREATE&nbsp;is&nbsp;set,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;which&nbsp;case&nbsp;the&nbsp;file&nbsp;is&nbsp;created<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Note&nbsp;an&nbsp;important&nbsp;difference&nbsp;in&nbsp;the&nbsp;way&nbsp;CREATE&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;handled&nbsp;by&nbsp;the&nbsp;C&nbsp;library&nbsp;and&nbsp;the&nbsp;pyhdf&nbsp;package.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;the&nbsp;C&nbsp;library,&nbsp;CREATE&nbsp;indicates&nbsp;that&nbsp;a&nbsp;new&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;should&nbsp;always&nbsp;be&nbsp;created,&nbsp;overwriting&nbsp;an&nbsp;existing&nbsp;one&nbsp;if<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any.&nbsp;For&nbsp;pyhdf,&nbsp;CREATE&nbsp;indicates&nbsp;a&nbsp;new&nbsp;file&nbsp;should&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;created&nbsp;only&nbsp;if&nbsp;it&nbsp;does&nbsp;not&nbsp;exist,&nbsp;and&nbsp;the&nbsp;overwriting<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;an&nbsp;already&nbsp;existing&nbsp;file&nbsp;must&nbsp;be&nbsp;explicitly&nbsp;asked<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;by&nbsp;setting&nbsp;the&nbsp;TRUNC&nbsp;flag.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Those&nbsp;differences&nbsp;were&nbsp;introduced&nbsp;so&nbsp;as&nbsp;to&nbsp;harmonize<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;way&nbsp;files&nbsp;are&nbsp;opened&nbsp;in&nbsp;the&nbsp;pycdf&nbsp;and&nbsp;pyhdf<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;packages.&nbsp;Also,&nbsp;this&nbsp;solves&nbsp;a&nbsp;limitation&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hdf&nbsp;(and&nbsp;netCDF)&nbsp;library,&nbsp;where&nbsp;there&nbsp;is&nbsp;no&nbsp;easy&nbsp;way<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;implement&nbsp;the&nbsp;frequent&nbsp;requirement&nbsp;that&nbsp;an&nbsp;existent<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;be&nbsp;opened&nbsp;in&nbsp;read-write&nbsp;mode,&nbsp;or&nbsp;created<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;it&nbsp;does&nbsp;not&nbsp;exist.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;an&nbsp;<a href="#SD">SD</a>&nbsp;instance<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDstart</tt></dd></dl>
+
+<dl><dt><a name="SD-__setattr__"><strong>__setattr__</strong></a>(self, name, value)</dt></dl>
+
+<dl><dt><a name="SD-attr"><strong>attr</strong></a>(self, name_or_index)</dt><dd><tt>Create&nbsp;an&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;instance&nbsp;representing&nbsp;a&nbsp;global<br>
+attribute&nbsp;(defined&nbsp;at&nbsp;the&nbsp;level&nbsp;of&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;interface).<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name_or_index&nbsp;&nbsp;&nbsp;attribute&nbsp;name&nbsp;or&nbsp;index&nbsp;number;&nbsp;if&nbsp;a&nbsp;name&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;given,&nbsp;the&nbsp;attribute&nbsp;may&nbsp;not&nbsp;exist;&nbsp;in&nbsp;that<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case,&nbsp;it&nbsp;will&nbsp;be&nbsp;created&nbsp;when&nbsp;the&nbsp;<a href="#SDAttr">SDAttr</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;instance&nbsp;set()&nbsp;method&nbsp;is&nbsp;called<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;instance&nbsp;for&nbsp;the&nbsp;attribute.&nbsp;Call&nbsp;the&nbsp;methods&nbsp;of&nbsp;this<br>
+&nbsp;&nbsp;class&nbsp;to&nbsp;query,&nbsp;read&nbsp;or&nbsp;set&nbsp;the&nbsp;attribute.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="SD-attributes"><strong>attributes</strong></a>(self, full<font color="#909090">=0</font>)</dt><dd><tt>Return&nbsp;a&nbsp;dictionnary&nbsp;describing&nbsp;every&nbsp;global<br>
+attribute&nbsp;attached&nbsp;to&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;interface.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;full&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true&nbsp;to&nbsp;get&nbsp;complete&nbsp;info&nbsp;about&nbsp;each&nbsp;attribute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;false&nbsp;to&nbsp;report&nbsp;only&nbsp;each&nbsp;attribute&nbsp;value<br>
+Returns:<br>
+&nbsp;&nbsp;Empty&nbsp;dictionnary&nbsp;if&nbsp;no&nbsp;global&nbsp;attribute&nbsp;defined<br>
+&nbsp;&nbsp;Otherwise,&nbsp;dictionnary&nbsp;where&nbsp;each&nbsp;key&nbsp;is&nbsp;the&nbsp;name&nbsp;of&nbsp;a<br>
+&nbsp;&nbsp;global&nbsp;attribute.&nbsp;If&nbsp;parameter&nbsp;'full'&nbsp;is&nbsp;false,<br>
+&nbsp;&nbsp;key&nbsp;value&nbsp;is&nbsp;the&nbsp;attribute&nbsp;value.&nbsp;If&nbsp;'full'&nbsp;is&nbsp;true,<br>
+&nbsp;&nbsp;key&nbsp;value&nbsp;is&nbsp;a&nbsp;tuple&nbsp;with&nbsp;the&nbsp;following&nbsp;elements:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;attribute&nbsp;index&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;attribute&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;attribute&nbsp;length<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="SD-create"><strong>create</strong></a>(self, name, data_type, dim_sizes)</dt><dd><tt>Create&nbsp;a&nbsp;dataset.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataset&nbsp;name<br>
+&nbsp;&nbsp;data_type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;of&nbsp;the&nbsp;data,&nbsp;set&nbsp;to&nbsp;one&nbsp;of&nbsp;the&nbsp;<a href="#SDC">SDC</a>.xxx&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constants;&nbsp;<br>
+&nbsp;&nbsp;dim_sizes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lengths&nbsp;of&nbsp;the&nbsp;dataset&nbsp;dimensions;&nbsp;a&nbsp;one-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimensional&nbsp;array&nbsp;is&nbsp;specified&nbsp;with&nbsp;an&nbsp;integer,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;n-dimensional&nbsp;array&nbsp;with&nbsp;an&nbsp;n-element&nbsp;sequence<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;integers;&nbsp;the&nbsp;length&nbsp;of&nbsp;the&nbsp;first&nbsp;dimension&nbsp;can<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;set&nbsp;to&nbsp;<a href="#SDC">SDC</a>.UNLIMITED&nbsp;to&nbsp;create&nbsp;an&nbsp;unlimited<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimension&nbsp;(a&nbsp;"record"&nbsp;variable).<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IMPORTANT:&nbsp;&nbsp;netCDF&nbsp;and&nbsp;HDF&nbsp;differ&nbsp;in&nbsp;the&nbsp;way<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;UNLIMITED&nbsp;dimension&nbsp;is&nbsp;handled.&nbsp;In&nbsp;netCDF,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;variables&nbsp;of&nbsp;a&nbsp;dataset&nbsp;with&nbsp;an&nbsp;unlimited<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimension&nbsp;grow&nbsp;in&nbsp;sync,&nbsp;eg&nbsp;adding&nbsp;a&nbsp;record&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;variable&nbsp;will&nbsp;implicitly&nbsp;extend&nbsp;other&nbsp;record<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;variables.&nbsp;In&nbsp;HDF,&nbsp;each&nbsp;record&nbsp;variable&nbsp;grows<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;independently&nbsp;of&nbsp;each&nbsp;other.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;<a href="#SDS">SDS</a>&nbsp;instance&nbsp;for&nbsp;the&nbsp;dataset<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDcreate</tt></dd></dl>
+
+<dl><dt><a name="SD-datasets"><strong>datasets</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dictionnary&nbsp;describing&nbsp;all&nbsp;the&nbsp;file&nbsp;datasets.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;Empty&nbsp;dictionnary&nbsp;if&nbsp;no&nbsp;dataset&nbsp;is&nbsp;defined.<br>
+&nbsp;&nbsp;Otherwise,&nbsp;dictionnary&nbsp;whose&nbsp;keys&nbsp;are&nbsp;the&nbsp;file&nbsp;dataset&nbsp;names,<br>
+&nbsp;&nbsp;and&nbsp;values&nbsp;are&nbsp;tuples&nbsp;describing&nbsp;the&nbsp;corresponding&nbsp;datasets.<br>
+&nbsp;&nbsp;Each&nbsp;tuple&nbsp;holds&nbsp;the&nbsp;following&nbsp;elements&nbsp;in&nbsp;order:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-tuple&nbsp;holding&nbsp;the&nbsp;names&nbsp;of&nbsp;the&nbsp;dimensions&nbsp;defining&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataset&nbsp;coordinate&nbsp;axes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-tuple&nbsp;holding&nbsp;the&nbsp;dataset&nbsp;shape&nbsp;(dimension&nbsp;lengths);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;a&nbsp;dimension&nbsp;is&nbsp;unlimited,&nbsp;the&nbsp;reported&nbsp;length&nbsp;corresponds<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;the&nbsp;dimension&nbsp;current&nbsp;length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-dataset&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-dataset&nbsp;index&nbsp;number<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="SD-end"><strong>end</strong></a>(self)</dt><dd><tt>End&nbsp;access&nbsp;to&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;interface&nbsp;and&nbsp;close&nbsp;the&nbsp;HDF&nbsp;file.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;None<br>
+&nbsp;<br>
+The&nbsp;instance&nbsp;should&nbsp;not&nbsp;be&nbsp;used&nbsp;afterwards.<br>
+The&nbsp;'<a href="#SD-end">end</a>()'&nbsp;method&nbsp;is&nbsp;implicitly&nbsp;called&nbsp;when&nbsp;the<br>
+<a href="#SD">SD</a>&nbsp;instance&nbsp;is&nbsp;deleted.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDend</tt></dd></dl>
+
+<dl><dt><a name="SD-info"><strong>info</strong></a>(self)</dt><dd><tt>Retrieve&nbsp;information&nbsp;about&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;interface.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;2-element&nbsp;tuple&nbsp;holding:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;number&nbsp;of&nbsp;datasets&nbsp;inside&nbsp;the&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;number&nbsp;of&nbsp;file&nbsp;attributes<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDfileinfo</tt></dd></dl>
+
+<dl><dt><a name="SD-nametoindex"><strong>nametoindex</strong></a>(self, sds_name)</dt><dd><tt>Return&nbsp;the&nbsp;index&nbsp;number&nbsp;of&nbsp;a&nbsp;dataset&nbsp;given&nbsp;the&nbsp;dataset&nbsp;name.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;sds_name&nbsp;&nbsp;:&nbsp;dataset&nbsp;name<br>
+Returns:<br>
+&nbsp;&nbsp;index&nbsp;number&nbsp;of&nbsp;the&nbsp;dataset<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDnametoindex</tt></dd></dl>
+
+<dl><dt><a name="SD-reftoindex"><strong>reftoindex</strong></a>(self, sds_ref)</dt><dd><tt>Returns&nbsp;the&nbsp;index&nbsp;number&nbsp;of&nbsp;a&nbsp;dataset&nbsp;given&nbsp;the&nbsp;dataset&nbsp;<br>
+reference&nbsp;number.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;sds_ref&nbsp;:&nbsp;dataset&nbsp;reference&nbsp;number<br>
+Returns:<br>
+&nbsp;&nbsp;dataset&nbsp;index&nbsp;number<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDreftoindex</tt></dd></dl>
+
+<dl><dt><a name="SD-select"><strong>select</strong></a>(self, name_or_index)</dt><dd><tt>Locate&nbsp;a&nbsp;dataset.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name_or_index&nbsp;&nbsp;dataset&nbsp;name&nbsp;or&nbsp;index&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;<a href="#SDS">SDS</a>&nbsp;instance&nbsp;for&nbsp;the&nbsp;dataset<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDselect</tt></dd></dl>
+
+<dl><dt><a name="SD-setfillmode"><strong>setfillmode</strong></a>(self, fill_mode)</dt><dd><tt>Set&nbsp;the&nbsp;fill&nbsp;mode&nbsp;for&nbsp;all&nbsp;the&nbsp;datasets&nbsp;in&nbsp;the&nbsp;file.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;fill_mode&nbsp;:&nbsp;fill&nbsp;mode;&nbsp;one&nbsp;of&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.FILL&nbsp;&nbsp;&nbsp;write&nbsp;the&nbsp;fill&nbsp;value&nbsp;to&nbsp;all&nbsp;the&nbsp;datasets<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;file&nbsp;by&nbsp;default<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.NOFILL&nbsp;do&nbsp;not&nbsp;write&nbsp;fill&nbsp;values&nbsp;to&nbsp;all&nbsp;datasets<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;file&nbsp;by&nbsp;default<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;previous&nbsp;fill&nbsp;mode&nbsp;value<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent:&nbsp;SDsetfillmode</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'SD' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SDAttr">class <strong>SDAttr</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="SDAttr-__init__"><strong>__init__</strong></a>(self, obj, index_or_name)</dt><dd><tt>Init&nbsp;an&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;instance.&nbsp;Should&nbsp;not&nbsp;be&nbsp;called&nbsp;directly&nbsp;by<br>
+the&nbsp;user&nbsp;program.&nbsp;An&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;instance&nbsp;must&nbsp;be&nbsp;created&nbsp;through<br>
+the&nbsp;attr()&nbsp;methods&nbsp;of&nbsp;the&nbsp;<a href="#SD">SD</a>,&nbsp;<a href="#SDS">SDS</a>&nbsp;or&nbsp;<a href="#SDim">SDim</a>&nbsp;classes.</tt></dd></dl>
+
+<dl><dt><a name="SDAttr-get"><strong>get</strong></a>(self)</dt><dd><tt>Retrieve&nbsp;the&nbsp;attribute&nbsp;value.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;attribute&nbsp;value(s);&nbsp;a&nbsp;list&nbsp;is&nbsp;returned&nbsp;if&nbsp;the&nbsp;attribute<br>
+&nbsp;&nbsp;is&nbsp;made&nbsp;up&nbsp;of&nbsp;more&nbsp;than&nbsp;one&nbsp;value,&nbsp;except&nbsp;in&nbsp;the&nbsp;case&nbsp;of&nbsp;a&nbsp;<br>
+&nbsp;&nbsp;string-valued&nbsp;attribute&nbsp;(data&nbsp;type&nbsp;<a href="#SDC">SDC</a>.CHAR8)&nbsp;where&nbsp;the&nbsp;<br>
+&nbsp;&nbsp;values&nbsp;are&nbsp;returned&nbsp;as&nbsp;a&nbsp;string<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDreadattr<br>
+&nbsp;<br>
+Attributes&nbsp;can&nbsp;also&nbsp;be&nbsp;read&nbsp;like&nbsp;ordinary&nbsp;python&nbsp;attributes,<br>
+using&nbsp;the&nbsp;dot&nbsp;notation.&nbsp;See&nbsp;"High&nbsp;level&nbsp;attribute&nbsp;access".</tt></dd></dl>
+
+<dl><dt><a name="SDAttr-index"><strong>index</strong></a>(self)</dt><dd><tt>Retrieve&nbsp;the&nbsp;attribute&nbsp;index&nbsp;number.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;attribute&nbsp;index&nbsp;number&nbsp;(starting&nbsp;at&nbsp;0)<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDfindattr</tt></dd></dl>
+
+<dl><dt><a name="SDAttr-info"><strong>info</strong></a>(self)</dt><dd><tt>Retrieve&nbsp;info&nbsp;about&nbsp;the&nbsp;attribute&nbsp;:&nbsp;name,&nbsp;data&nbsp;type&nbsp;and<br>
+number&nbsp;of&nbsp;values.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+&nbsp;<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;3-element&nbsp;tuple&nbsp;holding:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;data&nbsp;type&nbsp;(see&nbsp;constants&nbsp;<a href="#SDC">SDC</a>.xxx)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-number&nbsp;of&nbsp;values&nbsp;in&nbsp;the&nbsp;attribute;&nbsp;for&nbsp;a&nbsp;string-valued<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attribute&nbsp;(data&nbsp;type&nbsp;<a href="#SDC">SDC</a>.CHAR8),&nbsp;the&nbsp;number&nbsp;of&nbsp;values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;corresponds&nbsp;to&nbsp;the&nbsp;string&nbsp;length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDattrinfo</tt></dd></dl>
+
+<dl><dt><a name="SDAttr-set"><strong>set</strong></a>(self, data_type, values)</dt><dd><tt>Update/Create&nbsp;a&nbsp;new&nbsp;attribute&nbsp;and&nbsp;set&nbsp;its&nbsp;value(s).<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;data_type&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;attribute&nbsp;data&nbsp;type&nbsp;(see&nbsp;constants&nbsp;<a href="#SDC">SDC</a>.xxx)<br>
+&nbsp;&nbsp;values&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;attribute&nbsp;value(s);&nbsp;specify&nbsp;a&nbsp;list&nbsp;to&nbsp;create<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;multi-valued&nbsp;attribute;&nbsp;a&nbsp;string&nbsp;valued<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attribute&nbsp;can&nbsp;be&nbsp;created&nbsp;by&nbsp;setting&nbsp;'data_type'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;<a href="#SDC">SDC</a>.CHAR8&nbsp;and&nbsp;'values'&nbsp;to&nbsp;the&nbsp;corresponding<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDsetattr<br>
+&nbsp;<br>
+Attributes&nbsp;can&nbsp;also&nbsp;be&nbsp;written&nbsp;like&nbsp;ordinary&nbsp;python&nbsp;attributes,<br>
+using&nbsp;the&nbsp;dot&nbsp;notation.&nbsp;See&nbsp;"High&nbsp;level&nbsp;attribute&nbsp;access".</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'SDAttr' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SDC">class <strong>SDC</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="#SDC">SDC</a>&nbsp;class&nbsp;holds&nbsp;contants&nbsp;defining&nbsp;opening&nbsp;modes&nbsp;and&nbsp;data&nbsp;types.<br>
+&nbsp;<br>
+file&nbsp;opening&nbsp;modes:<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.CREATE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;create&nbsp;file&nbsp;if&nbsp;non&nbsp;existent<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.READ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;read-only&nbsp;mode<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.TRUNC&nbsp;&nbsp;&nbsp;&nbsp;256&nbsp;&nbsp;&nbsp;&nbsp;truncate&nbsp;file&nbsp;if&nbsp;already&nbsp;exists<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.WRITE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;read-write&nbsp;mode<br>
+&nbsp;<br>
+data&nbsp;types:<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.CHAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;8-bit&nbsp;character<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.CHAR8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;8-bit&nbsp;character<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.UCHAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;8-bit&nbsp;integer<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.UCHAR8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;8-bit&nbsp;integer<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.INT8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20&nbsp;&nbsp;&nbsp;&nbsp;signed&nbsp;8-bit&nbsp;integer<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.UINT8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;21&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;8-bit&nbsp;integer<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.INT16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;22&nbsp;&nbsp;&nbsp;&nbsp;signed&nbsp;16-bit&nbsp;integer<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.UINT16&nbsp;&nbsp;&nbsp;&nbsp;23&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;16-bit&nbsp;intege<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.INT32&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;24&nbsp;&nbsp;&nbsp;&nbsp;signed&nbsp;32-bit&nbsp;integer<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.UINT32&nbsp;&nbsp;&nbsp;&nbsp;25&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;32-bit&nbsp;integer<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.FLOAT32&nbsp;&nbsp;&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;32-bit&nbsp;floating&nbsp;point<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.FLOAT64&nbsp;&nbsp;&nbsp;&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;64-bit&nbsp;floaring&nbsp;point<br>
+&nbsp;<br>
+dataset&nbsp;fill&nbsp;mode:<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.FILL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.NOFILL&nbsp;&nbsp;&nbsp;256<br>
+&nbsp;<br>
+dimension:<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.UNLIMITED&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;dimension&nbsp;can&nbsp;grow&nbsp;dynamically<br>
+&nbsp;<br>
+data&nbsp;compression:<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_NONE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_RLE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_NBIT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SKPHUFF&nbsp;&nbsp;&nbsp;3<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_DEFLATE&nbsp;&nbsp;&nbsp;4<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_EC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_NN&nbsp;&nbsp;&nbsp;&nbsp;32<br>
+&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_RAW&nbsp;&nbsp;128<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Data and other attributes defined here:<br>
+<dl><dt><strong>CHAR</strong> = 4</dl>
+
+<dl><dt><strong>CHAR8</strong> = 4</dl>
+
+<dl><dt><strong>COMP_DEFLATE</strong> = 4</dl>
+
+<dl><dt><strong>COMP_NBIT</strong> = 2</dl>
+
+<dl><dt><strong>COMP_NONE</strong> = 0</dl>
+
+<dl><dt><strong>COMP_RLE</strong> = 1</dl>
+
+<dl><dt><strong>COMP_SKPHUFF</strong> = 3</dl>
+
+<dl><dt><strong>COMP_SZIP</strong> = 5</dl>
+
+<dl><dt><strong>COMP_SZIP_EC</strong> = 4</dl>
+
+<dl><dt><strong>COMP_SZIP_NN</strong> = 32</dl>
+
+<dl><dt><strong>COMP_SZIP_RAW</strong> = 128</dl>
+
+<dl><dt><strong>CREATE</strong> = 4</dl>
+
+<dl><dt><strong>FILL</strong> = 0</dl>
+
+<dl><dt><strong>FLOAT32</strong> = 5</dl>
+
+<dl><dt><strong>FLOAT64</strong> = 6</dl>
+
+<dl><dt><strong>INT16</strong> = 22</dl>
+
+<dl><dt><strong>INT32</strong> = 24</dl>
+
+<dl><dt><strong>INT8</strong> = 20</dl>
+
+<dl><dt><strong>NOFILL</strong> = 256</dl>
+
+<dl><dt><strong>READ</strong> = 1</dl>
+
+<dl><dt><strong>TRUNC</strong> = 256</dl>
+
+<dl><dt><strong>UCHAR</strong> = 3</dl>
+
+<dl><dt><strong>UCHAR8</strong> = 3</dl>
+
+<dl><dt><strong>UINT16</strong> = 23</dl>
+
+<dl><dt><strong>UINT32</strong> = 25</dl>
+
+<dl><dt><strong>UINT8</strong> = 21</dl>
+
+<dl><dt><strong>UNLIMITED</strong> = 0</dl>
+
+<dl><dt><strong>WRITE</strong> = 2</dl>
+
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'SDC' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>equivNumericTypes</strong> = [5, 6, 20, 21, 22, 24, 4, 3, 23, 25]</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SDS">class <strong>SDS</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="#SDS">SDS</a>&nbsp;class&nbsp;implements&nbsp;an&nbsp;HDF&nbsp;dataset&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+To&nbsp;create&nbsp;an&nbsp;<a href="#SDS">SDS</a>&nbsp;instance,&nbsp;call&nbsp;the&nbsp;create()&nbsp;or&nbsp;select()<br>
+methods&nbsp;of&nbsp;the&nbsp;<a href="#SD">SD</a>&nbsp;class.&nbsp;To&nbsp;set&nbsp;attributes&nbsp;on&nbsp;an&nbsp;<a href="#SDS">SDS</a>&nbsp;instance,<br>
+call&nbsp;the&nbsp;<a href="#SDS">SDS</a>.<a href="#SDS-attr">attr</a>()&nbsp;method&nbsp;to&nbsp;create&nbsp;an&nbsp;attribute&nbsp;instance,<br>
+then&nbsp;call&nbsp;the&nbsp;methods&nbsp;of&nbsp;this&nbsp;instance.&nbsp;Attributes&nbsp;can&nbsp;also&nbsp;be<br>
+set&nbsp;using&nbsp;the&nbsp;"dot&nbsp;notation".<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="SDS-__del__"><strong>__del__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="SDS-__getattr__"><strong>__getattr__</strong></a>(self, name)</dt></dl>
+
+<dl><dt><a name="SDS-__getitem__"><strong>__getitem__</strong></a>(self, elem)</dt></dl>
+
+<dl><dt><a name="SDS-__init__"><strong>__init__</strong></a>(self, sd, id)</dt><dd><tt>This&nbsp;constructor&nbsp;should&nbsp;not&nbsp;be&nbsp;called&nbsp;by&nbsp;the&nbsp;user&nbsp;program.<br>
+Call&nbsp;the&nbsp;<a href="#SD">SD</a>.create()&nbsp;and&nbsp;<a href="#SD">SD</a>.select()&nbsp;methods&nbsp;instead.</tt></dd></dl>
+
+<dl><dt><a name="SDS-__len__"><strong>__len__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="SDS-__setattr__"><strong>__setattr__</strong></a>(self, name, value)</dt></dl>
+
+<dl><dt><a name="SDS-__setitem__"><strong>__setitem__</strong></a>(self, elem, data)</dt></dl>
+
+<dl><dt><a name="SDS-attr"><strong>attr</strong></a>(self, name_or_index)</dt><dd><tt>Create&nbsp;an&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;instance&nbsp;representing&nbsp;an&nbsp;<a href="#SDS">SDS</a><br>
+(dataset)&nbsp;attribute.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name_or_index&nbsp;&nbsp;&nbsp;attribute&nbsp;name&nbsp;or&nbsp;index&nbsp;number;&nbsp;if&nbsp;a&nbsp;name&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;given,&nbsp;the&nbsp;attribute&nbsp;may&nbsp;not&nbsp;exist<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;instance&nbsp;for&nbsp;the&nbsp;attribute.&nbsp;Call&nbsp;the&nbsp;methods&nbsp;of&nbsp;this<br>
+&nbsp;&nbsp;class&nbsp;to&nbsp;query,&nbsp;read&nbsp;or&nbsp;set&nbsp;the&nbsp;attribute.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="SDS-attributes"><strong>attributes</strong></a>(self, full<font color="#909090">=0</font>)</dt><dd><tt>Return&nbsp;a&nbsp;dictionnary&nbsp;describing&nbsp;every&nbsp;attribute&nbsp;defined<br>
+on&nbsp;the&nbsp;dataset.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;full&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true&nbsp;to&nbsp;get&nbsp;complete&nbsp;info&nbsp;about&nbsp;each&nbsp;attribute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;false&nbsp;to&nbsp;report&nbsp;only&nbsp;each&nbsp;attribute&nbsp;value<br>
+Returns:<br>
+&nbsp;&nbsp;Empty&nbsp;dictionnary&nbsp;if&nbsp;no&nbsp;attribute&nbsp;defined.<br>
+&nbsp;&nbsp;Otherwise,&nbsp;dictionnary&nbsp;where&nbsp;each&nbsp;key&nbsp;is&nbsp;the&nbsp;name&nbsp;of&nbsp;a<br>
+&nbsp;&nbsp;dataset&nbsp;attribute.&nbsp;If&nbsp;parameter&nbsp;'full'&nbsp;is&nbsp;false,<br>
+&nbsp;&nbsp;key&nbsp;value&nbsp;is&nbsp;the&nbsp;attribute&nbsp;value.&nbsp;If&nbsp;'full'&nbsp;is&nbsp;true,<br>
+&nbsp;&nbsp;key&nbsp;value&nbsp;is&nbsp;a&nbsp;tuple&nbsp;with&nbsp;the&nbsp;following&nbsp;elements:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;attribute&nbsp;index&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;attribute&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;attribute&nbsp;length<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="SDS-checkempty"><strong>checkempty</strong></a>(self)</dt><dd><tt>Determine&nbsp;whether&nbsp;the&nbsp;dataset&nbsp;is&nbsp;empty.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;True(1)&nbsp;if&nbsp;dataset&nbsp;is&nbsp;empty,&nbsp;False(0)&nbsp;if&nbsp;not<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDcheckempty</tt></dd></dl>
+
+<dl><dt><a name="SDS-dim"><strong>dim</strong></a>(self, dim_index)</dt><dd><tt>Get&nbsp;an&nbsp;<a href="#SDim">SDim</a>&nbsp;instance&nbsp;given&nbsp;a&nbsp;dimension&nbsp;index&nbsp;number.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;dim_index&nbsp;index&nbsp;number&nbsp;of&nbsp;the&nbsp;dimension&nbsp;(numbering&nbsp;starts&nbsp;at&nbsp;0)<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDgetdimid</tt></dd></dl>
+
+<dl><dt><a name="SDS-dimensions"><strong>dimensions</strong></a>(self, full<font color="#909090">=0</font>)</dt><dd><tt>Return&nbsp;a&nbsp;dictionnary&nbsp;describing&nbsp;every&nbsp;dataset&nbsp;dimension.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;full&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true&nbsp;to&nbsp;get&nbsp;complete&nbsp;info&nbsp;about&nbsp;each&nbsp;dimension<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;false&nbsp;to&nbsp;report&nbsp;only&nbsp;each&nbsp;dimension&nbsp;length<br>
+Returns:<br>
+&nbsp;&nbsp;Dictionnary&nbsp;where&nbsp;each&nbsp;key&nbsp;is&nbsp;a&nbsp;dimension&nbsp;name.&nbsp;If&nbsp;no&nbsp;name<br>
+&nbsp;&nbsp;has&nbsp;been&nbsp;given&nbsp;to&nbsp;the&nbsp;dimension,&nbsp;the&nbsp;key&nbsp;is&nbsp;set&nbsp;to<br>
+&nbsp;&nbsp;'fakeDimx'&nbsp;where&nbsp;'x'&nbsp;is&nbsp;the&nbsp;dimension&nbsp;index&nbsp;number.<br>
+&nbsp;&nbsp;If&nbsp;parameter&nbsp;'full'&nbsp;is&nbsp;false,&nbsp;key&nbsp;value&nbsp;is&nbsp;the&nbsp;dimension<br>
+&nbsp;&nbsp;length.&nbsp;If&nbsp;'full'&nbsp;is&nbsp;true,&nbsp;key&nbsp;value&nbsp;is&nbsp;a&nbsp;5-element&nbsp;tuple<br>
+&nbsp;&nbsp;with&nbsp;the&nbsp;following&nbsp;elements:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;dimension&nbsp;length;&nbsp;for&nbsp;an&nbsp;unlimited&nbsp;dimension,&nbsp;the&nbsp;reported<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;length&nbsp;is&nbsp;the&nbsp;current&nbsp;dimension&nbsp;length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;dimension&nbsp;index&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;1&nbsp;if&nbsp;the&nbsp;dimension&nbsp;is&nbsp;unlimited,&nbsp;0&nbsp;otherwise<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;dimension&nbsp;scale&nbsp;type,&nbsp;or&nbsp;0&nbsp;if&nbsp;no&nbsp;scale&nbsp;is&nbsp;defined&nbsp;for<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;dimension<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;number&nbsp;of&nbsp;attributes&nbsp;defined&nbsp;on&nbsp;the&nbsp;dimension<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="SDS-endaccess"><strong>endaccess</strong></a>(self)</dt><dd><tt>Terminates&nbsp;access&nbsp;to&nbsp;the&nbsp;<a href="#SDS">SDS</a>.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;None.<br>
+&nbsp;<br>
+The&nbsp;<a href="#SDS">SDS</a>&nbsp;instance&nbsp;should&nbsp;not&nbsp;be&nbsp;used&nbsp;afterwards.<br>
+The&nbsp;'<a href="#SDS-endaccess">endaccess</a>()'&nbsp;method&nbsp;is&nbsp;implicitly&nbsp;called&nbsp;when<br>
+the&nbsp;<a href="#SDS">SDS</a>&nbsp;instance&nbsp;is&nbsp;deleted.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDendaccess</tt></dd></dl>
+
+<dl><dt><a name="SDS-get"><strong>get</strong></a>(self, start<font color="#909090">=None</font>, count<font color="#909090">=None</font>, stride<font color="#909090">=None</font>)</dt><dd><tt>Read&nbsp;data&nbsp;from&nbsp;the&nbsp;dataset.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;start&nbsp;&nbsp;&nbsp;:&nbsp;indices&nbsp;where&nbsp;to&nbsp;start&nbsp;reading&nbsp;in&nbsp;the&nbsp;data&nbsp;array;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default&nbsp;to&nbsp;0&nbsp;on&nbsp;all&nbsp;dimensions<br>
+&nbsp;&nbsp;count&nbsp;&nbsp;&nbsp;:&nbsp;number&nbsp;of&nbsp;values&nbsp;to&nbsp;read&nbsp;along&nbsp;each&nbsp;dimension;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default&nbsp;to&nbsp;the&nbsp;current&nbsp;length&nbsp;of&nbsp;all&nbsp;dimensions<br>
+&nbsp;&nbsp;stride&nbsp;&nbsp;:&nbsp;sampling&nbsp;interval&nbsp;along&nbsp;each&nbsp;dimension;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default&nbsp;to&nbsp;1&nbsp;on&nbsp;all&nbsp;dimensions<br>
+&nbsp;<br>
+&nbsp;&nbsp;For&nbsp;n-dimensional&nbsp;datasets,&nbsp;those&nbsp;3&nbsp;parameters&nbsp;are&nbsp;entered&nbsp;<br>
+&nbsp;&nbsp;using&nbsp;lists.&nbsp;For&nbsp;one-dimensional&nbsp;datasets,&nbsp;integers<br>
+&nbsp;&nbsp;can&nbsp;also&nbsp;be&nbsp;used.<br>
+&nbsp;<br>
+&nbsp;&nbsp;Note&nbsp;that,&nbsp;to&nbsp;read&nbsp;the&nbsp;whole&nbsp;dataset&nbsp;contents,&nbsp;one&nbsp;should<br>
+&nbsp;&nbsp;simply&nbsp;call&nbsp;the&nbsp;method&nbsp;with&nbsp;no&nbsp;argument.<br>
+&nbsp;<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;Numeric&nbsp;array&nbsp;initialized&nbsp;with&nbsp;the&nbsp;data.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDreaddata<br>
+&nbsp;<br>
+The&nbsp;dataset&nbsp;can&nbsp;also&nbsp;be&nbsp;read&nbsp;using&nbsp;the&nbsp;familiar&nbsp;indexing&nbsp;and<br>
+slicing&nbsp;notation,&nbsp;like&nbsp;ordinary&nbsp;python&nbsp;sequences.<br>
+See&nbsp;"High&nbsp;level&nbsp;variable&nbsp;access".</tt></dd></dl>
+
+<dl><dt><a name="SDS-getcal"><strong>getcal</strong></a>(self)</dt><dd><tt>Retrieve&nbsp;the&nbsp;<a href="#SDS">SDS</a>&nbsp;calibration&nbsp;coefficients.&nbsp;<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;5-element&nbsp;tuple&nbsp;holding&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-cal:&nbsp;calibration&nbsp;factor&nbsp;(attribute&nbsp;'scale_factor')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-cal_error&nbsp;:&nbsp;calibration&nbsp;factor&nbsp;error<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(attribute&nbsp;'scale_factor_err')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-offset:&nbsp;calibration&nbsp;offset&nbsp;(attribute&nbsp;'add_offset')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-offset_err&nbsp;:&nbsp;offset&nbsp;error&nbsp;(attribute&nbsp;'add_offset_err')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-data_type&nbsp;:&nbsp;type&nbsp;of&nbsp;the&nbsp;data&nbsp;resulting&nbsp;from&nbsp;applying<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;calibration&nbsp;formula&nbsp;to&nbsp;the&nbsp;dataset&nbsp;values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(attribute&nbsp;'calibrated_nt')<br>
+&nbsp;<br>
+An&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;no&nbsp;calibration&nbsp;data&nbsp;are&nbsp;defined.<br>
+&nbsp;<br>
+Original&nbsp;dataset&nbsp;values&nbsp;'orival'&nbsp;are&nbsp;converted&nbsp;to&nbsp;calibrated<br>
+values&nbsp;'calval'&nbsp;through&nbsp;the&nbsp;formula&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;calval&nbsp;=&nbsp;cal&nbsp;*&nbsp;(orival&nbsp;-&nbsp;offset)<br>
+&nbsp;<br>
+The&nbsp;calibration&nbsp;coefficients&nbsp;are&nbsp;part&nbsp;of&nbsp;the&nbsp;so-called<br>
+"standard"&nbsp;<a href="#SDS">SDS</a>&nbsp;attributes.&nbsp;The&nbsp;values&nbsp;inside&nbsp;the&nbsp;tuple&nbsp;returned&nbsp;<br>
+by&nbsp;'getcal'&nbsp;are&nbsp;those&nbsp;of&nbsp;the&nbsp;following&nbsp;attributes,&nbsp;in&nbsp;order&nbsp;:<br>
+&nbsp;&nbsp;scale_factor,&nbsp;scale_factor_err,&nbsp;add_offset,&nbsp;add_offset_err,<br>
+&nbsp;&nbsp;calibrated_nt<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent:&nbsp;SDgetcal()</tt></dd></dl>
+
+<dl><dt><a name="SDS-getcompress"><strong>getcompress</strong></a>(self)</dt><dd><tt>Retrieves&nbsp;info&nbsp;about&nbsp;dataset&nbsp;compression&nbsp;type&nbsp;and&nbsp;mode.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;tuple&nbsp;holding&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-compression&nbsp;type&nbsp;(one&nbsp;of&nbsp;the&nbsp;<a href="#SDC">SDC</a>.COMP_xxx&nbsp;constants)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-one&nbsp;one&nbsp;more&nbsp;auxiliary&nbsp;values,&nbsp;depending&nbsp;on&nbsp;the&nbsp;compression&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;COMP_SKPHUFF&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;value&nbsp;&nbsp;:&nbsp;skip&nbsp;size<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;COMP_DEFLATE&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;value&nbsp;&nbsp;:&nbsp;level&nbsp;(1&nbsp;to&nbsp;9)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;COMP_SZIP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5&nbsp;values&nbsp;:&nbsp;options&nbsp;mask,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pixels&nbsp;per&nbsp;block&nbsp;(2&nbsp;to&nbsp;32)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pixels&nbsp;per&nbsp;scanline,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bits&nbsp;per&nbsp;pixel&nbsp;(number&nbsp;of&nbsp;bits&nbsp;in&nbsp;the&nbsp;<a href="#SDS">SDS</a>&nbsp;datatype)&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pixels&nbsp;(number&nbsp;of&nbsp;elements&nbsp;in&nbsp;the&nbsp;<a href="#SDS">SDS</a>)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Note:&nbsp;in&nbsp;the&nbsp;context&nbsp;of&nbsp;an&nbsp;<a href="#SDS">SDS</a>,&nbsp;the&nbsp;word&nbsp;"pixel"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;should&nbsp;really&nbsp;be&nbsp;understood&nbsp;as&nbsp;meaning&nbsp;"data&nbsp;element",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eg&nbsp;a&nbsp;cell&nbsp;value&nbsp;inside&nbsp;a&nbsp;multidimensional&nbsp;grid.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Test&nbsp;the&nbsp;options&nbsp;mask&nbsp;against&nbsp;constants&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_NN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_EC,&nbsp;eg&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;optionMask&nbsp;&amp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_EC:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"EC&nbsp;encoding&nbsp;scheme&nbsp;used"<br>
+&nbsp;<br>
+An&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;dataset&nbsp;is&nbsp;not&nbsp;compressed.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent:&nbsp;SDgetcompress</tt></dd></dl>
+
+<dl><dt><a name="SDS-getdatastrs"><strong>getdatastrs</strong></a>(self)</dt><dd><tt>Retrieve&nbsp;the&nbsp;dataset&nbsp;standard&nbsp;string&nbsp;attributes.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;4-element&nbsp;tuple&nbsp;holding&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-dataset&nbsp;label&nbsp;string&nbsp;(attribute&nbsp;'long_name')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-dataset&nbsp;unit&nbsp;(attribute&nbsp;'units')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-dataset&nbsp;output&nbsp;format&nbsp;(attribute&nbsp;'format')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-dataset&nbsp;coordinate&nbsp;system&nbsp;(attribute&nbsp;'coordsys')<br>
+&nbsp;<br>
+The&nbsp;values&nbsp;returned&nbsp;by&nbsp;'getdatastrs'&nbsp;are&nbsp;part&nbsp;of&nbsp;the<br>
+so-called&nbsp;"standard"&nbsp;<a href="#SDS">SDS</a>&nbsp;attributes.&nbsp;&nbsp;Those&nbsp;4&nbsp;values&nbsp;<br>
+correspond&nbsp;respectively&nbsp;to&nbsp;the&nbsp;following&nbsp;attributes:&nbsp;<br>
+&nbsp;&nbsp;long_name,&nbsp;units,&nbsp;format,&nbsp;coordsys&nbsp;.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent:&nbsp;SDgetdatastrs</tt></dd></dl>
+
+<dl><dt><a name="SDS-getfillvalue"><strong>getfillvalue</strong></a>(self)</dt><dd><tt>Retrieve&nbsp;the&nbsp;dataset&nbsp;fill&nbsp;value.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;dataset&nbsp;fill&nbsp;value&nbsp;(attribute&nbsp;'_FillValue')<br>
+&nbsp;<br>
+An&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;the&nbsp;fill&nbsp;value&nbsp;is&nbsp;not&nbsp;set.<br>
+&nbsp;<br>
+The&nbsp;fill&nbsp;value&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;so-called&nbsp;"standard"&nbsp;<a href="#SDS">SDS</a><br>
+attributes,&nbsp;and&nbsp;corresponds&nbsp;to&nbsp;the&nbsp;following&nbsp;attribute&nbsp;:<br>
+&nbsp;&nbsp;_FillValue<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent:&nbsp;SDgetfillvalue</tt></dd></dl>
+
+<dl><dt><a name="SDS-getrange"><strong>getrange</strong></a>(self)</dt><dd><tt>Retrieve&nbsp;the&nbsp;dataset&nbsp;min&nbsp;and&nbsp;max&nbsp;values.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;(min,&nbsp;max)&nbsp;tuple&nbsp;(attribute&nbsp;'valid_range')<br>
+&nbsp;<br>
+&nbsp;&nbsp;Note&nbsp;that&nbsp;those&nbsp;are&nbsp;the&nbsp;values&nbsp;as&nbsp;stored<br>
+&nbsp;&nbsp;by&nbsp;the&nbsp;'setrange'&nbsp;method.&nbsp;'getrange'&nbsp;does&nbsp;*NOT*&nbsp;compute&nbsp;the<br>
+&nbsp;&nbsp;min&nbsp;and&nbsp;max&nbsp;from&nbsp;the&nbsp;current&nbsp;dataset&nbsp;contents.<br>
+&nbsp;<br>
+An&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;the&nbsp;range&nbsp;is&nbsp;not&nbsp;set.<br>
+&nbsp;<br>
+The&nbsp;range&nbsp;returned&nbsp;by&nbsp;'getrange'&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;so-called&nbsp;<br>
+"standard"&nbsp;<a href="#SDS">SDS</a>&nbsp;attributes.&nbsp;It&nbsp;corresponds&nbsp;to&nbsp;the&nbsp;following<br>
+attribute&nbsp;:<br>
+&nbsp;&nbsp;valid_range<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent:&nbsp;SDgetrange</tt></dd></dl>
+
+<dl><dt><a name="SDS-info"><strong>info</strong></a>(self)</dt><dd><tt>Retrieves&nbsp;information&nbsp;about&nbsp;the&nbsp;dataset.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;5-element&nbsp;tuple&nbsp;holding&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-dataset&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-dataset&nbsp;rank&nbsp;(number&nbsp;of&nbsp;dimensions)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-dataset&nbsp;shape,&nbsp;that&nbsp;is&nbsp;a&nbsp;list&nbsp;giving&nbsp;the&nbsp;length&nbsp;of&nbsp;each<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataset&nbsp;dimension;&nbsp;if&nbsp;the&nbsp;first&nbsp;dimension&nbsp;is&nbsp;unlimited,&nbsp;then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;first&nbsp;value&nbsp;of&nbsp;the&nbsp;list&nbsp;gives&nbsp;the&nbsp;current&nbsp;length&nbsp;of&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unlimited&nbsp;dimension<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-data&nbsp;type&nbsp;(one&nbsp;of&nbsp;the&nbsp;<a href="#SDC">SDC</a>.xxx&nbsp;values)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-number&nbsp;of&nbsp;attributes&nbsp;defined&nbsp;for&nbsp;the&nbsp;dataset<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDgetinfo</tt></dd></dl>
+
+<dl><dt><a name="SDS-iscoordvar"><strong>iscoordvar</strong></a>(self)</dt><dd><tt>Determine&nbsp;whether&nbsp;the&nbsp;dataset&nbsp;is&nbsp;a&nbsp;coordinate&nbsp;variable&nbsp;<br>
+(holds&nbsp;a&nbsp;dimension&nbsp;scale).&nbsp;A&nbsp;coordinate&nbsp;variable&nbsp;is&nbsp;created<br>
+when&nbsp;a&nbsp;dimension&nbsp;is&nbsp;assigned&nbsp;a&nbsp;set&nbsp;of&nbsp;scale&nbsp;values.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;True(1)&nbsp;if&nbsp;the&nbsp;dataset&nbsp;represents&nbsp;a&nbsp;coordinate&nbsp;variable,&nbsp;<br>
+&nbsp;&nbsp;False(0)&nbsp;if&nbsp;not<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDiscoordvar</tt></dd></dl>
+
+<dl><dt><a name="SDS-isrecord"><strong>isrecord</strong></a>(self)</dt><dd><tt>Determines&nbsp;whether&nbsp;the&nbsp;dataset&nbsp;is&nbsp;appendable&nbsp;<br>
+(contains&nbsp;an&nbsp;unlimited&nbsp;dimension).&nbsp;Note&nbsp;that&nbsp;if&nbsp;true,&nbsp;then<br>
+the&nbsp;unlimited&nbsp;dimension&nbsp;is&nbsp;always&nbsp;dimension&nbsp;number&nbsp;0.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;True(1)&nbsp;if&nbsp;the&nbsp;dataset&nbsp;is&nbsp;appendable,&nbsp;False(0)&nbsp;if&nbsp;not.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDisrecord</tt></dd></dl>
+
+<dl><dt><a name="SDS-ref"><strong>ref</strong></a>(self)</dt><dd><tt>Get&nbsp;the&nbsp;reference&nbsp;number&nbsp;of&nbsp;the&nbsp;dataset.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;dataset&nbsp;reference&nbsp;number<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDidtoref</tt></dd></dl>
+
+<dl><dt><a name="SDS-set"><strong>set</strong></a>(self, data, start<font color="#909090">=None</font>, count<font color="#909090">=None</font>, stride<font color="#909090">=None</font>)</dt><dd><tt>Write&nbsp;data&nbsp;to&nbsp;the&nbsp;dataset.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;data&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;array&nbsp;of&nbsp;data&nbsp;to&nbsp;write;&nbsp;can&nbsp;be&nbsp;given&nbsp;as&nbsp;a&nbsp;Numeric<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array,&nbsp;or&nbsp;as&nbsp;Python&nbsp;sequence&nbsp;(whose&nbsp;elements&nbsp;can&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;imbricated&nbsp;sequences)<br>
+&nbsp;&nbsp;start&nbsp;&nbsp;&nbsp;:&nbsp;indices&nbsp;where&nbsp;to&nbsp;start&nbsp;writing&nbsp;in&nbsp;the&nbsp;dataset;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default&nbsp;to&nbsp;0&nbsp;on&nbsp;all&nbsp;dimensions<br>
+&nbsp;&nbsp;count&nbsp;&nbsp;&nbsp;:&nbsp;number&nbsp;of&nbsp;values&nbsp;to&nbsp;write&nbsp;along&nbsp;each&nbsp;dimension;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default&nbsp;to&nbsp;the&nbsp;current&nbsp;length&nbsp;of&nbsp;dataset&nbsp;dimensions<br>
+&nbsp;&nbsp;stride&nbsp;&nbsp;:&nbsp;sampling&nbsp;interval&nbsp;along&nbsp;each&nbsp;dimension;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default&nbsp;to&nbsp;1&nbsp;on&nbsp;all&nbsp;dimensions<br>
+&nbsp;<br>
+&nbsp;&nbsp;For&nbsp;n-dimensional&nbsp;datasets,&nbsp;those&nbsp;3&nbsp;parameters&nbsp;are&nbsp;entered&nbsp;<br>
+&nbsp;&nbsp;using&nbsp;lists.&nbsp;For&nbsp;one-dimensional&nbsp;datasets,&nbsp;integers<br>
+&nbsp;&nbsp;can&nbsp;also&nbsp;be&nbsp;used.<br>
+&nbsp;<br>
+&nbsp;&nbsp;Note&nbsp;that,&nbsp;to&nbsp;write&nbsp;the&nbsp;whole&nbsp;dataset&nbsp;at&nbsp;once,&nbsp;one&nbsp;has&nbsp;simply<br>
+&nbsp;&nbsp;to&nbsp;call&nbsp;the&nbsp;method&nbsp;with&nbsp;the&nbsp;dataset&nbsp;values&nbsp;in&nbsp;parameter<br>
+&nbsp;&nbsp;'data',&nbsp;omitting&nbsp;all&nbsp;other&nbsp;parameters.<br>
+&nbsp;<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;None.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDwritedata<br>
+&nbsp;<br>
+The&nbsp;dataset&nbsp;can&nbsp;also&nbsp;be&nbsp;written&nbsp;using&nbsp;the&nbsp;familiar&nbsp;indexing&nbsp;and<br>
+slicing&nbsp;notation,&nbsp;like&nbsp;ordinary&nbsp;python&nbsp;sequences.<br>
+See&nbsp;"High&nbsp;level&nbsp;variable&nbsp;access".</tt></dd></dl>
+
+<dl><dt><a name="SDS-setcal"><strong>setcal</strong></a>(self, cal, cal_error, offset, offset_err, data_type)</dt><dd><tt>Set&nbsp;the&nbsp;dataset&nbsp;calibration&nbsp;coefficients.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;cal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;calibraton&nbsp;factor&nbsp;(attribute&nbsp;'scale_factor')<br>
+&nbsp;&nbsp;cal_error&nbsp;&nbsp;&nbsp;calibration&nbsp;factor&nbsp;error<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(attribute&nbsp;'scale_factor_err')<br>
+&nbsp;&nbsp;offset&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;offset&nbsp;value&nbsp;(attribute&nbsp;'add_offset')<br>
+&nbsp;&nbsp;offset_err&nbsp;&nbsp;offset&nbsp;error&nbsp;(attribute&nbsp;'add_offset_err')<br>
+&nbsp;&nbsp;data_type&nbsp;&nbsp;&nbsp;data&nbsp;type&nbsp;of&nbsp;the&nbsp;values&nbsp;resulting&nbsp;from&nbsp;applying&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;calibration&nbsp;formula&nbsp;to&nbsp;the&nbsp;dataset&nbsp;values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(one&nbsp;of&nbsp;the&nbsp;<a href="#SDC">SDC</a>.xxx&nbsp;constants)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(attribute&nbsp;'calibrated_nt')<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+See&nbsp;method&nbsp;'getcal'&nbsp;for&nbsp;the&nbsp;definition&nbsp;of&nbsp;the&nbsp;calibration<br>
+formula.<br>
+&nbsp;<br>
+Calibration&nbsp;coefficients&nbsp;are&nbsp;part&nbsp;of&nbsp;the&nbsp;so-called&nbsp;standard<br>
+<a href="#SDS">SDS</a>&nbsp;attributes.&nbsp;Calling&nbsp;'setcal'&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;setting&nbsp;<br>
+the&nbsp;following&nbsp;attributes,&nbsp;which&nbsp;correspond&nbsp;to&nbsp;the&nbsp;method&nbsp;<br>
+parameters,&nbsp;in&nbsp;order:&nbsp;<br>
+&nbsp;&nbsp;scale_factor,&nbsp;scale_factor_err,&nbsp;add_offset,&nbsp;add_offset_err,<br>
+&nbsp;&nbsp;calibrated_nt<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent:&nbsp;SDsetcal</tt></dd></dl>
+
+<dl><dt><a name="SDS-setcompress"><strong>setcompress</strong></a>(self, comp_type, value<font color="#909090">=0</font>, v2<font color="#909090">=0</font>)</dt><dd><tt>Compresses&nbsp;the&nbsp;dataset&nbsp;using&nbsp;a&nbsp;specified&nbsp;compression&nbsp;method.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;comp_type&nbsp;&nbsp;&nbsp;&nbsp;compression&nbsp;type,&nbsp;identified&nbsp;by&nbsp;one&nbsp;of&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_xxx&nbsp;constants<br>
+&nbsp;&nbsp;value,v2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auxiliary&nbsp;value(s)&nbsp;needed&nbsp;by&nbsp;some&nbsp;compression&nbsp;types<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SKPHUFF&nbsp;&nbsp;&nbsp;value=data&nbsp;size,&nbsp;v2&nbsp;is&nbsp;ignored<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_DEFLATE&nbsp;&nbsp;&nbsp;value=deflate&nbsp;level&nbsp;(1&nbsp;to&nbsp;9),&nbsp;v2&nbsp;is&nbsp;ignored<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value=encoding&nbsp;scheme&nbsp;(<a href="#SDC">SDC</a>.COMP_SZIP_EC&nbsp;or<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SDC">SDC</a>.COMP_SZIP_NN),&nbsp;v2=pixels&nbsp;per&nbsp;block&nbsp;(2&nbsp;to&nbsp;32)<br>
+Returns:&nbsp;None<br>
+&nbsp;<br>
+<a href="#SDC">SDC</a>.COMP_DEFLATE&nbsp;applies&nbsp;the&nbsp;GZIP&nbsp;compression&nbsp;to&nbsp;the&nbsp;dataset,<br>
+and&nbsp;the&nbsp;value&nbsp;varies&nbsp;from&nbsp;1&nbsp;to&nbsp;9,&nbsp;according&nbsp;to&nbsp;the&nbsp;level&nbsp;of<br>
+compression&nbsp;desired.<br>
+&nbsp;<br>
+<a href="#SDC">SDC</a>.COMP_SZIP&nbsp;compresses&nbsp;the&nbsp;dataset&nbsp;using&nbsp;the&nbsp;SZIP&nbsp;algorithm.&nbsp;See&nbsp;the&nbsp;HDF&nbsp;User's&nbsp;Guide<br>
+for&nbsp;details&nbsp;about&nbsp;the&nbsp;encoding&nbsp;scheme&nbsp;and&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;per&nbsp;block.&nbsp;SZIP&nbsp;is&nbsp;new<br>
+with&nbsp;HDF&nbsp;4.2.<br>
+&nbsp;<br>
+'setcompress'&nbsp;must&nbsp;be&nbsp;called&nbsp;before&nbsp;writing&nbsp;to&nbsp;the&nbsp;dataset.<br>
+The&nbsp;dataset&nbsp;must&nbsp;be&nbsp;written&nbsp;all&nbsp;at&nbsp;once,&nbsp;unless&nbsp;it&nbsp;is&nbsp;<br>
+appendable&nbsp;(has&nbsp;an&nbsp;unlimited&nbsp;dimension).&nbsp;Updating&nbsp;the&nbsp;dataset<br>
+in&nbsp;not&nbsp;allowed.&nbsp;Refer&nbsp;to&nbsp;the&nbsp;HDF&nbsp;user's&nbsp;guide&nbsp;for&nbsp;more&nbsp;details&nbsp;<br>
+on&nbsp;how&nbsp;to&nbsp;use&nbsp;data&nbsp;compression.&nbsp;<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent:&nbsp;SDsetcompress</tt></dd></dl>
+
+<dl><dt><a name="SDS-setdatastrs"><strong>setdatastrs</strong></a>(self, label, unit, format, coord_sys)</dt><dd><tt>Set&nbsp;the&nbsp;dataset&nbsp;standard&nbsp;string&nbsp;type&nbsp;attributes.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;label&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataset&nbsp;label&nbsp;(attribute&nbsp;'long_name')<br>
+&nbsp;&nbsp;unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataset&nbsp;unit&nbsp;(attribute&nbsp;'units')<br>
+&nbsp;&nbsp;format&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataset&nbsp;format&nbsp;(attribute&nbsp;'format')<br>
+&nbsp;&nbsp;coord_sys&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataset&nbsp;coordinate&nbsp;system&nbsp;(attribute&nbsp;'coordsys')<br>
+Returns:<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+Those&nbsp;strings&nbsp;are&nbsp;part&nbsp;of&nbsp;the&nbsp;so-called&nbsp;standard<br>
+<a href="#SDS">SDS</a>&nbsp;attributes.&nbsp;Calling&nbsp;'setdatastrs'&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;setting&nbsp;<br>
+the&nbsp;following&nbsp;attributes,&nbsp;which&nbsp;correspond&nbsp;to&nbsp;the&nbsp;method&nbsp;<br>
+parameters,&nbsp;in&nbsp;order:&nbsp;<br>
+&nbsp;&nbsp;long_name,&nbsp;units,&nbsp;format,&nbsp;coordsys<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent:&nbsp;SDsetdatastrs</tt></dd></dl>
+
+<dl><dt><a name="SDS-setexternalfile"><strong>setexternalfile</strong></a>(self, filename, offset<font color="#909090">=0</font>)</dt><dd><tt>Store&nbsp;the&nbsp;dataset&nbsp;data&nbsp;in&nbsp;an&nbsp;external&nbsp;file.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;filename&nbsp;&nbsp;&nbsp;&nbsp;external&nbsp;file&nbsp;name<br>
+&nbsp;&nbsp;offset&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;offset&nbsp;in&nbsp;bytes&nbsp;where&nbsp;to&nbsp;start&nbsp;writing&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;external&nbsp;file<br>
+Returns:&nbsp;None<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDsetexternalfile</tt></dd></dl>
+
+<dl><dt><a name="SDS-setfillvalue"><strong>setfillvalue</strong></a>(self, fill_val)</dt><dd><tt>Set&nbsp;the&nbsp;dataset&nbsp;fill&nbsp;value.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;fill_val&nbsp;&nbsp;&nbsp;dataset&nbsp;fill&nbsp;value&nbsp;(attribute&nbsp;'_FillValue')<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+The&nbsp;fill&nbsp;value&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;so-called&nbsp;"standard"&nbsp;<a href="#SDS">SDS</a><br>
+attributes.&nbsp;Calling&nbsp;'setfillvalue'&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;setting<br>
+the&nbsp;following&nbsp;attribute:<br>
+&nbsp;&nbsp;_FillValue<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent:&nbsp;SDsetfillvalue</tt></dd></dl>
+
+<dl><dt><a name="SDS-setrange"><strong>setrange</strong></a>(self, min, max)</dt><dd><tt>Set&nbsp;the&nbsp;dataset&nbsp;min&nbsp;and&nbsp;max&nbsp;values.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;min&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataset&nbsp;minimum&nbsp;value&nbsp;(attribute&nbsp;'valid_range')<br>
+&nbsp;&nbsp;max&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataset&nbsp;maximum&nbsp;value&nbsp;(attribute&nbsp;'valid_range')<br>
+&nbsp;<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+The&nbsp;data&nbsp;range&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;so-called&nbsp;"standard"&nbsp;<a href="#SDS">SDS</a><br>
+attributes.&nbsp;Calling&nbsp;method&nbsp;'setrange'&nbsp;is&nbsp;equivalent&nbsp;to<br>
+setting&nbsp;the&nbsp;following&nbsp;attribute&nbsp;with&nbsp;a&nbsp;2-element&nbsp;[min,max]<br>
+array&nbsp;:<br>
+&nbsp;&nbsp;valid_range<br>
+&nbsp;&nbsp;<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent:&nbsp;SDsetrange</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'SDS' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SDim">class <strong>SDim</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="#SDim">SDim</a>&nbsp;class&nbsp;implements&nbsp;a&nbsp;dimension&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+There&nbsp;can&nbsp;be&nbsp;one&nbsp;dimension&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;for&nbsp;each&nbsp;dataset&nbsp;dimension.<br>
+To&nbsp;create&nbsp;an&nbsp;<a href="#SDim">SDim</a>&nbsp;instance,&nbsp;call&nbsp;the&nbsp;dim()&nbsp;method&nbsp;of&nbsp;an&nbsp;<a href="#SDS">SDS</a>&nbsp;class<br>
+instance.&nbsp;To&nbsp;set&nbsp;attributes&nbsp;on&nbsp;an&nbsp;<a href="#SDim">SDim</a>&nbsp;instance,&nbsp;call&nbsp;the<br>
+<a href="#SDim">SDim</a>.<a href="#SDim-attr">attr</a>()&nbsp;method&nbsp;to&nbsp;create&nbsp;an&nbsp;attribute&nbsp;instance,&nbsp;then&nbsp;call&nbsp;the<br>
+methods&nbsp;of&nbsp;this&nbsp;instance.&nbsp;&nbsp;Attributes&nbsp;can&nbsp;also&nbsp;be&nbsp;set&nbsp;using&nbsp;the<br>
+"dot&nbsp;notation".<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="SDim-__getattr__"><strong>__getattr__</strong></a>(self, name)</dt></dl>
+
+<dl><dt><a name="SDim-__init__"><strong>__init__</strong></a>(self, sds, id, index)</dt><dd><tt>Init&nbsp;an&nbsp;<a href="#SDim">SDim</a>&nbsp;instance.&nbsp;This&nbsp;method&nbsp;should&nbsp;not&nbsp;be&nbsp;called<br>
+directly&nbsp;by&nbsp;the&nbsp;user&nbsp;program.&nbsp;To&nbsp;create&nbsp;an&nbsp;<a href="#SDim">SDim</a>&nbsp;instance,<br>
+call&nbsp;the&nbsp;<a href="#SDS">SDS</a>.dim()&nbsp;method.</tt></dd></dl>
+
+<dl><dt><a name="SDim-__setattr__"><strong>__setattr__</strong></a>(self, name, value)</dt></dl>
+
+<dl><dt><a name="SDim-attr"><strong>attr</strong></a>(self, name_or_index)</dt><dd><tt>Create&nbsp;an&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;instance&nbsp;representing&nbsp;an&nbsp;<a href="#SDim">SDim</a><br>
+(dimension)&nbsp;attribute.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name_or_index&nbsp;&nbsp;&nbsp;attribute&nbsp;name&nbsp;or&nbsp;index&nbsp;number;&nbsp;if&nbsp;a&nbsp;name&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;given,&nbsp;the&nbsp;attribute&nbsp;may&nbsp;not&nbsp;exist;&nbsp;in&nbsp;that<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case,&nbsp;the&nbsp;attribute&nbsp;is&nbsp;created&nbsp;when&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;instance&nbsp;set()&nbsp;method&nbsp;is&nbsp;called<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;<a href="#SDAttr">SDAttr</a>&nbsp;instance&nbsp;for&nbsp;the&nbsp;attribute.&nbsp;Call&nbsp;the&nbsp;methods&nbsp;of&nbsp;this<br>
+&nbsp;&nbsp;class&nbsp;to&nbsp;query,&nbsp;read&nbsp;or&nbsp;set&nbsp;the&nbsp;attribute.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="SDim-attributes"><strong>attributes</strong></a>(self, full<font color="#909090">=0</font>)</dt><dd><tt>Return&nbsp;a&nbsp;dictionnary&nbsp;describing&nbsp;every&nbsp;attribute&nbsp;defined<br>
+on&nbsp;the&nbsp;dimension.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;full&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true&nbsp;to&nbsp;get&nbsp;complete&nbsp;info&nbsp;about&nbsp;each&nbsp;attribute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;false&nbsp;to&nbsp;report&nbsp;only&nbsp;each&nbsp;attribute&nbsp;value<br>
+Returns:<br>
+&nbsp;&nbsp;Empty&nbsp;dictionnary&nbsp;if&nbsp;no&nbsp;attribute&nbsp;defined.<br>
+&nbsp;&nbsp;Otherwise,&nbsp;dictionnary&nbsp;where&nbsp;each&nbsp;key&nbsp;is&nbsp;the&nbsp;name&nbsp;of&nbsp;a<br>
+&nbsp;&nbsp;dimension&nbsp;attribute.&nbsp;If&nbsp;parameter&nbsp;'full'&nbsp;is&nbsp;false,<br>
+&nbsp;&nbsp;key&nbsp;value&nbsp;is&nbsp;the&nbsp;attribute&nbsp;value.&nbsp;If&nbsp;'full'&nbsp;is&nbsp;true,<br>
+&nbsp;&nbsp;key&nbsp;value&nbsp;is&nbsp;a&nbsp;tuple&nbsp;with&nbsp;the&nbsp;following&nbsp;elements:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;attribute&nbsp;index&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;attribute&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;attribute&nbsp;length<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="SDim-getscale"><strong>getscale</strong></a>(self)</dt><dd><tt>Obtain&nbsp;the&nbsp;scale&nbsp;values&nbsp;along&nbsp;a&nbsp;dimension.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;list&nbsp;with&nbsp;the&nbsp;scale&nbsp;values;&nbsp;the&nbsp;list&nbsp;length&nbsp;is&nbsp;equal&nbsp;to&nbsp;the<br>
+&nbsp;&nbsp;dimension&nbsp;length;&nbsp;the&nbsp;element&nbsp;type&nbsp;is&nbsp;equal&nbsp;to&nbsp;the&nbsp;dimension<br>
+&nbsp;&nbsp;data&nbsp;type,&nbsp;as&nbsp;set&nbsp;when&nbsp;the&nbsp;'setdimscale()'&nbsp;method&nbsp;was&nbsp;called.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDgetdimscale</tt></dd></dl>
+
+<dl><dt><a name="SDim-getstrs"><strong>getstrs</strong></a>(self)</dt><dd><tt>Retrieve&nbsp;the&nbsp;dimension&nbsp;standard&nbsp;string&nbsp;attributes.&nbsp;<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;3-element&nbsp;tuple&nbsp;holding:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-dimension&nbsp;label&nbsp;&nbsp;(attribute&nbsp;'long_name')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-dimension&nbsp;unit&nbsp;&nbsp;&nbsp;(attribute&nbsp;'units')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-dimension&nbsp;format&nbsp;(attribute&nbsp;'format')<br>
+&nbsp;<br>
+An&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;the&nbsp;standard&nbsp;attributes&nbsp;have<br>
+not&nbsp;been&nbsp;set.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent:&nbsp;SDgetdimstrs</tt></dd></dl>
+
+<dl><dt><a name="SDim-info"><strong>info</strong></a>(self)</dt><dd><tt>Return&nbsp;info&nbsp;about&nbsp;the&nbsp;dimension&nbsp;instance.<br>
+&nbsp;<br>
+Args&nbsp;:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;4-element&nbsp;tuple&nbsp;holding:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-dimension&nbsp;name;&nbsp;'fakeDimx'&nbsp;is&nbsp;returned&nbsp;if&nbsp;the&nbsp;dimension<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;has&nbsp;not&nbsp;been&nbsp;named&nbsp;yet,&nbsp;where&nbsp;'x'&nbsp;is&nbsp;the&nbsp;dimension<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;index&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-dimension&nbsp;length;&nbsp;0&nbsp;is&nbsp;returned&nbsp;if&nbsp;the&nbsp;dimension&nbsp;is&nbsp;unlimited;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;call&nbsp;the&nbsp;<a href="#SDim">SDim</a>.<a href="#SDim-length">length</a>()&nbsp;or&nbsp;<a href="#SDS">SDS</a>.<a href="#SDim-info">info</a>()&nbsp;methods&nbsp;to&nbsp;obtain&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;current&nbsp;dimension&nbsp;length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-scale&nbsp;data&nbsp;type&nbsp;(one&nbsp;of&nbsp;the&nbsp;<a href="#SDC">SDC</a>.xxx&nbsp;constants);&nbsp;0&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returned&nbsp;if&nbsp;no&nbsp;scale&nbsp;has&nbsp;been&nbsp;set&nbsp;on&nbsp;the&nbsp;dimension<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-number&nbsp;of&nbsp;attributes&nbsp;attached&nbsp;to&nbsp;the&nbsp;dimension<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDdiminfo</tt></dd></dl>
+
+<dl><dt><a name="SDim-length"><strong>length</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;dimension&nbsp;length.&nbsp;This&nbsp;method&nbsp;is&nbsp;usefull<br>
+to&nbsp;quickly&nbsp;retrieve&nbsp;the&nbsp;current&nbsp;length&nbsp;of&nbsp;an&nbsp;unlimited<br>
+dimension.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;dimension&nbsp;length;&nbsp;if&nbsp;the&nbsp;dimension&nbsp;is&nbsp;unlimited,&nbsp;the<br>
+&nbsp;&nbsp;returned&nbsp;value&nbsp;is&nbsp;the&nbsp;current&nbsp;dimension&nbsp;length<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="SDim-setname"><strong>setname</strong></a>(self, dim_name)</dt><dd><tt>Set&nbsp;the&nbsp;dimension&nbsp;name.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;dim_name&nbsp;&nbsp;&nbsp;&nbsp;dimension&nbsp;name;&nbsp;setting&nbsp;2&nbsp;dimensions&nbsp;to&nbsp;the&nbsp;same<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;make&nbsp;the&nbsp;dimensions&nbsp;"shared";&nbsp;in&nbsp;order&nbsp;to&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shared,&nbsp;the&nbsp;dimesions&nbsp;must&nbsp;be&nbsp;deined&nbsp;similarly.<br>
+Returns:<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDsetdimname</tt></dd></dl>
+
+<dl><dt><a name="SDim-setscale"><strong>setscale</strong></a>(self, data_type, scale)</dt><dd><tt>Initialize&nbsp;the&nbsp;scale&nbsp;values&nbsp;along&nbsp;the&nbsp;dimension.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;data_type&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;type&nbsp;code&nbsp;(one&nbsp;of&nbsp;the&nbsp;<a href="#SDC">SDC</a>.xxx&nbsp;constants)<br>
+&nbsp;&nbsp;scale&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sequence&nbsp;holding&nbsp;the&nbsp;scale&nbsp;values;&nbsp;the&nbsp;number&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;values&nbsp;must&nbsp;match&nbsp;the&nbsp;current&nbsp;length&nbsp;of&nbsp;the&nbsp;dataset&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;along&nbsp;that&nbsp;dimension<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;SDsetdimscale<br>
+&nbsp;<br>
+Setting&nbsp;a&nbsp;scale&nbsp;on&nbsp;a&nbsp;dimension&nbsp;generates&nbsp;what&nbsp;HDF&nbsp;calls&nbsp;a<br>
+"coordinate&nbsp;variable".&nbsp;This&nbsp;is&nbsp;a&nbsp;rank&nbsp;1&nbsp;dataset&nbsp;similar&nbsp;to&nbsp;any<br>
+other&nbsp;dataset,&nbsp;which&nbsp;is&nbsp;created&nbsp;to&nbsp;hold&nbsp;the&nbsp;scale&nbsp;values.&nbsp;The<br>
+dataset&nbsp;name&nbsp;is&nbsp;identical&nbsp;to&nbsp;that&nbsp;of&nbsp;the&nbsp;dimension&nbsp;on&nbsp;which<br>
+<a href="#SDim-setscale">setscale</a>()&nbsp;is&nbsp;called,&nbsp;and&nbsp;the&nbsp;data&nbsp;type&nbsp;passed&nbsp;in&nbsp;'data_type'<br>
+determines&nbsp;the&nbsp;type&nbsp;of&nbsp;the&nbsp;dataset.&nbsp;To&nbsp;distinguish&nbsp;between&nbsp;such<br>
+a&nbsp;dataset&nbsp;and&nbsp;a&nbsp;"normal"&nbsp;dataset,&nbsp;call&nbsp;the&nbsp;iscoordvar()&nbsp;method<br>
+of&nbsp;the&nbsp;dataset&nbsp;instance.</tt></dd></dl>
+
+<dl><dt><a name="SDim-setstrs"><strong>setstrs</strong></a>(self, label, unit, format)</dt><dd><tt>Set&nbsp;the&nbsp;dimension&nbsp;standard&nbsp;string&nbsp;attributes.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;label&nbsp;&nbsp;&nbsp;dimension&nbsp;label&nbsp;&nbsp;(attribute&nbsp;'long_name')<br>
+&nbsp;&nbsp;unit&nbsp;&nbsp;&nbsp;&nbsp;dimension&nbsp;unit&nbsp;&nbsp;&nbsp;(attribute&nbsp;'units')<br>
+&nbsp;&nbsp;format&nbsp;&nbsp;dimension&nbsp;format&nbsp;(attribute&nbsp;'format')<br>
+&nbsp;<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent:&nbsp;SDsetdimstrs</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'SDim' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__all__</strong> = ['SD', 'SDAttr', 'SDC', 'SDS', 'SDim', 'HDF4Error']</td></tr></table>
+</body></html>

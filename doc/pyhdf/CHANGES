@@ -1,0 +1,81 @@
+List of changes to 'pyhdf' since the initial release.
+
+pyhdf 0.7-3
+-----------
+  July 13 2005
+    Interim release.
+      - The main motivation for this release is to benefit from HDF-4.2r1 bug fixes and 
+        optionally the SZIP compression method allowed by HDF4.2 on SDS datasets.
+      - To use this release, you need to install HDF4.2r1. It will *NOT* work over
+        HDF4.1. To compress datasets using SZIP, szip 2.0 library must also be installed,
+        and your HDF installation must have been compiled with the szip option enabled.
+      - Conversely, pyhdf versions preceeding 0.7-3 will *NOT* work over HDF4.2. 
+        Only pyhdf-0.7-3 will work with HDF4.2.
+      - Added new compression type SDC.COMP_SZIP, and defined new constants SDC.COMP_SZIP_EC
+        and SDC.COMP_SZIP_NN to configure the behavior of SZIP.
+      - Updated methods SDS.sdsetcompress() and SDS.getcompress() to allow compression using 
+        SZIP compression, and inquire about SZIP compression configuration.
+      - All classes are now of "new-style" type (eg they derive from calss 'object').
+      - Updated documentation.
+
+pyhdf-0.7-2
+-----------
+  June 9 2004
+    Bug fix release.
+    - Do not strip trailing NULL at end of string attributes.
+    - Single-valued attributes were incorrectly processed in the set()
+      method of the SDAttr class.
+    - The following feature was not correctly documented.
+      When attributes are accessed using the "dot" notation, it is important
+      to be able to differentiate between true python attributes and 
+      HDF attributes. For ex., if 'sds' is an HDF SD instance and one writes
+      'sds.x = "abcd" ', should attribute 'x' be considered as an HDF attribute and
+      its value written in the HDF file, or as a python attribute and stored in the
+      'sds' object dictionnary ?
+
+      To solve that problem, an attribute is considered a python attribute if it
+      starts with an '_', and as an HDF attribute otherwise. Note that this only
+      applies when using the "dot" notation (or the getattr()/setattr() equivalent
+      functions). If one needs to define an HDF attribute whose name starts with a
+      '_' (eg: '_FillValue'), allocate an SDAttr instance and use its get()/set()
+      methods.
+
+      Ex.:
+        sds = SD('myfile.hdf').select('mydataset')
+        sds._FillValue = -999   # wrong: _FillValue not stored in the HDF dataset
+        sds.attr('_FillValue').set(SDC.FLOAT32, -999.0) # good!
+
+pyhdf-0.7-1
+-----------
+  December 16 2003
+    - Implementation of the V (vgroup) API.
+
+pyhdf-0.6-1
+-----------
+  December 3 2003
+    -Implementation of the VS (vdata) API.
+    -Added support for unsigned integer types UINT16 and UINT32 inside
+     the SD API. Version 22 of Numeric must however be installed
+     (see comments inside `setup.py' for a way to remove support for
+     unsigned integers and compile with a lower version number of Numeric).
+    -Improved documentation.
+    -Bug fixes (thanks to Richard.Andrews@esands.com)
+
+pyhdf-0.5-2
+-----------
+  August 3 2003
+    -After starting the implementation of another HDF API, it
+     was found that the idea of having on C extension module
+     per HDF API was not a good one. It made difficult the sharing
+     of HDF data structures between the C extension modules.
+     It was thus decided to have just one C extension module
+     shared between all the python modules.
+    -The new C extension module is named "_hdfext". The SD python 
+     module has been modified to import "_hdfext" instead of "_sdext".
+    -A new "error" module has been added.
+
+pyhdf-0.5-1
+-----------
+  July 31 2003
+    -Initial release.
+

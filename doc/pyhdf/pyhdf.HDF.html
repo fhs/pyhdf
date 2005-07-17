@@ -1,0 +1,347 @@
+wrote pyhdf.HDF.html
+C "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module pyhdf.HDF</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="pyhdf.html"><font color="#ffffff">pyhdf</font></a>.HDF</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python2.4/site-packages/pyhdf/HDF.py">/usr/lib/python2.4/site-packages/pyhdf/HDF.py</a></font></td></tr></table>
+    <p><tt>A&nbsp;module&nbsp;of&nbsp;the&nbsp;pyhdf&nbsp;package&nbsp;implementing&nbsp;the&nbsp;basic&nbsp;API&nbsp;of&nbsp;the<br>
+NCSA&nbsp;HDF4&nbsp;library.<br>
+(see:&nbsp;hdf.ncsa.uiuc.edu)<br>
+&nbsp;<br>
+Author:&nbsp;Andre&nbsp;Gosselin<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maurice-Lamontagne&nbsp;Institute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gosselina@dfo-mpo.gc.ca<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Version:&nbsp;0.7-3<br>
+Date:&nbsp;&nbsp;&nbsp;&nbsp;July&nbsp;13&nbsp;2005<br>
+&nbsp;<br>
+Introduction<br>
+------------<br>
+The&nbsp;role&nbsp;of&nbsp;the&nbsp;<a href="#HDF">HDF</a>&nbsp;module&nbsp;is&nbsp;to&nbsp;provide&nbsp;support&nbsp;to&nbsp;other&nbsp;modules&nbsp;of&nbsp;the<br>
+pyhdf&nbsp;package.&nbsp;It&nbsp;defines&nbsp;constants&nbsp;specifying&nbsp;file&nbsp;opening&nbsp;modes&nbsp;and<br>
+various&nbsp;data&nbsp;types,&nbsp;methods&nbsp;for&nbsp;accessing&nbsp;files,&nbsp;plus&nbsp;a&nbsp;few&nbsp;utility<br>
+functions&nbsp;to&nbsp;query&nbsp;library&nbsp;version&nbsp;and&nbsp;check&nbsp;if&nbsp;a&nbsp;file&nbsp;is&nbsp;an&nbsp;<a href="#HDF">HDF</a>&nbsp;one.<br>
+&nbsp;<br>
+It&nbsp;should&nbsp;be&nbsp;noted&nbsp;that,&nbsp;among&nbsp;the&nbsp;modules&nbsp;of&nbsp;the&nbsp;pyhdf&nbsp;package,&nbsp;SD&nbsp;is<br>
+special&nbsp;in&nbsp;the&nbsp;sense&nbsp;that&nbsp;it&nbsp;is&nbsp;self-contained&nbsp;and&nbsp;does&nbsp;not&nbsp;need&nbsp;support<br>
+from&nbsp;the&nbsp;<a href="#HDF">HDF</a>&nbsp;module.&nbsp;For&nbsp;example,&nbsp;SD&nbsp;provides&nbsp;its&nbsp;own&nbsp;file&nbsp;opening&nbsp;and<br>
+closing&nbsp;methods,&nbsp;whereas&nbsp;VS&nbsp;uses&nbsp;methods&nbsp;of&nbsp;the&nbsp;<a href="#HDF">HDF</a>.<a href="#HDF">HDF</a>&nbsp;class&nbsp;for&nbsp;that.<br>
+&nbsp;<br>
+Functions&nbsp;and&nbsp;classes&nbsp;summary<br>
+-----------------------------<br>
+The&nbsp;<a href="#HDF">HDF</a>&nbsp;module&nbsp;provides&nbsp;the&nbsp;following&nbsp;classes.<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#HC">HC</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<a href="#HC">HC</a>&nbsp;class&nbsp;holds&nbsp;constants&nbsp;defining&nbsp;opening&nbsp;modes&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;various&nbsp;data&nbsp;types.<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#HDF">HDF</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<a href="#HDF">HDF</a>&nbsp;class&nbsp;provides&nbsp;methods&nbsp;to&nbsp;open&nbsp;and&nbsp;close&nbsp;an&nbsp;<a href="#HDF">HDF</a>&nbsp;file,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;return&nbsp;instances&nbsp;of&nbsp;the&nbsp;major&nbsp;<a href="#HDF">HDF</a>&nbsp;APIs&nbsp;(except&nbsp;SD).<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To&nbsp;instantiate&nbsp;an&nbsp;<a href="#HDF">HDF</a>&nbsp;class,&nbsp;call&nbsp;the&nbsp;<a href="#HDF">HDF</a>()&nbsp;constructor.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methods:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructors:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#HDF">HDF</a>()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;open&nbsp;an&nbsp;<a href="#HDF">HDF</a>&nbsp;file,&nbsp;creating&nbsp;the&nbsp;file&nbsp;if&nbsp;necessary,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;return&nbsp;an&nbsp;<a href="#HDF">HDF</a>&nbsp;instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vstart()&nbsp;&nbsp;initialize&nbsp;the&nbsp;VS&nbsp;(Vdata)&nbsp;API&nbsp;over&nbsp;the&nbsp;<a href="#HDF">HDF</a>&nbsp;file&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;a&nbsp;VS&nbsp;instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vgstart()&nbsp;initialize&nbsp;the&nbsp;V&nbsp;(Vgroup)&nbsp;interface&nbsp;over&nbsp;the&nbsp;<a href="#HDF">HDF</a>&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;return&nbsp;a&nbsp;V&nbsp;instance.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;closing&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;close()&nbsp;&nbsp;close&nbsp;the&nbsp;<a href="#HDF">HDF</a>&nbsp;file<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inquiry<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;getfileversion()&nbsp;&nbsp;return&nbsp;info&nbsp;about&nbsp;the&nbsp;version&nbsp;of&nbsp;the&nbsp;&nbsp;<a href="#HDF">HDF</a>&nbsp;file&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+The&nbsp;<a href="#HDF">HDF</a>&nbsp;module&nbsp;also&nbsp;offers&nbsp;the&nbsp;following&nbsp;functions.<br>
+&nbsp;<br>
+&nbsp;&nbsp;inquiry<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#-getlibversion">getlibversion</a>()&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;info&nbsp;about&nbsp;the&nbsp;version&nbsp;of&nbsp;the&nbsp;library<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#-ishdf">ishdf</a>()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;determine&nbsp;whether&nbsp;a&nbsp;file&nbsp;is&nbsp;an&nbsp;<a href="#HDF">HDF</a>&nbsp;file</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="pyhdf.hdfext.html">pyhdf.hdfext</a><br>
+<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="pyhdf.html">pyhdf</a><br>
+<a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top><a href="types.html">types</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="pyhdf.HC.html#HC">pyhdf.HC.HC</a>
+</font></dt><dt><font face="helvetica, arial"><a href="pyhdf.HDF.html#HDF">HDF</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="exceptions.html#Exception">exceptions.Exception</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="pyhdf.error.html#HDF4Error">pyhdf.error.HDF4Error</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="HC">class <strong>HC</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="#HC">HC</a>&nbsp;class&nbsp;holds&nbsp;contants&nbsp;defining&nbsp;opening&nbsp;modes&nbsp;and&nbsp;data&nbsp;types.<br>
+&nbsp;<br>
+File&nbsp;opening&nbsp;modes&nbsp;(flags&nbsp;ORed&nbsp;together)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;CREATE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;create&nbsp;file&nbsp;if&nbsp;it&nbsp;does&nbsp;not&nbsp;exist<br>
+&nbsp;&nbsp;&nbsp;&nbsp;READ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;read-only&nbsp;mode<br>
+&nbsp;&nbsp;&nbsp;&nbsp;TRUNC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;256&nbsp;&nbsp;&nbsp;&nbsp;truncate&nbsp;if&nbsp;it&nbsp;exists<br>
+&nbsp;&nbsp;&nbsp;&nbsp;WRITE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;read-write&nbsp;mode<br>
+&nbsp;<br>
+Data&nbsp;types<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;CHAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;8-bit&nbsp;char<br>
+&nbsp;&nbsp;&nbsp;&nbsp;CHAR8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;8-bit&nbsp;char<br>
+&nbsp;&nbsp;&nbsp;&nbsp;UCHAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;8-bit&nbsp;integer&nbsp;(0&nbsp;to&nbsp;255)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;UCHAR8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;8-bit&nbsp;integer&nbsp;(0&nbsp;to&nbsp;255)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;INT8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20&nbsp;&nbsp;&nbsp;&nbsp;signed&nbsp;8-bit&nbsp;integer&nbsp;(-128&nbsp;to&nbsp;127)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;UINT8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;21&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;8-bit&nbsp;integer&nbsp;(0&nbsp;to&nbsp;255)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;INT16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;23&nbsp;&nbsp;&nbsp;&nbsp;signed&nbsp;16-bit&nbsp;integer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;UINT16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;23&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;16-bit&nbsp;integer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;INT32&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;24&nbsp;&nbsp;&nbsp;&nbsp;signed&nbsp;32-bit&nbsp;integer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;UINT32&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;25&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;32-bit&nbsp;integer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;FLOAT32&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;32-bit&nbsp;floating&nbsp;point<br>
+&nbsp;&nbsp;&nbsp;&nbsp;FLOAT64&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;64-bit&nbsp;floating&nbsp;point<br>
+&nbsp;<br>
+Tags<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;DFTAG_NDG&nbsp;&nbsp;720&nbsp;&nbsp;&nbsp;&nbsp;dataset<br>
+&nbsp;&nbsp;&nbsp;&nbsp;DFTAG_VH&nbsp;&nbsp;1962&nbsp;&nbsp;&nbsp;&nbsp;vdata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;DFTAG_VG&nbsp;&nbsp;1965&nbsp;&nbsp;&nbsp;&nbsp;vgroup<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Data and other attributes defined here:<br>
+<dl><dt><strong>CHAR</strong> = 4</dl>
+
+<dl><dt><strong>CHAR8</strong> = 4</dl>
+
+<dl><dt><strong>CREATE</strong> = 4</dl>
+
+<dl><dt><strong>DFTAG_NDG</strong> = 720</dl>
+
+<dl><dt><strong>DFTAG_VG</strong> = 1965</dl>
+
+<dl><dt><strong>DFTAG_VH</strong> = 1962</dl>
+
+<dl><dt><strong>FLOAT32</strong> = 5</dl>
+
+<dl><dt><strong>FLOAT64</strong> = 6</dl>
+
+<dl><dt><strong>FULL_INTERLACE</strong> = 0</dl>
+
+<dl><dt><strong>INT16</strong> = 22</dl>
+
+<dl><dt><strong>INT32</strong> = 24</dl>
+
+<dl><dt><strong>INT8</strong> = 20</dl>
+
+<dl><dt><strong>NO_INTERLACE</strong> = 1</dl>
+
+<dl><dt><strong>READ</strong> = 1</dl>
+
+<dl><dt><strong>TRUNC</strong> = 256</dl>
+
+<dl><dt><strong>UCHAR</strong> = 3</dl>
+
+<dl><dt><strong>UCHAR8</strong> = 3</dl>
+
+<dl><dt><strong>UINT16</strong> = 23</dl>
+
+<dl><dt><strong>UINT32</strong> = 25</dl>
+
+<dl><dt><strong>UINT8</strong> = 21</dl>
+
+<dl><dt><strong>WRITE</strong> = 2</dl>
+
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'HC' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="HDF">class <strong>HDF</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="#HDF">HDF</a>&nbsp;class&nbsp;encapsulates&nbsp;the&nbsp;basic&nbsp;<a href="#HDF">HDF</a>&nbsp;functions.<br>
+Its&nbsp;main&nbsp;use&nbsp;is&nbsp;to&nbsp;open&nbsp;and&nbsp;close&nbsp;an&nbsp;<a href="#HDF">HDF</a>&nbsp;file,&nbsp;and&nbsp;return<br>
+instances&nbsp;of&nbsp;the&nbsp;major&nbsp;<a href="#HDF">HDF</a>&nbsp;APIs&nbsp;(except&nbsp;for&nbsp;SD).<br>
+To&nbsp;instantiate&nbsp;an&nbsp;<a href="#HDF">HDF</a>&nbsp;class,&nbsp;call&nbsp;the&nbsp;<a href="#HDF">HDF</a>()&nbsp;constructor.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="HDF-__del__"><strong>__del__</strong></a>(self)</dt><dd><tt>Delete&nbsp;the&nbsp;instance,&nbsp;first&nbsp;calling&nbsp;the&nbsp;end()&nbsp;method&nbsp;<br>
+if&nbsp;not&nbsp;already&nbsp;done.</tt></dd></dl>
+
+<dl><dt><a name="HDF-__init__"><strong>__init__</strong></a>(self, path, mode<font color="#909090">=1</font>, nblocks<font color="#909090">=0</font>)</dt><dd><tt><a href="#HDF">HDF</a>&nbsp;constructor:&nbsp;open&nbsp;an&nbsp;<a href="#HDF">HDF</a>&nbsp;file,&nbsp;creating&nbsp;the&nbsp;file&nbsp;if<br>
+necessary.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;path&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;of&nbsp;the&nbsp;<a href="#HDF">HDF</a>&nbsp;file&nbsp;to&nbsp;open<br>
+&nbsp;&nbsp;mode&nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;opening&nbsp;mode;&nbsp;this&nbsp;mode&nbsp;is&nbsp;a&nbsp;set&nbsp;of&nbsp;binary&nbsp;flags<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;which&nbsp;can&nbsp;be&nbsp;ored&nbsp;together<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#HC">HC</a>.CREATE&nbsp;&nbsp;&nbsp;combined&nbsp;with&nbsp;<a href="#HC">HC</a>.WRITE&nbsp;to&nbsp;create&nbsp;file&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;it&nbsp;does&nbsp;not&nbsp;exist<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#HC">HC</a>.READ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;open&nbsp;file&nbsp;in&nbsp;read-only&nbsp;access&nbsp;(default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#HC">HC</a>.TRUNC&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;combined&nbsp;with&nbsp;<a href="#HC">HC</a>.WRITE,&nbsp;overwrite<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;if&nbsp;it&nbsp;already&nbsp;exists<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#HC">HC</a>.WRITE&nbsp;&nbsp;&nbsp;&nbsp;open&nbsp;file&nbsp;in&nbsp;read-write&nbsp;mode;&nbsp;if&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exists&nbsp;it&nbsp;is&nbsp;updated,&nbsp;unless&nbsp;<a href="#HC">HC</a>.TRUNC&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set,&nbsp;in&nbsp;which&nbsp;case&nbsp;it&nbsp;is&nbsp;erased&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;recreated;&nbsp;if&nbsp;file&nbsp;does&nbsp;not&nbsp;exist,&nbsp;an<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error&nbsp;is&nbsp;raised&nbsp;unless&nbsp;<a href="#HC">HC</a>.CREATE&nbsp;is&nbsp;set,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;which&nbsp;case&nbsp;the&nbsp;file&nbsp;is&nbsp;created<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Note&nbsp;an&nbsp;important&nbsp;difference&nbsp;in&nbsp;the&nbsp;way&nbsp;CREATE&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;handled&nbsp;by&nbsp;the&nbsp;<a href="#HDF">HDF</a>&nbsp;C&nbsp;library&nbsp;and&nbsp;the&nbsp;pyhdf&nbsp;package.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In&nbsp;the&nbsp;C&nbsp;library,&nbsp;CREATE&nbsp;indicates&nbsp;that&nbsp;a&nbsp;new&nbsp;file&nbsp;should<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;always&nbsp;be&nbsp;created,&nbsp;overwriting&nbsp;an&nbsp;existing&nbsp;one&nbsp;if<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any.&nbsp;For&nbsp;pyhdf,&nbsp;CREATE&nbsp;indicates&nbsp;a&nbsp;new&nbsp;file&nbsp;should&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;created&nbsp;only&nbsp;if&nbsp;it&nbsp;does&nbsp;not&nbsp;exist,&nbsp;and&nbsp;the&nbsp;overwriting<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;an&nbsp;already&nbsp;existing&nbsp;file&nbsp;must&nbsp;be&nbsp;explicitly&nbsp;asked<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;by&nbsp;setting&nbsp;the&nbsp;TRUNC&nbsp;flag.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Those&nbsp;differences&nbsp;were&nbsp;introduced&nbsp;so&nbsp;as&nbsp;to&nbsp;harmonize<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;way&nbsp;files&nbsp;are&nbsp;opened&nbsp;in&nbsp;the&nbsp;pycdf&nbsp;and&nbsp;pyhdf<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;packages.&nbsp;Also,&nbsp;this&nbsp;solves&nbsp;a&nbsp;limitation&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hdf&nbsp;(and&nbsp;netCDF)&nbsp;library,&nbsp;where&nbsp;there&nbsp;is&nbsp;no&nbsp;easy&nbsp;way<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;implement&nbsp;the&nbsp;frequent&nbsp;requirement&nbsp;that&nbsp;an&nbsp;existent<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;be&nbsp;opened&nbsp;in&nbsp;read-write&nbsp;mode,&nbsp;or&nbsp;created<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;it&nbsp;does&nbsp;not&nbsp;exist.<br>
+&nbsp;<br>
+&nbsp;&nbsp;nblocks&nbsp;&nbsp;number&nbsp;of&nbsp;data&nbsp;descriptor&nbsp;blocks&nbsp;in&nbsp;a&nbsp;block&nbsp;wit&nbsp;which<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;create&nbsp;the&nbsp;file;&nbsp;the&nbsp;parameter&nbsp;is&nbsp;ignored&nbsp;if&nbsp;the&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;not&nbsp;created;&nbsp;0&nbsp;asks&nbsp;to&nbsp;use&nbsp;the&nbsp;default<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;an&nbsp;<a href="#HDF">HDF</a>&nbsp;instance<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Hopen</tt></dd></dl>
+
+<dl><dt><a name="HDF-close"><strong>close</strong></a>(self)</dt><dd><tt>Close&nbsp;the&nbsp;<a href="#HDF">HDF</a>&nbsp;file.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Hclose</tt></dd></dl>
+
+<dl><dt><a name="HDF-getfileversion"><strong>getfileversion</strong></a>(self)</dt><dd><tt>Get&nbsp;file&nbsp;version&nbsp;info.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;4-element&nbsp;tuple&nbsp;with&nbsp;the&nbsp;following&nbsp;components:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-major&nbsp;version&nbsp;number&nbsp;(int)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-minor&nbsp;version&nbsp;number&nbsp;(int)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-complete&nbsp;library&nbsp;version&nbsp;number&nbsp;(int)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-additional&nbsp;information&nbsp;(string)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Hgetlibversion</tt></dd></dl>
+
+<dl><dt><a name="HDF-vgstart"><strong>vgstart</strong></a>(self)</dt><dd><tt>Initialize&nbsp;the&nbsp;V&nbsp;API&nbsp;over&nbsp;the&nbsp;file&nbsp;and&nbsp;return&nbsp;a&nbsp;V&nbsp;instance.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;V&nbsp;instance<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Vstart&nbsp;(in&nbsp;fact:&nbsp;Vinitialize)</tt></dd></dl>
+
+<dl><dt><a name="HDF-vstart"><strong>vstart</strong></a>(self)</dt><dd><tt>Initialize&nbsp;the&nbsp;VS&nbsp;API&nbsp;over&nbsp;the&nbsp;file&nbsp;and&nbsp;return&nbsp;a&nbsp;VS&nbsp;instance.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;VS&nbsp;instance<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Vstart&nbsp;(in&nbsp;fact:&nbsp;Vinitialize)</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'HDF' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="HDF4Error">class <strong>HDF4Error</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="HDF4Error-__init__"><strong>__init__</strong></a>(self, args<font color="#909090">=None</font>)</dt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="HDF4Error-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="HDF4Error-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-getlibversion"><strong>getlibversion</strong></a>()</dt><dd><tt>Get&nbsp;the&nbsp;library&nbsp;version&nbsp;info.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;4-element&nbsp;tuple&nbsp;with&nbsp;the&nbsp;following&nbsp;components:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-major&nbsp;version&nbsp;number&nbsp;(int)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-minor&nbsp;version&nbsp;number&nbsp;(int)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-complete&nbsp;library&nbsp;version&nbsp;number&nbsp;(int)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-additional&nbsp;information&nbsp;(string)<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Hgetlibversion</tt></dd></dl>
+ <dl><dt><a name="-ishdf"><strong>ishdf</strong></a>(filename)</dt><dd><tt>Determine&nbsp;whether&nbsp;a&nbsp;file&nbsp;is&nbsp;an&nbsp;<a href="#HDF">HDF</a>&nbsp;file.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;filename&nbsp;&nbsp;name&nbsp;of&nbsp;the&nbsp;file&nbsp;to&nbsp;check<br>
+Returns:<br>
+&nbsp;&nbsp;1&nbsp;if&nbsp;the&nbsp;file&nbsp;is&nbsp;an&nbsp;<a href="#HDF">HDF</a>&nbsp;file,&nbsp;0&nbsp;otherwise<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Hishdf</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__all__</strong> = ['HDF', 'HDF4Error', 'HC', 'getlibversion', 'ishdf']</td></tr></table>
+</body></html>

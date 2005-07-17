@@ -1,0 +1,1444 @@
+wrote pyhdf.VS.html
+IC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module pyhdf.VS</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="pyhdf.html"><font color="#ffffff">pyhdf</font></a>.VS</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python2.4/site-packages/pyhdf/VS.py">/usr/lib/python2.4/site-packages/pyhdf/VS.py</a></font></td></tr></table>
+    <p><tt>A&nbsp;module&nbsp;of&nbsp;the&nbsp;pyhdf&nbsp;package&nbsp;implementing&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;(Vdata&nbsp;table)<br>
+API&nbsp;of&nbsp;the&nbsp;NCSA&nbsp;HDF4&nbsp;library.<br>
+(see:&nbsp;hdf.ncsa.uiuc.edu)<br>
+&nbsp;<br>
+Author:&nbsp;Andre&nbsp;Gosselin<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maurice-Lamontagne&nbsp;Institute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gosselina@dfo-mpo.gc.ca<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Version:&nbsp;0.7-3<br>
+Date:&nbsp;&nbsp;&nbsp;&nbsp;July&nbsp;13&nbsp;2005<br>
+&nbsp;<br>
+Table&nbsp;of&nbsp;contents<br>
+-----------------<br>
+&nbsp;&nbsp;Introduction<br>
+&nbsp;&nbsp;<a href="#VS">VS</a>&nbsp;module&nbsp;key&nbsp;features<br>
+&nbsp;&nbsp;Accessing&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;module<br>
+&nbsp;&nbsp;Package&nbsp;components<br>
+&nbsp;&nbsp;Prerequisites<br>
+&nbsp;&nbsp;Documentation<br>
+&nbsp;&nbsp;Summary&nbsp;of&nbsp;differences&nbsp;between&nbsp;the&nbsp;pyhdf&nbsp;and&nbsp;C&nbsp;<a href="#VS">VS</a>&nbsp;API<br>
+&nbsp;&nbsp;Error&nbsp;handling<br>
+&nbsp;&nbsp;<a href="#VS">VS</a>&nbsp;needs&nbsp;support&nbsp;from&nbsp;the&nbsp;HDF&nbsp;module<br>
+&nbsp;&nbsp;Classes&nbsp;summary<br>
+&nbsp;&nbsp;Data&nbsp;types<br>
+&nbsp;&nbsp;Attribute&nbsp;access:&nbsp;low&nbsp;and&nbsp;high&nbsp;level<br>
+&nbsp;&nbsp;Predefined&nbsp;attributes<br>
+&nbsp;&nbsp;Record&nbsp;access:&nbsp;low&nbsp;and&nbsp;high&nbsp;level<br>
+&nbsp;&nbsp;Programming&nbsp;models<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Creating&nbsp;and&nbsp;initializing&nbsp;a&nbsp;new&nbsp;vdata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Appending&nbsp;records&nbsp;to&nbsp;a&nbsp;vdata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Updating&nbsp;records&nbsp;in&nbsp;a&nbsp;vdata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Reading&nbsp;a&nbsp;vdata<br>
+&nbsp;&nbsp;Module&nbsp;documentation<br>
+&nbsp;<br>
+&nbsp;<br>
+Introduction<br>
+------------<br>
+<a href="#VS">VS</a>&nbsp;is&nbsp;one&nbsp;of&nbsp;the&nbsp;modules&nbsp;composing&nbsp;pyhdf,&nbsp;a&nbsp;python&nbsp;package&nbsp;implementing<br>
+the&nbsp;NCSA&nbsp;HDF&nbsp;library&nbsp;and&nbsp;letting&nbsp;one&nbsp;manage&nbsp;HDF&nbsp;files&nbsp;from&nbsp;within&nbsp;a&nbsp;python<br>
+program.&nbsp;Two&nbsp;versions&nbsp;of&nbsp;the&nbsp;HDF&nbsp;library&nbsp;currently&nbsp;exist,&nbsp;version&nbsp;4&nbsp;and<br>
+version&nbsp;5.&nbsp;pyhdf&nbsp;only&nbsp;implements&nbsp;version&nbsp;4&nbsp;of&nbsp;the&nbsp;library.&nbsp;Many<br>
+different&nbsp;APIs&nbsp;are&nbsp;to&nbsp;be&nbsp;found&nbsp;inside&nbsp;the&nbsp;HDF4&nbsp;specification.<br>
+Currently,&nbsp;pyhdf&nbsp;implements&nbsp;just&nbsp;a&nbsp;few&nbsp;of&nbsp;those:&nbsp;the&nbsp;SD,&nbsp;<a href="#VS">VS</a>&nbsp;and&nbsp;V&nbsp;APIs.<br>
+Other&nbsp;APIs&nbsp;should&nbsp;be&nbsp;added&nbsp;in&nbsp;the&nbsp;future&nbsp;(GR,&nbsp;AN,&nbsp;etc).<br>
+&nbsp;<br>
+<a href="#VS">VS</a>&nbsp;allows&nbsp;the&nbsp;definition&nbsp;of&nbsp;structured&nbsp;data&nbsp;tables&nbsp;inside&nbsp;an&nbsp;HDF&nbsp;file.<br>
+Those&nbsp;tables&nbsp;are&nbsp;designated&nbsp;as&nbsp;"vdatas"&nbsp;(the&nbsp;name&nbsp;has&nbsp;to&nbsp;do&nbsp;with&nbsp;data<br>
+associated&nbsp;with&nbsp;the&nbsp;"vertices"&nbsp;of&nbsp;geometrical&nbsp;models,&nbsp;the&nbsp;storage&nbsp;of&nbsp;which<br>
+the&nbsp;API&nbsp;was&nbsp;originally&nbsp;designed&nbsp;for).&nbsp;A&nbsp;vdata&nbsp;is&nbsp;composed&nbsp;of&nbsp;a&nbsp;fixed<br>
+number&nbsp;of&nbsp;columns&nbsp;(also&nbsp;called&nbsp;fields),&nbsp;where&nbsp;a&nbsp;column&nbsp;can&nbsp;store&nbsp;a&nbsp;fixed<br>
+number&nbsp;of&nbsp;data&nbsp;values,&nbsp;all&nbsp;of&nbsp;the&nbsp;same&nbsp;type.&nbsp;The&nbsp;number&nbsp;of&nbsp;values&nbsp;allowed<br>
+inside&nbsp;a&nbsp;field&nbsp;is&nbsp;called&nbsp;the&nbsp;"order"&nbsp;of&nbsp;the&nbsp;field.&nbsp;A&nbsp;table&nbsp;is&nbsp;composed&nbsp;of&nbsp;a<br>
+varying&nbsp;number&nbsp;of&nbsp;rows&nbsp;(also&nbsp;called&nbsp;records),&nbsp;a&nbsp;record&nbsp;representing&nbsp;the<br>
+sequence&nbsp;of&nbsp;values&nbsp;stored&nbsp;in&nbsp;each&nbsp;field&nbsp;of&nbsp;the&nbsp;vdata.<br>
+&nbsp;<br>
+A&nbsp;vdata&nbsp;is&nbsp;associated&nbsp;with&nbsp;a&nbsp;descriptive&nbsp;name,&nbsp;and&nbsp;likewise&nbsp;each&nbsp;field&nbsp;of<br>
+the&nbsp;vdata.&nbsp;A&nbsp;vdata&nbsp;can&nbsp;also&nbsp;be&nbsp;tagged&nbsp;with&nbsp;a&nbsp;"class"&nbsp;to&nbsp;further&nbsp;describe&nbsp;the<br>
+vdata&nbsp;purpose.&nbsp;Records&nbsp;and&nbsp;fields&nbsp;are&nbsp;identified&nbsp;by&nbsp;a&nbsp;zero-based&nbsp;index.<br>
+An&nbsp;arbitrary&nbsp;number&nbsp;of&nbsp;attributes&nbsp;of&nbsp;different&nbsp;types&nbsp;can&nbsp;be&nbsp;attached&nbsp;to<br>
+a&nbsp;vdata&nbsp;as&nbsp;a&nbsp;whole,&nbsp;or&nbsp;to&nbsp;its&nbsp;individual&nbsp;fields.&nbsp;An&nbsp;attribute&nbsp;is&nbsp;a<br>
+(name,&nbsp;value)&nbsp;pair,&nbsp;where&nbsp;"value"&nbsp;can&nbsp;be&nbsp;of&nbsp;many&nbsp;types,&nbsp;and&nbsp;be&nbsp;either<br>
+single&nbsp;or&nbsp;multi-valued.&nbsp;The&nbsp;number&nbsp;of&nbsp;values&nbsp;stored&nbsp;in&nbsp;an&nbsp;attribute&nbsp;is<br>
+called&nbsp;the&nbsp;"order"&nbsp;of&nbsp;the&nbsp;attribute.<br>
+&nbsp;<br>
+The&nbsp;following&nbsp;example&nbsp;illustrates&nbsp;a&nbsp;simple&nbsp;vdata&nbsp;that&nbsp;could&nbsp;be&nbsp;stored<br>
+inside&nbsp;an&nbsp;HDF&nbsp;file.&nbsp;See&nbsp;section&nbsp;"Programming&nbsp;models"&nbsp;for&nbsp;an&nbsp;example<br>
+program&nbsp;implementing&nbsp;this&nbsp;vdata.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INVENTORY&nbsp;(experimental&nbsp;status)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;------------------------------------------i-------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;partid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qty&nbsp;&nbsp;&nbsp;wght(lb)&nbsp;&nbsp;price($)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--------------------------------------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q1234&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bolt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.05<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B5432&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;brush&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.25<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;S7613&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scissor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.75<br>
+&nbsp;<br>
+The&nbsp;vdata&nbsp;is&nbsp;composed&nbsp;of&nbsp;5&nbsp;fields.&nbsp;3&nbsp;records&nbsp;are&nbsp;shown&nbsp;(of&nbsp;course,&nbsp;a&nbsp;vdata<br>
+can&nbsp;store&nbsp;much&nbsp;more&nbsp;than&nbsp;that).&nbsp;"INVENTORY"&nbsp;would&nbsp;be&nbsp;the&nbsp;vdata&nbsp;name,&nbsp;and<br>
+"partid",&nbsp;"description",&nbsp;etc,&nbsp;would&nbsp;be&nbsp;the&nbsp;field&nbsp;names.&nbsp;The&nbsp;data&nbsp;type&nbsp;varies<br>
+between&nbsp;fields.&nbsp;"partid"&nbsp;and&nbsp;"description"&nbsp;would&nbsp;be&nbsp;of&nbsp;"multicharacter"&nbsp;type<br>
+(aka&nbsp;"string"),&nbsp;"qty"&nbsp;would&nbsp;be&nbsp;a&nbsp;integer,&nbsp;and&nbsp;"wght"&nbsp;and&nbsp;"price"&nbsp;would&nbsp;be<br>
+floats.&nbsp;The&nbsp;text&nbsp;in&nbsp;parentheses&nbsp;could&nbsp;be&nbsp;stored&nbsp;as&nbsp;attributes.&nbsp;A&nbsp;"status"<br>
+attribute&nbsp;could&nbsp;be&nbsp;defined&nbsp;for&nbsp;the&nbsp;table&nbsp;as&nbsp;a&nbsp;whole,&nbsp;and&nbsp;given&nbsp;the<br>
+value&nbsp;"experimental".&nbsp;Likewise,&nbsp;a&nbsp;"unit"&nbsp;attribute&nbsp;could&nbsp;be&nbsp;associated<br>
+with&nbsp;fields&nbsp;"wght"&nbsp;and&nbsp;"price",&nbsp;and&nbsp;given&nbsp;the&nbsp;values&nbsp;"lb"&nbsp;and&nbsp;"$",&nbsp;resp.&nbsp;<br>
+&nbsp;<br>
+The&nbsp;<a href="#VS">VS</a>&nbsp;API&nbsp;allows&nbsp;one&nbsp;to&nbsp;create,&nbsp;locate&nbsp;and&nbsp;open&nbsp;a&nbsp;vdata&nbsp;inside&nbsp;an<br>
+HDF&nbsp;file,&nbsp;update&nbsp;and&nbsp;append&nbsp;records&nbsp;inside&nbsp;it,&nbsp;read&nbsp;records&nbsp;randomly<br>
+or&nbsp;sequentially,&nbsp;and&nbsp;access&nbsp;and&nbsp;update&nbsp;the&nbsp;vdata&nbsp;and&nbsp;field&nbsp;attributes.<br>
+Attributes&nbsp;can&nbsp;be&nbsp;read&nbsp;and&nbsp;written&nbsp;using&nbsp;the&nbsp;familiar&nbsp;python&nbsp;"dot<br>
+notation",&nbsp;and&nbsp;records&nbsp;can&nbsp;be&nbsp;read&nbsp;and&nbsp;written&nbsp;by&nbsp;indexing&nbsp;and&nbsp;slicing&nbsp;the<br>
+vdata&nbsp;as&nbsp;if&nbsp;it&nbsp;were&nbsp;a&nbsp;python&nbsp;sequence.<br>
+&nbsp;<br>
+<a href="#VS">VS</a>&nbsp;module&nbsp;key&nbsp;features<br>
+----------------------<br>
+<a href="#VS">VS</a>&nbsp;key&nbsp;features&nbsp;are&nbsp;as&nbsp;follows.<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;-pyhdf&nbsp;implements&nbsp;almost&nbsp;every&nbsp;routine&nbsp;of&nbsp;the&nbsp;original&nbsp;<a href="#VS">VS</a>&nbsp;API.<br>
+&nbsp;&nbsp;&nbsp;Only&nbsp;a&nbsp;few&nbsp;have&nbsp;been&nbsp;ignored,&nbsp;most&nbsp;of&nbsp;them&nbsp;being&nbsp;of&nbsp;a&nbsp;rare&nbsp;use:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;VSgetblocksize()&nbsp;/&nbsp;VSsetblocksize()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;VSsetnumblocks()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;VSlone<br>
+&nbsp;<br>
+&nbsp;&nbsp;-It&nbsp;is&nbsp;quite&nbsp;straightforward&nbsp;to&nbsp;go&nbsp;from&nbsp;a&nbsp;C&nbsp;version&nbsp;to&nbsp;a&nbsp;python&nbsp;version<br>
+&nbsp;&nbsp;&nbsp;of&nbsp;a&nbsp;program&nbsp;accessing&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;API,&nbsp;and&nbsp;to&nbsp;learn&nbsp;<a href="#VS">VS</a>&nbsp;usage&nbsp;by&nbsp;refering&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;the&nbsp;C&nbsp;API&nbsp;documentation.<br>
+&nbsp;<br>
+&nbsp;&nbsp;-A&nbsp;few&nbsp;high-level&nbsp;python&nbsp;methods&nbsp;have&nbsp;been&nbsp;developped&nbsp;to&nbsp;ease<br>
+&nbsp;&nbsp;&nbsp;programmers&nbsp;task.&nbsp;Of&nbsp;greatest&nbsp;interest&nbsp;are&nbsp;the&nbsp;following:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Access&nbsp;to&nbsp;attributes&nbsp;through&nbsp;the&nbsp;familiar&nbsp;"dot&nbsp;notation".<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Indexing&nbsp;and&nbsp;slicing&nbsp;a&nbsp;vdata&nbsp;to&nbsp;read&nbsp;and&nbsp;write&nbsp;its&nbsp;records,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;similarly&nbsp;to&nbsp;a&nbsp;python&nbsp;sequence.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Easy&nbsp;retrieval&nbsp;of&nbsp;info&nbsp;on&nbsp;a&nbsp;vdata&nbsp;and&nbsp;its&nbsp;fields.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Easy&nbsp;creation&nbsp;of&nbsp;vdatas.<br>
+&nbsp;<br>
+Accessing&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;module<br>
+-----------------------<br>
+To&nbsp;access&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;module&nbsp;a&nbsp;python&nbsp;program&nbsp;can&nbsp;say&nbsp;one&nbsp;of:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;import&nbsp;pyhdf.<a href="#VS">VS</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;must&nbsp;prefix&nbsp;names&nbsp;with&nbsp;"pyhdf.<a href="#VS">VS</a>."<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf&nbsp;import&nbsp;<a href="#VS">VS</a>&nbsp;&nbsp;&nbsp;#&nbsp;must&nbsp;prefix&nbsp;names&nbsp;with&nbsp;"<a href="#VS">VS</a>."<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf.<a href="#VS">VS</a>&nbsp;import&nbsp;*&nbsp;#&nbsp;names&nbsp;need&nbsp;no&nbsp;prefix<br>
+&nbsp;<br>
+This&nbsp;document&nbsp;assumes&nbsp;the&nbsp;last&nbsp;import&nbsp;style&nbsp;is&nbsp;used.<br>
+&nbsp;<br>
+<a href="#VS">VS</a>&nbsp;is&nbsp;not&nbsp;self-contained,&nbsp;and&nbsp;needs&nbsp;functionnality&nbsp;provided&nbsp;by&nbsp;another<br>
+pyhdf&nbsp;module,&nbsp;namely&nbsp;the&nbsp;HDF&nbsp;module.&nbsp;This&nbsp;module&nbsp;must&nbsp;thus&nbsp;be&nbsp;imported<br>
+also:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;HDF&nbsp;import&nbsp;*<br>
+&nbsp;<br>
+Package&nbsp;components<br>
+------------------<br>
+pyhdf&nbsp;is&nbsp;a&nbsp;proper&nbsp;Python&nbsp;package,&nbsp;eg&nbsp;a&nbsp;collection&nbsp;of&nbsp;modules&nbsp;stored&nbsp;under<br>
+a&nbsp;directory&nbsp;whose&nbsp;name&nbsp;is&nbsp;that&nbsp;of&nbsp;the&nbsp;package&nbsp;and&nbsp;which&nbsp;stores&nbsp;an<br>
+__init__.py&nbsp;file.&nbsp;Following&nbsp;the&nbsp;normal&nbsp;installation&nbsp;procedure,&nbsp;this<br>
+directory&nbsp;will&nbsp;be&nbsp;&lt;python-lib&gt;/site-packages/pyhdf',&nbsp;where&nbsp;&lt;python-lib&gt;<br>
+stands&nbsp;for&nbsp;the&nbsp;python&nbsp;installation&nbsp;directory.<br>
+&nbsp;<br>
+For&nbsp;each&nbsp;HDF&nbsp;API&nbsp;exists&nbsp;a&nbsp;corresponding&nbsp;set&nbsp;of&nbsp;modules.<br>
+&nbsp;<br>
+The&nbsp;following&nbsp;modules&nbsp;are&nbsp;related&nbsp;to&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;API.<br>
+&nbsp;<br>
+&nbsp;&nbsp;_hdfext&nbsp;&nbsp;&nbsp;C&nbsp;extension&nbsp;module&nbsp;responsible&nbsp;for&nbsp;wrapping&nbsp;the&nbsp;HDF<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;library&nbsp;for&nbsp;all&nbsp;python&nbsp;modules<br>
+&nbsp;&nbsp;hdfext&nbsp;&nbsp;&nbsp;&nbsp;python&nbsp;module&nbsp;implementing&nbsp;some&nbsp;utility&nbsp;functions<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;complementing&nbsp;the&nbsp;_hdfext&nbsp;extension&nbsp;module<br>
+&nbsp;&nbsp;error&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;defines&nbsp;the&nbsp;HDF4Error&nbsp;exception<br>
+&nbsp;&nbsp;HDF&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;python&nbsp;module&nbsp;providing&nbsp;support&nbsp;to&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;module<br>
+&nbsp;&nbsp;<a href="#VS">VS</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;python&nbsp;module&nbsp;wrapping&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;API&nbsp;routines&nbsp;inside<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;OOP&nbsp;framework<br>
+&nbsp;<br>
+_hdfext&nbsp;and&nbsp;hdfext&nbsp;were&nbsp;generated&nbsp;using&nbsp;the&nbsp;SWIG&nbsp;preprocessor.<br>
+SWIG&nbsp;is&nbsp;however&nbsp;*not*&nbsp;needed&nbsp;to&nbsp;run&nbsp;the&nbsp;package.&nbsp;Those&nbsp;two&nbsp;modules<br>
+are&nbsp;meant&nbsp;to&nbsp;do&nbsp;their&nbsp;work&nbsp;in&nbsp;the&nbsp;background,&nbsp;and&nbsp;should&nbsp;never&nbsp;be&nbsp;called<br>
+directly.&nbsp;Only&nbsp;HDF&nbsp;and&nbsp;<a href="#VS">VS</a>&nbsp;should&nbsp;be&nbsp;imported&nbsp;by&nbsp;the&nbsp;user&nbsp;program.<br>
+&nbsp;<br>
+Prerequisites<br>
+-------------<br>
+The&nbsp;following&nbsp;software&nbsp;must&nbsp;be&nbsp;installed&nbsp;in&nbsp;order&nbsp;for&nbsp;<a href="#VS">VS</a>&nbsp;to<br>
+work.<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;HDF&nbsp;(v4)&nbsp;library<br>
+&nbsp;&nbsp;&nbsp;&nbsp;pyhdf&nbsp;does&nbsp;*not*&nbsp;include&nbsp;the&nbsp;HDF4&nbsp;library,&nbsp;which&nbsp;must<br>
+&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;installed&nbsp;separately.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;HDF&nbsp;is&nbsp;available&nbsp;at:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"<a href="http://hdf.ncsa.uiuc.edu/obtain.html">http://hdf.ncsa.uiuc.edu/obtain.html</a>".<br>
+&nbsp;<br>
+Numeric&nbsp;is&nbsp;also&nbsp;needed&nbsp;by&nbsp;the&nbsp;SD&nbsp;module.&nbsp;See&nbsp;the&nbsp;SD&nbsp;module&nbsp;documentation.<br>
+&nbsp;<br>
+Documentation<br>
+-------------<br>
+pyhdf&nbsp;has&nbsp;been&nbsp;written&nbsp;so&nbsp;as&nbsp;to&nbsp;stick&nbsp;as&nbsp;closely&nbsp;as&nbsp;possible&nbsp;to&nbsp;<br>
+the&nbsp;naming&nbsp;conventions&nbsp;and&nbsp;calling&nbsp;sequences&nbsp;documented&nbsp;inside&nbsp;the<br>
+"HDF&nbsp;User&nbsp;s&nbsp;Guide"&nbsp;manual.&nbsp;Even&nbsp;if&nbsp;pyhdf&nbsp;gives&nbsp;an&nbsp;OOP&nbsp;twist<br>
+to&nbsp;the&nbsp;C&nbsp;API,&nbsp;the&nbsp;manual&nbsp;can&nbsp;be&nbsp;easily&nbsp;used&nbsp;as&nbsp;a&nbsp;documentary&nbsp;source<br>
+for&nbsp;pyhdf,&nbsp;once&nbsp;the&nbsp;class&nbsp;to&nbsp;which&nbsp;a&nbsp;function&nbsp;belongs&nbsp;has&nbsp;been<br>
+identified,&nbsp;and&nbsp;of&nbsp;course&nbsp;once&nbsp;requirements&nbsp;imposed&nbsp;by&nbsp;the&nbsp;Python<br>
+langage&nbsp;have&nbsp;been&nbsp;taken&nbsp;into&nbsp;account.&nbsp;Consequently,&nbsp;this&nbsp;documentation<br>
+will&nbsp;not&nbsp;attempt&nbsp;to&nbsp;provide&nbsp;an&nbsp;exhaustive&nbsp;coverage&nbsp;of&nbsp;the&nbsp;HDF&nbsp;<a href="#VS">VS</a><br>
+API.&nbsp;For&nbsp;this,&nbsp;the&nbsp;user&nbsp;is&nbsp;referred&nbsp;to&nbsp;the&nbsp;above&nbsp;manual.<br>
+The&nbsp;documentation&nbsp;of&nbsp;each&nbsp;pyhdf&nbsp;method&nbsp;will&nbsp;indicate&nbsp;the&nbsp;name<br>
+of&nbsp;the&nbsp;equivalent&nbsp;routine&nbsp;as&nbsp;it&nbsp;is&nbsp;found&nbsp;inside&nbsp;the&nbsp;C&nbsp;API.<br>
+&nbsp;&nbsp;<br>
+This&nbsp;document&nbsp;(in&nbsp;both&nbsp;its&nbsp;text&nbsp;and&nbsp;html&nbsp;versions)&nbsp;has&nbsp;been&nbsp;completely<br>
+produced&nbsp;using&nbsp;"pydoc",&nbsp;the&nbsp;Python&nbsp;documentation&nbsp;generator&nbsp;(which<br>
+made&nbsp;its&nbsp;debut&nbsp;in&nbsp;the&nbsp;2.1&nbsp;Python&nbsp;release).&nbsp;pydoc&nbsp;can&nbsp;also&nbsp;be&nbsp;used<br>
+as&nbsp;an&nbsp;on-line&nbsp;help&nbsp;tool.&nbsp;For&nbsp;example,&nbsp;to&nbsp;know&nbsp;everything&nbsp;about<br>
+the&nbsp;<a href="#VS">VS</a>.<a href="#VD">VD</a>&nbsp;class,&nbsp;say:<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pydoc&nbsp;import&nbsp;help<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf.<a href="#VS">VS</a>&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;help(<a href="#VD">VD</a>)<br>
+&nbsp;<br>
+To&nbsp;be&nbsp;more&nbsp;specific&nbsp;and&nbsp;get&nbsp;help&nbsp;only&nbsp;for&nbsp;the&nbsp;read()&nbsp;method&nbsp;of&nbsp;the<br>
+<a href="#VD">VD</a>&nbsp;class:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;help(<a href="#VD">VD</a>.read)&nbsp;<br>
+&nbsp;<br>
+pydoc&nbsp;can&nbsp;also&nbsp;be&nbsp;called&nbsp;from&nbsp;the&nbsp;command&nbsp;line,&nbsp;as&nbsp;in:<br>
+&nbsp;<br>
+&nbsp;&nbsp;%&nbsp;pydoc&nbsp;pyhdf.<a href="#VS">VS</a>.<a href="#VD">VD</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;doc&nbsp;for&nbsp;the&nbsp;whole&nbsp;<a href="#VD">VD</a>&nbsp;class<br>
+&nbsp;&nbsp;%&nbsp;pydoc&nbsp;pyhdf.<a href="#VS">VS</a>.<a href="#VD">VD</a>.read&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;doc&nbsp;for&nbsp;the&nbsp;<a href="#VD">VD</a>.read&nbsp;method<br>
+&nbsp;&nbsp;<br>
+Summary&nbsp;of&nbsp;differences&nbsp;between&nbsp;the&nbsp;pyhdf&nbsp;and&nbsp;C&nbsp;<a href="#VS">VS</a>&nbsp;API<br>
+-----------------------------------------------------<br>
+Most&nbsp;of&nbsp;the&nbsp;differences&nbsp;between&nbsp;the&nbsp;pyhdf&nbsp;and&nbsp;C&nbsp;<a href="#VS">VS</a>&nbsp;API&nbsp;can<br>
+be&nbsp;summarized&nbsp;as&nbsp;follows.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;-In&nbsp;the&nbsp;C&nbsp;API,&nbsp;every&nbsp;function&nbsp;returns&nbsp;an&nbsp;integer&nbsp;status&nbsp;code,&nbsp;and&nbsp;values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;computed&nbsp;by&nbsp;the&nbsp;function&nbsp;are&nbsp;returned&nbsp;through&nbsp;one&nbsp;or&nbsp;more&nbsp;pointers<br>
+&nbsp;&nbsp;&nbsp;&nbsp;passed&nbsp;as&nbsp;arguments.<br>
+&nbsp;&nbsp;&nbsp;-In&nbsp;pyhdf,&nbsp;error&nbsp;statuses&nbsp;are&nbsp;returned&nbsp;through&nbsp;the&nbsp;Python&nbsp;exception<br>
+&nbsp;&nbsp;&nbsp;&nbsp;mechanism,&nbsp;and&nbsp;values&nbsp;are&nbsp;returned&nbsp;as&nbsp;the&nbsp;method&nbsp;result.&nbsp;When&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;API&nbsp;specifies&nbsp;that&nbsp;multiple&nbsp;values&nbsp;are&nbsp;returned,&nbsp;pyhdf&nbsp;returns&nbsp;a&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sequence&nbsp;of&nbsp;values,&nbsp;which&nbsp;are&nbsp;ordered&nbsp;similarly&nbsp;to&nbsp;the&nbsp;pointers&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;function&nbsp;argument&nbsp;list.<br>
+&nbsp;&nbsp;&nbsp;<br>
+Error&nbsp;handling<br>
+--------------<br>
+All&nbsp;errors&nbsp;reported&nbsp;by&nbsp;the&nbsp;C&nbsp;<a href="#VS">VS</a>&nbsp;API&nbsp;with&nbsp;a&nbsp;SUCCESS/FAIL&nbsp;error&nbsp;code<br>
+are&nbsp;reported&nbsp;by&nbsp;pyhdf&nbsp;using&nbsp;the&nbsp;Python&nbsp;exception&nbsp;mechanism.<br>
+When&nbsp;the&nbsp;C&nbsp;library&nbsp;reports&nbsp;a&nbsp;FAIL&nbsp;status,&nbsp;pyhdf&nbsp;raises&nbsp;an&nbsp;HDF4Error<br>
+exception&nbsp;(a&nbsp;subclass&nbsp;of&nbsp;Exception)&nbsp;with&nbsp;a&nbsp;descriptive&nbsp;message.&nbsp;<br>
+Unfortunately,&nbsp;the&nbsp;C&nbsp;library&nbsp;is&nbsp;rarely&nbsp;informative&nbsp;about&nbsp;the&nbsp;cause&nbsp;of&nbsp;<br>
+the&nbsp;error.&nbsp;pyhdf&nbsp;does&nbsp;its&nbsp;best&nbsp;to&nbsp;try&nbsp;to&nbsp;document&nbsp;the&nbsp;error,&nbsp;but&nbsp;most&nbsp;<br>
+of&nbsp;the&nbsp;time&nbsp;cannot&nbsp;do&nbsp;more&nbsp;than&nbsp;saying&nbsp;"execution&nbsp;error".<br>
+&nbsp;<br>
+<a href="#VS">VS</a>&nbsp;needs&nbsp;support&nbsp;from&nbsp;the&nbsp;HDF&nbsp;module<br>
+------------------------------------<br>
+The&nbsp;<a href="#VS">VS</a>&nbsp;module&nbsp;is&nbsp;not&nbsp;self-contained&nbsp;(countrary&nbsp;to&nbsp;the&nbsp;SD&nbsp;module).<br>
+It&nbsp;requires&nbsp;help&nbsp;from&nbsp;the&nbsp;HDF&nbsp;module,&nbsp;namely:<br>
+&nbsp;&nbsp;-the&nbsp;HDF.HDF&nbsp;class&nbsp;to&nbsp;open&nbsp;and&nbsp;close&nbsp;the&nbsp;HDF&nbsp;file,&nbsp;and&nbsp;initialize&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;<a href="#VS">VS</a>&nbsp;interface<br>
+&nbsp;&nbsp;-the&nbsp;HDF.HC&nbsp;class&nbsp;to&nbsp;provide&nbsp;different&nbsp;sorts&nbsp;of&nbsp;constants&nbsp;(opening&nbsp;modes,<br>
+&nbsp;&nbsp;&nbsp;data&nbsp;types,&nbsp;etc).<br>
+&nbsp;<br>
+A&nbsp;program&nbsp;wanting&nbsp;to&nbsp;access&nbsp;HDF&nbsp;vdatas&nbsp;will&nbsp;almost&nbsp;always&nbsp;need&nbsp;to&nbsp;execute<br>
+the&nbsp;following&nbsp;minimal&nbsp;set&nbsp;of&nbsp;calls:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf.HDF&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf.<a href="#VS">VS</a>&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;hdfFile&nbsp;=&nbsp;HDF(name,&nbsp;HC.xxx)#&nbsp;open&nbsp;HDF&nbsp;file<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;vs&nbsp;=&nbsp;hdfFile.vstart()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;initialize&nbsp;<a href="#VS">VS</a>&nbsp;interface&nbsp;on&nbsp;HDF&nbsp;file<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;manipulate&nbsp;vdatas&nbsp;through&nbsp;"vs"<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;vs.end()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;terminate&nbsp;<a href="#VS">VS</a>&nbsp;interface<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;hdfFile.close()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;close&nbsp;HDF&nbsp;file<br>
+&nbsp;<br>
+Classes&nbsp;summary<br>
+---------------<br>
+pyhdf&nbsp;wraps&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;API&nbsp;using&nbsp;different&nbsp;python&nbsp;classes:<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#VS">VS</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HDF&nbsp;<a href="#VS">VS</a>&nbsp;interface<br>
+&nbsp;&nbsp;<a href="#VD">VD</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vdata<br>
+&nbsp;&nbsp;<a href="#VDField">VDField</a>&nbsp;vdata&nbsp;field<br>
+&nbsp;&nbsp;VDattr&nbsp;&nbsp;attribute&nbsp;(either&nbsp;at&nbsp;the&nbsp;vdata&nbsp;or&nbsp;field&nbsp;level)<br>
+&nbsp;<br>
+In&nbsp;more&nbsp;detail:<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#VS">VS</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<a href="#VS">VS</a>&nbsp;class&nbsp;implements&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;(Vdata)&nbsp;interface&nbsp;applied&nbsp;to&nbsp;an<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HDF&nbsp;file.&nbsp;This&nbsp;class&nbsp;encapsulates&nbsp;the&nbsp;hdf&nbsp;instance,&nbsp;and&nbsp;all<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;top-level&nbsp;functions&nbsp;of&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;API.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To&nbsp;create&nbsp;a&nbsp;<a href="#VS">VS</a>&nbsp;instance,&nbsp;call&nbsp;the&nbsp;vstart()&nbsp;method&nbsp;of&nbsp;an<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HDF&nbsp;instance.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methods:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructors:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attach()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;open&nbsp;an&nbsp;existing&nbsp;vdata&nbsp;given&nbsp;its&nbsp;name&nbsp;or<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reference&nbsp;number,&nbsp;or&nbsp;create&nbsp;a&nbsp;new&nbsp;one,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returning&nbsp;a&nbsp;<a href="#VD">VD</a>&nbsp;instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;create()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;create&nbsp;a&nbsp;new&nbsp;vdata&nbsp;and&nbsp;define&nbsp;its&nbsp;structure,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returning&nbsp;a&nbsp;<a href="#VD">VD</a>&nbsp;instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;creating&nbsp;and&nbsp;initializing&nbsp;a&nbsp;simple&nbsp;vdata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;storedata()&nbsp;&nbsp;&nbsp;&nbsp;create&nbsp;a&nbsp;single-field&nbsp;vdata&nbsp;and&nbsp;initialize<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;its&nbsp;values<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;closing&nbsp;the&nbsp;interface<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;close&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;interface&nbsp;on&nbsp;the&nbsp;HDF&nbsp;file<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;searching<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;find()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;a&nbsp;vdata&nbsp;reference&nbsp;number&nbsp;given&nbsp;its&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;reference&nbsp;number&nbsp;of&nbsp;the&nbsp;vdata&nbsp;following<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;given&nbsp;one<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inquiry<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vdatainfo()&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;info&nbsp;about&nbsp;all&nbsp;the&nbsp;vdatas&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HDF&nbsp;file<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#VD">VD</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<a href="#VD">VD</a>&nbsp;class&nbsp;describes&nbsp;a&nbsp;vdata.&nbsp;It&nbsp;encapsulates<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;instance&nbsp;to&nbsp;which&nbsp;the&nbsp;vdata&nbsp;belongs,&nbsp;and&nbsp;the&nbsp;vdata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;identifier.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To&nbsp;instantiate&nbsp;a&nbsp;<a href="#VD">VD</a>&nbsp;class,&nbsp;call&nbsp;the&nbsp;attach()&nbsp;or&nbsp;create()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method&nbsp;of&nbsp;a&nbsp;<a href="#VS">VS</a>&nbsp;class&nbsp;instance.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methods:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructors<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attr()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;create&nbsp;a&nbsp;<a href="#VDAttr">VDAttr</a>&nbsp;instance&nbsp;representing&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vdata&nbsp;attribute;&nbsp;"dot&nbsp;notation"&nbsp;can&nbsp;also&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;used&nbsp;to&nbsp;access&nbsp;a&nbsp;vdata&nbsp;attribute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;field()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;a&nbsp;<a href="#VDField">VDField</a>&nbsp;instance&nbsp;representing&nbsp;a&nbsp;given<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;field&nbsp;of&nbsp;the&nbsp;vdata<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;closing&nbsp;vdata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;detach()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;access&nbsp;to&nbsp;the&nbsp;vdata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;defining&nbsp;fields<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fdefine()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;define&nbsp;the&nbsp;name,&nbsp;type&nbsp;and&nbsp;order&nbsp;of&nbsp;a&nbsp;new&nbsp;field<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setfields()&nbsp;&nbsp;&nbsp;&nbsp;define&nbsp;the&nbsp;field&nbsp;names&nbsp;and&nbsp;field&nbsp;order&nbsp;for<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;read()&nbsp;and&nbsp;write()&nbsp;methods;&nbsp;also&nbsp;used&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initialize&nbsp;the&nbsp;structure&nbsp;of&nbsp;a&nbsp;vdata&nbsp;previously<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;created&nbsp;with&nbsp;the&nbsp;<a href="#VS">VS</a>.attach()&nbsp;method<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reading&nbsp;and&nbsp;writing<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;note:&nbsp;a&nbsp;vdata&nbsp;can&nbsp;be&nbsp;indexed&nbsp;and&nbsp;sliced&nbsp;like&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;python&nbsp;sequence<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;read()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;the&nbsp;values&nbsp;of&nbsp;a&nbsp;number&nbsp;of&nbsp;records<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;starting&nbsp;at&nbsp;the&nbsp;current&nbsp;record&nbsp;position<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;seek()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reset&nbsp;the&nbsp;current&nbsp;record&nbsp;position<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;seekend()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;seek&nbsp;past&nbsp;the&nbsp;last&nbsp;record<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tell()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;the&nbsp;current&nbsp;record&nbsp;position<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;write()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;write&nbsp;a&nbsp;number&nbsp;of&nbsp;records&nbsp;starting&nbsp;at&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;current&nbsp;record&nbsp;position<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inquiry<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attrinfo()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;info&nbsp;about&nbsp;all&nbsp;the&nbsp;vdata&nbsp;attributes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fexist()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;check&nbsp;if&nbsp;a&nbsp;vdata&nbsp;contains&nbsp;a&nbsp;given&nbsp;set&nbsp;of&nbsp;fields<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fieldinfo()&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;info&nbsp;about&nbsp;all&nbsp;the&nbsp;vdata&nbsp;fields<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;findattr()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;locate&nbsp;an&nbsp;attribute,&nbsp;returning&nbsp;a&nbsp;<a href="#VDAttr">VDAttr</a>&nbsp;instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;found<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inquire()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;info&nbsp;about&nbsp;the&nbsp;vdata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sizeof()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;the&nbsp;size&nbsp;in&nbsp;bytes&nbsp;of&nbsp;one&nbsp;or&nbsp;more&nbsp;fields<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#VDField">VDField</a>&nbsp;&nbsp;The&nbsp;<a href="#VDField">VDField</a>&nbsp;class&nbsp;represents&nbsp;a&nbsp;vdata&nbsp;field.&nbsp;It&nbsp;encapsulates<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;<a href="#VD">VD</a>&nbsp;instance&nbsp;to&nbsp;which&nbsp;the&nbsp;field&nbsp;belongs,&nbsp;and&nbsp;the&nbsp;field<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;index&nbsp;number.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To&nbsp;instantiate&nbsp;a&nbsp;<a href="#VDField">VDField</a>,&nbsp;call&nbsp;the&nbsp;field()&nbsp;method&nbsp;of&nbsp;a&nbsp;<a href="#VD">VD</a>&nbsp;class<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;instance.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methods:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructors:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attr()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;a&nbsp;<a href="#VDAttr">VDAttr</a>&nbsp;instance&nbsp;representing&nbsp;an<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attribute&nbsp;of&nbsp;the&nbsp;field;&nbsp;"dot&nbsp;notation"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;can&nbsp;also&nbsp;be&nbsp;used&nbsp;to&nbsp;get/set&nbsp;an&nbsp;attribute.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inquiry<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attrinfo()&nbsp;&nbsp;&nbsp;return&nbsp;info&nbsp;about&nbsp;all&nbsp;the&nbsp;field&nbsp;attributes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;find()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;locate&nbsp;an&nbsp;attribute,&nbsp;returning&nbsp;a&nbsp;<a href="#VDAttr">VDAttr</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;instance&nbsp;if&nbsp;found<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#VDAttr">VDAttr</a>&nbsp;&nbsp;&nbsp;The&nbsp;<a href="#VDAttr">VDAttr</a>&nbsp;class&nbsp;encapsulates&nbsp;methods&nbsp;used&nbsp;to&nbsp;set&nbsp;and&nbsp;query<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attributes&nbsp;defined&nbsp;at&nbsp;the&nbsp;level&nbsp;either&nbsp;of&nbsp;the&nbsp;vdata&nbsp;or&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vdata&nbsp;field.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To&nbsp;create&nbsp;an&nbsp;instance&nbsp;of&nbsp;this&nbsp;class,&nbsp;call&nbsp;the&nbsp;attr()&nbsp;or<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;findattr()&nbsp;methods&nbsp;of&nbsp;a&nbsp;<a href="#VD">VD</a>&nbsp;instance&nbsp;(for&nbsp;vdata&nbsp;attributes),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;call&nbsp;the&nbsp;attr()&nbsp;or&nbsp;find()&nbsp;methods&nbsp;of&nbsp;a&nbsp;<a href="#VDField">VDField</a>&nbsp;instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(for&nbsp;field&nbsp;attributes).<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methods:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;/&nbsp;set<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set&nbsp;the&nbsp;attribute&nbsp;value<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;info<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;info()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;retrieve&nbsp;info&nbsp;about&nbsp;the&nbsp;attribute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Data&nbsp;types<br>
+----------<br>
+Data&nbsp;types&nbsp;come&nbsp;into&nbsp;play&nbsp;when&nbsp;first&nbsp;defining&nbsp;vdata&nbsp;fields&nbsp;and&nbsp;attributes,<br>
+and&nbsp;later&nbsp;when&nbsp;querying&nbsp;the&nbsp;definition&nbsp;of&nbsp;those&nbsp;fields&nbsp;and&nbsp;attributes.<br>
+Data&nbsp;types&nbsp;are&nbsp;specified&nbsp;using&nbsp;the&nbsp;symbolic&nbsp;constants&nbsp;defined&nbsp;inside&nbsp;the<br>
+HC&nbsp;class&nbsp;of&nbsp;the&nbsp;HDF&nbsp;module.<br>
+&nbsp;<br>
+&nbsp;&nbsp;-&nbsp;CHAR&nbsp;and&nbsp;CHAR8&nbsp;(equivalent):&nbsp;an&nbsp;8-bit&nbsp;character.&nbsp;<br>
+&nbsp;&nbsp;-&nbsp;UCHAR,&nbsp;UCHAR8&nbsp;and&nbsp;UINT8&nbsp;(equivalent):&nbsp;unsigned&nbsp;8-bit&nbsp;values&nbsp;(0&nbsp;to&nbsp;255)<br>
+&nbsp;&nbsp;-&nbsp;INT8:&nbsp;&nbsp;&nbsp;&nbsp;signed&nbsp;8-bit&nbsp;values&nbsp;(-128&nbsp;to&nbsp;127)<br>
+&nbsp;&nbsp;-&nbsp;INT16:&nbsp;&nbsp;&nbsp;signed&nbsp;16-bit&nbsp;values<br>
+&nbsp;&nbsp;-&nbsp;UINT16:&nbsp;&nbsp;unsigned&nbsp;16&nbsp;bit&nbsp;values<br>
+&nbsp;&nbsp;-&nbsp;INT32:&nbsp;&nbsp;&nbsp;signed&nbsp;32&nbsp;bit&nbsp;values<br>
+&nbsp;&nbsp;-&nbsp;UINT32:&nbsp;&nbsp;unsigned&nbsp;32&nbsp;bit&nbsp;values<br>
+&nbsp;&nbsp;-&nbsp;FLOAT32:&nbsp;32&nbsp;bit&nbsp;floating&nbsp;point&nbsp;values&nbsp;(C&nbsp;floats)<br>
+&nbsp;&nbsp;-&nbsp;FLOAT64:&nbsp;64&nbsp;bit&nbsp;floating&nbsp;point&nbsp;values&nbsp;(C&nbsp;doubles)<br>
+&nbsp;<br>
+There&nbsp;is&nbsp;no&nbsp;explicit&nbsp;"string"&nbsp;type.&nbsp;To&nbsp;simulate&nbsp;a&nbsp;string,&nbsp;set&nbsp;the&nbsp;field&nbsp;or<br>
+attribute&nbsp;type&nbsp;to&nbsp;CHAR,&nbsp;and&nbsp;set&nbsp;the&nbsp;field&nbsp;or&nbsp;attribute&nbsp;"order"&nbsp;to<br>
+a&nbsp;value&nbsp;of&nbsp;'n'&nbsp;&gt;&nbsp;1.&nbsp;This&nbsp;creates&nbsp;and&nbsp;"array&nbsp;of&nbsp;characters",&nbsp;close<br>
+to&nbsp;a&nbsp;string&nbsp;(except&nbsp;that&nbsp;strings&nbsp;will&nbsp;always&nbsp;be&nbsp;of&nbsp;length&nbsp;'n',&nbsp;right-padded<br>
+with&nbsp;spaces&nbsp;if&nbsp;necessary).<br>
+&nbsp;<br>
+Attribute&nbsp;access:&nbsp;low&nbsp;and&nbsp;high&nbsp;level<br>
+------------------------------------<br>
+The&nbsp;<a href="#VS">VS</a>&nbsp;API&nbsp;allow&nbsp;setting&nbsp;attributes&nbsp;on&nbsp;vdatas&nbsp;and&nbsp;vdata&nbsp;fields.&nbsp;Attributes<br>
+can&nbsp;be&nbsp;of&nbsp;many&nbsp;types&nbsp;(int,&nbsp;float,&nbsp;char)&nbsp;of&nbsp;different&nbsp;bit&nbsp;lengths&nbsp;(8,&nbsp;16,&nbsp;32,<br>
+64&nbsp;bits),&nbsp;and&nbsp;can&nbsp;be&nbsp;single&nbsp;or&nbsp;multi-valued.&nbsp;Values&nbsp;of&nbsp;a&nbsp;multi-valued<br>
+attribute&nbsp;must&nbsp;all&nbsp;be&nbsp;of&nbsp;the&nbsp;same&nbsp;type.<br>
+&nbsp;<br>
+Attributes&nbsp;can&nbsp;be&nbsp;set&nbsp;and&nbsp;queried&nbsp;in&nbsp;two&nbsp;different&nbsp;ways.&nbsp;First,&nbsp;given&nbsp;a<br>
+<a href="#VD">VD</a>&nbsp;instance&nbsp;(describing&nbsp;a&nbsp;vdata&nbsp;<a href="__builtin__.html#object">object</a>)&nbsp;or&nbsp;a&nbsp;<a href="#VDField">VDField</a>&nbsp;instance&nbsp;(describing&nbsp;a<br>
+vdata&nbsp;field),&nbsp;the&nbsp;attr()&nbsp;method&nbsp;of&nbsp;that&nbsp;instance&nbsp;is&nbsp;called&nbsp;to&nbsp;create&nbsp;a<br>
+<a href="#VDAttr">VDAttr</a>&nbsp;instance&nbsp;representing&nbsp;the&nbsp;wanted&nbsp;attribute&nbsp;(possibly&nbsp;non&nbsp;existent).<br>
+The&nbsp;set()&nbsp;method&nbsp;of&nbsp;this&nbsp;<a href="#VDAttr">VDAttr</a>&nbsp;instance&nbsp;is&nbsp;then&nbsp;called&nbsp;to&nbsp;define&nbsp;the<br>
+attribute&nbsp;value,&nbsp;creating&nbsp;it&nbsp;if&nbsp;it&nbsp;does&nbsp;not&nbsp;already&nbsp;exist.&nbsp;The&nbsp;get()&nbsp;method<br>
+returns&nbsp;the&nbsp;current&nbsp;attribute&nbsp;value.&nbsp;Here&nbsp;is&nbsp;an&nbsp;example.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf.HDF&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf.<a href="#VS">VS</a>&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;f&nbsp;=&nbsp;HDF('test.hdf',&nbsp;HC.WRITE)&nbsp;#&nbsp;Open&nbsp;file&nbsp;'test.hdf'&nbsp;in&nbsp;write&nbsp;mode<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;vs&nbsp;=&nbsp;f.vstart()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;init&nbsp;vdata&nbsp;interface<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;vd&nbsp;=&nbsp;vs.attach('vtest',&nbsp;1)&nbsp;#&nbsp;attach&nbsp;vdata&nbsp;'vtest'&nbsp;in&nbsp;write&nbsp;mode<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;attr&nbsp;=&nbsp;vd.attr('version')&nbsp;&nbsp;#&nbsp;prepare&nbsp;to&nbsp;define&nbsp;the&nbsp;'version'&nbsp;attribute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;on&nbsp;the&nbsp;vdata<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;attr.set(HC.CHAR8,'1.0')&nbsp;&nbsp;&nbsp;#&nbsp;set&nbsp;attribute&nbsp;'version'&nbsp;to&nbsp;string&nbsp;'1.0'<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;attr.get()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;get&nbsp;and&nbsp;print&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;fld&nbsp;&nbsp;=&nbsp;vd.field('fld1')&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;obtain&nbsp;a&nbsp;field&nbsp;instance&nbsp;for&nbsp;field&nbsp;'fld1'<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;attr&nbsp;=&nbsp;fld.attr('range')&nbsp;&nbsp;&nbsp;#&nbsp;prepare&nbsp;to&nbsp;define&nbsp;attribute&nbsp;'range'&nbsp;on<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;this&nbsp;field<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;attr.set(HC.INT32,(-10,&nbsp;15))&nbsp;#&nbsp;set&nbsp;attribute&nbsp;'range'&nbsp;to&nbsp;a&nbsp;pair&nbsp;of&nbsp;ints<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;attr.get()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;get&nbsp;and&nbsp;print&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;vd.detach()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;"close"&nbsp;the&nbsp;vdata<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;vs.end()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;terminate&nbsp;the&nbsp;vdata&nbsp;interface<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;f.close()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;close&nbsp;the&nbsp;HDF&nbsp;file<br>
+&nbsp;<br>
+The&nbsp;second&nbsp;way&nbsp;consists&nbsp;of&nbsp;setting/querying&nbsp;an&nbsp;attribute&nbsp;as&nbsp;if&nbsp;it&nbsp;were&nbsp;a<br>
+normal&nbsp;python&nbsp;class&nbsp;attribute,&nbsp;using&nbsp;the&nbsp;usual&nbsp;dot&nbsp;notation.&nbsp;Above&nbsp;example<br>
+then&nbsp;becomes:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf.HDF&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;pyhdf.<a href="#VS">VS</a>&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;f&nbsp;=&nbsp;HDF('test.hdf',&nbsp;HC.WRITE)&nbsp;#&nbsp;Open&nbsp;file&nbsp;'test.hdf'&nbsp;in&nbsp;write&nbsp;mode<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;vs&nbsp;=&nbsp;f.vstart()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;init&nbsp;vdata&nbsp;interface<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;vd&nbsp;=&nbsp;vs.attach('vtest',&nbsp;1)&nbsp;#&nbsp;attach&nbsp;vdata&nbsp;'vtest'&nbsp;in&nbsp;write&nbsp;mode<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;vd.version&nbsp;=&nbsp;'1.0'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;create&nbsp;vdata&nbsp;attribute&nbsp;'version',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;setting&nbsp;it&nbsp;to&nbsp;string&nbsp;'1.0'<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;vd.version&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;print&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;fld&nbsp;&nbsp;=&nbsp;vd.field('fld1')&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;obtain&nbsp;a&nbsp;field&nbsp;instance&nbsp;for&nbsp;field&nbsp;'fld1'<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;fld.range&nbsp;=&nbsp;(-10,&nbsp;15)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;create&nbsp;field&nbsp;attribute&nbsp;'range',&nbsp;setting<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;it&nbsp;to&nbsp;the&nbsp;pair&nbsp;of&nbsp;ints&nbsp;(-10,&nbsp;15)<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;fld.range&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;print&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;vd.detach()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;"close"&nbsp;the&nbsp;vdata<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;vs.end()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;terminate&nbsp;the&nbsp;vdata&nbsp;interface<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;f.close()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;close&nbsp;the&nbsp;HDF&nbsp;file<br>
+&nbsp;<br>
+Note&nbsp;how&nbsp;the&nbsp;dot&nbsp;notation&nbsp;greatly&nbsp;simplifies&nbsp;and&nbsp;clarifies&nbsp;the&nbsp;code.<br>
+Some&nbsp;latitude&nbsp;is&nbsp;however&nbsp;lost&nbsp;by&nbsp;manipulating&nbsp;attributes&nbsp;in&nbsp;that&nbsp;way,<br>
+because&nbsp;the&nbsp;pyhdf&nbsp;package,&nbsp;not&nbsp;the&nbsp;programmer,&nbsp;is&nbsp;then&nbsp;responsible&nbsp;of<br>
+setting&nbsp;the&nbsp;attribute&nbsp;type.&nbsp;The&nbsp;attribute&nbsp;type&nbsp;is&nbsp;chosen&nbsp;to&nbsp;be&nbsp;one&nbsp;of:<br>
+&nbsp;<br>
+&nbsp;&nbsp;HC.CHAR8&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;the&nbsp;attribute&nbsp;value&nbsp;is&nbsp;a&nbsp;string<br>
+&nbsp;&nbsp;HC.INT32&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;all&nbsp;attribute&nbsp;values&nbsp;are&nbsp;integers<br>
+&nbsp;&nbsp;HC.FLOAT64&nbsp;&nbsp;otherwise<br>
+&nbsp;<br>
+The&nbsp;first&nbsp;way&nbsp;of&nbsp;handling&nbsp;attribute&nbsp;values&nbsp;must&nbsp;be&nbsp;used&nbsp;if&nbsp;one&nbsp;wants&nbsp;to<br>
+define&nbsp;an&nbsp;attribute&nbsp;of&nbsp;any&nbsp;other&nbsp;type&nbsp;(for&nbsp;ex.&nbsp;8&nbsp;or&nbsp;16&nbsp;bit&nbsp;integers,<br>
+signed&nbsp;or&nbsp;unsigned).&nbsp;Also,&nbsp;only&nbsp;a&nbsp;<a href="#VDAttr">VDAttr</a>&nbsp;instance&nbsp;gives&nbsp;access&nbsp;to&nbsp;attribute<br>
+info,&nbsp;through&nbsp;its&nbsp;info()&nbsp;method.<br>
+&nbsp;<br>
+However,&nbsp;accessing&nbsp;HDF&nbsp;attributes&nbsp;as&nbsp;if&nbsp;they&nbsp;were&nbsp;python&nbsp;attributes&nbsp;raises<br>
+an&nbsp;important&nbsp;issue.&nbsp;There&nbsp;must&nbsp;exist&nbsp;a&nbsp;way&nbsp;to&nbsp;assign&nbsp;generic&nbsp;attributes<br>
+to&nbsp;the&nbsp;python&nbsp;objects&nbsp;without&nbsp;requiring&nbsp;those&nbsp;attributes&nbsp;to&nbsp;be&nbsp;converted<br>
+to&nbsp;HDF&nbsp;attributes.&nbsp;pyhdf&nbsp;uses&nbsp;the&nbsp;following&nbsp;rule:&nbsp;an&nbsp;attribute&nbsp;whose&nbsp;name<br>
+starts&nbsp;with&nbsp;an&nbsp;underscore&nbsp;('_')&nbsp;is&nbsp;either&nbsp;a&nbsp;"predefined"&nbsp;attribute<br>
+(see&nbsp;below)&nbsp;or&nbsp;a&nbsp;standard&nbsp;python&nbsp;attribute.&nbsp;Otherwise,&nbsp;the&nbsp;attribute<br>
+is&nbsp;handled&nbsp;as&nbsp;an&nbsp;HDF&nbsp;attribute.&nbsp;Also,&nbsp;HDF&nbsp;attributes&nbsp;are&nbsp;not&nbsp;stored&nbsp;inside<br>
+the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;dictionnary:&nbsp;the&nbsp;python&nbsp;dir()&nbsp;function&nbsp;will&nbsp;not&nbsp;list&nbsp;them.<br>
+&nbsp;<br>
+Attribute&nbsp;values&nbsp;can&nbsp;be&nbsp;updated,&nbsp;but&nbsp;it&nbsp;is&nbsp;illegal&nbsp;to&nbsp;try&nbsp;to&nbsp;change&nbsp;the<br>
+value&nbsp;type,&nbsp;or&nbsp;the&nbsp;attribute&nbsp;order&nbsp;(number&nbsp;of&nbsp;values).&nbsp;This&nbsp;is&nbsp;important<br>
+for&nbsp;attributes&nbsp;holding&nbsp;string&nbsp;values.&nbsp;An&nbsp;attribute&nbsp;initialized&nbsp;with&nbsp;an<br>
+'n'&nbsp;character&nbsp;string&nbsp;is&nbsp;simply&nbsp;a&nbsp;character&nbsp;attribute&nbsp;of&nbsp;order&nbsp;'n'&nbsp;(eg&nbsp;a<br>
+character&nbsp;array&nbsp;of&nbsp;length&nbsp;'n').&nbsp;If&nbsp;'vd'&nbsp;is&nbsp;a&nbsp;vdata&nbsp;and&nbsp;we&nbsp;initialize&nbsp;its<br>
+'a1'&nbsp;attribute&nbsp;as&nbsp;'vd.a1&nbsp;=&nbsp;"abcdef"',&nbsp;then&nbsp;a&nbsp;subsequent&nbsp;update&nbsp;attempt<br>
+like&nbsp;'vd.a1&nbsp;=&nbsp;"12"'&nbsp;will&nbsp;fail,&nbsp;because&nbsp;we&nbsp;then&nbsp;try&nbsp;to&nbsp;change&nbsp;the&nbsp;order<br>
+of&nbsp;the&nbsp;attribute&nbsp;(from&nbsp;6&nbsp;to&nbsp;2).&nbsp;It&nbsp;is&nbsp;mandatory&nbsp;to&nbsp;keep&nbsp;the&nbsp;length&nbsp;of&nbsp;string<br>
+attributes&nbsp;constant.&nbsp;Examples&nbsp;below&nbsp;show&nbsp;simple&nbsp;ways&nbsp;how&nbsp;this&nbsp;can&nbsp;be&nbsp;done.<br>
+&nbsp;<br>
+Predefined&nbsp;attributes<br>
+---------------------<br>
+The&nbsp;<a href="#VD">VD</a>&nbsp;and&nbsp;<a href="#VDField">VDField</a>&nbsp;classes&nbsp;support&nbsp;predefined&nbsp;attributes&nbsp;to&nbsp;get&nbsp;(and<br>
+occasionnaly&nbsp;set)&nbsp;attribute&nbsp;values&nbsp;easily,&nbsp;without&nbsp;having&nbsp;to&nbsp;call&nbsp;a<br>
+class&nbsp;method.&nbsp;The&nbsp;names&nbsp;of&nbsp;predefined&nbsp;attributes&nbsp;all&nbsp;start&nbsp;with&nbsp;an<br>
+underscore&nbsp;('_').<br>
+&nbsp;<br>
+In&nbsp;the&nbsp;following&nbsp;tables,&nbsp;the&nbsp;RW&nbsp;column&nbsp;holds&nbsp;an&nbsp;X&nbsp;if&nbsp;the&nbsp;attribute<br>
+is&nbsp;read/write.&nbsp;See&nbsp;the&nbsp;HDF&nbsp;User&nbsp;s&nbsp;guide&nbsp;for&nbsp;details&nbsp;about&nbsp;more<br>
+"exotic"&nbsp;topics&nbsp;like&nbsp;"class",&nbsp;"faked&nbsp;vdata"&nbsp;and&nbsp;"tag".<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#VD">VD</a>&nbsp;predefined&nbsp;attributes<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RW&nbsp;&nbsp;description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;library&nbsp;routine<br>
+&nbsp;&nbsp;&nbsp;&nbsp;--------------------------------------------------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_class&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;class&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSgetclass/VSsetclass<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_fields&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;list&nbsp;of&nbsp;field&nbsp;names&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSgetfields<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_interlace&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;interlace&nbsp;mode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSgetinterlace/VSsetinterlace<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_isattr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true&nbsp;if&nbsp;vdata&nbsp;is&nbsp;"faked"&nbsp;&nbsp;&nbsp;VSisattr<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;by&nbsp;HDF&nbsp;to&nbsp;hold&nbsp;attributes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;name&nbsp;of&nbsp;the&nbsp;vdata&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSgetname/VSsetname<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_nattrs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number&nbsp;of&nbsp;attributes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSfnattrs<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_nfields&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number&nbsp;of&nbsp;fields&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VFnfields<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_nrecs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number&nbsp;of&nbsp;records&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSelts<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_recsize&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;record&nbsp;size&nbsp;(bytes)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSQueryvsize<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_refnum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reference&nbsp;number&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSQueryref<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_tag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vdata&nbsp;tag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSQuerytag<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_tnattrs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;total&nbsp;number&nbsp;of&nbsp;vdata&nbsp;and&nbsp;&nbsp;VSnattrs<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;field&nbsp;attributes<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#VDField">VDField</a>&nbsp;predefined&nbsp;attributes<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RW&nbsp;&nbsp;description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;library&nbsp;routine<br>
+&nbsp;&nbsp;&nbsp;&nbsp;--------------------------------------------------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_esize&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;external&nbsp;size&nbsp;(bytes)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VFfieldesize<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_index&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;index&nbsp;number&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSfindex<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_isize&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;internal&nbsp;size&nbsp;(bytes)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VFfieldisize<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VFfieldname<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_nattrs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number&nbsp;of&nbsp;attributes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSfnattrs<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_order&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;order&nbsp;(number&nbsp;of&nbsp;values)&nbsp;&nbsp;&nbsp;VFfieldorder<br>
+&nbsp;&nbsp;&nbsp;&nbsp;_type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;field&nbsp;type&nbsp;(HC.xxx)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VFfieldtype<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+Record&nbsp;access:&nbsp;low&nbsp;and&nbsp;high&nbsp;level<br>
+---------------------------------<br>
+vdata&nbsp;records&nbsp;can&nbsp;be&nbsp;read&nbsp;and&nbsp;written&nbsp;in&nbsp;two&nbsp;different&nbsp;ways.&nbsp;The&nbsp;first&nbsp;one<br>
+consists&nbsp;of&nbsp;calling&nbsp;the&nbsp;basic&nbsp;I/O&nbsp;methods&nbsp;of&nbsp;the&nbsp;vdata:<br>
+&nbsp;<br>
+&nbsp;&nbsp;-&nbsp;seek()&nbsp;to&nbsp;set&nbsp;the&nbsp;current&nbsp;record&nbsp;position,&nbsp;if&nbsp;necessary;<br>
+&nbsp;&nbsp;-&nbsp;read()&nbsp;to&nbsp;retrieve&nbsp;a&nbsp;given&nbsp;number&nbsp;of&nbsp;records&nbsp;from&nbsp;that&nbsp;position;<br>
+&nbsp;&nbsp;-&nbsp;write()&nbsp;to&nbsp;write&nbsp;a&nbsp;given&nbsp;number&nbsp;of&nbsp;records&nbsp;starting&nbsp;at<br>
+&nbsp;&nbsp;&nbsp;&nbsp;that&nbsp;position<br>
+&nbsp;<br>
+A&nbsp;second,&nbsp;higher&nbsp;level&nbsp;way,&nbsp;lets&nbsp;one&nbsp;see&nbsp;a&nbsp;vdata&nbsp;similarly&nbsp;to&nbsp;a&nbsp;python<br>
+sequence,&nbsp;and&nbsp;access&nbsp;its&nbsp;contents&nbsp;using&nbsp;the&nbsp;familiar&nbsp;indexing&nbsp;and&nbsp;slicing<br>
+notation&nbsp;in&nbsp;square&nbsp;brackets.&nbsp;Reading&nbsp;and&nbsp;writing&nbsp;a&nbsp;vdata&nbsp;as&nbsp;if&nbsp;it&nbsp;were&nbsp;a<br>
+python&nbsp;sequence&nbsp;may&nbsp;often&nbsp;look&nbsp;simpler,&nbsp;and&nbsp;improve&nbsp;code&nbsp;legibility.<br>
+&nbsp;<br>
+Here&nbsp;are&nbsp;some&nbsp;examples&nbsp;of&nbsp;how&nbsp;a&nbsp;vdata&nbsp;'vd'&nbsp;holding&nbsp;3&nbsp;fields&nbsp;could&nbsp;be&nbsp;read.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;vd[0]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;print&nbsp;record&nbsp;0<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;vd[-1]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;print&nbsp;last&nbsp;record<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;vd[2:]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;print&nbsp;records&nbsp;2&nbsp;and&nbsp;those&nbsp;that&nbsp;follow<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;vd[:]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;print&nbsp;all&nbsp;records<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;vd[:,0]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;print&nbsp;field&nbsp;0&nbsp;of&nbsp;all&nbsp;records<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;vd[:3,:2]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;print&nbsp;first&nbsp;2&nbsp;fields&nbsp;of&nbsp;first&nbsp;3&nbsp;records<br>
+&nbsp;<br>
+As&nbsp;the&nbsp;above&nbsp;examples&nbsp;show,&nbsp;the&nbsp;usual&nbsp;python&nbsp;rules&nbsp;are&nbsp;obeyed&nbsp;regarding<br>
+the&nbsp;interpretation&nbsp;of&nbsp;indexing&nbsp;and&nbsp;slicing&nbsp;values.&nbsp;Note&nbsp;that&nbsp;the&nbsp;vdata<br>
+fields&nbsp;can&nbsp;be&nbsp;indexed&nbsp;and&nbsp;sliced,&nbsp;not&nbsp;only&nbsp;the&nbsp;records.&nbsp;The&nbsp;setfields()<br>
+method&nbsp;can&nbsp;also&nbsp;be&nbsp;used&nbsp;to&nbsp;select&nbsp;a&nbsp;subset&nbsp;to&nbsp;the&nbsp;vdata&nbsp;fields<br>
+(setfields()&nbsp;also&nbsp;let&nbsp;you&nbsp;reorder&nbsp;the&nbsp;fields).&nbsp;When&nbsp;the&nbsp;vdata&nbsp;is<br>
+indexed&nbsp;(as&nbsp;opposed&nbsp;to&nbsp;being&nbsp;sliced),&nbsp;a&nbsp;single&nbsp;record&nbsp;is&nbsp;returned&nbsp;as&nbsp;a&nbsp;list<br>
+of&nbsp;values.&nbsp;When&nbsp;the&nbsp;vdata&nbsp;is&nbsp;sliced,&nbsp;a&nbsp;list&nbsp;of&nbsp;records&nbsp;is<br>
+always&nbsp;returned&nbsp;(thus&nbsp;a&nbsp;2-level&nbsp;list),&nbsp;even&nbsp;if&nbsp;the&nbsp;slice&nbsp;contains&nbsp;only<br>
+one&nbsp;record.<br>
+&nbsp;<br>
+A&nbsp;vdata&nbsp;can&nbsp;also&nbsp;be&nbsp;written&nbsp;similarly&nbsp;to&nbsp;a&nbsp;python&nbsp;sequence.&nbsp;When&nbsp;indexing<br>
+the&nbsp;vdata&nbsp;(as&nbsp;opposed&nbsp;to&nbsp;slicing&nbsp;it),&nbsp;a&nbsp;single&nbsp;record&nbsp;must&nbsp;be&nbsp;assigned,<br>
+and&nbsp;the&nbsp;record&nbsp;must&nbsp;be&nbsp;given&nbsp;as&nbsp;a&nbsp;sequence&nbsp;of&nbsp;values.&nbsp;It&nbsp;is&nbsp;legal&nbsp;to&nbsp;use<br>
+as&nbsp;an&nbsp;index&nbsp;the&nbsp;current&nbsp;number&nbsp;of&nbsp;records&nbsp;in&nbsp;the&nbsp;vdata:&nbsp;the&nbsp;record&nbsp;is&nbsp;then<br>
+appended&nbsp;to&nbsp;the&nbsp;vdata.&nbsp;When&nbsp;slicing&nbsp;the&nbsp;vdata,&nbsp;the&nbsp;records&nbsp;assigned&nbsp;to&nbsp;the<br>
+slice&nbsp;must&nbsp;always&nbsp;be&nbsp;given&nbsp;as&nbsp;a&nbsp;list&nbsp;of&nbsp;records,&nbsp;even<br>
+if&nbsp;only&nbsp;one&nbsp;record&nbsp;is&nbsp;assigned.&nbsp;Also,&nbsp;the&nbsp;number&nbsp;of&nbsp;records&nbsp;assigned&nbsp;must<br>
+always&nbsp;match&nbsp;the&nbsp;width&nbsp;of&nbsp;the&nbsp;slice,&nbsp;except&nbsp;if&nbsp;the&nbsp;slice&nbsp;includes&nbsp;or&nbsp;goes<br>
+past&nbsp;the&nbsp;last&nbsp;record&nbsp;of&nbsp;the&nbsp;vdata.&nbsp;In&nbsp;that&nbsp;case,&nbsp;the&nbsp;number&nbsp;of&nbsp;records<br>
+assigned&nbsp;can&nbsp;exceed&nbsp;the&nbsp;width&nbsp;of&nbsp;the&nbsp;slice,&nbsp;and&nbsp;the&nbsp;extra&nbsp;records&nbsp;are<br>
+appended&nbsp;to&nbsp;the&nbsp;vdata.&nbsp;So,&nbsp;to&nbsp;append&nbsp;records&nbsp;to&nbsp;vdata&nbsp;'vd',&nbsp;simply<br>
+assign&nbsp;records&nbsp;to&nbsp;the&nbsp;slice&nbsp;'vd[vd._nrecs:]'.&nbsp;Note&nbsp;that,&nbsp;even&nbsp;if&nbsp;the<br>
+'field'&nbsp;dimension&nbsp;can&nbsp;be&nbsp;specified&nbsp;in&nbsp;the&nbsp;left-hand&nbsp;side&nbsp;expression,<br>
+there&nbsp;is&nbsp;no&nbsp;real&nbsp;interest&nbsp;in&nbsp;doing&nbsp;so,&nbsp;since&nbsp;all&nbsp;fields&nbsp;must<br>
+be&nbsp;specified&nbsp;when&nbsp;assigning&nbsp;a&nbsp;record&nbsp;to&nbsp;the&nbsp;vdata:&nbsp;it&nbsp;is&nbsp;an&nbsp;error&nbsp;to<br>
+try&nbsp;to&nbsp;assign&nbsp;just&nbsp;a&nbsp;few&nbsp;of&nbsp;the&nbsp;fields.<br>
+&nbsp;<br>
+For&nbsp;example,&nbsp;given&nbsp;a&nbsp;vdata&nbsp;'vd'&nbsp;holding&nbsp;5&nbsp;records,&nbsp;and&nbsp;lists&nbsp;'reca',<br>
+'recb',&nbsp;etc,&nbsp;holding&nbsp;record&nbsp;values:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vd[0]&nbsp;=&nbsp;reca&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;updates&nbsp;record&nbsp;0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vd[0,:]&nbsp;=&nbsp;reca&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;specifying&nbsp;fields&nbsp;is&nbsp;OK,&nbsp;but&nbsp;useless<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vd[0,1:]&nbsp;=&nbsp;reca[1:]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;error:&nbsp;all&nbsp;fields&nbsp;must&nbsp;be&nbsp;assigned<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vd[1]&nbsp;=&nbsp;[recb,&nbsp;recc]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;error:&nbsp;only&nbsp;one&nbsp;record&nbsp;allowed<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vd[5]&nbsp;=&nbsp;recc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;append&nbsp;one&nbsp;record<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vd[1:3]&nbsp;=&nbsp;[reca,recb]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;updates&nbsp;second&nbsp;and&nbsp;third&nbsp;record<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vd[1:4]&nbsp;=&nbsp;[reca,&nbsp;recb]&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;error:&nbsp;3&nbsp;records&nbsp;needed<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vd[5:]&nbsp;=&nbsp;[reca,recb]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;appends&nbsp;2&nbsp;records&nbsp;to&nbsp;the&nbsp;vdata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vd[4:]&nbsp;=&nbsp;[reca,&nbsp;recb]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;updates&nbsp;last&nbsp;record,&nbsp;append&nbsp;one<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;<br>
+Programming&nbsp;models<br>
+------------------<br>
+&nbsp;<br>
+Creating&nbsp;and&nbsp;initializing&nbsp;a&nbsp;new&nbsp;vdata<br>
+-------------------------------------<br>
+The&nbsp;following&nbsp;code&nbsp;can&nbsp;serve&nbsp;as&nbsp;a&nbsp;model&nbsp;for&nbsp;the&nbsp;creation&nbsp;and<br>
+initialization&nbsp;of&nbsp;a&nbsp;new&nbsp;vdata.&nbsp;It&nbsp;implements&nbsp;the&nbsp;INVENTORY&nbsp;example<br>
+described&nbsp;in&nbsp;the&nbsp;"Introduction"&nbsp;section.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.HDF&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.<a href="#VS">VS</a>&nbsp;import&nbsp;*<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Open&nbsp;HDF&nbsp;file&nbsp;and&nbsp;initialize&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;interface<br>
+&nbsp;&nbsp;&nbsp;&nbsp;f&nbsp;=&nbsp;HDF('inventory.hdf',&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Open&nbsp;file&nbsp;'inventory.hdf'&nbsp;in&nbsp;write&nbsp;mode<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HC.WRITE|HC.CREATE)&nbsp;#&nbsp;creating&nbsp;it&nbsp;if&nbsp;it&nbsp;does&nbsp;not&nbsp;exist<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vs&nbsp;=&nbsp;f.vstart()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;init&nbsp;vdata&nbsp;interface<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Create&nbsp;vdata&nbsp;and&nbsp;define&nbsp;its&nbsp;structure<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd&nbsp;=&nbsp;vs.create(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;create&nbsp;a&nbsp;new&nbsp;vdata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'INVENTORY',&nbsp;#&nbsp;name&nbsp;of&nbsp;the&nbsp;vdata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;fields&nbsp;of&nbsp;the&nbsp;vdata&nbsp;follow<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(('partid',HC.CHAR8,&nbsp;5),&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;5&nbsp;char&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('description',HC.CHAR8,&nbsp;10),&nbsp;#&nbsp;10&nbsp;char&nbsp;string&nbsp;field<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('qty',HC.INT16,&nbsp;1),&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;1&nbsp;16&nbsp;bit&nbsp;int&nbsp;field<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('wght',HC.FLOAT32,&nbsp;1),&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;1&nbsp;32&nbsp;bit&nbsp;float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('price',HC.FLOAT32,1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;1&nbsp;32&nbsp;bit&nbsp;float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;5&nbsp;fields&nbsp;allocated&nbsp;in&nbsp;the&nbsp;vdata<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Set&nbsp;attributes&nbsp;on&nbsp;the&nbsp;vdata&nbsp;and&nbsp;its&nbsp;fields<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd.field('wght').unit&nbsp;=&nbsp;'lb'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd.field('price').unit&nbsp;=&nbsp;'$'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;In&nbsp;order&nbsp;to&nbsp;be&nbsp;able&nbsp;to&nbsp;update&nbsp;a&nbsp;string&nbsp;attribute,&nbsp;it&nbsp;must<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;always&nbsp;be&nbsp;set&nbsp;to&nbsp;the&nbsp;same&nbsp;length.&nbsp;This&nbsp;sets&nbsp;'status'&nbsp;to&nbsp;a&nbsp;20<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;char&nbsp;long,&nbsp;left-justified&nbsp;string,&nbsp;padded&nbsp;with&nbsp;spaces&nbsp;on&nbsp;the&nbsp;right.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd.status&nbsp;=&nbsp;"%-20s"&nbsp;%&nbsp;'phase&nbsp;1&nbsp;done'<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Store&nbsp;records<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd.write((&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;write&nbsp;3&nbsp;records<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('Q1234',&nbsp;'bolt',12,&nbsp;0.01,&nbsp;0.05),&nbsp;&nbsp;&nbsp;#&nbsp;record&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('B5432',&nbsp;'brush',&nbsp;10,&nbsp;0.4,&nbsp;4.25),&nbsp;&nbsp;#&nbsp;record&nbsp;2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('S7613',&nbsp;'scissor',&nbsp;2,&nbsp;0.2,&nbsp;3.75)&nbsp;&nbsp;#&nbsp;record&nbsp;3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd.detach()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;"close"&nbsp;the&nbsp;vdata<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vs.end()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;terminate&nbsp;the&nbsp;vdata&nbsp;interface<br>
+&nbsp;&nbsp;&nbsp;&nbsp;f.close()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;close&nbsp;the&nbsp;HDF&nbsp;file<br>
+&nbsp;<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;is&nbsp;mandatory&nbsp;to&nbsp;always&nbsp;write&nbsp;whole&nbsp;records&nbsp;to&nbsp;the&nbsp;vdata.<br>
+Note&nbsp;also&nbsp;the&nbsp;comments&nbsp;about&nbsp;the&nbsp;initialization&nbsp;of&nbsp;the&nbsp;'status'<br>
+vdata&nbsp;attribute.&nbsp;We&nbsp;want&nbsp;to&nbsp;be&nbsp;able&nbsp;update&nbsp;this&nbsp;attribute&nbsp;(see<br>
+following&nbsp;examples).&nbsp;However,&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;API&nbsp;&nbsp;prohibits&nbsp;changing&nbsp;an&nbsp;attribute<br>
+type&nbsp;when&nbsp;updating&nbsp;its&nbsp;value.&nbsp;Since&nbsp;the&nbsp;length&nbsp;(order)&nbsp;of&nbsp;an&nbsp;attribute<br>
+is&nbsp;part&nbsp;of&nbsp;its&nbsp;type,&nbsp;we&nbsp;make&nbsp;sure&nbsp;of&nbsp;setting&nbsp;the&nbsp;attribute&nbsp;to&nbsp;a&nbsp;length<br>
+long&nbsp;enough&nbsp;to&nbsp;accomodate&nbsp;the&nbsp;longest&nbsp;possible&nbsp;string&nbsp;we&nbsp;migh&nbsp;want&nbsp;to<br>
+assign&nbsp;to&nbsp;the&nbsp;attribute.<br>
+&nbsp;<br>
+Appending&nbsp;records&nbsp;to&nbsp;a&nbsp;vdata<br>
+----------------------------<br>
+Appending&nbsp;records&nbsp;requires&nbsp;first&nbsp;seeking&nbsp;to&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;vdata,&nbsp;to&nbsp;avoid<br>
+overwriting&nbsp;existing&nbsp;records.&nbsp;The&nbsp;following&nbsp;code&nbsp;can&nbsp;serve&nbsp;as&nbsp;a&nbsp;model.&nbsp;The<br>
+INVENTORY&nbsp;vdata&nbsp;created&nbsp;before&nbsp;is&nbsp;used.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.HDF&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.<a href="#VS">VS</a>&nbsp;import&nbsp;*<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;f&nbsp;=&nbsp;HDF('inventory.hdf',&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Open&nbsp;'inventory.hdf'&nbsp;in&nbsp;write&nbsp;mode<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HC.WRITE|HC.CREATE)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;creating&nbsp;it&nbsp;if&nbsp;it&nbsp;does&nbsp;not&nbsp;exist<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vs&nbsp;=&nbsp;f.vstart()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;init&nbsp;vdata&nbsp;interface<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd&nbsp;=&nbsp;vs.attach('INVENTORY',&nbsp;1)&nbsp;&nbsp;&nbsp;#&nbsp;attach&nbsp;'INVENTORY'&nbsp;in&nbsp;write&nbsp;mode<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Update&nbsp;the&nbsp;`status'&nbsp;vdata&nbsp;attribute.&nbsp;The&nbsp;attribute&nbsp;length&nbsp;must&nbsp;not<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;change.&nbsp;We&nbsp;call&nbsp;the&nbsp;attribute&nbsp;info()&nbsp;method,&nbsp;which&nbsp;returns&nbsp;a&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;where&nbsp;number&nbsp;of&nbsp;values&nbsp;(eg&nbsp;string&nbsp;length)&nbsp;is&nbsp;stored&nbsp;at&nbsp;index&nbsp;2.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;We&nbsp;then&nbsp;assign&nbsp;a&nbsp;left&nbsp;justified&nbsp;string&nbsp;of&nbsp;exactly&nbsp;that&nbsp;length.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;len&nbsp;=&nbsp;vd.attr('status').info()[2]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd.status&nbsp;=&nbsp;'%-*s'&nbsp;%&nbsp;(len,&nbsp;'phase&nbsp;2&nbsp;done')<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd[vd._nrecs:]&nbsp;=&nbsp;(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;append&nbsp;2&nbsp;records<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('A4321',&nbsp;'axe',&nbsp;5,&nbsp;1.5,&nbsp;25),&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;record<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('C3214',&nbsp;'cup',&nbsp;100,&nbsp;0.1,&nbsp;3.25)&nbsp;#&nbsp;second&nbsp;record<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd.detach()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;"close"&nbsp;the&nbsp;vdata<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vs.end()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;terminate&nbsp;the&nbsp;vdata&nbsp;interface<br>
+&nbsp;&nbsp;&nbsp;&nbsp;f.close()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;close&nbsp;the&nbsp;HDF&nbsp;file<br>
+&nbsp;<br>
+Note&nbsp;how,&nbsp;when&nbsp;updating&nbsp;the&nbsp;value&nbsp;of&nbsp;the&nbsp;'status'&nbsp;vdata&nbsp;attribute,<br>
+we&nbsp;take&nbsp;care&nbsp;of&nbsp;assigning&nbsp;a&nbsp;value&nbsp;of&nbsp;the&nbsp;same&nbsp;length&nbsp;as&nbsp;that&nbsp;of&nbsp;the<br>
+original&nbsp;value.&nbsp;Otherwise,&nbsp;the&nbsp;assignment&nbsp;would&nbsp;raise&nbsp;an&nbsp;exception.<br>
+Records&nbsp;are&nbsp;written&nbsp;by&nbsp;assigning&nbsp;the&nbsp;vdata&nbsp;through&nbsp;a&nbsp;slicing<br>
+expression,&nbsp;like&nbsp;a&nbsp;python&nbsp;sequence.&nbsp;By&nbsp;specifying&nbsp;the&nbsp;number&nbsp;of&nbsp;records<br>
+as&nbsp;the&nbsp;start&nbsp;of&nbsp;the&nbsp;slice,&nbsp;the&nbsp;records&nbsp;are&nbsp;appended&nbsp;to&nbsp;the&nbsp;vdata.<br>
+&nbsp;<br>
+Updating&nbsp;records&nbsp;in&nbsp;a&nbsp;vdata<br>
+---------------------------<br>
+Updating&nbsp;requires&nbsp;seeking&nbsp;to&nbsp;the&nbsp;record&nbsp;to&nbsp;update&nbsp;before&nbsp;writing&nbsp;the&nbsp;new<br>
+records.&nbsp;New&nbsp;data&nbsp;will&nbsp;overwrite&nbsp;this&nbsp;record&nbsp;and&nbsp;all&nbsp;records&nbsp;that&nbsp;follow,<br>
+until&nbsp;a&nbsp;new&nbsp;seek&nbsp;is&nbsp;performed&nbsp;or&nbsp;the&nbsp;vdata&nbsp;is&nbsp;closed.&nbsp;Note&nbsp;that&nbsp;record<br>
+numbering&nbsp;starts&nbsp;at&nbsp;0.<br>
+&nbsp;<br>
+The&nbsp;following&nbsp;code&nbsp;can&nbsp;serve&nbsp;as&nbsp;a&nbsp;model.&nbsp;The&nbsp;INVENTORY&nbsp;vdata&nbsp;created<br>
+before&nbsp;is&nbsp;used.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.HDF&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.<a href="#VS">VS</a>&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;f&nbsp;=&nbsp;HDF('inventory.hdf',&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Open&nbsp;'inventory.hdf'&nbsp;in&nbsp;write&nbsp;mode<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HC.WRITE|HC.CREATE)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;creating&nbsp;it&nbsp;if&nbsp;it&nbsp;does&nbsp;not&nbsp;exist<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vs&nbsp;=&nbsp;f.vstart()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;init&nbsp;vdata&nbsp;interface<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd&nbsp;=&nbsp;vs.attach('INVENTORY',&nbsp;1)&nbsp;&nbsp;&nbsp;#&nbsp;attach&nbsp;'INVENTORY'&nbsp;in&nbsp;write&nbsp;mode<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Update&nbsp;the&nbsp;`status'&nbsp;vdata&nbsp;attribute.&nbsp;The&nbsp;attribute&nbsp;length&nbsp;must&nbsp;not<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;change.&nbsp;We&nbsp;call&nbsp;the&nbsp;attribute&nbsp;info()&nbsp;method,&nbsp;which&nbsp;returns&nbsp;a&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;where&nbsp;number&nbsp;of&nbsp;values&nbsp;(eg&nbsp;string&nbsp;length)&nbsp;is&nbsp;stored&nbsp;at&nbsp;index&nbsp;2.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;We&nbsp;then&nbsp;assign&nbsp;a&nbsp;left&nbsp;justified&nbsp;string&nbsp;of&nbsp;exactly&nbsp;that&nbsp;length.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;len&nbsp;=&nbsp;vd.attr('status').info()[2]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd.status&nbsp;=&nbsp;'%-*s'&nbsp;%&nbsp;(len,&nbsp;'phase&nbsp;3&nbsp;done')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Update&nbsp;record&nbsp;at&nbsp;index&nbsp;1&nbsp;(second&nbsp;record)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd[1]&nbsp;&nbsp;=&nbsp;('Z4367',&nbsp;'surprise',&nbsp;10,&nbsp;3.1,&nbsp;44.5)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Update&nbsp;record&nbsp;at&nbsp;index&nbsp;4,&nbsp;and&nbsp;all&nbsp;those&nbsp;that&nbsp;follow<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd[4:]&nbsp;=&nbsp;(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('QR231',&nbsp;'toy',&nbsp;12,&nbsp;2.5,&nbsp;45),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('R3389',&nbsp;'robot',&nbsp;3,&nbsp;45,&nbsp;2000)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd.detach()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;"close"&nbsp;the&nbsp;vdata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vs.end()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;terminate&nbsp;the&nbsp;vdata&nbsp;interface<br>
+&nbsp;&nbsp;&nbsp;&nbsp;f.close()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;close&nbsp;the&nbsp;HDF&nbsp;file<br>
+&nbsp;<br>
+Reading&nbsp;a&nbsp;vdata<br>
+---------------<br>
+The&nbsp;following&nbsp;example&nbsp;shows&nbsp;how&nbsp;read&nbsp;the&nbsp;vdata&nbsp;attributes&nbsp;and&nbsp;sequentially<br>
+maneuver&nbsp;through&nbsp;its&nbsp;records.&nbsp;Note&nbsp;how&nbsp;we&nbsp;use&nbsp;the&nbsp;exception&nbsp;mechanism&nbsp;<br>
+to&nbsp;break&nbsp;out&nbsp;of&nbsp;the&nbsp;reading&nbsp;loop&nbsp;when&nbsp;we&nbsp;reach&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;vdata.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.HDF&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.<a href="#VS">VS</a>&nbsp;import&nbsp;*<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;f&nbsp;=&nbsp;HDF('inventory.hdf')&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;open&nbsp;'inventory.hdf'&nbsp;in&nbsp;read&nbsp;mode<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vs&nbsp;=&nbsp;f.vstart()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;init&nbsp;vdata&nbsp;interface<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd&nbsp;=&nbsp;vs.attach('INVENTORY')&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;attach&nbsp;'INVENTORY'&nbsp;in&nbsp;read&nbsp;mode<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Display&nbsp;some&nbsp;vdata&nbsp;attributes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"status:",&nbsp;vd.status<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"vdata:&nbsp;",&nbsp;vd._name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;predefined&nbsp;attribute:&nbsp;vdata&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"nrecs:&nbsp;",&nbsp;vd._nrecs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;predefined&nbsp;attribute:&nbsp;&nbsp;num&nbsp;records<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Display&nbsp;value&nbsp;of&nbsp;attribute&nbsp;'unit'&nbsp;for&nbsp;all&nbsp;fields&nbsp;on&nbsp;which<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;this&nbsp;attribute&nbsp;is&nbsp;set<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"units:&nbsp;",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;fieldName&nbsp;in&nbsp;vd._fields:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;loop&nbsp;over&nbsp;all&nbsp;field&nbsp;names<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;instantiate&nbsp;field&nbsp;and&nbsp;obtain&nbsp;value&nbsp;of&nbsp;attribute&nbsp;'unit'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v&nbsp;=&nbsp;vd.field(fieldName).unit&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"%s:&nbsp;%s"&nbsp;%&nbsp;(fieldName,&nbsp;v),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;except:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;no&nbsp;'unit'&nbsp;attribute:&nbsp;ignore&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;""<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;""<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Display&nbsp;table&nbsp;header.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;header&nbsp;=&nbsp;"%-7s&nbsp;%-12s&nbsp;%3s&nbsp;%4s&nbsp;%8s"&nbsp;%&nbsp;tuple(vd._fields)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"-"&nbsp;*&nbsp;len(header)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;header<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"-"&nbsp;*&nbsp;len(header)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Loop&nbsp;over&nbsp;the&nbsp;vdata&nbsp;records,&nbsp;displaying&nbsp;each&nbsp;record&nbsp;as&nbsp;a&nbsp;table&nbsp;row.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Current&nbsp;record&nbsp;position&nbsp;is&nbsp;0&nbsp;after&nbsp;attaching&nbsp;the&nbsp;vdata.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;1:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rec&nbsp;=&nbsp;vd.read()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;read&nbsp;next&nbsp;record<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;equivalent&nbsp;to:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;rec&nbsp;=&nbsp;vd[vd.tell()]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"%-7s&nbsp;%-12s&nbsp;%3d&nbsp;%4.1f&nbsp;%8.2f"&nbsp;%&nbsp;tuple(rec[0])<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;except&nbsp;HDF4Error:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;end&nbsp;of&nbsp;vdata&nbsp;reached<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd.detach()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;"close"&nbsp;the&nbsp;vdata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vs.end()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;terminate&nbsp;the&nbsp;vdata&nbsp;interface<br>
+&nbsp;&nbsp;&nbsp;&nbsp;f.close()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;close&nbsp;the&nbsp;HDF&nbsp;file<br>
+&nbsp;<br>
+In&nbsp;the&nbsp;previous&nbsp;example,&nbsp;the&nbsp;reading/displaying&nbsp;loop&nbsp;can&nbsp;be&nbsp;greatly<br>
+simplified&nbsp;by&nbsp;rewriting&nbsp;it&nbsp;as&nbsp;follows:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.HDF&nbsp;import&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;pyhdf.<a href="#VS">VS</a>&nbsp;import&nbsp;*<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;f&nbsp;=&nbsp;HDF('inventory.hdf')&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;open&nbsp;'inventory.hdf'&nbsp;in&nbsp;read&nbsp;mode<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vs&nbsp;=&nbsp;f.vstart()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;init&nbsp;vdata&nbsp;interface<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd&nbsp;=&nbsp;vs.attach('INVENTORY')&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;attach&nbsp;'INVENTORY'&nbsp;in&nbsp;read&nbsp;mode<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;....<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Read&nbsp;all&nbsp;records&nbsp;at&nbsp;once,&nbsp;and&nbsp;loop&nbsp;over&nbsp;the&nbsp;sequence.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;rec&nbsp;in&nbsp;vd[:]:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"%-7s&nbsp;%-12s&nbsp;%3d&nbsp;%4.1f&nbsp;%8.2f"&nbsp;%&nbsp;tuple(rec)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vd.detach()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;"close"&nbsp;the&nbsp;vdata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...<br>
+&nbsp;<br>
+The&nbsp;indexing&nbsp;expression&nbsp;'vd[:]'&nbsp;returns&nbsp;the&nbsp;complete&nbsp;set&nbsp;of&nbsp;records,<br>
+which&nbsp;can&nbsp;then&nbsp;be&nbsp;looped&nbsp;over&nbsp;using&nbsp;a&nbsp;'for'&nbsp;statement.&nbsp;This&nbsp;style&nbsp;of&nbsp;loop<br>
+is&nbsp;quite&nbsp;clean,&nbsp;and&nbsp;should&nbsp;look&nbsp;very&nbsp;familiar&nbsp;to&nbsp;python&nbsp;adepts.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="pyhdf.hdfext.html">pyhdf.hdfext</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top><a href="types.html">types</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="pyhdf.VS.html#VD">VD</a>
+</font></dt><dt><font face="helvetica, arial"><a href="pyhdf.VS.html#VDAttr">VDAttr</a>
+</font></dt><dt><font face="helvetica, arial"><a href="pyhdf.VS.html#VDField">VDField</a>
+</font></dt><dt><font face="helvetica, arial"><a href="pyhdf.VS.html#VS">VS</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="VD">class <strong>VD</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="#VD">VD</a>&nbsp;class&nbsp;encapsulates&nbsp;the&nbsp;functionnality&nbsp;of&nbsp;a&nbsp;vdata.<br>
+To&nbsp;instantiate&nbsp;a&nbsp;<a href="#VD">VD</a>&nbsp;class,&nbsp;call&nbsp;the&nbsp;attach()&nbsp;or&nbsp;the&nbsp;create()<br>
+method&nbsp;of&nbsp;a&nbsp;<a href="#VS">VS</a>&nbsp;class&nbsp;instance.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="VD-__del__"><strong>__del__</strong></a>(self)</dt><dd><tt>Delete&nbsp;the&nbsp;instance,&nbsp;first&nbsp;calling&nbsp;the&nbsp;<a href="#VD-detach">detach</a>()&nbsp;method&nbsp;<br>
+if&nbsp;not&nbsp;already&nbsp;done.</tt></dd></dl>
+
+<dl><dt><a name="VD-__getattr__"><strong>__getattr__</strong></a>(self, name)</dt><dd><tt>Some&nbsp;vdata&nbsp;properties&nbsp;can&nbsp;be&nbsp;queried/set&nbsp;through&nbsp;the&nbsp;following<br>
+attributes.&nbsp;Their&nbsp;names&nbsp;all&nbsp;start&nbsp;with&nbsp;an&nbsp;"_"&nbsp;to&nbsp;avoid<br>
+clashes&nbsp;with&nbsp;user-defined&nbsp;attributes.&nbsp;Most&nbsp;are&nbsp;read-only.<br>
+Only&nbsp;the&nbsp;_class,&nbsp;_fields,&nbsp;_interlace&nbsp;and&nbsp;_name&nbsp;can&nbsp;be&nbsp;modified.<br>
+_fields&nbsp;and&nbsp;_interlace&nbsp;can&nbsp;only&nbsp;be&nbsp;set&nbsp;once.<br>
+&nbsp;<br>
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RO&nbsp;&nbsp;Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;library&nbsp;routine<br>
+-----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;&nbsp;-----------------&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-----------------<br>
+_class&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSgetclass<br>
+_fields&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;field&nbsp;names&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSgetfields<br>
+_interlace&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interlace&nbsp;mode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSgetinterlace<br>
+_isattr&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;attribute&nbsp;vs&nbsp;real&nbsp;vdata&nbsp;&nbsp;VSisattr<br>
+_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSgetname<br>
+_nattrs&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;number&nbsp;of&nbsp;attributes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSfnattrs<br>
+_nfields&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;number&nbsp;of&nbsp;fields&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VFnfields<br>
+_nrecs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;number&nbsp;of&nbsp;records&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSelts<br>
+_recsize&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;record&nbsp;size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSQueryvsize<br>
+_refnum&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;reference&nbsp;number&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSQueryref<br>
+_tag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;tag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSQuerytag<br>
+_tnattrs&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;total&nbsp;number&nbsp;of&nbsp;attr.&nbsp;&nbsp;&nbsp;&nbsp;VSnattrs</tt></dd></dl>
+
+<dl><dt><a name="VD-__getitem__"><strong>__getitem__</strong></a>(self, elem)</dt></dl>
+
+<dl><dt><a name="VD-__init__"><strong>__init__</strong></a>(self, vsinst, id)</dt></dl>
+
+<dl><dt><a name="VD-__setattr__"><strong>__setattr__</strong></a>(self, name, value)</dt></dl>
+
+<dl><dt><a name="VD-__setitem__"><strong>__setitem__</strong></a>(self, elem, data)</dt></dl>
+
+<dl><dt><a name="VD-attr"><strong>attr</strong></a>(self, name_or_index)</dt><dd><tt>Create&nbsp;a&nbsp;<a href="#VDAttr">VDAttr</a>&nbsp;instance&nbsp;representing&nbsp;a&nbsp;vdata&nbsp;attribute.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name_or_index&nbsp;&nbsp;&nbsp;attribute&nbsp;name&nbsp;or&nbsp;index&nbsp;number;&nbsp;if&nbsp;a&nbsp;name&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;given,&nbsp;the&nbsp;attribute&nbsp;may&nbsp;not&nbsp;exist;&nbsp;in&nbsp;that<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case,&nbsp;it&nbsp;will&nbsp;be&nbsp;created&nbsp;when&nbsp;the&nbsp;VSAttr<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;instance&nbsp;set()&nbsp;method&nbsp;is&nbsp;called<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;VSAttr&nbsp;instance&nbsp;for&nbsp;the&nbsp;attribute.&nbsp;Call&nbsp;the&nbsp;methods&nbsp;of&nbsp;this<br>
+&nbsp;&nbsp;class&nbsp;to&nbsp;query,&nbsp;read&nbsp;or&nbsp;set&nbsp;the&nbsp;attribute.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="VD-attrinfo"><strong>attrinfo</strong></a>(self)</dt><dd><tt>Return&nbsp;info&nbsp;about&nbsp;all&nbsp;the&nbsp;vdata&nbsp;attributes.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;dictionnary&nbsp;describing&nbsp;each&nbsp;vdata&nbsp;attribute;&nbsp;for&nbsp;each&nbsp;attribute<br>
+&nbsp;&nbsp;a&nbsp;(name,data)&nbsp;pair&nbsp;is&nbsp;added&nbsp;to&nbsp;the&nbsp;dictionary,&nbsp;where&nbsp;'data'&nbsp;is<br>
+&nbsp;&nbsp;a&nbsp;tuple&nbsp;holding:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;data&nbsp;type&nbsp;(one&nbsp;of&nbsp;HC.xxx&nbsp;constants)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;order<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;size&nbsp;in&nbsp;bytes<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="VD-detach"><strong>detach</strong></a>(self)</dt><dd><tt>Terminate&nbsp;access&nbsp;to&nbsp;the&nbsp;vdata.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSdetach</tt></dd></dl>
+
+<dl><dt><a name="VD-fdefine"><strong>fdefine</strong></a>(self, name, type, order)</dt><dd><tt>Define&nbsp;a&nbsp;field.&nbsp;To&nbsp;initialize&nbsp;a&nbsp;newly&nbsp;created&nbsp;vdata&nbsp;with<br>
+fields&nbsp;created&nbsp;with&nbsp;<a href="#VD-fdefine">fdefine</a>(),&nbsp;assign&nbsp;a&nbsp;tuple&nbsp;of&nbsp;field&nbsp;names<br>
+to&nbsp;the&nbsp;_fields&nbsp;attribute&nbsp;or&nbsp;call&nbsp;the&nbsp;<a href="#VD-setfields">setfields</a>()&nbsp;method.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;field&nbsp;name<br>
+&nbsp;&nbsp;type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;field&nbsp;data&nbsp;type&nbsp;(one&nbsp;of&nbsp;HC.xxx)<br>
+&nbsp;&nbsp;order&nbsp;&nbsp;&nbsp;&nbsp;field&nbsp;order&nbsp;(number&nbsp;of&nbsp;values&nbsp;in&nbsp;the&nbsp;field)<br>
+Returns:<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSfdefine</tt></dd></dl>
+
+<dl><dt><a name="VD-fexist"><strong>fexist</strong></a>(self, fields)</dt><dd><tt>Check&nbsp;if&nbsp;a&nbsp;vdata&nbsp;contains&nbsp;a&nbsp;given&nbsp;set&nbsp;of&nbsp;fields.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;fields&nbsp;&nbsp;&nbsp;sequence&nbsp;of&nbsp;field&nbsp;names&nbsp;whose&nbsp;presence&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vdata&nbsp;must&nbsp;be&nbsp;checked<br>
+Returns:<br>
+&nbsp;&nbsp;true&nbsp;&nbsp;(1)&nbsp;if&nbsp;the&nbsp;given&nbsp;fields&nbsp;are&nbsp;present<br>
+&nbsp;&nbsp;false&nbsp;(0)&nbsp;otherwise<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSfexist</tt></dd></dl>
+
+<dl><dt><a name="VD-field"><strong>field</strong></a>(self, name_index)</dt><dd><tt>Get&nbsp;a&nbsp;<a href="#VDField">VDField</a>&nbsp;instance&nbsp;representing&nbsp;a&nbsp;field&nbsp;of&nbsp;the&nbsp;vdata.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name_index&nbsp;&nbsp;&nbsp;name&nbsp;or&nbsp;index&nbsp;number&nbsp;of&nbsp;the&nbsp;field<br>
+Returns:<br>
+&nbsp;&nbsp;VDfield&nbsp;instance&nbsp;representing&nbsp;the&nbsp;field<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="VD-fieldinfo"><strong>fieldinfo</strong></a>(self)</dt><dd><tt>Retrieve&nbsp;info&nbsp;about&nbsp;all&nbsp;vdata&nbsp;fields.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;list&nbsp;where&nbsp;each&nbsp;element&nbsp;describes&nbsp;a&nbsp;field&nbsp;of&nbsp;the&nbsp;vdata;<br>
+&nbsp;&nbsp;each&nbsp;field&nbsp;is&nbsp;described&nbsp;by&nbsp;an&nbsp;7-element&nbsp;tuple&nbsp;containing<br>
+&nbsp;&nbsp;the&nbsp;following&nbsp;elements:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-field&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-field&nbsp;data&nbsp;type&nbsp;(one&nbsp;of&nbsp;HC.xxx&nbsp;constants)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-field&nbsp;order<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-number&nbsp;of&nbsp;attributes&nbsp;attached&nbsp;to&nbsp;the&nbsp;field<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-field&nbsp;index&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-field&nbsp;external&nbsp;size<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-field&nbsp;internal&nbsp;size<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="VD-findattr"><strong>findattr</strong></a>(self, name)</dt><dd><tt>Search&nbsp;the&nbsp;vdata&nbsp;for&nbsp;a&nbsp;given&nbsp;attribute.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;attribute&nbsp;name<br>
+Returns:<br>
+&nbsp;&nbsp;if&nbsp;found,&nbsp;<a href="#VDAttr">VDAttr</a>&nbsp;instance&nbsp;describing&nbsp;the&nbsp;attribute<br>
+&nbsp;&nbsp;None&nbsp;otherwise<br>
+&nbsp;<br>
+&nbsp;C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSfindattr</tt></dd></dl>
+
+<dl><dt><a name="VD-inquire"><strong>inquire</strong></a>(self)</dt><dd><tt>Retrieve&nbsp;info&nbsp;about&nbsp;the&nbsp;vdata.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;5-element&nbsp;tuple&nbsp;with&nbsp;the&nbsp;following&nbsp;elements:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-number&nbsp;of&nbsp;records&nbsp;in&nbsp;the&nbsp;vdata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-interlace&nbsp;mode<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-list&nbsp;of&nbsp;vdata&nbsp;field&nbsp;names<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-size&nbsp;in&nbsp;bytes&nbsp;of&nbsp;the&nbsp;vdata&nbsp;record<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-name&nbsp;of&nbsp;the&nbsp;vdata<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSinquire</tt></dd></dl>
+
+<dl><dt><a name="VD-read"><strong>read</strong></a>(self, nRec<font color="#909090">=1</font>)</dt><dd><tt>Retrieve&nbsp;the&nbsp;values&nbsp;of&nbsp;a&nbsp;number&nbsp;of&nbsp;records,&nbsp;starting<br>
+at&nbsp;the&nbsp;current&nbsp;record&nbsp;position.&nbsp;The&nbsp;current&nbsp;record&nbsp;position<br>
+is&nbsp;advanced&nbsp;by&nbsp;the&nbsp;number&nbsp;of&nbsp;records&nbsp;read.&nbsp;Current&nbsp;position<br>
+is&nbsp;0&nbsp;after&nbsp;"opening"&nbsp;the&nbsp;vdata&nbsp;with&nbsp;the&nbsp;attach()&nbsp;method.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;nRec&nbsp;&nbsp;&nbsp;&nbsp;number&nbsp;of&nbsp;records&nbsp;to&nbsp;read<br>
+&nbsp;&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;2-level&nbsp;list.&nbsp;First&nbsp;level&nbsp;is&nbsp;a&nbsp;sequence&nbsp;of&nbsp;records,<br>
+&nbsp;&nbsp;second&nbsp;level&nbsp;gives&nbsp;the&nbsp;sequence&nbsp;of&nbsp;values&nbsp;for&nbsp;each&nbsp;record.<br>
+&nbsp;&nbsp;The&nbsp;values&nbsp;returned&nbsp;for&nbsp;each&nbsp;record&nbsp;are&nbsp;those&nbsp;of&nbsp;the&nbsp;fields<br>
+&nbsp;&nbsp;specified&nbsp;in&nbsp;the&nbsp;last&nbsp;call&nbsp;to&nbsp;method&nbsp;<a href="#VD-setfields">setfields</a>(),&nbsp;in&nbsp;that<br>
+&nbsp;&nbsp;order.&nbsp;The&nbsp;complete&nbsp;vdata&nbsp;field&nbsp;set&nbsp;is&nbsp;returned&nbsp;if<br>
+&nbsp;&nbsp;<a href="#VD-setfields">setfields</a>()&nbsp;has&nbsp;not&nbsp;been&nbsp;called.<br>
+&nbsp;<br>
+An&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;the&nbsp;current&nbsp;record&nbsp;position&nbsp;is<br>
+already&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;vdata&nbsp;when&nbsp;<a href="#VD-read">read</a>()&nbsp;is&nbsp;called.&nbsp;This<br>
+exception&nbsp;can&nbsp;be&nbsp;caught&nbsp;as&nbsp;an&nbsp;"end&nbsp;of&nbsp;vdata"&nbsp;indication&nbsp;to<br>
+exit&nbsp;a&nbsp;loop&nbsp;which&nbsp;scans&nbsp;each&nbsp;record&nbsp;of&nbsp;the&nbsp;vdata.&nbsp;Otherwise,<br>
+the&nbsp;number&nbsp;of&nbsp;records&nbsp;to&nbsp;be&nbsp;read&nbsp;is&nbsp;lowered&nbsp;to&nbsp;the&nbsp;number&nbsp;of<br>
+records&nbsp;remaining&nbsp;in&nbsp;the&nbsp;vdata,&nbsp;if&nbsp;that&nbsp;number&nbsp;is&nbsp;less&nbsp;than<br>
+the&nbsp;number&nbsp;asked&nbsp;for&nbsp;by&nbsp;parameter&nbsp;'nRec'.&nbsp;Setting&nbsp;'nRec'&nbsp;to<br>
+an&nbsp;arbitrarily&nbsp;large&nbsp;value&nbsp;can&nbsp;thus&nbsp;be&nbsp;used&nbsp;to&nbsp;retrieve&nbsp;the<br>
+remaining&nbsp;records&nbsp;in&nbsp;the&nbsp;vdata.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSread</tt></dd></dl>
+
+<dl><dt><a name="VD-seek"><strong>seek</strong></a>(self, recIndex)</dt><dd><tt>Seek&nbsp;to&nbsp;the&nbsp;beginning&nbsp;of&nbsp;the&nbsp;record&nbsp;identified&nbsp;by&nbsp;its<br>
+record&nbsp;index.&nbsp;A&nbsp;succeeding&nbsp;read&nbsp;will&nbsp;load&nbsp;this&nbsp;record&nbsp;in<br>
+memory.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;recIndex&nbsp;&nbsp;index&nbsp;of&nbsp;the&nbsp;record&nbsp;in&nbsp;the&nbsp;vdata;&nbsp;numbering<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;starts&nbsp;at&nbsp;0.&nbsp;Legal&nbsp;values&nbsp;range&nbsp;from&nbsp;0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(start&nbsp;of&nbsp;vdata)&nbsp;to&nbsp;the&nbsp;current&nbsp;number&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;records&nbsp;(at&nbsp;end&nbsp;of&nbsp;vdata).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;record&nbsp;index<br>
+&nbsp;<br>
+An&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;an&nbsp;attempt&nbsp;is&nbsp;made&nbsp;to&nbsp;seek&nbsp;beyond&nbsp;the<br>
+last&nbsp;record.<br>
+&nbsp;<br>
+The&nbsp;C&nbsp;API&nbsp;prohibits&nbsp;seeking&nbsp;past&nbsp;the&nbsp;next-to-last&nbsp;record,<br>
+forcing&nbsp;one&nbsp;to&nbsp;read&nbsp;the&nbsp;last&nbsp;record&nbsp;to&nbsp;advance&nbsp;to&nbsp;the&nbsp;end<br>
+of&nbsp;the&nbsp;vdata.&nbsp;The&nbsp;python&nbsp;API&nbsp;removes&nbsp;this&nbsp;limitation.<br>
+&nbsp;<br>
+Seeking&nbsp;to&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;vdata&nbsp;can&nbsp;also&nbsp;be&nbsp;done&nbsp;by&nbsp;calling<br>
+method&nbsp;`<a href="#VD-seekend">seekend</a>()'.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSseek</tt></dd></dl>
+
+<dl><dt><a name="VD-seekend"><strong>seekend</strong></a>(self)</dt><dd><tt>Set&nbsp;the&nbsp;current&nbsp;record&nbsp;position&nbsp;past&nbsp;the&nbsp;last&nbsp;vdata&nbsp;record.<br>
+Subsequent&nbsp;<a href="#VD-write">write</a>()&nbsp;calls&nbsp;will&nbsp;append&nbsp;records&nbsp;to&nbsp;the&nbsp;vdata.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;index&nbsp;of&nbsp;the&nbsp;last&nbsp;record&nbsp;plus&nbsp;1<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="VD-setfields"><strong>setfields</strong></a>(self, *fldNames)</dt><dd><tt>Define&nbsp;the&nbsp;name&nbsp;and&nbsp;order&nbsp;of&nbsp;the&nbsp;fields&nbsp;to&nbsp;access<br>
+with&nbsp;the&nbsp;<a href="#VD-read">read</a>()&nbsp;and&nbsp;<a href="#VD-write">write</a>()&nbsp;methods.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;fldNames&nbsp;&nbsp;variable&nbsp;length&nbsp;argument&nbsp;specifying&nbsp;one&nbsp;or&nbsp;more<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vdata&nbsp;field&nbsp;names<br>
+Returns:<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSsetfields<br>
+&nbsp;<br>
+<a href="#VD-setfields">setfields</a>()&nbsp;indicates&nbsp;how&nbsp;to&nbsp;perform&nbsp;the&nbsp;matching&nbsp;between&nbsp;the&nbsp;vdata<br>
+fields&nbsp;and&nbsp;the&nbsp;values&nbsp;passed&nbsp;to&nbsp;the&nbsp;<a href="#VD-write">write</a>()&nbsp;method&nbsp;or&nbsp;returned<br>
+by&nbsp;the&nbsp;<a href="#VD-read">read</a>()&nbsp;method.<br>
+&nbsp;<br>
+For&nbsp;example,&nbsp;if&nbsp;the&nbsp;vdata&nbsp;contains&nbsp;fields&nbsp;'a',&nbsp;'b'&nbsp;and&nbsp;'c'&nbsp;and<br>
+a&nbsp;"<a href="#VD-setfields">setfields</a>('c','a')"&nbsp;call&nbsp;is&nbsp;made,&nbsp;&nbsp;<a href="#VD-read">read</a>()&nbsp;will&nbsp;thereafter&nbsp;return<br>
+for&nbsp;each&nbsp;record&nbsp;the&nbsp;values&nbsp;of&nbsp;field&nbsp;'c'&nbsp;and&nbsp;'a',&nbsp;in&nbsp;that&nbsp;order.<br>
+Field&nbsp;'b'&nbsp;will&nbsp;be&nbsp;ignored.<br>
+&nbsp;<br>
+When&nbsp;writing&nbsp;to&nbsp;a&nbsp;vdata,&nbsp;<a href="#VD-setfields">setfields</a>()&nbsp;has&nbsp;a&nbsp;second&nbsp;usage.&nbsp;It&nbsp;is&nbsp;used<br>
+to&nbsp;initialize&nbsp;the&nbsp;structure&nbsp;of&nbsp;the&nbsp;vdata,&nbsp;that&nbsp;is,&nbsp;the&nbsp;name&nbsp;and&nbsp;order<br>
+of&nbsp;the&nbsp;fields&nbsp;that&nbsp;it&nbsp;will&nbsp;contain.&nbsp;The&nbsp;fields&nbsp;must&nbsp;have&nbsp;been<br>
+previously&nbsp;defined&nbsp;by&nbsp;calls&nbsp;to&nbsp;the&nbsp;<a href="#VD-fdefine">fdefine</a>()&nbsp;method.<br>
+Following&nbsp;that&nbsp;first&nbsp;call,&nbsp;<a href="#VD-setfields">setfields</a>()&nbsp;can&nbsp;be&nbsp;called&nbsp;again&nbsp;to<br>
+change&nbsp;the&nbsp;order&nbsp;in&nbsp;which&nbsp;the&nbsp;record&nbsp;values&nbsp;will&nbsp;be&nbsp;passed<br>
+to&nbsp;the&nbsp;<a href="#VD-write">write</a>()&nbsp;method.&nbsp;However,&nbsp;since&nbsp;it&nbsp;is&nbsp;mandatory&nbsp;to&nbsp;write<br>
+whole&nbsp;records,&nbsp;subsequent&nbsp;calls&nbsp;to&nbsp;<a href="#VD-setfields">setfields</a>()&nbsp;must&nbsp;specify&nbsp;every<br>
+field&nbsp;name:&nbsp;only&nbsp;the&nbsp;field&nbsp;order&nbsp;can&nbsp;be&nbsp;changed.</tt></dd></dl>
+
+<dl><dt><a name="VD-sizeof"><strong>sizeof</strong></a>(self, fields)</dt><dd><tt>Retrieve&nbsp;the&nbsp;size&nbsp;in&nbsp;bytes&nbsp;of&nbsp;the&nbsp;given&nbsp;fields.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;fields&nbsp;&nbsp;&nbsp;sequence&nbsp;of&nbsp;field&nbsp;names&nbsp;to&nbsp;query<br>
+Returns:<br>
+&nbsp;&nbsp;total&nbsp;size&nbsp;of&nbsp;the&nbsp;fields&nbsp;in&nbsp;bytes<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSsizeof</tt></dd></dl>
+
+<dl><dt><a name="VD-tell"><strong>tell</strong></a>(self)</dt><dd><tt>Return&nbsp;current&nbsp;record&nbsp;position&nbsp;in&nbsp;the&nbsp;vdata.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;current&nbsp;record&nbsp;position;&nbsp;0&nbsp;is&nbsp;at&nbsp;start&nbsp;of&nbsp;vdata.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="VD-write"><strong>write</strong></a>(self, values)</dt><dd><tt>Write&nbsp;records&nbsp;to&nbsp;the&nbsp;vdata.&nbsp;Writing&nbsp;starts&nbsp;at&nbsp;the&nbsp;current<br>
+record&nbsp;position,&nbsp;which&nbsp;is&nbsp;advanced&nbsp;by&nbsp;the&nbsp;number&nbsp;of&nbsp;records<br>
+written.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;values:&nbsp;2-level&nbsp;sequence.&nbsp;First&nbsp;level&nbsp;is&nbsp;a&nbsp;sequence&nbsp;of&nbsp;records.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;second&nbsp;level&nbsp;gives&nbsp;the&nbsp;sequence&nbsp;of&nbsp;record&nbsp;values.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;It&nbsp;is&nbsp;mandatory&nbsp;to&nbsp;always&nbsp;write&nbsp;whole&nbsp;records.&nbsp;Thus<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;every&nbsp;record&nbsp;field&nbsp;must&nbsp;appear&nbsp;at&nbsp;the&nbsp;second&nbsp;level.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;record&nbsp;values&nbsp;are&nbsp;ordered&nbsp;according&nbsp;the&nbsp;list&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;field&nbsp;names&nbsp;set&nbsp;in&nbsp;the&nbsp;last&nbsp;call&nbsp;to&nbsp;the&nbsp;<a href="#VD-setfields">setfields</a>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method.&nbsp;The&nbsp;ordre&nbsp;of&nbsp;the&nbsp;complete&nbsp;vdata&nbsp;field&nbsp;set&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;used&nbsp;if&nbsp;<a href="#VD-setfields">setfields</a>()&nbsp;has&nbsp;not&nbsp;been&nbsp;called.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;number&nbsp;of&nbsp;records&nbsp;written<br>
+&nbsp;<br>
+To&nbsp;append&nbsp;to&nbsp;a&nbsp;vdata&nbsp;already&nbsp;holding&nbsp;'n'&nbsp;records,&nbsp;it&nbsp;is&nbsp;necessary<br>
+to&nbsp;first&nbsp;move&nbsp;the&nbsp;current&nbsp;record&nbsp;position&nbsp;to&nbsp;'n-1'&nbsp;with&nbsp;a&nbsp;call&nbsp;to<br>
+method&nbsp;<a href="#VD-seek">seek</a>(),&nbsp;then&nbsp;to&nbsp;call&nbsp;method&nbsp;<a href="#VD-read">read</a>()&nbsp;for&nbsp;the&nbsp;side&nbsp;effect<br>
+of&nbsp;advancing&nbsp;the&nbsp;current&nbsp;record&nbsp;position&nbsp;past&nbsp;this&nbsp;last&nbsp;record.<br>
+Method&nbsp;<a href="#VD-seekend">seekend</a>()&nbsp;does&nbsp;just&nbsp;that.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSwrite</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'VD' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="VDAttr">class <strong>VDAttr</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="#VDAttr">VDAttr</a>&nbsp;class&nbsp;encapsulates&nbsp;methods&nbsp;used&nbsp;to&nbsp;set&nbsp;and&nbsp;query&nbsp;attributes<br>
+defined&nbsp;at&nbsp;the&nbsp;level&nbsp;either&nbsp;of&nbsp;the&nbsp;vdata&nbsp;or&nbsp;of&nbsp;the&nbsp;vdata&nbsp;field.<br>
+To&nbsp;create&nbsp;an&nbsp;instance&nbsp;of&nbsp;this&nbsp;class,&nbsp;call&nbsp;the&nbsp;attr()&nbsp;method&nbsp;of&nbsp;a&nbsp;<a href="#VD">VD</a><br>
+(vdata)&nbsp;or&nbsp;<a href="#VDField">VDField</a>&nbsp;(vdata&nbsp;field)&nbsp;instance.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="VDAttr-__init__"><strong>__init__</strong></a>(self, obj, name_or_index, fIndex)</dt></dl>
+
+<dl><dt><a name="VDAttr-get"><strong>get</strong></a>(self)</dt><dd><tt>Retrieve&nbsp;the&nbsp;attribute&nbsp;value.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;attribute&nbsp;value(s);&nbsp;a&nbsp;list&nbsp;is&nbsp;returned&nbsp;if&nbsp;the&nbsp;attribute<br>
+&nbsp;&nbsp;is&nbsp;made&nbsp;up&nbsp;of&nbsp;more&nbsp;than&nbsp;one&nbsp;value,&nbsp;except&nbsp;in&nbsp;the&nbsp;case&nbsp;of&nbsp;a&nbsp;<br>
+&nbsp;&nbsp;string-valued&nbsp;attribute&nbsp;(data&nbsp;type&nbsp;HC.CHAR8)&nbsp;where&nbsp;the&nbsp;<br>
+&nbsp;&nbsp;values&nbsp;are&nbsp;returned&nbsp;as&nbsp;a&nbsp;string<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSgetattr</tt></dd></dl>
+
+<dl><dt><a name="VDAttr-info"><strong>info</strong></a>(self)</dt><dd><tt>Retrieve&nbsp;info&nbsp;about&nbsp;the&nbsp;attribute.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;4-element&nbsp;tuple&nbsp;with&nbsp;the&nbsp;following&nbsp;components:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;data&nbsp;type&nbsp;(one&nbsp;of&nbsp;HC.xxx&nbsp;constants)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;order&nbsp;(number&nbsp;of&nbsp;values)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;size&nbsp;in&nbsp;bytes<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSattrinfo</tt></dd></dl>
+
+<dl><dt><a name="VDAttr-set"><strong>set</strong></a>(self, data_type, values)</dt><dd><tt>Set&nbsp;the&nbsp;attribute&nbsp;value.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;data_type&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;attribute&nbsp;data&nbsp;type&nbsp;(see&nbsp;constants&nbsp;HC.xxx)<br>
+&nbsp;&nbsp;values&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;attribute&nbsp;value(s);&nbsp;specify&nbsp;a&nbsp;list&nbsp;to&nbsp;create<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;multi-valued&nbsp;attribute;&nbsp;a&nbsp;string&nbsp;valued<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attribute&nbsp;can&nbsp;be&nbsp;created&nbsp;by&nbsp;setting&nbsp;'data_type'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;HC.CHAR8&nbsp;and&nbsp;'values'&nbsp;to&nbsp;the&nbsp;corresponding<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;the&nbsp;attribute&nbsp;already&nbsp;exists,&nbsp;it&nbsp;will&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;updated.&nbsp;However,&nbsp;it&nbsp;is&nbsp;illegal&nbsp;to&nbsp;try&nbsp;to&nbsp;change<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;its&nbsp;data&nbsp;type&nbsp;or&nbsp;its&nbsp;order&nbsp;(number&nbsp;of&nbsp;values).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSsetattr</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'VDAttr' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="VDField">class <strong>VDField</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="#VDField">VDField</a>&nbsp;class&nbsp;represents&nbsp;a&nbsp;vdata&nbsp;field.<br>
+To&nbsp;create&nbsp;a&nbsp;<a href="#VDField">VDField</a>&nbsp;instance,&nbsp;call&nbsp;the&nbsp;field()&nbsp;method&nbsp;of&nbsp;a<br>
+<a href="#VD">VD</a>&nbsp;class&nbsp;instance.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="VDField-__getattr__"><strong>__getattr__</strong></a>(self, name)</dt><dd><tt>Some&nbsp;field&nbsp;properties&nbsp;can&nbsp;be&nbsp;queried&nbsp;through&nbsp;the&nbsp;following<br>
+read-only&nbsp;attributes.&nbsp;Their&nbsp;names&nbsp;all&nbsp;start&nbsp;with&nbsp;an&nbsp;"_"&nbsp;to&nbsp;avoid<br>
+clashes&nbsp;with&nbsp;user-defined&nbsp;attributes.<br>
+&nbsp;<br>
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;library&nbsp;routine<br>
+-----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-------------------&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-----------------<br>
+_esize&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;field&nbsp;external&nbsp;size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VFfieldesize<br>
+_index&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;field&nbsp;index&nbsp;number&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSfindex<br>
+_isize&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;field&nbsp;internal&nbsp;size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VFfieldisize<br>
+_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;field&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VFfieldname<br>
+_nattrs&nbsp;&nbsp;&nbsp;&nbsp;number&nbsp;of&nbsp;attributes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VSfnattrs<br>
+_order&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;field&nbsp;order&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VFfieldorder<br>
+_type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;field&nbsp;type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VFfieldtype</tt></dd></dl>
+
+<dl><dt><a name="VDField-__init__"><strong>__init__</strong></a>(self, vdinst, fIndex)</dt></dl>
+
+<dl><dt><a name="VDField-__setattr__"><strong>__setattr__</strong></a>(self, name, value)</dt></dl>
+
+<dl><dt><a name="VDField-attr"><strong>attr</strong></a>(self, name_or_index)</dt><dd><tt>Create&nbsp;a&nbsp;<a href="#VDAttr">VDAttr</a>&nbsp;instance&nbsp;representing&nbsp;a&nbsp;field&nbsp;attribute.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name_or_index&nbsp;&nbsp;&nbsp;attribute&nbsp;name&nbsp;or&nbsp;index&nbsp;number;&nbsp;if&nbsp;a&nbsp;name&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;specified,&nbsp;the&nbsp;attribute&nbsp;may&nbsp;not&nbsp;exist;&nbsp;in&nbsp;that<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case,&nbsp;it&nbsp;will&nbsp;be&nbsp;created&nbsp;when&nbsp;the&nbsp;<a href="#VDAttr">VDAttr</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;instance&nbsp;set()&nbsp;method&nbsp;is&nbsp;called;&nbsp;if&nbsp;an<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;index&nbsp;number&nbsp;is&nbsp;specified,&nbsp;the&nbsp;attribute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;must&nbsp;exist<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;VSAttr&nbsp;instance&nbsp;for&nbsp;the&nbsp;attribute.&nbsp;Call&nbsp;the&nbsp;methods&nbsp;of&nbsp;this<br>
+&nbsp;&nbsp;class&nbsp;to&nbsp;query,&nbsp;read&nbsp;or&nbsp;set&nbsp;the&nbsp;attribute.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="VDField-attrinfo"><strong>attrinfo</strong></a>(self)</dt><dd><tt>Return&nbsp;info&nbsp;about&nbsp;all&nbsp;the&nbsp;field&nbsp;attributes.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;dictionnary&nbsp;describing&nbsp;each&nbsp;vdata&nbsp;attribute;&nbsp;for&nbsp;each&nbsp;attribute<br>
+&nbsp;&nbsp;a&nbsp;(name,data)&nbsp;pair&nbsp;is&nbsp;added&nbsp;to&nbsp;the&nbsp;dictionary,&nbsp;where&nbsp;'data'&nbsp;is<br>
+&nbsp;&nbsp;a&nbsp;tuple&nbsp;holding:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;data&nbsp;type&nbsp;(one&nbsp;of&nbsp;HC.xxx&nbsp;constants)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;order<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-attribute&nbsp;size&nbsp;in&nbsp;bytes<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="VDField-find"><strong>find</strong></a>(self, name)</dt><dd><tt>Search&nbsp;the&nbsp;field&nbsp;for&nbsp;a&nbsp;given&nbsp;attribute.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;attribute&nbsp;name<br>
+Returns:<br>
+&nbsp;&nbsp;if&nbsp;found,&nbsp;<a href="#VDAttr">VDAttr</a>&nbsp;instance&nbsp;describing&nbsp;the&nbsp;attribute<br>
+&nbsp;&nbsp;None&nbsp;otherwise<br>
+&nbsp;<br>
+&nbsp;C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSfindattr</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'VDField' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="VS">class <strong>VS</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="#VS">VS</a>&nbsp;class&nbsp;implements&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;(Vdata)&nbsp;interface&nbsp;applied&nbsp;to&nbsp;an<br>
+HDF&nbsp;file.<br>
+To&nbsp;instantiate&nbsp;a&nbsp;<a href="#VS">VS</a>&nbsp;class,&nbsp;call&nbsp;the&nbsp;vstart()&nbsp;method&nbsp;of&nbsp;an<br>
+HDF&nbsp;instance.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="VS-__del__"><strong>__del__</strong></a>(self)</dt><dd><tt>Delete&nbsp;the&nbsp;instance,&nbsp;first&nbsp;calling&nbsp;the&nbsp;<a href="#VS-end">end</a>()&nbsp;method&nbsp;<br>
+if&nbsp;not&nbsp;already&nbsp;done.</tt></dd></dl>
+
+<dl><dt><a name="VS-__init__"><strong>__init__</strong></a>(self, hinst)</dt></dl>
+
+<dl><dt><a name="VS-attach"><strong>attach</strong></a>(self, num_name, write<font color="#909090">=0</font>)</dt><dd><tt>Locate&nbsp;an&nbsp;existing&nbsp;vdata&nbsp;or&nbsp;create&nbsp;a&nbsp;new&nbsp;vdata&nbsp;in&nbsp;the&nbsp;HDF&nbsp;file,<br>
+returning&nbsp;a&nbsp;<a href="#VD">VD</a>&nbsp;instance.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;num_name&nbsp;&nbsp;Name&nbsp;or&nbsp;reference&nbsp;number&nbsp;of&nbsp;the&nbsp;vdata.&nbsp;An&nbsp;existing&nbsp;vdata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;can&nbsp;be&nbsp;specified&nbsp;either&nbsp;through&nbsp;its&nbsp;reference&nbsp;number&nbsp;or<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;its&nbsp;name.&nbsp;Use&nbsp;-1&nbsp;to&nbsp;create&nbsp;a&nbsp;new&nbsp;vdata.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Note&nbsp;that&nbsp;uniqueness&nbsp;is&nbsp;not&nbsp;imposed&nbsp;on&nbsp;vdatas&nbsp;names,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;whereas&nbsp;refnums&nbsp;are&nbsp;guaranteed&nbsp;to&nbsp;be&nbsp;unique.&nbsp;Thus<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;knowledge&nbsp;of&nbsp;its&nbsp;reference&nbsp;number&nbsp;may&nbsp;be&nbsp;the&nbsp;only&nbsp;way<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;get&nbsp;at&nbsp;a&nbsp;wanted&nbsp;vdata.<br>
+&nbsp;<br>
+&nbsp;&nbsp;write&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set&nbsp;to&nbsp;0&nbsp;to&nbsp;open&nbsp;the&nbsp;vdata&nbsp;in&nbsp;read-only&nbsp;mode,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set&nbsp;to&nbsp;1&nbsp;to&nbsp;open&nbsp;it&nbsp;in&nbsp;write&nbsp;mode<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;<a href="#VD">VD</a>&nbsp;instance&nbsp;representing&nbsp;the&nbsp;vdata<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSattach<br>
+&nbsp;<br>
+After&nbsp;creating&nbsp;a&nbsp;new&nbsp;vdata&nbsp;(num_name&nbsp;==&nbsp;-1),&nbsp;fields&nbsp;must&nbsp;be<br>
+defined&nbsp;using&nbsp;method&nbsp;fdefine()&nbsp;of&nbsp;the&nbsp;<a href="#VD">VD</a>&nbsp;instance,&nbsp;and&nbsp;those<br>
+fields&nbsp;must&nbsp;be&nbsp;allocated&nbsp;to&nbsp;the&nbsp;vdata&nbsp;with&nbsp;method&nbsp;setfields().<br>
+Same&nbsp;results&nbsp;can&nbsp;be&nbsp;achieved,&nbsp;but&nbsp;more&nbsp;simply,&nbsp;by&nbsp;calling&nbsp;the<br>
+<a href="#VS-create">create</a>()&nbsp;method&nbsp;of&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;instance.</tt></dd></dl>
+
+<dl><dt><a name="VS-create"><strong>create</strong></a>(self, name, fields)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;vdata,&nbsp;setting&nbsp;its&nbsp;name&nbsp;and&nbsp;allocating<br>
+its&nbsp;fields.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;to&nbsp;assign&nbsp;to&nbsp;the&nbsp;vdata<br>
+&nbsp;&nbsp;fields&nbsp;&nbsp;&nbsp;Sequence&nbsp;of&nbsp;field&nbsp;definitions.&nbsp;Each&nbsp;field&nbsp;definition<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;a&nbsp;sequence&nbsp;with&nbsp;the&nbsp;following&nbsp;elements&nbsp;in&nbsp;order:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-field&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-field&nbsp;type&nbsp;(one&nbsp;of&nbsp;HC.xxx&nbsp;constants)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-field&nbsp;order&nbsp;(number&nbsp;of&nbsp;values)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fields&nbsp;are&nbsp;allocated&nbsp;to&nbsp;the&nbsp;vdata&nbsp;in&nbsp;the&nbsp;given&nbsp;order<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;<a href="#VD">VD</a>&nbsp;instance&nbsp;representing&nbsp;the&nbsp;created&nbsp;vdata<br>
+&nbsp;<br>
+Calling&nbsp;the&nbsp;<a href="#VS-create">create</a>()&nbsp;method&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;the&nbsp;following&nbsp;calls:<br>
+&nbsp;&nbsp;-&nbsp;vd&nbsp;=&nbsp;<a href="#VS-attach">attach</a>(-1,1),&nbsp;to&nbsp;create&nbsp;a&nbsp;new&nbsp;vdata&nbsp;and&nbsp;open&nbsp;it&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;write&nbsp;mode<br>
+&nbsp;&nbsp;-&nbsp;vd._name&nbsp;=&nbsp;name,&nbsp;to&nbsp;set&nbsp;the&nbsp;vdata&nbsp;name<br>
+&nbsp;&nbsp;-&nbsp;vd.fdefine(...),&nbsp;to&nbsp;define&nbsp;the&nbsp;name,&nbsp;type&nbsp;and&nbsp;order&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;each&nbsp;field<br>
+&nbsp;&nbsp;-&nbsp;vd.setfields(...),&nbsp;to&nbsp;allocate&nbsp;fields&nbsp;to&nbsp;the&nbsp;vdata<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="VS-end"><strong>end</strong></a>(self)</dt><dd><tt>Close&nbsp;the&nbsp;<a href="#VS">VS</a>&nbsp;interface.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;No&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;Vend</tt></dd></dl>
+
+<dl><dt><a name="VS-find"><strong>find</strong></a>(self, vName)</dt><dd><tt>Get&nbsp;the&nbsp;reference&nbsp;number&nbsp;of&nbsp;a&nbsp;vdata&nbsp;given&nbsp;its&nbsp;name.<br>
+The&nbsp;vdata&nbsp;can&nbsp;then&nbsp;be&nbsp;opened&nbsp;(attached)&nbsp;by&nbsp;passing&nbsp;this<br>
+reference&nbsp;number&nbsp;to&nbsp;the&nbsp;<a href="#VS-attach">attach</a>()&nbsp;method.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;vName&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;of&nbsp;the&nbsp;vdata&nbsp;for&nbsp;which&nbsp;the&nbsp;reference&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;needed.&nbsp;vdatas&nbsp;names&nbsp;are&nbsp;not&nbsp;guaranteed&nbsp;to&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unique.&nbsp;When&nbsp;more&nbsp;than&nbsp;one&nbsp;vdata&nbsp;bear&nbsp;the&nbsp;same&nbsp;name,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#VS-find">find</a>()&nbsp;will&nbsp;return&nbsp;the&nbsp;refnum&nbsp;of&nbsp;the&nbsp;first&nbsp;one&nbsp;founmd.<br>
+Returns:<br>
+&nbsp;&nbsp;vdata&nbsp;reference&nbsp;number.&nbsp;0&nbsp;is&nbsp;returned&nbsp;if&nbsp;the&nbsp;vdata&nbsp;does&nbsp;not&nbsp;exist.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSfind</tt></dd></dl>
+
+<dl><dt><a name="VS-next"><strong>next</strong></a>(self, vRef)</dt><dd><tt>Get&nbsp;the&nbsp;reference&nbsp;number&nbsp;of&nbsp;the&nbsp;vdata&nbsp;following&nbsp;a&nbsp;given<br>
+vdata.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;vRef&nbsp;&nbsp;&nbsp;Reference&nbsp;number&nbsp;of&nbsp;the&nbsp;vdata&nbsp;preceding&nbsp;the&nbsp;one<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;we&nbsp;require.&nbsp;Set&nbsp;to&nbsp;-1&nbsp;to&nbsp;get&nbsp;the&nbsp;first&nbsp;vdata&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;HDF&nbsp;file.&nbsp;Knowing&nbsp;its&nbsp;reference&nbsp;number,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;vdata&nbsp;can&nbsp;then&nbsp;be&nbsp;opened&nbsp;(attached)&nbsp;by&nbsp;passing&nbsp;this<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reference&nbsp;number&nbsp;to&nbsp;the&nbsp;<a href="#VS-attach">attach</a>()&nbsp;method.<br>
+Returns:<br>
+&nbsp;&nbsp;Reference&nbsp;number&nbsp;of&nbsp;the&nbsp;vdata&nbsp;following&nbsp;the&nbsp;one&nbsp;given<br>
+&nbsp;&nbsp;by&nbsp;argument&nbsp;vref<br>
+&nbsp;<br>
+An&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;no&nbsp;vdata&nbsp;follows&nbsp;the&nbsp;one&nbsp;given&nbsp;by&nbsp;vRef.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VSgetid</tt></dd></dl>
+
+<dl><dt><a name="VS-storedata"><strong>storedata</strong></a>(self, fieldName, values, data_type, vName, vClass)</dt><dd><tt>Create&nbsp;and&nbsp;initialize&nbsp;a&nbsp;single&nbsp;field&nbsp;vdata,&nbsp;returning<br>
+the&nbsp;vdata&nbsp;reference&nbsp;number.&nbsp;<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;fieldName&nbsp;&nbsp;&nbsp;Name&nbsp;of&nbsp;the&nbsp;single&nbsp;field&nbsp;in&nbsp;the&nbsp;vadata&nbsp;to&nbsp;create<br>
+&nbsp;&nbsp;values&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sequence&nbsp;of&nbsp;values&nbsp;to&nbsp;store&nbsp;in&nbsp;the&nbsp;field;.&nbsp;Each&nbsp;value&nbsp;can<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;itself&nbsp;be&nbsp;a&nbsp;sequence,&nbsp;in&nbsp;which&nbsp;case&nbsp;the&nbsp;field&nbsp;will&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multivalued&nbsp;(all&nbsp;second-level&nbsp;sequences&nbsp;must&nbsp;be&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;same&nbsp;length)<br>
+&nbsp;&nbsp;data_type&nbsp;&nbsp;&nbsp;Values&nbsp;type&nbsp;(one&nbsp;of&nbsp;HC.xxx&nbsp;constants).&nbsp;All&nbsp;values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;must&nbsp;be&nbsp;of&nbsp;the&nbsp;same&nbsp;type<br>
+&nbsp;&nbsp;vName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;of&nbsp;the&nbsp;vdata&nbsp;to&nbsp;create<br>
+&nbsp;&nbsp;vClass&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vdata&nbsp;class&nbsp;(string)<br>
+&nbsp;&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;vdata&nbsp;reference&nbsp;number<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;VHstoredata&nbsp;/&nbsp;VHstoredatam</tt></dd></dl>
+
+<dl><dt><a name="VS-vdatainfo"><strong>vdatainfo</strong></a>(self, listAttr<font color="#909090">=0</font>)</dt><dd><tt>Return&nbsp;info&nbsp;about&nbsp;all&nbsp;the&nbsp;file&nbsp;vdatas.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;listAttr&nbsp;&nbsp;&nbsp;Set&nbsp;to&nbsp;0&nbsp;to&nbsp;ignore&nbsp;vdatas&nbsp;used&nbsp;to&nbsp;store&nbsp;attribute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;values,&nbsp;1&nbsp;to&nbsp;list&nbsp;them&nbsp;(see&nbsp;the&nbsp;<a href="#VD">VD</a>._isattr&nbsp;readonly<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attribute)<br>
+Returns:<br>
+&nbsp;&nbsp;List&nbsp;of&nbsp;vdata&nbsp;descriptions.&nbsp;Each&nbsp;vdata&nbsp;is&nbsp;described&nbsp;as<br>
+&nbsp;&nbsp;a&nbsp;9-element&nbsp;tuple,&nbsp;composed&nbsp;of&nbsp;the&nbsp;following:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-vdata&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-vdata&nbsp;class<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-vdata&nbsp;reference&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-vdata&nbsp;number&nbsp;of&nbsp;records<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-vdata&nbsp;number&nbsp;of&nbsp;fields<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-vdata&nbsp;number&nbsp;of&nbsp;attributes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-vdata&nbsp;record&nbsp;size&nbsp;in&nbsp;bytes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-vdata&nbsp;tag&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-vdata&nbsp;interlace&nbsp;mode<br>
+&nbsp;<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="VS-vend"><strong>vend</strong></a> = <a href="#VS-end">end</a>(self)</dt></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'VS' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__all__</strong> = ['VS', 'VD', 'VDField', 'VDAttr']</td></tr></table>
+</body></html>
