@@ -8,102 +8,34 @@
 <body>
 <h1><strong>pysclint</strong> - A collection of python interfaces
 to major scientific libraries</h1>
+<p>Author : 
+     <a href="mailto:gosselina@dfo-mpo.gc.ca">Andr&eacute; Gosselin</a>, <A href="http://www.qc.dfo-mpo.gc.ca/iml/fr/intro.htm">Institut Maurice-Lamontagne</A>, &nbsp;Qu&eacute;bec, Canada
+   </p>
+     
 <h2>Introduction</h2>
 <p><strong>pysclint</strong> is a set of python packages aimed at providing high quality python interfaces &nbsp;to major scientific libraires like <em>netCDF</em>,
-<em>pyhdf</em>, and <em>MPI</em>. The packages are written so as to stay as close as possible to the original libraries, trying to cover as much of the libraries API&#039;s as possible, with no intent to heavily redesign them or rewrite their documentation. &nbsp;At the same time,<strong> pysclint</strong> &nbsp;tries to wrap the API&#039;s in as a natural pythonic paradigm as possible, augmenting it with &nbsp;an OOP approach whenever appropriate. A major goal was to make a user of the original API (usually in C) feel at home with the python version, while not requiring any previous experience with this API when first learning it through the python language.</p>
-<p>The following interfaces are currently provided.</p>
-    <ul>
-<li><strong>pycdf</strong> - Python interface to the Unidata&nbsp;<em>netcdf</em> library.</li>
-<li><strong>pyhdf</strong> - Python interface to the &nbsp;NCSA
-<em>hdf4</em> library.</li>
-</ul>
-An interface tothe MPI 1.2 standard will be provided in a coming future.
-<h2>pycdf</h2>
-<p><strong>pycdf</strong> is a python interface to the Unidata
-<a href=
-"http://my.unidata.ucar.edu/content/software/netcdf/index.html">netCDF</a> library. &nbsp;It provides an almost complete coverage of the netCDF C API, wrapping it &nbsp;inside easy to use classes. netCDF arrays are handled using Numeric Python <em>array</em> objects.</p>
-<p>
-      netCDF versions up to 3.5.0 have been successfully tested with pycdf, under Python v2.2 and above .
+<em>HDF</em>, and <em>MPI</em>. The packages are written so as to stay very close to the original libraries structure and intent. They try to encompass and respect as much of the libraries API&#039;s as possible, with no attempt at redesigning them, correcting their supposed flaws, &nbsp;or rewriting their documentation. As for this last point, being able to easily refer to &nbsp;a library original documentation while using its python interface was always considered an important objective.
     </p>
-<table width="90%" border="0" cellpadding="0">
-<tr>
-<td width="10%">&nbsp;</td>
-<td width="30%">
-          current version:
-        </td>
-<td width="30%">pycdf-0.5-3</td>
-<td width="30%">&nbsp;</td>
-</tr>
-<tr>
-<td>&nbsp;</td>
-<td>
-          requires:
-        </td>
-<td>
-          netcdf, Numeric Python
-        </td>
-</tr>
-<tr>
-<td>&nbsp;</td>
-</tr>
-<tr>
-<td>&nbsp;</td>
-<td>
-          <A href="http://www.sf.net/projects/pysclint">download</A>
-        </td>
-<td>
-          <A href="pycdf/pycdf.html">documentation</A>
-        </td>
-<td>
-          <A href="pycdf/examples">examples</A>
-        </td>
-</tr>
-<tr>
-<td>&nbsp;</td>
-<td>
-          <A href="pycdf/CHANGES">changes</A>
-        </td>
-<td>
-          <A href="pycdf/INSTALL">install notes</A>
-        </td>
-</tr>
-</table>
-
-<h2><strong>pyhdf</strong></h2>
-<p><strong>pyhdf</strong> is a python interface to the NCSA <A href="http://hdf.ncsa.uiuc.edu/hdf4.html">HDF4</A> library. Among the numerous components offered by HDF4, the following are currently supported by pyhdf : SD (Scientific Dataset), VS (Vdata), V (Vgroup) and HDF (common declarations). SD arrays are handled using Numeric Python <em>array</em> objects.</p>
-<p>
-      HDF versions up to 4.2r1 have been successfully tested with pyhdf, under Python v2.2 and above. Note that there exists a version 5 of HDF, <em>which is totally incompatible with version 4</em>. pyhdf does&nbsp;<em>not</em> work with HDF5.</p>
-<table width="90%" border="0" cellpadding="1">
-<tr>
-<td width="10%">&nbsp;</td>
-<td width="30%">current version:</td>
-<td width="30%">pyhdf-0.7-3</td>
-<td width="30%">&nbsp;</td>
-</tr>
-<tr>
-<td>&nbsp;</td>
-<td>requires:</td>
-<td>HDF4, Numeric Python</td>
-</tr>
-<tr>
-<td>&nbsp;</td>
-</tr>
-<tr valign="top">
-<td>&nbsp;</td>
-<td><A href="http://www.sf.net/projects/pysclint">download</A></td>
-<td valign="top">documentation: <br><A href="pyhdf/pyhdf.HDF.html">HDF</A>, <A href="pyhdf/pyhdf.SD.html">SD</A>, <A href="pyhdf/pyhdf.V.html">V</A>, <A href="pyhdf/pyhdf.VS.html">VS</A><br>&nbsp;</td>
-<td><A href="pyhdf/examples">examples</A></td>
-</tr>
-<tr>
-<td>&nbsp;</td>
-<td><A href="pyhdf/CHANGES">changes</A></td>
-<td><A href="pycdf/INSTALL">install notes</A></td>
-</tr>
-</table>
+<p>At the same time,<strong> pysclint</strong> &nbsp;tries to wrap the API&#039;s in a natural pythonic paradigm, augmenting it with &nbsp;an OOP approach whenever appropriate. A major goal was to make a user of the original API (usually in C) feel &nbsp;at home with the python version, and &nbsp;conversely not require any previous experience with this API when first learning it through its pysclint interface.
+    </p>
+<p>The following interfaces are currently provided.</p>
+<ul>
+<li><strong>pycdf</strong> - Python interface to the Unidata&nbsp;<em>netCDF</em> library. See the <A href="pycdf/index.html">pycdf</A> web page.
+      </li>
+<li><strong>pyhdf</strong> - Python interface to the &nbsp;NCSA
+<em>HDF4</em> library. See the <A href="pyhdf/index.html">pyhdf</A> web page.
+      </li>
+</ul>
+     An interface to the MPI 1.2 standard will be provided in a near future.
+     
+<p>The packages making up pysclint were previously hosted at Institut Maurice-Lamontagne (IML).
+It became more practical to move the project to Sourceforge, which was done in July 2005.
+We want to thank IML for it previous support.</p>
+<p>The <a href="mailto:gosselina@dfo-mpo.gc.ca"> author</a> will always be happy to hear from you!</p>
 
 <hr>
-<em>Last update: 2005-07-16</em>
-<p align="right"><a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=63486&amp;type=1">
+<em>Last update: 2005-07-17</em>
+<p align="right"> <a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=63486&amp;type=1">
 </a>
 </p>
 

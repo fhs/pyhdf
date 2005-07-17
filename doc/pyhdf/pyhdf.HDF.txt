@@ -1,0 +1,309 @@
+Help on module pyhdf.HDF in pyhdf:
+
+NAME
+    pyhdf.HDF
+
+FILE
+    /usr/lib/python2.4/site-packages/pyhdf/HDF.py
+
+DESCRIPTION
+    A module of the pyhdf package implementing the basic API of the
+    NCSA HDF4 library.
+    (see: hdf.ncsa.uiuc.edu)
+    
+    Author: Andre Gosselin
+            Maurice-Lamontagne Institute
+            gosselina@dfo-mpo.gc.ca
+            
+    Version: 0.7-3
+    Date:    July 13 2005
+    
+    Introduction
+    ------------
+    The role of the HDF module is to provide support to other modules of the
+    pyhdf package. It defines constants specifying file opening modes and
+    various data types, methods for accessing files, plus a few utility
+    functions to query library version and check if a file is an HDF one.
+    
+    It should be noted that, among the modules of the pyhdf package, SD is
+    special in the sense that it is self-contained and does not need support
+    from the HDF module. For example, SD provides its own file opening and
+    closing methods, whereas VS uses methods of the HDF.HDF class for that.
+    
+    Functions and classes summary
+    -----------------------------
+    The HDF module provides the following classes.
+    
+      HC
+          The HC class holds constants defining opening modes and
+          various data types.
+    
+      HDF
+          The HDF class provides methods to open and close an HDF file,
+          and return instances of the major HDF APIs (except SD).
+    
+          To instantiate an HDF class, call the HDF() constructor.
+    
+          methods:
+            constructors:
+              HDF()     open an HDF file, creating the file if necessary,
+                        and return an HDF instance
+              vstart()  initialize the VS (Vdata) API over the HDF file and
+                        return a VS instance
+              vgstart() initialize the V (Vgroup) interface over the HDF file
+                        and return a V instance.
+              
+    
+            closing file
+              close()  close the HDF file
+    
+            inquiry
+              getfileversion()  return info about the version of the  HDF file 
+                       
+    The HDF module also offers the following functions.
+    
+      inquiry
+        getlibversion()    return info about the version of the library
+        ishdf()            determine whether a file is an HDF file
+
+CLASSES
+    __builtin__.object
+        pyhdf.HC.HC
+        HDF
+    exceptions.Exception
+        pyhdf.error.HDF4Error
+    
+    class HC(__builtin__.object)
+     |  The HC class holds contants defining opening modes and data types.
+     |  
+     |  File opening modes (flags ORed together)
+     |  
+     |      CREATE       4    create file if it does not exist
+     |      READ         1    read-only mode
+     |      TRUNC      256    truncate if it exists
+     |      WRITE        2    read-write mode
+     |  
+     |  Data types
+     |  
+     |      CHAR         4    8-bit char
+     |      CHAR8        4    8-bit char
+     |      UCHAR        3    unsigned 8-bit integer (0 to 255)
+     |      UCHAR8       3    unsigned 8-bit integer (0 to 255)
+     |      INT8        20    signed 8-bit integer (-128 to 127)
+     |      UINT8       21    unsigned 8-bit integer (0 to 255)
+     |      INT16       23    signed 16-bit integer
+     |      UINT16      23    unsigned 16-bit integer
+     |      INT32       24    signed 32-bit integer
+     |      UINT32      25    unsigned 32-bit integer
+     |      FLOAT32      5    32-bit floating point
+     |      FLOAT64      6    64-bit floating point
+     |  
+     |  Tags
+     |  
+     |      DFTAG_NDG  720    dataset
+     |      DFTAG_VH  1962    vdata
+     |      DFTAG_VG  1965    vgroup
+     |  
+     |  Data and other attributes defined here:
+     |  
+     |  CHAR = 4
+     |  
+     |  CHAR8 = 4
+     |  
+     |  CREATE = 4
+     |  
+     |  DFTAG_NDG = 720
+     |  
+     |  DFTAG_VG = 1965
+     |  
+     |  DFTAG_VH = 1962
+     |  
+     |  FLOAT32 = 5
+     |  
+     |  FLOAT64 = 6
+     |  
+     |  FULL_INTERLACE = 0
+     |  
+     |  INT16 = 22
+     |  
+     |  INT32 = 24
+     |  
+     |  INT8 = 20
+     |  
+     |  NO_INTERLACE = 1
+     |  
+     |  READ = 1
+     |  
+     |  TRUNC = 256
+     |  
+     |  UCHAR = 3
+     |  
+     |  UCHAR8 = 3
+     |  
+     |  UINT16 = 23
+     |  
+     |  UINT32 = 25
+     |  
+     |  UINT8 = 21
+     |  
+     |  WRITE = 2
+     |  
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__ = <attribute '__weakref__' of 'HC' objects>
+     |      list of weak references to the object (if defined)
+    
+    class HDF(__builtin__.object)
+     |  The HDF class encapsulates the basic HDF functions.
+     |  Its main use is to open and close an HDF file, and return
+     |  instances of the major HDF APIs (except for SD).
+     |  To instantiate an HDF class, call the HDF() constructor.
+     |  
+     |  Methods defined here:
+     |  
+     |  __del__(self)
+     |      Delete the instance, first calling the end() method 
+     |      if not already done.
+     |  
+     |  __init__(self, path, mode=1, nblocks=0)
+     |      HDF constructor: open an HDF file, creating the file if
+     |      necessary.
+     |      
+     |      Args:
+     |        path    name of the HDF file to open
+     |        mode    file opening mode; this mode is a set of binary flags
+     |                which can be ored together
+     |                    
+     |                    HC.CREATE   combined with HC.WRITE to create file 
+     |                                if it does not exist
+     |                    HC.READ     open file in read-only access (default)
+     |                    HC.TRUNC    if combined with HC.WRITE, overwrite
+     |                                file if it already exists
+     |                    HC.WRITE    open file in read-write mode; if file
+     |                                exists it is updated, unless HC.TRUNC is
+     |                                set, in which case it is erased and
+     |                                recreated; if file does not exist, an
+     |                                error is raised unless HC.CREATE is set,
+     |                                in which case the file is created
+     |      
+     |                 Note an important difference in the way CREATE is
+     |                 handled by the HDF C library and the pyhdf package.
+     |                 In the C library, CREATE indicates that a new file should
+     |                 always be created, overwriting an existing one if
+     |                 any. For pyhdf, CREATE indicates a new file should be
+     |                 created only if it does not exist, and the overwriting
+     |                 of an already existing file must be explicitly asked
+     |                 for by setting the TRUNC flag.
+     |      
+     |                 Those differences were introduced so as to harmonize
+     |                 the way files are opened in the pycdf and pyhdf
+     |                 packages. Also, this solves a limitation in the
+     |                 hdf (and netCDF) library, where there is no easy way
+     |                 to implement the frequent requirement that an existent
+     |                 file be opened in read-write mode, or created
+     |                 if it does not exist.
+     |      
+     |        nblocks  number of data descriptor blocks in a block wit which
+     |                 to create the file; the parameter is ignored if the file
+     |                 is not created; 0 asks to use the default
+     |      
+     |      Returns:
+     |        an HDF instance
+     |      
+     |      C library equivalent : Hopen
+     |  
+     |  close(self)
+     |      Close the HDF file.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        None
+     |      
+     |      C library equivalent : Hclose
+     |  
+     |  getfileversion(self)
+     |      Get file version info.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        4-element tuple with the following components:
+     |          -major version number (int)
+     |          -minor version number (int)
+     |          -complete library version number (int)
+     |          -additional information (string)
+     |          
+     |      C library equivalent : Hgetlibversion
+     |  
+     |  vgstart(self)
+     |      Initialize the V API over the file and return a V instance.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        V instance
+     |      
+     |      C library equivalent : Vstart (in fact: Vinitialize)
+     |  
+     |  vstart(self)
+     |      Initialize the VS API over the file and return a VS instance.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        VS instance
+     |      
+     |      C library equivalent : Vstart (in fact: Vinitialize)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__ = <attribute '__weakref__' of 'HDF' objects>
+     |      list of weak references to the object (if defined)
+    
+    class HDF4Error(exceptions.Exception)
+     |  Methods defined here:
+     |  
+     |  __init__(self, args=None)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from exceptions.Exception:
+     |  
+     |  __getitem__(...)
+     |  
+     |  __str__(...)
+
+FUNCTIONS
+    getlibversion()
+        Get the library version info.
+        
+        Args:
+          no argument
+        Returns:
+          4-element tuple with the following components:
+            -major version number (int)
+            -minor version number (int)
+            -complete library version number (int)
+            -additional information (string)
+        
+        C library equivalent : Hgetlibversion
+    
+    ishdf(filename)
+        Determine whether a file is an HDF file.
+        
+        Args:
+          filename  name of the file to check
+        Returns:
+          1 if the file is an HDF file, 0 otherwise
+        
+        C library equivalent : Hishdf
+
+DATA
+    __all__ = ['HDF', 'HDF4Error', 'HC', 'getlibversion', 'ishdf']
+
+
