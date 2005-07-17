@@ -1,0 +1,42 @@
+Installing the pycdf python package.
+
+pycdf has been successfully installed under python 2.2 and above on
+the following platforms:
+  -Linux, kernel 2.4.19 and above
+  -Tru64 4.0.f and above
+  -Solaris 8
+  -AIX 4
+
+Please inform the author (gosselina@dfo-mpo.gc.ca) of any
+successfull installation on a different platform, and of
+problems encountered.
+
+To install, follow these steps.
+
+1-Install the netcdf library. Source code is available at:
+  www.unidata.ucar.edu/packages/netcdf. Binary packages
+  are available for most popular environments.
+
+2-Install the python Numeric package. Source code is
+  available at: numpy.sourceforge.net. Binary packages
+  are available for most popular environments.
+
+3-Uncompress and untar the pycdf tar ball, then cd to the
+  pycdf-xxx directory just created.
+
+4-If your netcdf library lives in a non-standard directory
+  (eg not on the standard library search path),
+  edit the `setup.py' file and locate the line reading:
+
+    #library_dirs=["non standard path where libs live"],
+
+  Remove the pound sign to uncomment the line, and enter the non-
+  standard path in quotes between the square brackets. For ex.:
+
+    library_dirs = ["/usr/local/netcdf-3.5.0/lib"],
+
+5-As root, execute the command:
+
+    python setup.py install
+
+Enjoy!
