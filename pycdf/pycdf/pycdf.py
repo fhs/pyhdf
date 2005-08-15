@@ -1,12 +1,16 @@
-# $Id: pycdf.py,v 1.2 2005-07-16 16:22:35 gosselin_a Exp $
+# $Id: pycdf.py,v 1.3 2005-08-15 02:00:30 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2005/07/16 16:22:35  gosselin_a
+# pycdf classes are now 'new-style' classes (they derive from 'object').
+# Added CVS keywords.
+#
 
 """Python interface to the Unidata netCDF library
 (see: www.unidata.ucar.edu/packages/netcdf).
 
-Version: 0.5-3
-Date:    July 16 2005
+Version: 0.5-4
+Date:    August 14 2005
 
   
 Table of contents
@@ -19,6 +23,9 @@ Table of contents
   High level attribute access
   High level variable access
   Reading/setting multivalued netCDF attributes and variables
+  Working with scalar variables
+  Working with the unlimited dimension
+  Open issues and current limitations
   Functions summary
   Classes summary
   Examples
@@ -210,8 +217,18 @@ Ex.:
 
 High level attribute access
 ---------------------------
+
 netCDF allow setting attributes either at the dataset or the variable
-level. With pycdf, this can can be achieved in two ways.
+level. Attributes are names storing information (in the form of scalars,
+strings, sequences) which help interpret the dataset or variable they
+are attached to. netCDF attributes rely on a set of conventions (see the
+netCDF manual) and are not enforced in ay way by the library. The only
+exception (known to the author) is the '_FillValue' attribute which, when
+attached to a variable, sets the value that is to be stored in uninitialized
+entries of this variable. All other attributes must be interpreted at the
+application level.
+
+With pycdf, attributes can be assigned in two ways.
 
   -By calling the get()/put() method of an attribute instance. In the
    following example, dataset 'example.nc' is created, and string
@@ -329,7 +346,7 @@ get()/put() methods. Negative indices offer a nice example:
 
 The only features exclusively available with the get()/put) methods are the
 specification of a mapping vector (which could be used for ex. to
-transpose an array), and the handling of NC.BYTE type values as unsigned. 
+transpose an array), and the handling of NC.BYTE type values as unsigned.
 
 Reading/setting multivalued netCDF attributes and variables
 -----------------------------------------------------------
@@ -367,6 +384,109 @@ arrays.
 Reading a netCDF variable always returns a Numeric array, except if
 indexing is used and produces a rank-0 array, in which case a scalar is
 returned.
+
+Working with scalar variables
+-----------------------------
+
+A scalar (rank-0) variable is created inside a dataset by calling
+dataset method def_var() with an empty (or omitted) dimension sequence, eg:
+   >>> cdf = CDF(...)
+   >>> cdf.automode()
+   >>> temp = cdf.def_var('temp', NC.FLOAT)    # 'temp' is a scalar variable
+
+Now, methods put() and get() of this variable can be called 
+to set and get the variable value, and attributes can be set on the
+variable in the usual way, eg:
+   >>> temp.put(12)
+   >>> temp.units = "celsius"
+   >>> print temp.get(), temp.units       # prints "12.0 celsius"
+   
+For uniformity purposes, the slicing expression "[:]" is also applicable
+to scalar variables, even if they are not sequences at all.
+Purists may disagree, but otherwise scalar variables could only be accessed
+through get() and put() methods, preventing writing generic code to handle
+variables using slicing constructs. We can thus write:
+   >>> temp[:] = 12                      # equivalent to temp.put(12)
+   >>> print temp[:]                     # equivalent to "print temp.get()"
+
+
+Working with the unlimited dimension
+------------------------------------
+
+Inside a dataset, one dimension can be designated as being 'unlimited',
+allowing variables based on that dimension to dynamically grow
+along that dimension. An unlimited dimension is defined by calling the
+dataset def_dim() method using NC.UNLIMITED as the dimension length,
+eg:
+   >>> d1 = cdf.def_dim('d1', NC.UNLIMITED)
+
+A variable can be allowed to grow along that dimension if that dimension
+comes first in the variable dimension list, eg:
+   >>> d2 = cdf.def_dim('d2', 5)
+   >>> v = cdf.def_var('v', NC.DOUBLE, (d1, d2))
+
+Only one unlimited dimension is allowed inside a dataset, and all variables
+based on that dimension will grow "in synch".
+
+When assigning to a variable along an unlimited dimension, the indices
+must be specified if they exceed the current dimension range. Otherwise,
+only the currently existing elements along that dimension will be affected,
+irrespective of the shape of the right-hand side expression. This could be
+considered a bug (comments please...). Thus:
+   >>> v[:]  = ones((4,5))     # fails: 'd1' empty, dimension left untouched
+   >>> v[:4] = ones((4,5))     # works: indices 0 to 3 along 'd1' are assigned to
+   >>> v[:]  = zeros((4,5))    # now works: current 'd1' 0 to 3 indices assigned to
+   >>> v[:2,:2] = ones((2,2))  # assign elements 0 to 1 on dimensions 'd1' and 'd2'
+
+An unlimited dimension can be made to grow by assigning to higher and higher
+indices along that dimension. Thus:
+   >>> for i in range(4,7):
+   ...    v[i] = i * ones(5)  # grow dimension 'd1' from 4 to 6
+
+Making an unlimited dimension grow in a non-sequential way will allocate
+intermediate elements inside the variable, which will be initialized with
+the fill value (default one, or the one set with attribute _FillValue). So:
+   >>> v._FillValue = 999.0
+   >>> v[8] = ones(5)        # will fill v[7] with '999.0' fill values
+
+The same holds true for other variables based on the unlimited dimension. They
+will all grow in synch when the dimension range is extended, and newly allocated
+elements inside those variables will be set to their variable fill value.
+
+
+Open issues and current limitiations
+------------------------------------
+
+The following limitations now affect the pycdf package. They may be lifted out
+in future releases. Users are encouraged to send their votes on those
+issues.
+
+Assigning non-conforming array shapes.
+
+  pycdf currently does not check the shapes of arrays involved in the
+  assignment to netCDF variables. Thus, the following code will proceed without
+  errors.
+     >>> d = cdf.def_dim('d', 5)
+     >>> v = cdf.def_var('v', NC.INT, d)
+     >>> v[:] = ones(10)     # indices 5 to 9 silently ignored
+
+  In the current implementation, pycdf simply "linearizes" the right-hand side,
+  assigning elements to the left-hand until all designated elements have been
+  assigned to. This is why , when assigning to a variable along an unlimited
+  dimension, the indices must be specified if they exceed the current dimension
+  range (see "Working with the unlimited dimension").
+
+  This behavior may be considered a bug by some, who would like to see
+  pycdf raise an exception when trying to assign a non-conformant array shape
+  to a netCDF variable.
+
+'Numeric' vs 'numarray' support
+
+  pycdf has not been tested so far with the 'numarray' package, which is expected
+  to make 'Numeric' obsolete in some future. Some users have reported that
+  they could import 'numarray' in place of 'Numeric', at the cost however of
+  having to cast returned 'Numeric' arrays to 'numarray' arrays. 
+
 
 Functions summary
 -----------------
@@ -859,6 +979,13 @@ class CDF(object):
 	# Private attributes:
 	#  _id:       dataset id
         #  _automode: automode flag
+
+        # Make sure _id is initialized in case __del__ is called
+        # when the SD object goes out of scope after failing to
+        # open file. Failure to do so may put python into an infinite loop
+        # (thanks to Richard.Andrews@esands.com and 
+        # E.Bernsen@phys.uu.nl for reporting this bug).
+        self._id = None
                                                    
         # See if file exists.
         exists = os.path.exists(path)
@@ -883,7 +1010,7 @@ class CDF(object):
             if exists:
                 fct = _C.nc_open
             else:
-                raise("CDF", 0, "no such file")
+                raise CDFError("CDF", 0, "no such file")
                 
         status, id = fct(path, mode)
         _checkCDFErr('CDF', status)
@@ -892,10 +1019,12 @@ class CDF(object):
         self._automode = 0
 
     def __del__(self):
-        """Close the dataset when a CDF instance is deleted."""
+        """Close the associated dataset when a CDF instance is deleted,
+        if this has not already been done."""
 
         try:
-            self.close()
+            if self._id:
+                self.close()
         except:
             pass
 
@@ -928,8 +1057,11 @@ class CDF(object):
 	try:
 	    type, values = a.inq()
 	except CDFError:
-	    raise AttributeError, "Global attribute not found"
-	# Return attribute value(s).
+            raise AttributeError, "Global attribute not found"
+        except Exception, msg:
+            raise AttributeError, msg
+        
+        # Return attribute value(s).
 	return a.get()
 
     def __setattr__(self, name, value):
@@ -1242,6 +1374,9 @@ class CDF(object):
           previous fillmode
  
         C library equivalent : nc_set_fill
+
+        The value used as the fill value is the one set using the variable
+        '_FillValue' attribute, or a default implementation dependent value. 
                                               """
 
         status, prevmode = _C.nc_set_fill(self._id, fillmode)
@@ -1325,7 +1460,7 @@ class CDF(object):
                       specify an empty sequence to define a scalar
                       variable; for a one-dimensional variable, the
                       dimension can be specified directly and does not
-                      need to be entered as a scalar; for a record variable
+                      need to be entered as a sequence; for a record variable
                       (eg using an unlimited dimension), the unlimited
                       dimension must come first
         Returns:
@@ -1338,7 +1473,8 @@ class CDF(object):
         else:    # Transform scalar into sequence
             ndims = 1
             dimids = [dimids]
-        buf = _C.array_int(ndims > 0 or 1)    # allocate at least 1
+
+        buf = _C.array_int((ndims > 0) and ndims or 1)    # allocate at least 1
         for n in range(ndims):
             d = dimids[n]
             if isinstance(d, CDFDim):
@@ -1771,10 +1907,14 @@ class CDFVar(object):
         # Get number of unlimited dimension, if any
         unlim = self._ncid.inq_unlimdim()
         
-        # Make sure the indexing expression does not exceed the variable
-        # number of dimensions.
+        # Handle a scalar variable as a 1-dimensional array of length 1.
         shape = self.shape()
         nDims = self.inq_ndims()
+        if nDims == 0:
+            nDims = 1
+            shape = (1,)
+        # Make sure the indexing expression does not exceed the variable
+        # number of dimensions.
         if type(elem) == types.TupleType:
             if len(elem) > nDims:
                 raise CDFError("get", 0,
@@ -1997,7 +2137,7 @@ class CDFVar(object):
         except:    # Transform scalar into sequence
             ndims = 1
             indices = [indices]
-        buf = _C.array_size_t(ndims > 0 or 1)    # allocate at least 1
+        buf = _C.array_size_t((ndims > 0) and ndims or 1)    # allocate at least 1
         for n in range(ndims):
             buf[n] = indices[n]
 
@@ -2006,7 +2146,7 @@ class CDFVar(object):
         _checkCDFErr('get_1', status)
 
         # Force data mode.
-        self._ncid.forceDataMode()
+        self._ncid._forceDataMode()
         if xtype in [NC.BYTE] and ubyte:
             bytes = _C.array_byte(1)
             status = _C.nc_get_var1_uchar(self._ncid._id, self._id, 
@@ -2048,12 +2188,12 @@ class CDFVar(object):
         except:    # Transform scalar into sequence
             ndims = 1
             indices = [indices]
-        buf = _C.array_size_t(ndims > 0 or 1)    # allocate at least 1
+        buf = _C.array_size_t((ndims > 0) and ndims or 1)    # allocate at least 1
         for n in range(ndims):
             buf[n] = indices[n]
 
         # Force data mode.
-        self._ncid.forceDataMode()
+        self._ncid._forceDataMode()
         # Check the value type.
         xtype = self.inq_type()
 
@@ -2117,9 +2257,17 @@ class CDFVar(object):
         try:
             name, data_type, dimids, nattr = self.inq()
             rank = len(dimids)
-            dim_sizes = []
-            for n in range(rank):
-                dim_sizes.append(sd.dim(dimids[n]).inq_len())
+            # Temporarily handle a scalar var as a 1-dimensional array of length 1.
+            # This faked array will be undone at exit.
+            if rank == 0:
+                scalar = 1
+                rank = 1
+                dim_sizes = [1]
+            else:
+                scalar = 0
+                dim_sizes = []
+                for n in range(rank):
+                    dim_sizes.append(sd.dim(dimids[n]).inq_len())
         except CDFError, msg:
             raise CDFError('get', 0, 'cannot execute')
 
@@ -2160,8 +2308,13 @@ class CDFVar(object):
         sd._forceDataMode()
         
         try:
-            return _C._nc_get_var_0(sd._id, self._id, data_type, start,
+            res = _C._nc_get_var_0(sd._id, self._id, data_type, start,
                                    count, stride, map, ubyte)
+            # Undo the fake array used to handle a scalar var.
+            if scalar:
+                res = res[0]
+            return res
+              
         except ValueError, status:
             status = int(str(status))
             _checkCDFErr('get', status)
@@ -2175,7 +2328,8 @@ class CDFVar(object):
         Args:
           data    : array of data to write; can be given as a Numeric
                     array, or as Python sequence (whose elements can be
-                    imbricated sequences)
+                    imbricated sequences); for a scalar variable, directly
+                    specify the value
           start   : indices where to start writing in the variable;
                     default to 0 on all dimensions
           count   : number of values to write along each dimension;
@@ -2211,9 +2365,15 @@ class CDFVar(object):
         try:
             name, data_type, dimids, nattr = self.inq()
             rank = len(dimids)
-            dim_sizes = []
-            for n in range(rank):
-                dim_sizes.append(sd.dim(dimids[n]).inq_len())
+            # Handle a scalar variable as a 1-dimensional array of length 1.
+            if rank == 0:
+                scalar = 1
+                rank = 1
+                dim_sizes = [1]
+            else:
+                dim_sizes = []
+                for n in range(rank):
+                    dim_sizes.append(sd.dim(dimids[n]).inq_len())
         except CDFError, msg:
             raise CDFError('put', 0, 'cannot execute')
 
@@ -2524,7 +2684,7 @@ class CDFAttr(object):
             varnum = NC.GLOBAL
  
         status, xtype, nval = _C.nc_inq_att(self._ncid._id, varnum,
-                                           self._name)
+                                            self._name)
         _checkCDFErr('inq', status)
         return xtype, nval
 
@@ -2807,7 +2967,6 @@ if __name__ == '__main__':
     try:
         # Create a test dataset. Raise the automode flag, so that
         # we do not need to worry about setting the define/data mode.
-        print "DEBUG: calling CDF"
         d = CDF('test.nc', NC.WRITE|NC.CREATE|NC.TRUNC)
         d.automode()
         # Create 2 global attributes, one holding a string,

@@ -1,7 +1,11 @@
 /*
- * $Id: pycdfext.i,v 1.2 2005-07-16 16:22:35 gosselin_a Exp $
+ * $Id: pycdfext.i,v 1.3 2005-08-15 02:00:30 gosselin_a Exp $
  * $Name: not supported by cvs2svn $
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2005/07/16 16:22:35  gosselin_a
+ * pycdf classes are now 'new-style' classes (they derive from 'object').
+ * Added CVS keywords.
+ *
  */
 
 %module pycdfext
@@ -326,7 +330,7 @@ static PyObject * _nc_get_var_0(int ncid, int varid, int data_type,
     int   i32;
 
         /*
-         * Load arrays. Caller has guaranteeded that all 4 arrays have the
+         * Load arrays. Caller has guaranteed that all 4 arrays have the
          * same dimensions.
          */
     rank = PyObject_Length(start);
