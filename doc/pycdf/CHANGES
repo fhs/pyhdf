@@ -1,5 +1,41 @@
+# $Id: CHANGES,v 1.2 2005-08-15 02:16:24 gosselin_a Exp $
+# $Name: not supported by cvs2svn $
+# $Log: not supported by cvs2svn $
+# Revision 1.3  2005/08/15 02:00:29  gosselin_a
+# pycdf-0.5-4 bug fix release. See CHANGES file.
+#
+# Revision 1.2  2005/07/16 17:01:18  gosselin_a
+# pycdf-0.5-3
+#   pycdf classes are now 'new-style' classes (they derive from 'object').
+#   Updated documentation and admin files.
+#
+
 List of changes to 'pycdf' since the initial release.
 
+pycdf-0.5-4
+  August 14 2005
+    Bug fix release.
+
+    -Fixed a bad 'raise' statement in CDF.__init()__ method.
+     (thanks: E.Bernsen@phys.uu.nl who reported this bug)
+    -Fixed an infinite loop condition in the CDF.__del__() method when
+     trying to open a non-existent file.
+     (thanks: E.Bernsen@phys.uu.nl who reported this bug)
+    -Fixed bug in CDF.def_var() method : the number of dimensions was not
+     always correctly computed.
+     (thanks: badland@broadpark.no who reported this bug)
+    -Fixed bug in the handling of scalar variables inside methods
+     get() and put(), and slicing expression "v[:]". Added a new section
+     "Working with scalar variables" in the documentation.
+     (thanks: gerry@ucar.edu for reporting this bug)
+    -Fixed a bug with assignments to variables based on an unlimited dimension. 
+     Added a new section "Working with the unlimited dimension" in
+     the documentation.
+     (thanks to sdhyok@email.unc.edu for reporting this bug)
+    -Added a new section "Open issues and current limitations" to the
+     documentation.
+    -Added some comments about the '_FillValue' attribute inside the documentation.
+     
 pycdf-0.5-3
   July 16 2005
     Interim release.

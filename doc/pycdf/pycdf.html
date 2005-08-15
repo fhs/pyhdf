@@ -12,8 +12,8 @@
     <p><tt>Python&nbsp;interface&nbsp;to&nbsp;the&nbsp;Unidata&nbsp;netCDF&nbsp;library<br>
 (see:&nbsp;www.unidata.ucar.edu/packages/netcdf).<br>
 &nbsp;<br>
-Version:&nbsp;0.5-3<br>
-Date:&nbsp;&nbsp;&nbsp;&nbsp;July&nbsp;16&nbsp;2005<br>
+Version:&nbsp;0.5-4<br>
+Date:&nbsp;&nbsp;&nbsp;&nbsp;August&nbsp;14&nbsp;2005<br>
 &nbsp;<br>
 &nbsp;&nbsp;<br>
 Table&nbsp;of&nbsp;contents<br>
@@ -26,6 +26,9 @@ Table&nbsp;of&nbsp;contents<br>
 &nbsp;&nbsp;High&nbsp;level&nbsp;attribute&nbsp;access<br>
 &nbsp;&nbsp;High&nbsp;level&nbsp;variable&nbsp;access<br>
 &nbsp;&nbsp;Reading/setting&nbsp;multivalued&nbsp;netCDF&nbsp;attributes&nbsp;and&nbsp;variables<br>
+&nbsp;&nbsp;Working&nbsp;with&nbsp;scalar&nbsp;variables<br>
+&nbsp;&nbsp;Working&nbsp;with&nbsp;the&nbsp;unlimited&nbsp;dimension<br>
+&nbsp;&nbsp;Open&nbsp;issues&nbsp;and&nbsp;current&nbsp;limitations<br>
 &nbsp;&nbsp;Functions&nbsp;summary<br>
 &nbsp;&nbsp;Classes&nbsp;summary<br>
 &nbsp;&nbsp;Examples<br>
@@ -217,8 +220,18 @@ Ex.:<br>
 &nbsp;<br>
 High&nbsp;level&nbsp;attribute&nbsp;access<br>
 ---------------------------<br>
+&nbsp;<br>
 netCDF&nbsp;allow&nbsp;setting&nbsp;attributes&nbsp;either&nbsp;at&nbsp;the&nbsp;dataset&nbsp;or&nbsp;the&nbsp;variable<br>
-level.&nbsp;With&nbsp;pycdf,&nbsp;this&nbsp;can&nbsp;can&nbsp;be&nbsp;achieved&nbsp;in&nbsp;two&nbsp;ways.<br>
+level.&nbsp;Attributes&nbsp;are&nbsp;names&nbsp;storing&nbsp;information&nbsp;(in&nbsp;the&nbsp;form&nbsp;of&nbsp;scalars,<br>
+strings,&nbsp;sequences)&nbsp;which&nbsp;help&nbsp;interpret&nbsp;the&nbsp;dataset&nbsp;or&nbsp;variable&nbsp;they<br>
+are&nbsp;attached&nbsp;to.&nbsp;netCDF&nbsp;attributes&nbsp;rely&nbsp;on&nbsp;a&nbsp;set&nbsp;of&nbsp;conventions&nbsp;(see&nbsp;the<br>
+netCDF&nbsp;manual)&nbsp;and&nbsp;are&nbsp;not&nbsp;enforced&nbsp;in&nbsp;ay&nbsp;way&nbsp;by&nbsp;the&nbsp;library.&nbsp;The&nbsp;only<br>
+exception&nbsp;(known&nbsp;to&nbsp;the&nbsp;author)&nbsp;is&nbsp;the&nbsp;'_FillValue'&nbsp;attribute&nbsp;which,&nbsp;when<br>
+attached&nbsp;to&nbsp;a&nbsp;variable,&nbsp;sets&nbsp;the&nbsp;value&nbsp;that&nbsp;is&nbsp;to&nbsp;be&nbsp;stored&nbsp;in&nbsp;uninitialized<br>
+entries&nbsp;of&nbsp;this&nbsp;variable.&nbsp;All&nbsp;other&nbsp;attributes&nbsp;must&nbsp;be&nbsp;interpreted&nbsp;at&nbsp;the<br>
+application&nbsp;level.<br>
+&nbsp;<br>
+With&nbsp;pycdf,&nbsp;attributes&nbsp;can&nbsp;be&nbsp;assigned&nbsp;in&nbsp;two&nbsp;ways.<br>
 &nbsp;<br>
 &nbsp;&nbsp;-By&nbsp;calling&nbsp;the&nbsp;get()/put()&nbsp;method&nbsp;of&nbsp;an&nbsp;attribute&nbsp;instance.&nbsp;In&nbsp;the<br>
 &nbsp;&nbsp;&nbsp;following&nbsp;example,&nbsp;dataset&nbsp;'example.nc'&nbsp;is&nbsp;created,&nbsp;and&nbsp;string<br>
@@ -336,7 +349,7 @@ get()/put()&nbsp;methods.&nbsp;Negative&nbsp;indices&nbsp;offer&nbsp;a&nbsp;nice
 &nbsp;<br>
 The&nbsp;only&nbsp;features&nbsp;exclusively&nbsp;available&nbsp;with&nbsp;the&nbsp;get()/put)&nbsp;methods&nbsp;are&nbsp;the<br>
 specification&nbsp;of&nbsp;a&nbsp;mapping&nbsp;vector&nbsp;(which&nbsp;could&nbsp;be&nbsp;used&nbsp;for&nbsp;ex.&nbsp;to<br>
-transpose&nbsp;an&nbsp;array),&nbsp;and&nbsp;the&nbsp;handling&nbsp;of&nbsp;<a href="#NC">NC</a>.BYTE&nbsp;type&nbsp;values&nbsp;as&nbsp;unsigned.&nbsp;<br>
+transpose&nbsp;an&nbsp;array),&nbsp;and&nbsp;the&nbsp;handling&nbsp;of&nbsp;<a href="#NC">NC</a>.BYTE&nbsp;type&nbsp;values&nbsp;as&nbsp;unsigned.<br>
 &nbsp;<br>
 Reading/setting&nbsp;multivalued&nbsp;netCDF&nbsp;attributes&nbsp;and&nbsp;variables<br>
 -----------------------------------------------------------<br>
@@ -374,6 +387,109 @@ arrays.<br>
 Reading&nbsp;a&nbsp;netCDF&nbsp;variable&nbsp;always&nbsp;returns&nbsp;a&nbsp;Numeric&nbsp;array,&nbsp;except&nbsp;if<br>
 indexing&nbsp;is&nbsp;used&nbsp;and&nbsp;produces&nbsp;a&nbsp;rank-0&nbsp;array,&nbsp;in&nbsp;which&nbsp;case&nbsp;a&nbsp;scalar&nbsp;is<br>
 returned.<br>
+&nbsp;<br>
+Working&nbsp;with&nbsp;scalar&nbsp;variables<br>
+-----------------------------<br>
+&nbsp;<br>
+A&nbsp;scalar&nbsp;(rank-0)&nbsp;variable&nbsp;is&nbsp;created&nbsp;inside&nbsp;a&nbsp;dataset&nbsp;by&nbsp;calling<br>
+dataset&nbsp;method&nbsp;def_var()&nbsp;with&nbsp;an&nbsp;empty&nbsp;(or&nbsp;omitted)&nbsp;dimension&nbsp;sequence,&nbsp;eg:<br>
+&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;cdf&nbsp;=&nbsp;<a href="#CDF">CDF</a>(...)<br>
+&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;cdf.automode()<br>
+&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;temp&nbsp;=&nbsp;cdf.def_var('temp',&nbsp;<a href="#NC">NC</a>.FLOAT)&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;'temp'&nbsp;is&nbsp;a&nbsp;scalar&nbsp;variable<br>
+&nbsp;<br>
+Now,&nbsp;methods&nbsp;put()&nbsp;and&nbsp;get()&nbsp;of&nbsp;this&nbsp;variable&nbsp;can&nbsp;be&nbsp;called&nbsp;<br>
+to&nbsp;set&nbsp;and&nbsp;get&nbsp;the&nbsp;variable&nbsp;value,&nbsp;and&nbsp;attributes&nbsp;can&nbsp;be&nbsp;set&nbsp;on&nbsp;the<br>
+variable&nbsp;in&nbsp;the&nbsp;usual&nbsp;way,&nbsp;eg:<br>
+&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;temp.put(12)<br>
+&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;temp.units&nbsp;=&nbsp;"celsius"<br>
+&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;temp.get(),&nbsp;temp.units&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;prints&nbsp;"12.0&nbsp;celsius"<br>
+&nbsp;&nbsp;&nbsp;<br>
+For&nbsp;uniformity&nbsp;purposes,&nbsp;the&nbsp;slicing&nbsp;expression&nbsp;"[:]"&nbsp;is&nbsp;also&nbsp;applicable<br>
+to&nbsp;scalar&nbsp;variables,&nbsp;even&nbsp;if&nbsp;they&nbsp;are&nbsp;not&nbsp;sequences&nbsp;at&nbsp;all.<br>
+Purists&nbsp;may&nbsp;disagree,&nbsp;but&nbsp;otherwise&nbsp;scalar&nbsp;variables&nbsp;could&nbsp;only&nbsp;be&nbsp;accessed<br>
+through&nbsp;get()&nbsp;and&nbsp;put()&nbsp;methods,&nbsp;preventing&nbsp;writing&nbsp;generic&nbsp;code&nbsp;to&nbsp;handle<br>
+variables&nbsp;using&nbsp;slicing&nbsp;constructs.&nbsp;We&nbsp;can&nbsp;thus&nbsp;write:<br>
+&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;temp[:]&nbsp;=&nbsp;12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;equivalent&nbsp;to&nbsp;temp.put(12)<br>
+&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;temp[:]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;equivalent&nbsp;to&nbsp;"print&nbsp;temp.get()"<br>
+&nbsp;<br>
+&nbsp;<br>
+Working&nbsp;with&nbsp;the&nbsp;unlimited&nbsp;dimension<br>
+------------------------------------<br>
+&nbsp;<br>
+Inside&nbsp;a&nbsp;dataset,&nbsp;one&nbsp;dimension&nbsp;can&nbsp;be&nbsp;designated&nbsp;as&nbsp;being&nbsp;'unlimited',<br>
+allowing&nbsp;variables&nbsp;based&nbsp;on&nbsp;that&nbsp;dimension&nbsp;to&nbsp;dynamically&nbsp;grow<br>
+along&nbsp;that&nbsp;dimension.&nbsp;An&nbsp;unlimited&nbsp;dimension&nbsp;is&nbsp;defined&nbsp;by&nbsp;calling&nbsp;the<br>
+dataset&nbsp;def_dim()&nbsp;method&nbsp;using&nbsp;<a href="#NC">NC</a>.UNLIMITED&nbsp;as&nbsp;the&nbsp;dimension&nbsp;length,<br>
+eg:<br>
+&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;d1&nbsp;=&nbsp;cdf.def_dim('d1',&nbsp;<a href="#NC">NC</a>.UNLIMITED)<br>
+&nbsp;<br>
+A&nbsp;variable&nbsp;can&nbsp;be&nbsp;allowed&nbsp;to&nbsp;grow&nbsp;along&nbsp;that&nbsp;dimension&nbsp;if&nbsp;that&nbsp;dimension<br>
+comes&nbsp;first&nbsp;in&nbsp;the&nbsp;variable&nbsp;dimension&nbsp;list,&nbsp;eg:<br>
+&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;d2&nbsp;=&nbsp;cdf.def_dim('d2',&nbsp;5)<br>
+&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v&nbsp;=&nbsp;cdf.def_var('v',&nbsp;<a href="#NC">NC</a>.DOUBLE,&nbsp;(d1,&nbsp;d2))<br>
+&nbsp;<br>
+Only&nbsp;one&nbsp;unlimited&nbsp;dimension&nbsp;is&nbsp;allowed&nbsp;inside&nbsp;a&nbsp;dataset,&nbsp;and&nbsp;all&nbsp;variables<br>
+based&nbsp;on&nbsp;that&nbsp;dimension&nbsp;will&nbsp;grow&nbsp;"in&nbsp;synch".<br>
+&nbsp;<br>
+When&nbsp;assigning&nbsp;to&nbsp;a&nbsp;variable&nbsp;along&nbsp;an&nbsp;unlimited&nbsp;dimension,&nbsp;the&nbsp;indices<br>
+must&nbsp;be&nbsp;specified&nbsp;if&nbsp;they&nbsp;exceed&nbsp;the&nbsp;current&nbsp;dimension&nbsp;range.&nbsp;Otherwise,<br>
+only&nbsp;the&nbsp;currently&nbsp;existing&nbsp;elements&nbsp;along&nbsp;that&nbsp;dimension&nbsp;will&nbsp;be&nbsp;affected,<br>
+irrespective&nbsp;of&nbsp;the&nbsp;shape&nbsp;of&nbsp;the&nbsp;right-hand&nbsp;side&nbsp;expression.&nbsp;This&nbsp;could&nbsp;be<br>
+considered&nbsp;a&nbsp;bug&nbsp;(comments&nbsp;please...).&nbsp;Thus:<br>
+&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v[:]&nbsp;&nbsp;=&nbsp;ones((4,5))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;fails:&nbsp;'d1'&nbsp;empty,&nbsp;dimension&nbsp;left&nbsp;untouched<br>
+&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v[:4]&nbsp;=&nbsp;ones((4,5))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;works:&nbsp;indices&nbsp;0&nbsp;to&nbsp;3&nbsp;along&nbsp;'d1'&nbsp;are&nbsp;assigned&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v[:]&nbsp;&nbsp;=&nbsp;zeros((4,5))&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;now&nbsp;works:&nbsp;current&nbsp;'d1'&nbsp;0&nbsp;to&nbsp;3&nbsp;indices&nbsp;assigned&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v[:2,:2]&nbsp;=&nbsp;ones((2,2))&nbsp;&nbsp;#&nbsp;assign&nbsp;elements&nbsp;0&nbsp;to&nbsp;1&nbsp;on&nbsp;dimensions&nbsp;'d1'&nbsp;and&nbsp;'d2'<br>
+&nbsp;<br>
+An&nbsp;unlimited&nbsp;dimension&nbsp;can&nbsp;be&nbsp;made&nbsp;to&nbsp;grow&nbsp;by&nbsp;assigning&nbsp;to&nbsp;higher&nbsp;and&nbsp;higher<br>
+indices&nbsp;along&nbsp;that&nbsp;dimension.&nbsp;Thus:<br>
+&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;for&nbsp;i&nbsp;in&nbsp;range(4,7):<br>
+&nbsp;&nbsp;&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;v[i]&nbsp;=&nbsp;i&nbsp;*&nbsp;ones(5)&nbsp;&nbsp;#&nbsp;grow&nbsp;dimension&nbsp;'d1'&nbsp;from&nbsp;4&nbsp;to&nbsp;6<br>
+&nbsp;<br>
+Making&nbsp;an&nbsp;unlimited&nbsp;dimension&nbsp;grow&nbsp;in&nbsp;a&nbsp;non-sequential&nbsp;way&nbsp;will&nbsp;allocate<br>
+intermediate&nbsp;elements&nbsp;inside&nbsp;the&nbsp;variable,&nbsp;which&nbsp;will&nbsp;be&nbsp;initialized&nbsp;with<br>
+the&nbsp;fill&nbsp;value&nbsp;(default&nbsp;one,&nbsp;or&nbsp;the&nbsp;one&nbsp;set&nbsp;with&nbsp;attribute&nbsp;_FillValue).&nbsp;So:<br>
+&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v._FillValue&nbsp;=&nbsp;999.0<br>
+&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v[8]&nbsp;=&nbsp;ones(5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;will&nbsp;fill&nbsp;v[7]&nbsp;with&nbsp;'999.0'&nbsp;fill&nbsp;values<br>
+&nbsp;<br>
+The&nbsp;same&nbsp;holds&nbsp;true&nbsp;for&nbsp;other&nbsp;variables&nbsp;based&nbsp;on&nbsp;the&nbsp;unlimited&nbsp;dimension.&nbsp;They<br>
+will&nbsp;all&nbsp;grow&nbsp;in&nbsp;synch&nbsp;when&nbsp;the&nbsp;dimension&nbsp;range&nbsp;is&nbsp;extended,&nbsp;and&nbsp;newly&nbsp;allocated<br>
+elements&nbsp;inside&nbsp;those&nbsp;variables&nbsp;will&nbsp;be&nbsp;set&nbsp;to&nbsp;their&nbsp;variable&nbsp;fill&nbsp;value.<br>
+&nbsp;<br>
+&nbsp;<br>
+Open&nbsp;issues&nbsp;and&nbsp;current&nbsp;limitiations<br>
+------------------------------------<br>
+&nbsp;<br>
+The&nbsp;following&nbsp;limitations&nbsp;now&nbsp;affect&nbsp;the&nbsp;pycdf&nbsp;package.&nbsp;They&nbsp;may&nbsp;be&nbsp;lifted&nbsp;out<br>
+in&nbsp;future&nbsp;releases.&nbsp;Users&nbsp;are&nbsp;encouraged&nbsp;to&nbsp;send&nbsp;their&nbsp;votes&nbsp;on&nbsp;those<br>
+issues.<br>
+&nbsp;<br>
+Assigning&nbsp;non-conforming&nbsp;array&nbsp;shapes.<br>
+&nbsp;<br>
+&nbsp;&nbsp;pycdf&nbsp;currently&nbsp;does&nbsp;not&nbsp;check&nbsp;the&nbsp;shapes&nbsp;of&nbsp;arrays&nbsp;involved&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;assignment&nbsp;to&nbsp;netCDF&nbsp;variables.&nbsp;Thus,&nbsp;the&nbsp;following&nbsp;code&nbsp;will&nbsp;proceed&nbsp;without<br>
+&nbsp;&nbsp;errors.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;d&nbsp;=&nbsp;cdf.def_dim('d',&nbsp;5)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v&nbsp;=&nbsp;cdf.def_var('v',&nbsp;<a href="#NC">NC</a>.INT,&nbsp;d)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;v[:]&nbsp;=&nbsp;ones(10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;indices&nbsp;5&nbsp;to&nbsp;9&nbsp;silently&nbsp;ignored<br>
+&nbsp;<br>
+&nbsp;&nbsp;In&nbsp;the&nbsp;current&nbsp;implementation,&nbsp;pycdf&nbsp;simply&nbsp;"linearizes"&nbsp;the&nbsp;right-hand&nbsp;side,<br>
+&nbsp;&nbsp;assigning&nbsp;elements&nbsp;to&nbsp;the&nbsp;left-hand&nbsp;until&nbsp;all&nbsp;designated&nbsp;elements&nbsp;have&nbsp;been<br>
+&nbsp;&nbsp;assigned&nbsp;to.&nbsp;This&nbsp;is&nbsp;why&nbsp;,&nbsp;when&nbsp;assigning&nbsp;to&nbsp;a&nbsp;variable&nbsp;along&nbsp;an&nbsp;unlimited<br>
+&nbsp;&nbsp;dimension,&nbsp;the&nbsp;indices&nbsp;must&nbsp;be&nbsp;specified&nbsp;if&nbsp;they&nbsp;exceed&nbsp;the&nbsp;current&nbsp;dimension<br>
+&nbsp;&nbsp;range&nbsp;(see&nbsp;"Working&nbsp;with&nbsp;the&nbsp;unlimited&nbsp;dimension").<br>
+&nbsp;<br>
+&nbsp;&nbsp;This&nbsp;behavior&nbsp;may&nbsp;be&nbsp;considered&nbsp;a&nbsp;bug&nbsp;by&nbsp;some,&nbsp;who&nbsp;would&nbsp;like&nbsp;to&nbsp;see<br>
+&nbsp;&nbsp;pycdf&nbsp;raise&nbsp;an&nbsp;exception&nbsp;when&nbsp;trying&nbsp;to&nbsp;assign&nbsp;a&nbsp;non-conformant&nbsp;array&nbsp;shape<br>
+&nbsp;&nbsp;to&nbsp;a&nbsp;netCDF&nbsp;variable.<br>
+&nbsp;<br>
+'Numeric'&nbsp;vs&nbsp;'numarray'&nbsp;support<br>
+&nbsp;<br>
+&nbsp;&nbsp;pycdf&nbsp;has&nbsp;not&nbsp;been&nbsp;tested&nbsp;so&nbsp;far&nbsp;with&nbsp;the&nbsp;'numarray'&nbsp;package,&nbsp;which&nbsp;is&nbsp;expected<br>
+&nbsp;&nbsp;to&nbsp;make&nbsp;'Numeric'&nbsp;obsolete&nbsp;in&nbsp;some&nbsp;future.&nbsp;Some&nbsp;users&nbsp;have&nbsp;reported&nbsp;that<br>
+&nbsp;&nbsp;they&nbsp;could&nbsp;import&nbsp;'numarray'&nbsp;in&nbsp;place&nbsp;of&nbsp;'Numeric',&nbsp;at&nbsp;the&nbsp;cost&nbsp;however&nbsp;of<br>
+&nbsp;&nbsp;having&nbsp;to&nbsp;cast&nbsp;returned&nbsp;'Numeric'&nbsp;arrays&nbsp;to&nbsp;'numarray'&nbsp;arrays.&nbsp;<br>
+&nbsp;<br>
 &nbsp;<br>
 Functions&nbsp;summary<br>
 -----------------<br>
@@ -840,7 +956,8 @@ To&nbsp;instantiate&nbsp;a&nbsp;netCDF&nbsp;dataset,&nbsp;call&nbsp;the&nbsp;<a 
 constructor.<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
-<dl><dt><a name="CDF-__del__"><strong>__del__</strong></a>(self)</dt><dd><tt>Close&nbsp;the&nbsp;dataset&nbsp;when&nbsp;a&nbsp;<a href="#CDF">CDF</a>&nbsp;instance&nbsp;is&nbsp;deleted.</tt></dd></dl>
+<dl><dt><a name="CDF-__del__"><strong>__del__</strong></a>(self)</dt><dd><tt>Close&nbsp;the&nbsp;associated&nbsp;dataset&nbsp;when&nbsp;a&nbsp;<a href="#CDF">CDF</a>&nbsp;instance&nbsp;is&nbsp;deleted,<br>
+if&nbsp;this&nbsp;has&nbsp;not&nbsp;already&nbsp;been&nbsp;done.</tt></dd></dl>
 
 <dl><dt><a name="CDF-__getattr__"><strong>__getattr__</strong></a>(self, name)</dt></dl>
 
@@ -987,7 +1104,7 @@ Args:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;specify&nbsp;an&nbsp;empty&nbsp;sequence&nbsp;to&nbsp;define&nbsp;a&nbsp;scalar<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;variable;&nbsp;for&nbsp;a&nbsp;one-dimensional&nbsp;variable,&nbsp;the<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimension&nbsp;can&nbsp;be&nbsp;specified&nbsp;directly&nbsp;and&nbsp;does&nbsp;not<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;need&nbsp;to&nbsp;be&nbsp;entered&nbsp;as&nbsp;a&nbsp;scalar;&nbsp;for&nbsp;a&nbsp;record&nbsp;variable<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;need&nbsp;to&nbsp;be&nbsp;entered&nbsp;as&nbsp;a&nbsp;sequence;&nbsp;for&nbsp;a&nbsp;record&nbsp;variable<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(eg&nbsp;using&nbsp;an&nbsp;unlimited&nbsp;dimension),&nbsp;the&nbsp;unlimited<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimension&nbsp;must&nbsp;come&nbsp;first<br>
 Returns:<br>
@@ -1145,7 +1262,10 @@ Args:<br>
 Returns:<br>
 &nbsp;&nbsp;previous&nbsp;fillmode<br>
 &nbsp;<br>
-C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_set_fill</tt></dd></dl>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_set_fill<br>
+&nbsp;<br>
+The&nbsp;value&nbsp;used&nbsp;as&nbsp;the&nbsp;fill&nbsp;value&nbsp;is&nbsp;the&nbsp;one&nbsp;set&nbsp;using&nbsp;the&nbsp;variable<br>
+'_FillValue'&nbsp;attribute,&nbsp;or&nbsp;a&nbsp;default&nbsp;implementation&nbsp;dependent&nbsp;value.</tt></dd></dl>
 
 <dl><dt><a name="CDF-sync"><strong>sync</strong></a>(self)</dt><dd><tt>Synchronize&nbsp;the&nbsp;dataset&nbsp;to&nbsp;disk.<br>
 Dataset&nbsp;mode:&nbsp;data&nbsp;mode.&nbsp;<br>
@@ -1625,7 +1745,8 @@ Dataset&nbsp;mode:&nbsp;data&nbsp;mode.<br>
 Args:<br>
 &nbsp;&nbsp;data&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;array&nbsp;of&nbsp;data&nbsp;to&nbsp;write;&nbsp;can&nbsp;be&nbsp;given&nbsp;as&nbsp;a&nbsp;Numeric<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array,&nbsp;or&nbsp;as&nbsp;Python&nbsp;sequence&nbsp;(whose&nbsp;elements&nbsp;can&nbsp;be<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;imbricated&nbsp;sequences)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;imbricated&nbsp;sequences);&nbsp;for&nbsp;a&nbsp;scalar&nbsp;variable,&nbsp;directly<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;specify&nbsp;the&nbsp;value<br>
 &nbsp;&nbsp;start&nbsp;&nbsp;&nbsp;:&nbsp;indices&nbsp;where&nbsp;to&nbsp;start&nbsp;writing&nbsp;in&nbsp;the&nbsp;variable;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default&nbsp;to&nbsp;0&nbsp;on&nbsp;all&nbsp;dimensions<br>
 &nbsp;&nbsp;count&nbsp;&nbsp;&nbsp;:&nbsp;number&nbsp;of&nbsp;values&nbsp;to&nbsp;write&nbsp;along&nbsp;each&nbsp;dimension;<br>
