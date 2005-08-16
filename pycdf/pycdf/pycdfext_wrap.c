@@ -1041,7 +1041,7 @@ static PyObject * _nc_get_var_0(int ncid, int varid, int data_type,
     int   i32;
 
         /*
-         * Load arrays. Caller has guaranteeded that all 4 arrays have the
+         * Load arrays. Caller has guaranteed that all 4 arrays have the
          * same dimensions.
          */
     rank = PyObject_Length(start);
@@ -3683,6 +3683,7 @@ static swig_const_info swig_const_table[] = {
 { SWIG_PY_INT,     (char *)"NC_WRITE", (long) 0x1, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"NC_CLOBBER", (long) 0, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"NC_NOCLOBBER", (long) 0x4, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"NC_64BIT_OFFSET", (long) 0x0200, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"NC_FILL", (long) 0, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"NC_NOFILL", (long) 0x0100, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"NC_LOCK", (long) 0x0400, 0, 0, 0},
@@ -3701,6 +3702,7 @@ static swig_const_info swig_const_table[] = {
 { SWIG_PY_INT,     (char *)"WRITE", (long) 0x1, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"CLOBBER", (long) 0, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"NOCLOBBER", (long) 0x4, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"BIT64_OFFSET", (long) 0x0200, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"FILL", (long) 0, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"NOFILL", (long) 0x0100, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"LOCK", (long) 0x0400, 0, 0, 0},

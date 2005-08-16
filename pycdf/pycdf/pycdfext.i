@@ -1,7 +1,10 @@
 /*
- * $Id: pycdfext.i,v 1.3 2005-08-15 02:00:30 gosselin_a Exp $
+ * $Id: pycdfext.i,v 1.4 2005-08-16 02:39:05 gosselin_a Exp $
  * $Name: not supported by cvs2svn $
  * $Log: not supported by cvs2svn $
+ * Revision 1.3  2005/08/15 02:00:30  gosselin_a
+ * pycdf-0.5-4 bug fix release. See CHANGES file.
+ *
  * Revision 1.2  2005/07/16 16:22:35  gosselin_a
  * pycdf classes are now 'new-style' classes (they derive from 'object').
  * Added CVS keywords.
@@ -18,7 +21,7 @@
 
 /*
  * Define new typemaps to deal with output args of non standard type:
- *   size_t   (4 bits on Intel, 8 on Alpah)
+ *   size_t   (4 bits on Intel, 8 on Alpha)
  *
  * The definitions are adapted from the `typemaps.i' file.
  */
@@ -52,6 +55,7 @@
 #define NC_WRITE        0x1     /* read & write */
 #define NC_CLOBBER      0
 #define NC_NOCLOBBER    0x4     /* Don't destroy existing file on create */
+#define NC_64BIT_OFFSET 0x0200  /* Use large (64-bit) file offsets */
 #define NC_FILL         0       /* argument to ncsetfill to clear NC_NOFILL */
 #define NC_NOFILL       0x0100  /* Don't fill data section an records */
 #define NC_LOCK         0x0400  /* Use locking if available */
@@ -75,6 +79,7 @@
 #define WRITE        0x1     /* read & write */
 #define CLOBBER      0
 #define NOCLOBBER    0x4     /* Don't destroy existing file on create */
+#define BIT64_OFFSET  0x0200  /* Use large (64-bit) file offsets */
 #define FILL         0       /* argument to ncsetfill to clear NC_NOFILL */
 #define NOFILL       0x0100  /* Don't fill data section an records */
 #define LOCK         0x0400  /* Use locking if available */

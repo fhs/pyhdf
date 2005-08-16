@@ -12,8 +12,8 @@
     <p><tt>Python&nbsp;interface&nbsp;to&nbsp;the&nbsp;Unidata&nbsp;netCDF&nbsp;library<br>
 (see:&nbsp;www.unidata.ucar.edu/packages/netcdf).<br>
 &nbsp;<br>
-Version:&nbsp;0.5-4<br>
-Date:&nbsp;&nbsp;&nbsp;&nbsp;August&nbsp;14&nbsp;2005<br>
+Version:&nbsp;0.5-5<br>
+Date:&nbsp;&nbsp;&nbsp;&nbsp;FIX-FIX<br>
 &nbsp;<br>
 &nbsp;&nbsp;<br>
 Table&nbsp;of&nbsp;contents<br>
@@ -656,6 +656,7 @@ pycdf&nbsp;defines&nbsp;the&nbsp;following&nbsp;classes.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.SHARE<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.NOWRITE<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.WRITE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.BIT64_OFFSET&nbsp;(corresponds&nbsp;to&nbsp;C&nbsp;NC_64BIT_OFFSET&nbsp;constant)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataset&nbsp;fill&nbsp;mode:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.FILL<br>
@@ -963,6 +964,23 @@ if&nbsp;this&nbsp;has&nbsp;not&nbsp;already&nbsp;been&nbsp;done.</tt></dd></dl>
 
 <dl><dt><a name="CDF-__init__"><strong>__init__</strong></a>(self, path, mode<font color="#909090">=0</font>)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;netCDF&nbsp;dataset&nbsp;or&nbsp;open&nbsp;an&nbsp;existing&nbsp;one.<br>
 &nbsp;<br>
+NOTE&nbsp;about&nbsp;"classic"&nbsp;and&nbsp;"new"&nbsp;<a href="#CDF">CDF</a>&nbsp;file&nbsp;format<br>
+----------------------------------------------<br>
+New&nbsp;files&nbsp;will&nbsp;be&nbsp;created&nbsp;in&nbsp;the&nbsp;original&nbsp;netCDF&nbsp;CDF1<br>
+(aka&nbsp;"classic")&nbsp;format,&nbsp;unless&nbsp;the&nbsp;<a href="#NC">NC</a>.BIT64_OFFSET&nbsp;flag<br>
+is&nbsp;set&nbsp;in&nbsp;the&nbsp;mode&nbsp;argument,&nbsp;in&nbsp;which&nbsp;case&nbsp;the&nbsp;new&nbsp;CDF2<br>
+format&nbsp;will&nbsp;be&nbsp;used.&nbsp;Except&nbsp;for&nbsp;this&nbsp;new&nbsp;creation&nbsp;mode&nbsp;flag,<br>
+the&nbsp;format&nbsp;type&nbsp;used&nbsp;by&nbsp;a&nbsp;file&nbsp;is&nbsp;essentially&nbsp;transparent&nbsp;to<br>
+an&nbsp;application,&nbsp;and&nbsp;has&nbsp;no&nbsp;impact&nbsp;on&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;API.<br>
+&nbsp;<br>
+CDF2&nbsp;allows&nbsp;much&nbsp;bigger&nbsp;file&nbsp;sizes&nbsp;(over&nbsp;2GB)&nbsp;by&nbsp;using&nbsp;64&nbsp;bits<br>
+integer&nbsp;offsets.&nbsp;netCDF&nbsp;library&nbsp;version&nbsp;3.6&nbsp;or&nbsp;above&nbsp;must<br>
+be&nbsp;installed&nbsp;in&nbsp;order&nbsp;to&nbsp;use&nbsp;this&nbsp;last&nbsp;feature,&nbsp;otherwise<br>
+the&nbsp;new&nbsp;mode&nbsp;flag&nbsp;will&nbsp;be&nbsp;inoperant.&nbsp;Also&nbsp;note&nbsp;that&nbsp;a&nbsp;CDF2&nbsp;file<br>
+cannot&nbsp;be&nbsp;read&nbsp;on&nbsp;a&nbsp;platform&nbsp;with&nbsp;an&nbsp;earlier&nbsp;version&nbsp;of&nbsp;the<br>
+netCDF&nbsp;library&nbsp;(&nbsp;&lt;&nbsp;3.6)&nbsp;.&nbsp;Users&nbsp;are&nbsp;thus&nbsp;advised&nbsp;to&nbsp;not&nbsp;create<br>
+CDF2&nbsp;files&nbsp;unless&nbsp;necessary,&nbsp;to&nbsp;improve&nbsp;portability.<br>
+&nbsp;<br>
 Args:<br>
 &nbsp;&nbsp;path&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;of&nbsp;the&nbsp;netCDF&nbsp;file&nbsp;to&nbsp;open<br>
 &nbsp;&nbsp;mode&nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;opening&nbsp;mode;&nbsp;this&nbsp;mode&nbsp;is&nbsp;set&nbsp;of&nbsp;binary&nbsp;flags<br>
@@ -983,6 +1001,14 @@ Args:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;the&nbsp;file&nbsp;is&nbsp;created<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.SHARE&nbsp;&nbsp;&nbsp;mimimize&nbsp;buffering&nbsp;to&nbsp;improve&nbsp;file&nbsp;sharing&nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;other&nbsp;processes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.BIT64_OFFSET<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create&nbsp;a&nbsp;CDF2&nbsp;file&nbsp;format,&nbsp;using&nbsp;64<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bit&nbsp;offsets&nbsp;allowing&nbsp;file&nbsp;sizes&nbsp;over&nbsp;2GB<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Note&nbsp;that&nbsp;pycdf&nbsp;offers&nbsp;a&nbsp;richer&nbsp;set&nbsp;of&nbsp;opening&nbsp;modes,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;close&nbsp;to&nbsp;the&nbsp;ones&nbsp;found&nbsp;inside&nbsp;the&nbsp;C&nbsp;library.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;netCDF&nbsp;routines&nbsp;support&nbsp;only&nbsp;2&nbsp;basic&nbsp;modes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(clobber&nbsp;and&nbsp;no&nbsp;clobber).<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Once&nbsp;the&nbsp;file&nbsp;is&nbsp;opened,&nbsp;it&nbsp;is&nbsp;left&nbsp;in&nbsp;define&nbsp;mode&nbsp;if&nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;it&nbsp;has&nbsp;been&nbsp;created,&nbsp;and&nbsp;in&nbsp;data&nbsp;mode&nbsp;otherwise.<br>
@@ -1832,6 +1858,8 @@ Data and other attributes defined here:<br>
 <td colspan=2><tt>This&nbsp;class&nbsp;holds&nbsp;constants&nbsp;defining&nbsp;data&nbsp;types&nbsp;and&nbsp;opening&nbsp;modes<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%">Data and other attributes defined here:<br>
+<dl><dt><strong>BIT64_OFFSET</strong> = 512</dl>
+
 <dl><dt><strong>BYTE</strong> = 1</dl>
 
 <dl><dt><strong>CHAR</strong> = 2</dl>

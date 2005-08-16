@@ -1,6 +1,9 @@
-# $Id: pycdf.py,v 1.3 2005-08-15 02:00:30 gosselin_a Exp $
+# $Id: pycdf.py,v 1.4 2005-08-16 02:39:05 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2005/08/15 02:00:30  gosselin_a
+# pycdf-0.5-4 bug fix release. See CHANGES file.
+#
 # Revision 1.2  2005/07/16 16:22:35  gosselin_a
 # pycdf classes are now 'new-style' classes (they derive from 'object').
 # Added CVS keywords.
@@ -9,8 +12,8 @@
 """Python interface to the Unidata netCDF library
 (see: www.unidata.ucar.edu/packages/netcdf).
 
-Version: 0.5-4
-Date:    August 14 2005
+Version: 0.5-5
+Date:    FIX-FIX
 
   
 Table of contents
@@ -653,6 +656,7 @@ pycdf defines the following classes.
               NC.SHARE
               NC.NOWRITE
               NC.WRITE
+              NC.BIT64_OFFSET (corresponds to C NC_64BIT_OFFSET constant)
               
             dataset fill mode:
               NC.FILL
@@ -919,25 +923,26 @@ def strerror(ncerr) :      # static method
 class NC(object):
     """This class holds constants defining data types and opening modes"""
     
-    NOERR      = _C.NOERR
-    LOCK       = _C.LOCK
-    SHARE      = _C.SHARE
-    WRITE      = _C.WRITE
-    NOWRITE    = _C.NOWRITE
-    CREATE     = 0x1000            # specific tp pycdf
-    TRUNC      = 0x2000            # specific to pycdf
+    NOERR        = _C.NOERR
+    LOCK         = _C.LOCK
+    SHARE        = _C.SHARE
+    WRITE        = _C.WRITE
+    NOWRITE      = _C.NOWRITE
+    BIT64_OFFSET = _C.BIT64_OFFSET
+    CREATE       = 0x1000            # specific tp pycdf
+    TRUNC        = 0x2000            # specific to pycdf
 
-    FILL       = _C.FILL
-    NOFILL     = _C.NOFILL
+    FILL         = _C.FILL
+    NOFILL       = _C.NOFILL
 
-    BYTE       = _C.BYTE
-    CHAR       = _C.CHAR
-    SHORT      = _C.SHORT
-    INT        = _C.INT
-    FLOAT      = _C.FLOAT
-    DOUBLE     = _C.DOUBLE
-    GLOBAL     = _C.GLOBAL
-    UNLIMITED  = _C.UNLIMITED  
+    BYTE         = _C.BYTE
+    CHAR         = _C.CHAR
+    SHORT        = _C.SHORT
+    INT          = _C.INT
+    FLOAT        = _C.FLOAT
+    DOUBLE       = _C.DOUBLE
+    GLOBAL       = _C.GLOBAL
+    UNLIMITED    = _C.UNLIMITED  
 
 class CDF(object):
     """The CDF class describes a netCDF dataset.
@@ -946,6 +951,23 @@ class CDF(object):
 
     def __init__(self, path, mode=NC.NOWRITE):
         """Create a new netCDF dataset or open an existing one.
+
+        NOTE about "classic" and "new" CDF file format
+        ----------------------------------------------
+        New files will be created in the original netCDF CDF1
+        (aka "classic") format, unless the NC.BIT64_OFFSET flag
+        is set in the mode argument, in which case the new CDF2
+        format will be used. Except for this new creation mode flag,
+        the format type used by a file is essentially transparent to
+        an application, and has no impact on the rest of the API.
+        
+        CDF2 allows much bigger file sizes (over 2GB) by using 64 bits
+        integer offsets. netCDF library version 3.6 or above must
+        be installed in order to use this last feature, otherwise
+        the new mode flag will be inoperant. Also note that a CDF2 file
+        cannot be read on a platform with an earlier version of the
+        netCDF library ( < 3.6) . Users are thus advised to not create
+        CDF2 files unless necessary, to improve portability.
  
         Args:
           path    name of the netCDF file to open
@@ -967,6 +989,14 @@ class CDF(object):
                                  case the file is created
                       NC.SHARE   mimimize buffering to improve file sharing 
 		                 with other processes
+                      NC.BIT64_OFFSET
+                                 Create a CDF2 file format, using 64
+                                 bit offsets allowing file sizes over 2GB
+
+                  Note that pycdf offers a richer set of opening modes,
+                  close to the ones found inside the C library.
+                  netCDF routines support only 2 basic modes
+                  (clobber and no clobber).
 	
 	    Once the file is opened, it is left in define mode if 
             it has been created, and in data mode otherwise.
