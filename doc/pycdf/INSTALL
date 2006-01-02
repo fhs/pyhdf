@@ -1,3 +1,15 @@
+# $Id: INSTALL,v 1.2 2006-01-02 22:07:24 gosselin_a Exp $
+# $Name: not supported by cvs2svn $
+# $Log: not supported by cvs2svn $
+# Revision 1.3  2006/01/02 20:37:56  gosselin_a
+# New pycdf-0.6-0 release.
+#
+# Revision 1.2  2005/07/16 17:01:18  gosselin_a
+# pycdf-0.5-3
+#   pycdf classes are now 'new-style' classes (they derive from 'object').
+#   Updated documentation and admin files.
+#
+
 Installing the pycdf python package.
 
 pycdf has been successfully installed under python 2.2 and above on
@@ -7,24 +19,35 @@ the following platforms:
   -Solaris 8
   -AIX 4
 
+pycdf is compatible with all current releases of Numeric (last tested: 24.0),
+numarray (last tested: 1.3.3), and netcdf (last tested: 3.6.1).
+
 Please inform the author (gosselina@dfo-mpo.gc.ca) of any
 successfull installation on a different platform, and of
 problems encountered.
 
 To install, follow these steps.
 
-1-Install the netcdf library. Source code is available at:
-  www.unidata.ucar.edu/packages/netcdf. Binary packages
+1-Install the Python 'devel' package, holding the python libraries and header
+  files.
+
+2-Install the netcdf library. Source code is available at:
+  http://www.unidata.ucar.edu/software/netcdf . Binary packages
   are available for most popular environments.
 
-2-Install the python Numeric package. Source code is
-  available at: numpy.sourceforge.net. Binary packages
-  are available for most popular environments.
+3-Install one of the python Numeric or numarray packages. 
+  Numeric source code is available at: numpy.sourceforge.net, 
+  and numarray source code at http://sourceforge.net/projects/numpy .
+  Binary packages are available for most popular environments.
 
-3-Uncompress and untar the pycdf tar ball, then cd to the
+4-Uncompress and untar the pycdf tar ball, then cd to the
   pycdf-xxx directory just created.
 
-4-If your netcdf library lives in a non-standard directory
+5-Edit the 'setup.py' file, and locate the line reading "USE = ...".
+  Set "USE = NUMERIC" to create a Numeric-based version of pycdf. 
+  Set "USE = NUMARRAY" to create a numarray-based version.
+
+5-If your netcdf library lives in a non-standard directory
   (eg not on the standard library search path),
   edit the `setup.py' file and locate the line reading:
 
@@ -35,7 +58,7 @@ To install, follow these steps.
 
     library_dirs = ["/usr/local/netcdf-3.5.0/lib"],
 
-5-As root, execute the command:
+6-As root, execute the command:
 
     python setup.py install
 
