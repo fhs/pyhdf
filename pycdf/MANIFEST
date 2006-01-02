@@ -5,8 +5,12 @@ README
 INSTALL
 pycdf/__init__.py
 pycdf/pycdf.py
-pycdf/pycdfext.py
-pycdf/pycdfext_wrap.c
+pycdf/pycdfext/numarray/pycdfext.py
+pycdf/pycdfext/numarray/pycdfext_wrap.c
+pycdf/pycdfext/numarray/pycdfext_array.py
+pycdf/pycdfext/numeric/pycdfext.py
+pycdf/pycdfext/numeric/pycdfext_wrap.c
+pycdf/pycdfext/numeric/pycdfext_array.py
 doc/pycdf.html
 doc/pycdf.txt
 examples/txttocdf/txttocdf.py

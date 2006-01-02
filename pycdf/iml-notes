@@ -3,7 +3,7 @@ Gestion de pycdf
 
 Pour regenerer l'extension pycdf avec SWIG:
 
-  % cd pycdf
+  % cd pycdf/numeric     # ou pycdf/numarray
   % make python
   % make python_clean
 
