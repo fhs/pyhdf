@@ -1,6 +1,13 @@
-# $Id: pycdf.py,v 1.5 2006-01-02 18:51:15 gosselin_a Exp $
+# $Id: pycdf.py,v 1.6 2006-01-02 20:25:24 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.5  2006/01/02 18:51:15  gosselin_a
+# The 'pycdf' directory has been restructured so as to allow
+# installing pycdf with either the Numeric or numarray array packages.
+# The directory top level now holds the package-independent
+# python code. 'numeric' and 'numarray' directories hold the
+# package-dependent parts.
+#
 # Revision 1.4  2005/08/16 02:39:05  gosselin_a
 # Addition of new features in preparation of release 0.6-0 .
 #   -Support of CDF2 file format (64 bit file offsets).
@@ -18,7 +25,7 @@
 (see: www.unidata.ucar.edu/packages/netcdf).
 
 Version: 0.6-0
-Date:    FIX-FIX
+Date:    Jan 2 2006
 
   
 Table of contents
@@ -36,7 +43,7 @@ Table of contents
   Rules governing array assignment
   Working with scalar variables
   Working with the unlimited dimension
-  Open issues and current limitations
+  Open issues and current limitations : scipy_core
   Functions summary
   Classes summary
   Examples
@@ -89,45 +96,48 @@ pycdf key features are as follows.
 Array package : Numeric and numarray
 ------------------------------------
 netCDF variables are read/written using high-level "array" objects.
-Those used to be provided solely by the python Numeric package. Beginning with
-version 0.6-0, the python numarray package can now be used. The choice of the
-array package on which to base pycdf is made at install time (see the INSTALL
-file in the pycdf distribution). Only one style of install is possible :
-a Numeric-based and a numarray-based pycdf cannot coexist on the same machine,
-unless one wants to play tricks with python search paths.
+Arrays used to be provided solely by the python Numeric package. Beginning
+with version 0.6-0, the python numarray package can now be used. The choice
+of the array package on which to base pycdf is made at install time (see
+the INSTALL file in the pycdf distribution). Only one style of install is
+possible : a Numeric-based and a numarray-based pycdf cannot coexist on the
+same machine, unless one wants to play tricks with python search paths.
 
-Although the underlying API is very much identical, the two packages define the
-"array" somewhat differently :
+Although the underlying API is very much identical, the two packages define
+the "array" somewhat differently :
 
   >>> import Numeric, numarray
   >>> type(Numeric.array('i')), type(numarray.array('i'))
   ==> (<type 'array'>, <class 'numarray.numarraycore.NumArray'>)
 
 Since the contents of cdf variables are always returned as "arrays" to the
-calling program, the user must be carefull when processing those arrays using
-packages directly or indirectly based on Numeric/numarray : a Numeric-style
-array may not always be acceptable to a numarray-based package, and vice-versa.
+calling program, the user must be carefull when processing those arrays
+using packages directly or indirectly based on Numeric/numarray : a
+Numeric-style array may not always be acceptable to a numarray-based
+package, and vice-versa.
 
-However, since pycdf simply dispatches "arrays" to the calling program and does not
-process them in any special way, it appears that the programmer can import either
-'Numeric' or 'numarray', irrespective of the flavor used to install pycdf. Thus :
+However, since pycdf simply dispatches "arrays" to the calling program and
+does not process them in any special way, it appears that the programmer
+can import either 'Numeric' or 'numarray', irrespective of the variant used
+to install pycdf. Thus :
 
-  >>> from Numeric import *   # ... for "from numarray import *"
+  >>> from Numeric import * 
 
-should usually work ok. In the rest of this documentation, when one reads
-"from Numeric import ...", it should be assumed that "from numarray import ..."
-could also be used, unless explicitly stated otherwise.
+should usually work even if pycdf has been installed using numarray. In the
+rest of this documentation, when one reads "from Numeric import ...", it
+should be assumed that "from numarray import ..." could also be used,
+unless explicitly stated otherwise.
 
-It is however deemed safer to import the same array package as the one used when
-installing pycdf. To obtain the name of the package on which the current
-pycdf installation is based, call function pycdfArrayPkg().
+It is however deemed safer to import the same array package as the one
+used when installing pycdf. To obtain the name of the package on which the
+current pycdf installation is based, call function pycdfArrayPkg().
 
 
 Package components
 ------------------
 pycdf is a proper Python package, eg a collection of modules stored under
-a directory named by the package and holding an __init__.py file.
-The pycdf package is composed of 3 modules:
+a directory name identical to the package name and holding an __init__.py
+file. The pycdf package is composed of 3 modules:
    _pycdfext   C extension module responsible for wrapping the
                netcdf library
    pycdfext    python module implementing some utility functions
@@ -249,8 +259,8 @@ netCDF C library, and the string is then identical to the one obtained
 through the strerror() function call. An error code of 0 indicates
 an error signaled by the python layer, not the netCDF C library.
 However, some errors related to the inner workings of the pycdf package 
-are reported using the standard python exceptions (ValueError, TypeError, etc)
-rather than a CDFError exception.
+are reported using the standard python exceptions (ValueError, TypeError,
+etc) rather than a CDFError exception.
 
 Ex.:
   >>> from pycdf import *
@@ -270,9 +280,9 @@ strings, sequences) which help interpret the dataset or variable they
 are attached to. netCDF attributes rely on a set of conventions (see the
 netCDF manual) and are not enforced in ay way by the library. The only
 exception (known to the author) is the '_FillValue' attribute which, when
-attached to a variable, sets the value that is to be stored in uninitialized
-entries of this variable. All other attributes must be interpreted at the
-application level.
+attached to a variable, sets the value that is to be stored in
+uninitialized entries of this variable. All other attributes must be
+interpreted at the application level.
 
 With pycdf, attributes can be assigned in two ways.
 
@@ -282,9 +292,9 @@ With pycdf, attributes can be assigned in two ways.
    'this is an example'.
      >>> from pycdf import *
      >>> d = CDF('example.nc',NC.WRITE|NC.CREATE)  # create dataset
-     >>> att = d.attr('title')               # create attribute instance
-     >>> att.put(NC.CHAR, 'this is an example') # set attribute type and value
-     >>> att.get()                           # get attribute value
+     >>> att = d.attr('title')               # create attr. instance
+     >>> att.put(NC.CHAR, 'this is an example') # set attr. type and value
+     >>> att.get()                           # get attr. value
      'this is an example'
      >>>
 
@@ -318,8 +328,8 @@ Handling a netCDF attribute like a Python class attribute is admittedly
 more natural, and also simpler. Some control is however lost in doing so.
   -Attribute type cannot be specified. pycdf automatically selects one of
    three types according to the value(s) assigned to the attribute:
-   NC.CHAR if value is a string, NC.INT if all values are integral, NC.DOUBLE
-   if one value is a float. 
+   NC.CHAR if value is a string, NC.INT if all values are integral,
+   NC.DOUBLE if one value is a float. 
   -Consequently, unsigned NC.BYTE values cannot be assigned.
   -Attribute properties (length, type, index number) can only be queried
    through methods of an attribute instance.
@@ -378,10 +388,10 @@ Indexes and slices can be freely mixed, eg:
     >>> m[:2,3,1:3:2]
      
 An ellipis (...) can be used to denote consecutive dimensions in a slicing
-expression, avoiding the use of a series of ':' "wild-cards". Only one ellipsis
-can appear, either at the start, the end, or the middle of the slicing
-expression (more than one ellipsis would make the expression ambiguous).
-Thus, if 'v' a 5-dimensional variable :
+expression, avoiding the use of a series of ':' "wild-cards". Only one
+ellipsis can appear, either at the start, the end, or the middle of the
+slicing expression (more than one ellipsis would make the expression
+ambiguous). Thus, if 'v' a 5-dimensional variable :
      v[...,-1]      equivalent to v[:,:,:,:,-1]
      v[0,...,-1]    equivalent to v[0,:,:,:,-1]
      v[2,...]       equivalent to v[2]
@@ -410,10 +420,12 @@ transpose an array), and the handling of NC.BYTE type values as unsigned.
 
 Primer on reading and querying a netcdf file
 --------------------------------------------
-Here are useful hints for a quick start on how to read and query a netcdf file.
+Here are useful hints for a quick start on how to read and query a netcdf
+file.
 
-Assume the file is named 'table.nc' (as created for example by the 'txttocdf.py'
-program inside the 'examples/txttocdf' directory accompanying the pycdf distribution).
+Assume the file is named 'table.nc' (as created for example by the
+'txttocdf.py' program inside the 'examples/txttocdf' directory accompanying
+the pycdf distribution).
 
 To open the file:
 
@@ -421,7 +433,7 @@ To open the file:
   
   >>> from pycdf import *
   >>> from Numeric import *    # or "from numarray import *"
-  >>> nc = CDF('table.nc')
+  >>> nc = CDF('table.nc')     # file opened in readonly mode
 
 To get a dictionnary of attributes defined at the file level :
 
@@ -429,33 +441,41 @@ To get a dictionnary of attributes defined at the file level :
 
 To get a dictionnary of the variables stored inside the file :
   
-  >>> vardict = nc.variables()  # the keys are the variable names; the values store the variable
-                                # properties, eg  dimension names, shape, and type
+  >>> vardict = nc.variables()
+
+The keys are the variable names; the values store the variable properties,
+eg: dimension names, shape, and type
 
 To get a list of the variable names:
 
   >>> varnames = nc.variables().keys()
 
-To retrieve and print the full array of values stored inside variable 'varname[0]' :
+To retrieve and print the full array of values stored inside variable
+'varnames[0]' :
 
-  >>> v0 = nc.var(varnames[0])[:]    # without the [:], you would get a CDFVar instance
-                                     # the slice gets you the array of values
+  >>> v0 = nc.var(varnames[0])[:]  # without the [:], you would get a CDF
+                                   # var instance;  the slice gets you
+                                   # the array of values
   >>> print v0                       
 
-To print value of the last column of array v0 :
+To print the values of the last column of array v0 :
 
   >>> print v0[:,-1]
 
-To print just the first two rows of values of variable 'varname[1]' :
+To print just the first two rows of values of variable 'varnames[1]' :
 
   >>> v1_01 = nc.var(varnames[1])[:2]
 
-To get the dictionnary of attributes attached to variable 'varname[0]' :
+To get the dictionnary of attributes attached to variable 'varnames[0]' :
 
-  >>> v0_dict = nc.var(varname[0]).attributes()  # key is attr name, value is attr value
+  >>> v0_dict = nc.var(varnames[0]).attributes()
 
-See 'examples/cdfstruct/cdfstruct.py' in the pycdf distribution for an example of
-a program that exercices many of the pycdf query and read methods.
+Keys are the attribute names, and the dictionnary values store the
+attribute values.
+
+See 'examples/cdfstruct/cdfstruct.py' in the pycdf distribution for an
+example of a program that exercices many of the pycdf query and read
+methods.
 
 
 Reading/setting multivalued netCDF attributes and variables
@@ -474,11 +494,11 @@ indexed subset of the variable, using "[:]" (or [...]) to assign to the
 whole variable (see "High level variable access"). The assigned value
 can be a python sequence, which can be multi-leveled when assigning to a
 multdimensional variable. For example:
-    >>> d=CDF('test.nc',NC.WRITE|NC.CREATE)         # create dataset
-    >>> d3=d.def_dim('d1',3)                        # create dim. of length 3
-    >>> v1=d.def_var('v1',NC.INT,d3)                # 3-elem vector
-    >>> v1[:]=[1,2,3]                               # assign 3-elem python list
-    >>> v2=d.def_var('d2',NC.INT,(d3,d3))           # create 3x3 variable
+    >>> d=CDF('test.nc',NC.WRITE|NC.CREATE)     # create dataset
+    >>> d3=d.def_dim('d1',3)                    # create dim. of length 3
+    >>> v1=d.def_var('v1',NC.INT,d3)            # 3-elem vector
+    >>> v1[:]=[1,2,3]                           # assign 3-elem python list
+    >>> v2=d.def_var('d2',NC.INT,(d3,d3))       # create 3x3 variable
            # The list assigned to v2 is composed
            # of 3 lists, each representing a row of v2.
     >>> v2[:]=[[1,2,3],[11,12,13],[21,22,23]]
@@ -502,51 +522,58 @@ pycdf releases before 0.6-0 were somewhat careless when dealing with
 array assignments. For example, no validity check was performed when
 attempting to assign the contents of an array to an array of a different
 shape. This could result in garbage being assigned, fatal errors, 
-and hard to catch dormant bugs.
+and hard to catch rampant bugs.
 
-Beginning with release 0.6-0, when an array (or a slice of thereof) is assigned to,
-pycdf makes sure that the type of right-hand side is acceptable, and that the values
-meet certain validity constraints. An array can be assigned :
+Beginning with release 0.6-0, when an array (or a slice of thereof) is
+assigned to, pycdf makes sure that the type of right-hand side is
+acceptable, and that the values meet certain validity constraints. An
+array can be assigned :
        - a scalar (integer or float)
        - a sequence (list or tuple) of integers or floats, or sequences
          of integers or floats (arbitrarily nested)
        - an array (possibly sliced)
 
 The following paragraphs define the rules obeyed by pycdf.
-Any unmet condition will be signaled by a TypeError or ValueError exception.
+Any unmet condition will be signaled by a TypeError or ValueError
+exception.
        
 Assigning a scalar to an array
   When an integer or float scalar value is used on the right-hand side
   (as in "x[4:6,:10:2] = 5), the value is now replicated (broadcasted)
   over the whole left-hand size. Thus:
       >>> x[:2] = 0"    # zeroes the first  two rows of array "x"
-      >>> x[:] = 1      # set 'x' to all 1's; equivalent to, but much simpler than
-                        #   x[:] = Numeric.ones((x.shape()))  # or numarray.ones(...)
+      >>> x[:] = 1      # set 'x' to all 1's; equivalent to, but much
+                        # simpler than :
+                        #   x[:] = Numeric.ones((x.shape()))
+                        #   x[:] = NUMARRAY.ones((x.shape()))
 
-  Note in the above example that we do not have to care about the shape of the
-  left-hand side array.
+  Note in the above example that we do not have to care about the shape of
+  the left-hand side array.
 
-Assigning a sequence to an array
+Assigning a sequence (tuple or list) to an array
   When a sequence appears on the right-hand size, it must hold only
   integer or float scalars, or nested sequences thereof. The total number
   of scalars in the sequence (ignoring nesting level) must match
-  exactly the number of elements expected on the left-hand side. The sequence
-  nesting levels are of no consequence, and the values are assigned to
-  the array in row-major order. Thus, if "x" is a 3x3 array and "seq"
-  is a sequence , then the statement "x[:] = seq" requires 9 values to be assigned
-  to 'x' and is legal only if "seq" enumerates exactly 9 values, eg:
-      >>> x[:] = (1,2,3,4,5,6,7,8,9)          # ok, 9 values at same level
-      >>> x[:] = ((1,2,3),(4,5,6),(7,8,9))    # ok, 9 values in a 2-level tuple
-      >>> x[:] = ((1,2,3)[(4,5,6),(7,8,9)])   # ok, 9 values, mix of tuple and list
-      >>> x[:] = [1,2,3,4]                    # wrong, 4 values listed, 5 missing
+  exactly the number of elements expected on the left-hand side. The
+  sequence nesting levels are of no consequence, and the values are
+  assigned to the array in row-major order. Thus, if "x" is a 3x3 array
+  and "seq" is a sequence , then the statement "x[:] = seq" requires 9
+  values to be assigned to 'x' and is legal only if "seq" enumerates
+  exactly 9 values, eg:
+      >>> x[:] = (1,2,3,4,5,6,7,8,9)       # ok, 9 values at same level
+      >>> x[:] = ((1,2,3),(4,5,6),(7,8,9)) # ok, 9 values in a 2-level tuple
+      >>> x[:] = ((1,2,3)[(4,5,6),(7,8,9)] # ok, 9 values, mix of
+                                           # tuple and list
+      >>> x[:] = [1,2,3,4]             # wrong, 4 values listed, 5 missing
 
 Assigning the contents of an array to an array
   When an array (possibly sliced) is used as the right-hand size, its shape
   must exactly match that of the array (possibly sliced) used on the left-
    hand side. Thus, if "x" is a 4x4 array and "y" is a 6x4 array :
-        >>> x[...] = y       # Fails, shape of x is (4,4) and does not match
-                             # that of y which is (6,4)
-        >>> x[...] = y[:4]   # Works since array 'y' is sliced to a (4,4) shape
+        >>> x[...] = y      # Fails, shape of x is (4,4) and does not match
+                            # that of y which is (6,4)
+        >>> x[...] = y[:4]  # Works since array 'y' is sliced to
+                            # a (4,4) shape
 
 
 
@@ -598,34 +625,39 @@ Given an unlimited dimension 'd' and a variable 'v' whose first dimension
 is 'd', it is common in netcdf parlance to designate 'v' as a "record
 variable", and the data subsets v[0], v[1], etc as "records" inside 'v'.
 For ex., if 'd' represents time, and 'v' is a temperature(time,lat,lon)
-variable, one can picture v[0] as a "record" holding the grid of temperatures
-at time 0, v[1] as the "record" of temperatures at time 1, etc. Variable 'v'
-is extended by adding "records" v[0], v[1], etc along dimension 'd',
-much as a traditional file is extended by writing data records to it.
+variable, one can picture v[0] as a "record" holding the grid of
+temperatures at time 0, v[1] as the "record" of temperatures at time 1,
+etc. Variable 'v' is extended by adding "records" v[0], v[1], etc along
+dimension 'd', much as a traditional file is extended by writing data
+records to it.
 
 Only ONE unlimited dimension is allowed inside a dataset, and ALL variables
 based on that dimension grow "in synch". So, if variables 'v1' and 'v2'
 include an unlimited dimension, adding records to 'v1' will also create new
-records in 'v2' as a side effect. Those records will be initialized with the
-'v2' fill value. They will of course need to be properly initialized afterwards.
+records in 'v2' as a side effect. Those records will be initialized with
+the 'v2' fill value. They will of course need to be properly initialized
+afterwards.
 
 When assigning to a variable along an unlimited dimension, the variable
 must be properly sliced so as to match the shape of the right-hand side.
 The "wild-card" notation ([:], [...]) cannot be used if the shape of the
-right-hand side exceeds the current shape of the variable : a shape mismatch
-will then be declared and the assignment will be refused. Slicing the variable
-beyond its current length will allocate new records and solve the problem.
-For example, if 'd' is an unlimited dimension, 'v' has dimensions (d,5) and
-'v' is empty at start: 
+right-hand side exceeds the current shape of the variable : a shape
+mismatch will then be declared and the assignment will be refused. Slicing
+the variable beyond its current length will allocate new records and solve
+the problem. For example, if 'd' is an unlimited dimension, 'v' has
+dimensions (d,5) and 'v' is empty at start: 
    >>> v[:]  = zeros((4,5))    # fails: shape mismatch : (0,5) vs (4,5)
-   >>> v[:4] = ones((4,5))     # works: allocate records 0 to 3 and set them to 1's
-   >>> v[:]  = zeros((4,5))    # now works: records 0 to 3 exist and are reset to 0's
+   >>> v[:4] = ones((4,5))     # works: allocate records 0 to 3
+                               # and set them to 1's
+   >>> v[:]  = zeros((4,5))    # now works: records 0 to 3 exist and are
+                               # reset to 0's
    >>> v[:2,:2] = ones((2,2))  # works: resets records 0 and 1 to 1's
 
-An unlimited dimension can be made to grow by assigning to higher and higher
-indices along that dimension. Thus:
+An unlimited dimension can be made to grow by assigning to higher and
+higher indices along that dimension. Thus:
    >>> for i in range(4,7):
-   ...    v[i] = i * ones(5)  # grow dimension unlimited dimension from 4 to 6
+   ...    v[i] = i * ones(5)  # grow dimension unlimited dimension
+                              # from 4 to 6
 
 Making an unlimited dimension grow in a non-sequential way will allocate
 intermediate records inside the variable, which will be initialized with
@@ -634,20 +666,25 @@ _FillValue). So, if 'v' currently holds 7 records (v[0] to v[6]):
    >>> v._FillValue = 999.0
    >>> v[8] = ones(5)        # will fill v[7] with '999.0' fill values
 
-The same holds true for the other record variables inside the dataset.
-They will all grow in synch when the unlimited dimension length is extended,
-and newly created records inside those variables will be set to their variable
-fill value.
+The same holds true for the other record variables defined in the dataset.
+They will all grow in synch when the unlimited dimension length is
+extended, and newly created records inside those variables will be set to
+their variable fill value.
 
 
-Open issues and current limitiations
-------------------------------------
+Open issues and current limitiations : scipy_core
+-------------------------------------------------
 
-The following limitations now affect the pycdf package. They may be lifted out
-in future releases. Users are encouraged to send their votes on those
-issues.
+The following limitations now affect the pycdf package. They may be
+lifted out in future releases. Users are encouraged to send their votes
+on those issues.
 
-
+  scipy_core   The Scientific Python project team is currently working on a
+               merge of Numeric and numarray called 'scipy_core'.
+               Numeric and numarray coud be deprecated once scipy_core
+               achieves a stable status (Numeric is said to have reached
+               its last release ever). pycdf does not currently support
+               scipy_core, but wil certainly do in a not too far feature.
 
 
 Functions summary
