@@ -1,3 +1,16 @@
-To compile the pycdf python extension and module, do:
-  
+The pycdfext module can be compiled for use either with 'numarray'
+or 'Numeric'. To compile the module :
+
+  % cd pycdfext/numeric   # to use Numeric
+  % cd pycdfext/numarray  # to use numarray
+
+Then :
   % make python
+
+The following wrapper files will be generated :
+
+  pycdfext_wrap.c    # C extension module
+  pycdfext.py        # python code wrapping the extension module
+
+Run "python setup.py install" from the installation root directory
+to compile and install the module.

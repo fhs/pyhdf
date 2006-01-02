@@ -1,8 +1,10 @@
 # This file was created automatically by SWIG.
 # Don't modify this file, modify the SWIG interface instead.
 # This file is compatible with both classic and new-style classes.
+
 import _pycdfext
-def _swig_setattr(self,class_type,name,value):
+
+def _swig_setattr_nondynamic(self,class_type,name,value,static=1):
     if (name == "this"):
         if isinstance(value, class_type):
             self.__dict__[name] = value.this
@@ -11,7 +13,13 @@ def _swig_setattr(self,class_type,name,value):
             return
     method = class_type.__swig_setmethods__.get(name,None)
     if method: return method(self,value)
-    self.__dict__[name] = value
+    if (not static) or hasattr(self,name) or (name == "thisown"):
+        self.__dict__[name] = value
+    else:
+        raise AttributeError("You cannot add attributes to %s" % self)
+
+def _swig_setattr(self,class_type,name,value):
+    return _swig_setattr_nondynamic(self,class_type,name,value,0)
 
 def _swig_getattr(self,class_type,name):
     method = class_type.__swig_getmethods__.get(name,None)
@@ -25,6 +33,7 @@ try:
 except AttributeError:
     class _object : pass
     _newclass = 0
+del types
 
 
 class array_byte(_object):
@@ -32,203 +41,210 @@ class array_byte(_object):
     __setattr__ = lambda self, name, value: _swig_setattr(self, array_byte, name, value)
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, array_byte, name)
-    def __init__(self,*args):
-        _swig_setattr(self, array_byte, 'this', apply(_pycdfext.new_array_byte,args))
+    def __repr__(self):
+        return "<%s.%s; proxy of C array_byte instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, array_byte, 'this', _pycdfext.new_array_byte(*args))
         _swig_setattr(self, array_byte, 'thisown', 1)
-    def __del__(self, destroy= _pycdfext.delete_array_byte):
+    def __del__(self, destroy=_pycdfext.delete_array_byte):
         try:
             if self.thisown: destroy(self)
         except: pass
-    def __getitem__(*args): return apply(_pycdfext.array_byte___getitem__,args)
-    def __setitem__(*args): return apply(_pycdfext.array_byte___setitem__,args)
-    def cast(*args): return apply(_pycdfext.array_byte_cast,args)
+
+    def __getitem__(*args): return _pycdfext.array_byte___getitem__(*args)
+    def __setitem__(*args): return _pycdfext.array_byte___setitem__(*args)
+    def cast(*args): return _pycdfext.array_byte_cast(*args)
     __swig_getmethods__["frompointer"] = lambda x: _pycdfext.array_byte_frompointer
     if _newclass:frompointer = staticmethod(_pycdfext.array_byte_frompointer)
-    def __repr__(self):
-        return "<C array_byte instance at %s>" % (self.this,)
 
 class array_bytePtr(array_byte):
-    def __init__(self,this):
+    def __init__(self, this):
         _swig_setattr(self, array_byte, 'this', this)
         if not hasattr(self,"thisown"): _swig_setattr(self, array_byte, 'thisown', 0)
         _swig_setattr(self, array_byte,self.__class__,array_byte)
 _pycdfext.array_byte_swigregister(array_bytePtr)
-array_byte_frompointer = _pycdfext.array_byte_frompointer
 
+array_byte_frompointer = _pycdfext.array_byte_frompointer
 
 class array_int16(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, array_int16, name, value)
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, array_int16, name)
-    def __init__(self,*args):
-        _swig_setattr(self, array_int16, 'this', apply(_pycdfext.new_array_int16,args))
+    def __repr__(self):
+        return "<%s.%s; proxy of C array_int16 instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, array_int16, 'this', _pycdfext.new_array_int16(*args))
         _swig_setattr(self, array_int16, 'thisown', 1)
-    def __del__(self, destroy= _pycdfext.delete_array_int16):
+    def __del__(self, destroy=_pycdfext.delete_array_int16):
         try:
             if self.thisown: destroy(self)
         except: pass
-    def __getitem__(*args): return apply(_pycdfext.array_int16___getitem__,args)
-    def __setitem__(*args): return apply(_pycdfext.array_int16___setitem__,args)
-    def cast(*args): return apply(_pycdfext.array_int16_cast,args)
+
+    def __getitem__(*args): return _pycdfext.array_int16___getitem__(*args)
+    def __setitem__(*args): return _pycdfext.array_int16___setitem__(*args)
+    def cast(*args): return _pycdfext.array_int16_cast(*args)
     __swig_getmethods__["frompointer"] = lambda x: _pycdfext.array_int16_frompointer
     if _newclass:frompointer = staticmethod(_pycdfext.array_int16_frompointer)
-    def __repr__(self):
-        return "<C array_int16 instance at %s>" % (self.this,)
 
 class array_int16Ptr(array_int16):
-    def __init__(self,this):
+    def __init__(self, this):
         _swig_setattr(self, array_int16, 'this', this)
         if not hasattr(self,"thisown"): _swig_setattr(self, array_int16, 'thisown', 0)
         _swig_setattr(self, array_int16,self.__class__,array_int16)
 _pycdfext.array_int16_swigregister(array_int16Ptr)
-array_int16_frompointer = _pycdfext.array_int16_frompointer
 
+array_int16_frompointer = _pycdfext.array_int16_frompointer
 
 class array_uint16(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, array_uint16, name, value)
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, array_uint16, name)
-    def __init__(self,*args):
-        _swig_setattr(self, array_uint16, 'this', apply(_pycdfext.new_array_uint16,args))
+    def __repr__(self):
+        return "<%s.%s; proxy of C array_uint16 instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, array_uint16, 'this', _pycdfext.new_array_uint16(*args))
         _swig_setattr(self, array_uint16, 'thisown', 1)
-    def __del__(self, destroy= _pycdfext.delete_array_uint16):
+    def __del__(self, destroy=_pycdfext.delete_array_uint16):
         try:
             if self.thisown: destroy(self)
         except: pass
-    def __getitem__(*args): return apply(_pycdfext.array_uint16___getitem__,args)
-    def __setitem__(*args): return apply(_pycdfext.array_uint16___setitem__,args)
-    def cast(*args): return apply(_pycdfext.array_uint16_cast,args)
+
+    def __getitem__(*args): return _pycdfext.array_uint16___getitem__(*args)
+    def __setitem__(*args): return _pycdfext.array_uint16___setitem__(*args)
+    def cast(*args): return _pycdfext.array_uint16_cast(*args)
     __swig_getmethods__["frompointer"] = lambda x: _pycdfext.array_uint16_frompointer
     if _newclass:frompointer = staticmethod(_pycdfext.array_uint16_frompointer)
-    def __repr__(self):
-        return "<C array_uint16 instance at %s>" % (self.this,)
 
 class array_uint16Ptr(array_uint16):
-    def __init__(self,this):
+    def __init__(self, this):
         _swig_setattr(self, array_uint16, 'this', this)
         if not hasattr(self,"thisown"): _swig_setattr(self, array_uint16, 'thisown', 0)
         _swig_setattr(self, array_uint16,self.__class__,array_uint16)
 _pycdfext.array_uint16_swigregister(array_uint16Ptr)
-array_uint16_frompointer = _pycdfext.array_uint16_frompointer
 
+array_uint16_frompointer = _pycdfext.array_uint16_frompointer
 
 class array_int(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, array_int, name, value)
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, array_int, name)
-    def __init__(self,*args):
-        _swig_setattr(self, array_int, 'this', apply(_pycdfext.new_array_int,args))
+    def __repr__(self):
+        return "<%s.%s; proxy of C array_int instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, array_int, 'this', _pycdfext.new_array_int(*args))
         _swig_setattr(self, array_int, 'thisown', 1)
-    def __del__(self, destroy= _pycdfext.delete_array_int):
+    def __del__(self, destroy=_pycdfext.delete_array_int):
         try:
             if self.thisown: destroy(self)
         except: pass
-    def __getitem__(*args): return apply(_pycdfext.array_int___getitem__,args)
-    def __setitem__(*args): return apply(_pycdfext.array_int___setitem__,args)
-    def cast(*args): return apply(_pycdfext.array_int_cast,args)
+
+    def __getitem__(*args): return _pycdfext.array_int___getitem__(*args)
+    def __setitem__(*args): return _pycdfext.array_int___setitem__(*args)
+    def cast(*args): return _pycdfext.array_int_cast(*args)
     __swig_getmethods__["frompointer"] = lambda x: _pycdfext.array_int_frompointer
     if _newclass:frompointer = staticmethod(_pycdfext.array_int_frompointer)
-    def __repr__(self):
-        return "<C array_int instance at %s>" % (self.this,)
 
 class array_intPtr(array_int):
-    def __init__(self,this):
+    def __init__(self, this):
         _swig_setattr(self, array_int, 'this', this)
         if not hasattr(self,"thisown"): _swig_setattr(self, array_int, 'thisown', 0)
         _swig_setattr(self, array_int,self.__class__,array_int)
 _pycdfext.array_int_swigregister(array_intPtr)
-array_int_frompointer = _pycdfext.array_int_frompointer
 
+array_int_frompointer = _pycdfext.array_int_frompointer
 
 class array_float(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, array_float, name, value)
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, array_float, name)
-    def __init__(self,*args):
-        _swig_setattr(self, array_float, 'this', apply(_pycdfext.new_array_float,args))
+    def __repr__(self):
+        return "<%s.%s; proxy of C array_float instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, array_float, 'this', _pycdfext.new_array_float(*args))
         _swig_setattr(self, array_float, 'thisown', 1)
-    def __del__(self, destroy= _pycdfext.delete_array_float):
+    def __del__(self, destroy=_pycdfext.delete_array_float):
         try:
             if self.thisown: destroy(self)
         except: pass
-    def __getitem__(*args): return apply(_pycdfext.array_float___getitem__,args)
-    def __setitem__(*args): return apply(_pycdfext.array_float___setitem__,args)
-    def cast(*args): return apply(_pycdfext.array_float_cast,args)
+
+    def __getitem__(*args): return _pycdfext.array_float___getitem__(*args)
+    def __setitem__(*args): return _pycdfext.array_float___setitem__(*args)
+    def cast(*args): return _pycdfext.array_float_cast(*args)
     __swig_getmethods__["frompointer"] = lambda x: _pycdfext.array_float_frompointer
     if _newclass:frompointer = staticmethod(_pycdfext.array_float_frompointer)
-    def __repr__(self):
-        return "<C array_float instance at %s>" % (self.this,)
 
 class array_floatPtr(array_float):
-    def __init__(self,this):
+    def __init__(self, this):
         _swig_setattr(self, array_float, 'this', this)
         if not hasattr(self,"thisown"): _swig_setattr(self, array_float, 'thisown', 0)
         _swig_setattr(self, array_float,self.__class__,array_float)
 _pycdfext.array_float_swigregister(array_floatPtr)
-array_float_frompointer = _pycdfext.array_float_frompointer
 
+array_float_frompointer = _pycdfext.array_float_frompointer
 
 class array_double(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, array_double, name, value)
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, array_double, name)
-    def __init__(self,*args):
-        _swig_setattr(self, array_double, 'this', apply(_pycdfext.new_array_double,args))
+    def __repr__(self):
+        return "<%s.%s; proxy of C array_double instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, array_double, 'this', _pycdfext.new_array_double(*args))
         _swig_setattr(self, array_double, 'thisown', 1)
-    def __del__(self, destroy= _pycdfext.delete_array_double):
+    def __del__(self, destroy=_pycdfext.delete_array_double):
         try:
             if self.thisown: destroy(self)
         except: pass
-    def __getitem__(*args): return apply(_pycdfext.array_double___getitem__,args)
-    def __setitem__(*args): return apply(_pycdfext.array_double___setitem__,args)
-    def cast(*args): return apply(_pycdfext.array_double_cast,args)
+
+    def __getitem__(*args): return _pycdfext.array_double___getitem__(*args)
+    def __setitem__(*args): return _pycdfext.array_double___setitem__(*args)
+    def cast(*args): return _pycdfext.array_double_cast(*args)
     __swig_getmethods__["frompointer"] = lambda x: _pycdfext.array_double_frompointer
     if _newclass:frompointer = staticmethod(_pycdfext.array_double_frompointer)
-    def __repr__(self):
-        return "<C array_double instance at %s>" % (self.this,)
 
 class array_doublePtr(array_double):
-    def __init__(self,this):
+    def __init__(self, this):
         _swig_setattr(self, array_double, 'this', this)
         if not hasattr(self,"thisown"): _swig_setattr(self, array_double, 'thisown', 0)
         _swig_setattr(self, array_double,self.__class__,array_double)
 _pycdfext.array_double_swigregister(array_doublePtr)
-array_double_frompointer = _pycdfext.array_double_frompointer
 
+array_double_frompointer = _pycdfext.array_double_frompointer
 
 class array_size_t(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, array_size_t, name, value)
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, array_size_t, name)
-    def __init__(self,*args):
-        _swig_setattr(self, array_size_t, 'this', apply(_pycdfext.new_array_size_t,args))
+    def __repr__(self):
+        return "<%s.%s; proxy of C array_size_t instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, array_size_t, 'this', _pycdfext.new_array_size_t(*args))
         _swig_setattr(self, array_size_t, 'thisown', 1)
-    def __del__(self, destroy= _pycdfext.delete_array_size_t):
+    def __del__(self, destroy=_pycdfext.delete_array_size_t):
         try:
             if self.thisown: destroy(self)
         except: pass
-    def __getitem__(*args): return apply(_pycdfext.array_size_t___getitem__,args)
-    def __setitem__(*args): return apply(_pycdfext.array_size_t___setitem__,args)
-    def cast(*args): return apply(_pycdfext.array_size_t_cast,args)
+
+    def __getitem__(*args): return _pycdfext.array_size_t___getitem__(*args)
+    def __setitem__(*args): return _pycdfext.array_size_t___setitem__(*args)
+    def cast(*args): return _pycdfext.array_size_t_cast(*args)
     __swig_getmethods__["frompointer"] = lambda x: _pycdfext.array_size_t_frompointer
     if _newclass:frompointer = staticmethod(_pycdfext.array_size_t_frompointer)
-    def __repr__(self):
-        return "<C array_size_t instance at %s>" % (self.this,)
 
 class array_size_tPtr(array_size_t):
-    def __init__(self,this):
+    def __init__(self, this):
         _swig_setattr(self, array_size_t, 'this', this)
         if not hasattr(self,"thisown"): _swig_setattr(self, array_size_t, 'thisown', 0)
         _swig_setattr(self, array_size_t,self.__class__,array_size_t)
 _pycdfext.array_size_t_swigregister(array_size_tPtr)
-array_size_t_frompointer = _pycdfext.array_size_t_frompointer
 
+array_size_t_frompointer = _pycdfext.array_size_t_frompointer
 
 NC_NOERR = _pycdfext.NC_NOERR
 NC_NOWRITE = _pycdfext.NC_NOWRITE
@@ -268,6 +284,7 @@ FLOAT = _pycdfext.FLOAT
 DOUBLE = _pycdfext.DOUBLE
 GLOBAL = _pycdfext.GLOBAL
 UNLIMITED = _pycdfext.UNLIMITED
+
 _nc_get_var_0 = _pycdfext._nc_get_var_0
 
 _nc_put_var_0 = _pycdfext._nc_put_var_0
@@ -381,5 +398,4 @@ nc_copy_att = _pycdfext.nc_copy_att
 nc_del_att = _pycdfext.nc_del_att
 
 nc_rename_att = _pycdfext.nc_rename_att
-
 

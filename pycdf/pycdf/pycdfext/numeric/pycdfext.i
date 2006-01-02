@@ -1,14 +1,9 @@
 /*
- * $Id: pycdfext.i,v 1.4 2005-08-16 02:39:05 gosselin_a Exp $
+ * $Id: pycdfext.i,v 1.1 2006-01-02 18:51:15 gosselin_a Exp $
  * $Name: not supported by cvs2svn $
  * $Log: not supported by cvs2svn $
- * Revision 1.3  2005/08/15 02:00:30  gosselin_a
- * pycdf-0.5-4 bug fix release. See CHANGES file.
  *
- * Revision 1.2  2005/07/16 16:22:35  gosselin_a
- * pycdf classes are now 'new-style' classes (they derive from 'object').
- * Added CVS keywords.
- *
+ * SWIG directives for generating the pycdfext module for use with Numeric.
  */
 
 %module pycdfext

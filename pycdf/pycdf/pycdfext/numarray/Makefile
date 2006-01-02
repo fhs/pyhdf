@@ -1,6 +1,8 @@
-# $Id: Makefile,v 1.3 2005-07-16 16:22:35 gosselin_a Exp $
+# $Id: Makefile,v 1.1 2006-01-02 18:51:15 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+#
+# Makefile for generating the pycdfext module for use with numarray.
 
 # ------------------------------------------------------------
 # SWIG Examples Makefile
