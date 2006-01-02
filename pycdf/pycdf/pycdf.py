@@ -1,6 +1,9 @@
-# $Id: pycdf.py,v 1.6 2006-01-02 20:25:24 gosselin_a Exp $
+# $Id: pycdf.py,v 1.7 2006-01-02 20:35:59 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.6  2006/01/02 20:25:24  gosselin_a
+# Retouched the documentation to produce nicer printouts.
+#
 # Revision 1.5  2006/01/02 18:51:15  gosselin_a
 # The 'pycdf' directory has been restructured so as to allow
 # installing pycdf with either the Numeric or numarray array packages.
@@ -25,7 +28,7 @@
 (see: www.unidata.ucar.edu/packages/netcdf).
 
 Version: 0.6-0
-Date:    Jan 2 2006
+Date:    Jan 2 2006   
 
   
 Table of contents
