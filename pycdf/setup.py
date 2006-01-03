@@ -1,6 +1,9 @@
-# $Id: setup.py,v 1.5 2006-01-02 20:37:56 gosselin_a Exp $
+# $Id: setup.py,v 1.6 2006-01-03 23:20:04 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.5  2006/01/02 20:37:56  gosselin_a
+# New pycdf-0.6-0 release.
+#
 # Revision 1.4  2005/08/16 02:39:04  gosselin_a
 # Addition of new features in preparation of release 0.6-0
 #   -Support of CDF2 file format (64 bit file offsets).
@@ -59,7 +62,7 @@ setup(name         = 'pycdf',
 			 'read/written through arrays provided by the '
 			 'Numeric or numarray package.',
       url          = 'http://pysclint.sourceforge.net/pycdf',
-      version      ='0.6-0',
+      version      ='0.6-1',
       packages     = ['pycdf'],
       ext_modules  = [_pycdf_ext]
 

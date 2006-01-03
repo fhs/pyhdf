@@ -18,3 +18,80 @@ Pour installer pycdf:
   % tar xfz pycdf...*gz
   % cd pycdf...
   % python setup.py install
+
+Pour faire un check-in sous CVS :
+
+  % cd <dir>
+  % cvs ci
+
+Ne pas oublier de modifier les pages web (cvs-sandbox.pysclint/doc),
+et de faire un check-in de ces pages.
+
+Une fois une nouvelle version finalisee, faire un dernier check-in
+pour s'assurer de n'avoir rien oublie. Appliquer ensuite un tag
+sur la racine des fichiers source et web. La racine a la forme:
+   pycdf-version  (ex.: pycdf-0_5-4, pycdf-0_6-0, etc)
+
+  % cvs tag pycdf-0_6-0
+
+Generer une distribution source, et la transferer sur SourceForge :
+
+  % cd cvs-sandbox/pysclint/pycdf
+  % python setup.py sdist   # fichier *.tar.gz dans dist/
+  % ftp upload.sourceforge.net
+  Name: anonymous
+  Password: gosselin@dfo-mpo.gc.ca
+  ftp> bin
+  ftp> cd /incoming
+  ftp> lcd dist
+  ftp> mput *gz
+  ftp> quit
+
+Enregistrer la nouvelle version dans le FRS (file release system)
+de SourceForge.
+
+  Aller a : http://sourceforge.net/projects/pysclint
+  Cliquer sur "Admin"
+  Faire un login
+  Cliquer sur File Releases
+  Au bas de la page, dans la section "Releases", cliquer sur "Add Release"
+    sur la ligne correspondant au package desire (pycdf, pyhdf).
+  Entrer le nom de la version dans la case "New release name" (ex.: pycdf-0.6-0),
+  selectionner le bon nom de package (ex.: pycdf), et cliquer sur 
+  "Create This Release".
+
+  Section "Step 1" :
+  Entrer le chemin du fichier README dans le champ "Upload Release Notes", et
+  le chemin du fichier CHANGES dans le champ "Upload Change Log". Cocher
+  "Preserve my pre-formatted text", et cliquer sur Submit.
+
+  Section "Step 2" :
+  Cocher le nom du fichier ".tar.gz" prealablement telecharge. Cliquer sur
+  "Add Files".
+
+  Section "Step 3" :
+  Dans la liste "Processor", choisir "Platform-Independent".
+  Dans la liste "File Type", choisir ".gz".
+  Cliquer "Update".
+
+Mise-a-jour des pages web
+  Preparer un tar file des pages modifiees.
+    % cd cvs-sandbox/doc
+    % tar cfz web.tar.gz <files...>
+
+  Telecharger le tar file sur SF:
+    % scp web.tar.gz gosselin_a@shell.sourceforge.net:
+    password: ...
+  
+  Faire une connexion ssh sur SF:
+    % ssh gosselin_a@shell.sourceforge.net
+    password: ...
+      # maintenant dans un shell sur SF.
+    % ls
+      web.tar.gz
+      # se placer a la racine du site web.
+    % cd /home/groups/p/py/pysclint/htdocs
+    % ls
+      index.html  pycdf  pyhdf
+      # M-a-j les fichiers.
+    % tar xfz ~/*gz
