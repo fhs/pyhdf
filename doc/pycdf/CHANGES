@@ -1,6 +1,13 @@
-# $Id: CHANGES,v 1.3 2006-01-02 22:07:24 gosselin_a Exp $
+# $Id: CHANGES,v 1.4 2006-01-03 23:41:58 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.7  2006/01/03 23:20:04  gosselin_a
+# A bug was found in the pycdf-0.6-0 release shortly after it
+# was made public. The new pycdf-0.6-1 release corrects that.
+#
+# Revision 1.6  2006/01/02 23:08:51  gosselin_a
+# Forgot to enter the 0.6-0 rrelease date.
+#
 # Revision 1.5  2006/01/02 20:37:56  gosselin_a
 # New pycdf-0.6-0 release.
 #
@@ -20,8 +27,9 @@
 
 List of changes to 'pycdf' since the initial release.
 
-pycdf-0.6-0
- Date: FIX DATE
+
+pycdf-0.6-1
+ Date: 2006-01-02
 
     New features.
 
@@ -88,6 +96,12 @@ pycdf-0.6-0
      pycdfArrayPkg()  returns the name of the array package used to
                       install pycdf
 
+   -New method CDFVar.isrecord()
+      Calling method 'isrecord()' of a CDFVar intance tells if the
+      variable is a record variable, eg if its 1st dimension is based
+      on the unlimited dimension.
+
+
    Documentation changes
 
    -Added a new section "Primer on reading and querying a netcdf file"
@@ -150,15 +164,18 @@ pycdf-0.6-0
        cdf = CDF('test-2.nc', ...)
        ...
 
-    a CDFError exception could be raised related to a 'Not a netCDF id' error. 
-    The error resulted from the combination of an explicit call to the close()
-    method, followed by the reuse of the previous CDF instance variable.
-    The python interpreter executed a call to the cdf.__del__() method 
-    in order to free its internal data structures, before reassigning it 
-    to a new CDF instance. __del__() then tried to close an already closed file,
-    with perverse effects on the internal state of the netcdf library.
-    Thanks to Deahyok Shin (sdhyok@email.unc.edu) and Bjoern Aadlandsvik
-    (bjorn@imr.no) for having reported this problem.
+     a CDFError exception could be raised related to a 'Not a netCDF id' error. 
+     The error resulted from the combination of an explicit call to the close()
+     method, followed by the reuse of the previous CDF instance variable.
+     The python interpreter executed a call to the cdf.__del__() method 
+     in order to free its internal data structures, before reassigning it 
+     to a new CDF instance. __del__() then tried to close an already closed file,
+     with perverse effects on the internal state of the netcdf library.
+     Thanks to Deahyok Shin (sdhyok@email.unc.edu) and Bjoern Aadlandsvik
+     (bjorn@imr.no) for having reported this problem.
+
+    -The unlimited dimension was sometimes badly handled when validating 
+     a slicing expression.
 
 
 pycdf-0.5-4
