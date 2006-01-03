@@ -1,6 +1,23 @@
-# $Id: pycdf.py,v 1.7 2006-01-02 20:35:59 gosselin_a Exp $
+# $Id: pycdf.py,v 1.8 2006-01-03 23:14:04 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.7  2006/01/02 20:35:59  gosselin_a
+# Previous check-out forgot to log the most important information
+# about the changes made to pycdf.py. Here they are.
+#   -numaray support
+#   -Ellipsis notation now allowed inside a slicing expression
+#   -The full contents of a Numeric array or a cdf variable can now be assigned
+#    to a sliced variable, simply by using its name, without recourse
+#    to a "[:]" slicing expression.
+#   -A __str__() method was added to CDFVar class, allowing it to be
+#    printed saying simply "print v" instead of having to write
+#    "print v[:]".
+#   -New functions: pycdfVersion() and pycdfArrayPkg().
+#   -Stricter validity checks when assigning to an array.
+#   -Few bug fixes.
+#
+# See the CHANGES file for details.
+#
 # Revision 1.6  2006/01/02 20:25:24  gosselin_a
 # Retouched the documentation to produce nicer printouts.
 #
@@ -27,8 +44,8 @@
 """Python interface to the Unidata netCDF library
 (see: www.unidata.ucar.edu/packages/netcdf).
 
-Version: 0.6-0
-Date:    Jan 2 2006   
+Version: 0.6-1
+Date:    Jan 3 2006   
 
   
 Table of contents
@@ -100,7 +117,7 @@ Array package : Numeric and numarray
 ------------------------------------
 netCDF variables are read/written using high-level "array" objects.
 Arrays used to be provided solely by the python Numeric package. Beginning
-with version 0.6-0, the python numarray package can now be used. The choice
+with version 0.6, the python numarray package can now be used. The choice
 of the array package on which to base pycdf is made at install time (see
 the INSTALL file in the pycdf distribution). Only one style of install is
 possible : a Numeric-based and a numarray-based pycdf cannot coexist on the
@@ -521,13 +538,13 @@ returned.
 
 Rules governing array assignment
 --------------------------------
-pycdf releases before 0.6-0 were somewhat careless when dealing with
+pycdf releases before 0.6 were somewhat careless when dealing with
 array assignments. For example, no validity check was performed when
 attempting to assign the contents of an array to an array of a different
 shape. This could result in garbage being assigned, fatal errors, 
 and hard to catch rampant bugs.
 
-Beginning with release 0.6-0, when an array (or a slice of thereof) is
+Beginning with release 0.6, when an array (or a slice of thereof) is
 assigned to, pycdf makes sure that the type of right-hand side is
 acceptable, and that the values meet certain validity constraints. An
 array can be assigned :
@@ -633,6 +650,10 @@ temperatures at time 0, v[1] as the "record" of temperatures at time 1,
 etc. Variable 'v' is extended by adding "records" v[0], v[1], etc along
 dimension 'd', much as a traditional file is extended by writing data
 records to it.
+
+Given a CDFVar instance v, method v.isrecord() can be called to check
+whether v is a record variable, eg if first dimension of v refers to the
+unlimited dimension.
 
 Only ONE unlimited dimension is allowed inside a dataset, and ALL variables
 based on that dimension grow "in synch". So, if variables 'v1' and 'v2'
@@ -824,16 +845,19 @@ pycdf defines the following classes.
                put_1()     put a single value in the variable
 
              inquiry
-               inq()       get variable name, type, dimension index
-                           numbers and number of attributes
-               inq_dimid() get the dimensions index numbers
-               inq_name()  get the variable name
-               inq_natts() get the variable number of attributes
-               inq_ndims() get the variable number of dimensions
-               inq_type()  get the variable type
        	       attributes()  get a dictionnary holding the names and
 	                     values of all the variable attributes
                dimensions()  get the names of the variable dimensions
+               inq()         get variable name, type, dimension index
+                             numbers and number of attributes
+               inq_dimid()   get the dimensions index numbers
+               inq_name()    get the variable name
+               inq_natts()   get the variable number of attributes
+               inq_ndims()   get the variable number of dimensions
+               inq_type()    get the variable type
+               isrecord()    indicates wheter the variable is a record
+                             variable (eg dimension 0 refers to the
+                             unlimited dimension)
                shape()       get the lengths of the variable dimensions
 
              misc
@@ -1081,7 +1105,7 @@ the contents of those dictionaries.
          
 """
 
-_VERSION = "0.6-0"
+_VERSION = "0.6-1"
 
 import os, os.path
 import sys
@@ -2223,7 +2247,7 @@ class CDFVar(object):
         # thereof, and count the number of such scalars it holds.
         elif type(data) in [types.ListType, types.TupleType]:
             nRhs = _checkSeq(data)
-            # Count the numbr of values which need to be assigned in the lhs.
+            # Count the number of values which need to be assigned in the lhs.
             nLhs = 1
             for k in count:
                 if k > 0:
@@ -2231,6 +2255,7 @@ class CDFVar(object):
             # The number of scalars in the rhs must match the number of elements assigned
             # in the lhs.
             if nRhs != nLhs:
+                print "debug count=",count,"start=",start,"stride=",stride
                 raise ValueError, "%d values assigned, %d needed" % (nRhs, nLhs)
 
         # Bad assignment.
@@ -2252,8 +2277,13 @@ class CDFVar(object):
         #             dropped from the output array.
         #   stride    strides along each dimension
 
-        # Get number of unlimited dimension, if any
-        unlim = self._ncid.inq_unlimdim()
+        # See if we deal with a record variable, by checking if
+        # first dimension refers to the unlimited dimension. Set unlim to -1
+        # if not, and 0 otherwise.
+        if self.isrecord():
+            unlim = 0
+        else:
+            unnlim = -1
         
         # Handle a scalar variable as a 1-dimensional array of length 1.
         shape = self.shape()
@@ -2483,6 +2513,23 @@ class CDFVar(object):
         status, natts = _C.nc_inq_varnatts(self._ncid._id, self._id)
         _checkCDFErr('inq_natts', status)
         return natts
+
+    def isrecord(self):
+        """Determines whether the variable is a record variable, eg
+        its first dimension refers to the unlimited dimension.
+
+        Args:
+          no argument
+        Returns:
+          1 if the variable is a record variable, 0 if not
+
+        C library equivalent : None
+
+        This method was taken from HDF4 library.
+                                                                  """
+        
+        return self.inq_dimid()[0] == self._ncid.inq_unlimdim()
+
 
     def get_1(self, indices, ubyte=0):
         """Retrieve a single value from the netCDF variable.
