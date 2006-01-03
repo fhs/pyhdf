@@ -13,7 +13,7 @@
 (see:&nbsp;www.unidata.ucar.edu/packages/netcdf).<br>
 &nbsp;<br>
 Version:&nbsp;0.6-0<br>
-Date:&nbsp;&nbsp;&nbsp;&nbsp;Jan&nbsp;2&nbsp;2006<br>
+Date:&nbsp;&nbsp;&nbsp;&nbsp;Jan&nbsp;2&nbsp;2006&nbsp;&nbsp;&nbsp;<br>
 &nbsp;<br>
 &nbsp;&nbsp;<br>
 Table&nbsp;of&nbsp;contents<br>
@@ -550,8 +550,9 @@ Assigning&nbsp;a&nbsp;sequence&nbsp;(tuple&nbsp;or&nbsp;list)&nbsp;to&nbsp;an&nb
 &nbsp;&nbsp;exactly&nbsp;9&nbsp;values,&nbsp;eg:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;x[:]&nbsp;=&nbsp;(1,2,3,4,5,6,7,8,9)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;ok,&nbsp;9&nbsp;values&nbsp;at&nbsp;same&nbsp;level<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;x[:]&nbsp;=&nbsp;((1,2,3),(4,5,6),(7,8,9))&nbsp;#&nbsp;ok,&nbsp;9&nbsp;values&nbsp;in&nbsp;a&nbsp;2-level&nbsp;tuple<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;x[:]&nbsp;=&nbsp;((1,2,3)[(4,5,6),(7,8,9)]&nbsp;#&nbsp;ok,&nbsp;9&nbsp;values,&nbsp;mix&nbsp;of&nbsp;tuple&nbsp;and&nbsp;list<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;x[:]&nbsp;=&nbsp;[1,2,3,4]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;wrong,&nbsp;4&nbsp;values&nbsp;listed,&nbsp;5&nbsp;missing<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;x[:]&nbsp;=&nbsp;((1,2,3)[(4,5,6),(7,8,9)]&nbsp;#&nbsp;ok,&nbsp;9&nbsp;values,&nbsp;mix&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;tuple&nbsp;and&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;x[:]&nbsp;=&nbsp;[1,2,3,4]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;wrong,&nbsp;4&nbsp;values&nbsp;listed,&nbsp;5&nbsp;missing<br>
 &nbsp;<br>
 Assigning&nbsp;the&nbsp;contents&nbsp;of&nbsp;an&nbsp;array&nbsp;to&nbsp;an&nbsp;array<br>
 &nbsp;&nbsp;When&nbsp;an&nbsp;array&nbsp;(possibly&nbsp;sliced)&nbsp;is&nbsp;used&nbsp;as&nbsp;the&nbsp;right-hand&nbsp;size,&nbsp;its&nbsp;shape<br>
@@ -617,6 +618,10 @@ temperatures&nbsp;at&nbsp;time&nbsp;0,&nbsp;v[1]&nbsp;as&nbsp;the&nbsp;"record"&
 etc.&nbsp;Variable&nbsp;'v'&nbsp;is&nbsp;extended&nbsp;by&nbsp;adding&nbsp;"records"&nbsp;v[0],&nbsp;v[1],&nbsp;etc&nbsp;along<br>
 dimension&nbsp;'d',&nbsp;much&nbsp;as&nbsp;a&nbsp;traditional&nbsp;file&nbsp;is&nbsp;extended&nbsp;by&nbsp;writing&nbsp;data<br>
 records&nbsp;to&nbsp;it.<br>
+&nbsp;<br>
+Given&nbsp;a&nbsp;<a href="#CDFVar">CDFVar</a>&nbsp;instance&nbsp;v,&nbsp;method&nbsp;v.isrecord()&nbsp;can&nbsp;be&nbsp;called&nbsp;to&nbsp;check&nbsp;if<br>
+v&nbsp;is&nbsp;a&nbsp;record&nbsp;variable,&nbsp;eg&nbsp;if&nbsp;first&nbsp;dimension&nbsp;of&nbsp;v&nbsp;refers&nbsp;to&nbsp;the<br>
+unlimited&nbsp;dimension.<br>
 &nbsp;<br>
 Only&nbsp;ONE&nbsp;unlimited&nbsp;dimension&nbsp;is&nbsp;allowed&nbsp;inside&nbsp;a&nbsp;dataset,&nbsp;and&nbsp;ALL&nbsp;variables<br>
 based&nbsp;on&nbsp;that&nbsp;dimension&nbsp;grow&nbsp;"in&nbsp;synch".&nbsp;So,&nbsp;if&nbsp;variables&nbsp;'v1'&nbsp;and&nbsp;'v2'<br>
@@ -808,16 +813,19 @@ pycdf&nbsp;defines&nbsp;the&nbsp;following&nbsp;classes.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;put_1()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;put&nbsp;a&nbsp;single&nbsp;value&nbsp;in&nbsp;the&nbsp;variable<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inquiry<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;variable&nbsp;name,&nbsp;type,&nbsp;dimension&nbsp;index<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numbers&nbsp;and&nbsp;number&nbsp;of&nbsp;attributes<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_dimid()&nbsp;get&nbsp;the&nbsp;dimensions&nbsp;index&nbsp;numbers<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_name()&nbsp;&nbsp;get&nbsp;the&nbsp;variable&nbsp;name<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_natts()&nbsp;get&nbsp;the&nbsp;variable&nbsp;number&nbsp;of&nbsp;attributes<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_ndims()&nbsp;get&nbsp;the&nbsp;variable&nbsp;number&nbsp;of&nbsp;dimensions<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_type()&nbsp;&nbsp;get&nbsp;the&nbsp;variable&nbsp;type<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attributes()&nbsp;&nbsp;get&nbsp;a&nbsp;dictionnary&nbsp;holding&nbsp;the&nbsp;names&nbsp;and<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;values&nbsp;of&nbsp;all&nbsp;the&nbsp;variable&nbsp;attributes<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimensions()&nbsp;&nbsp;get&nbsp;the&nbsp;names&nbsp;of&nbsp;the&nbsp;variable&nbsp;dimensions<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;variable&nbsp;name,&nbsp;type,&nbsp;dimension&nbsp;index<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numbers&nbsp;and&nbsp;number&nbsp;of&nbsp;attributes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_dimid()&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;dimensions&nbsp;index&nbsp;numbers<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_name()&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;variable&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_natts()&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;variable&nbsp;number&nbsp;of&nbsp;attributes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_ndims()&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;variable&nbsp;number&nbsp;of&nbsp;dimensions<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_type()&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;variable&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isrecord()&nbsp;&nbsp;&nbsp;&nbsp;indicates&nbsp;wheter&nbsp;the&nbsp;variable&nbsp;is&nbsp;a&nbsp;record<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;variable&nbsp;(eg&nbsp;dimension&nbsp;0&nbsp;refers&nbsp;to&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unlimited&nbsp;dimension)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shape()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;lengths&nbsp;of&nbsp;the&nbsp;variable&nbsp;dimensions<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;misc<br>
@@ -1955,6 +1963,16 @@ Returns:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.FLOAT,&nbsp;<a href="#NC">NC</a>.DOUBLE)<br>
 &nbsp;<br>
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_inq_vartype</tt></dd></dl>
+
+<dl><dt><a name="CDFVar-isrecord"><strong>isrecord</strong></a>(self)</dt><dd><tt>Determines&nbsp;whether&nbsp;the&nbsp;variable&nbsp;is&nbsp;a&nbsp;record&nbsp;variable,&nbsp;eg<br>
+its&nbsp;first&nbsp;dimension&nbsp;is&nbsp;that&nbsp;of&nbsp;the&nbsp;unlimited&nbsp;dimension.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;1&nbsp;if&nbsp;the&nbsp;variable&nbsp;is&nbsp;a&nbsp;record&nbsp;variable,&nbsp;0&nbsp;if&nbsp;not<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;None</tt></dd></dl>
 
 <dl><dt><a name="CDFVar-put"><strong>put</strong></a>(self, data, start<font color="#909090">=None</font>, count<font color="#909090">=None</font>, stride<font color="#909090">=None</font>, mapv<font color="#909090">=None</font>, ubyte<font color="#909090">=0</font>)</dt><dd><tt>Write&nbsp;data&nbsp;to&nbsp;the&nbsp;netCDF&nbsp;variable.<br>
 Dataset&nbsp;mode:&nbsp;data&nbsp;mode.<br>

@@ -11,7 +11,7 @@ DESCRIPTION
     (see: www.unidata.ucar.edu/packages/netcdf).
     
     Version: 0.6-0
-    Date:    Jan 2 2006
+    Date:    Jan 2 2006   
     
       
     Table of contents
@@ -548,8 +548,9 @@ DESCRIPTION
       exactly 9 values, eg:
           >>> x[:] = (1,2,3,4,5,6,7,8,9)       # ok, 9 values at same level
           >>> x[:] = ((1,2,3),(4,5,6),(7,8,9)) # ok, 9 values in a 2-level tuple
-          >>> x[:] = ((1,2,3)[(4,5,6),(7,8,9)] # ok, 9 values, mix of tuple and list
-          >>> x[:] = [1,2,3,4]                 # wrong, 4 values listed, 5 missing
+          >>> x[:] = ((1,2,3)[(4,5,6),(7,8,9)] # ok, 9 values, mix of
+                                               # tuple and list
+          >>> x[:] = [1,2,3,4]             # wrong, 4 values listed, 5 missing
     
     Assigning the contents of an array to an array
       When an array (possibly sliced) is used as the right-hand size, its shape
@@ -615,6 +616,10 @@ DESCRIPTION
     etc. Variable 'v' is extended by adding "records" v[0], v[1], etc along
     dimension 'd', much as a traditional file is extended by writing data
     records to it.
+    
+    Given a CDFVar instance v, method v.isrecord() can be called to check if
+    v is a record variable, eg if first dimension of v refers to the
+    unlimited dimension.
     
     Only ONE unlimited dimension is allowed inside a dataset, and ALL variables
     based on that dimension grow "in synch". So, if variables 'v1' and 'v2'
@@ -806,16 +811,19 @@ DESCRIPTION
                    put_1()     put a single value in the variable
     
                  inquiry
-                   inq()       get variable name, type, dimension index
-                               numbers and number of attributes
-                   inq_dimid() get the dimensions index numbers
-                   inq_name()  get the variable name
-                   inq_natts() get the variable number of attributes
-                   inq_ndims() get the variable number of dimensions
-                   inq_type()  get the variable type
                    attributes()  get a dictionnary holding the names and
                                  values of all the variable attributes
                    dimensions()  get the names of the variable dimensions
+                   inq()         get variable name, type, dimension index
+                                 numbers and number of attributes
+                   inq_dimid()   get the dimensions index numbers
+                   inq_name()    get the variable name
+                   inq_natts()   get the variable number of attributes
+                   inq_ndims()   get the variable number of dimensions
+                   inq_type()    get the variable type
+                   isrecord()    indicates wheter the variable is a record
+                                 variable (eg dimension 0 refers to the
+                                 unlimited dimension)
                    shape()       get the lengths of the variable dimensions
     
                  misc
@@ -1970,6 +1978,17 @@ CLASSES
      |                               NC.FLOAT, NC.DOUBLE)
      |      
      |      C library equivalent : nc_inq_vartype
+     |  
+     |  isrecord(self)
+     |      Determines whether the variable is a record variable, eg
+     |      its first dimension is that of the unlimited dimension.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        1 if the variable is a record variable, 0 if not
+     |      
+     |      C library equivalent : None
      |  
      |  put(self, data, start=None, count=None, stride=None, mapv=None, ubyte=0)
      |      Write data to the netCDF variable.
