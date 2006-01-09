@@ -1,6 +1,10 @@
-# $Id: CHANGES,v 1.7 2006-01-03 23:20:04 gosselin_a Exp $
+# $Id: CHANGES,v 1.8 2006-01-09 04:12:15 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.7  2006/01/03 23:20:04  gosselin_a
+# A bug was found in the pycdf-0.6-0 release shortly after it
+# was made public. The new pycdf-0.6-1 release corrects that.
+#
 # Revision 1.6  2006/01/02 23:08:51  gosselin_a
 # Forgot to enter the 0.6-0 rrelease date.
 #
@@ -24,6 +28,13 @@
 List of changes to 'pycdf' since the initial release.
 
 
+pycdf-0.6-2
+ Date: 2006-01-???
+
+    New method CDF.inq_unlimlen().
+      Calling method inq_unlimlen() of a CDF instance returns the current
+      length of the dataset unlimited dimension, or -1 if no unlimited
+      dimension has been defined in the dataset.
 pycdf-0.6-1
  Date: 2006-01-02
 

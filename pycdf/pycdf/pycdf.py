@@ -1,6 +1,10 @@
-# $Id: pycdf.py,v 1.8 2006-01-03 23:14:04 gosselin_a Exp $
+# $Id: pycdf.py,v 1.9 2006-01-09 04:12:15 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.8  2006/01/03 23:14:04  gosselin_a
+# Fixed a bug with the unlimited dimension inside __buildStartCountStride().
+# Added CDFVar.isrecord() method.
+#
 # Revision 1.7  2006/01/02 20:35:59  gosselin_a
 # Previous check-out forgot to log the most important information
 # about the changes made to pycdf.py. Here they are.
@@ -651,9 +655,16 @@ etc. Variable 'v' is extended by adding "records" v[0], v[1], etc along
 dimension 'd', much as a traditional file is extended by writing data
 records to it.
 
-Given a CDFVar instance v, method v.isrecord() can be called to check
-whether v is a record variable, eg if first dimension of v refers to the
-unlimited dimension.
+Here are some usefull methods to work with the unlimited dimension.
+  -Given a CDF dataset instance 'nc':
+     nc.inq_unlimdim()  returns the index of the dataset unlimited dimension
+                        or -1 if no unlimited dimension exists
+     nc.inq_unlimlen()  returns the current length of the unlimited
+                        dimension (or -1 if no unlimited dimension exists)
+
+  -Given a CDFVar variable instance 'v':
+     v.isrecord()       checks whether v is a record variable, eg if first
+                        dimension of v refers to the unlimited dimension.
 
 Only ONE unlimited dimension is allowed inside a dataset, and ALL variables
 based on that dimension grow "in synch". So, if variables 'v1' and 'v2'
@@ -776,6 +787,7 @@ pycdf defines the following classes.
            inq_ndims()     query number of dimensions
            inq_nvars()     query number of variables
            inq_unlimdim()  query id of the unlimited dimension
+           inq_unlimlen()  query the current length of the unlimited dimension
            variables()     get a dictionnary describing the dataset
                            variables
            
@@ -856,7 +868,7 @@ pycdf defines the following classes.
                inq_ndims()   get the variable number of dimensions
                inq_type()    get the variable type
                isrecord()    indicates wheter the variable is a record
-                             variable (eg dimension 0 refers to the
+                             variable (eg if dimension 0 refers to the
                              unlimited dimension)
                shape()       get the lengths of the variable dimensions
 
@@ -1111,8 +1123,8 @@ import os, os.path
 import sys
 import types
 
-# 'pycdf_array' packages declarations dependent on which array package (numarray, Numeric, ...)
-# was chosen as the array package.
+# 'pycdf_array' packages declarations dependent on which array package
+# (numarray, Numeric, ...) was chosen as the array package.
 from pycdfext_array import array, _ARRAYPKG
     
 import pycdfext as _C
@@ -1289,7 +1301,8 @@ class CDF(object):
                     try:
                         os.remove(path)
                     except Exception, msg:
-                        raise CDFError("CDF", 0, "cannot delete %s : %s" % (path, str(msg)))
+                        raise CDFError("CDF", 0, "cannot delete %s : %s" %
+                                       (path, str(msg)))
                     fct = _C.nc_create
                 else:
                     fct = _C.nc_open
@@ -1418,8 +1431,9 @@ class CDF(object):
 
     
     def close(self):
-        """Close the dataset. This call is optional, since the dataset is automatically
-        closed when its instance variable goes out of scope or is reassigned. 
+        """Close the dataset. This call is optional, since the dataset is
+        automatically closed when its instance variable goes out of scope
+        or is reassigned. 
  
         Args:
           no argument
@@ -1432,8 +1446,8 @@ class CDF(object):
         _checkCDFErr('close', _C.nc_close(self._id))
         
         # Cancel the id so that self.__del__() does no try to close the dataset
-        # again. Attempting to close an already closed file could severely corrupt
-        # internal netcdf tables.
+        # again. Attempting to close an already closed file could severely
+        # corrupt internal netcdf tables.
         self._id = 0   
 
     def automode(self, auto=1):
@@ -1605,6 +1619,26 @@ class CDF(object):
         status, unlimdim = _C.nc_inq_unlimdim(self._id)
         _checkCDFErr('inq_unlimdim', status)
         return unlimdim
+
+    def inq_unlimlen(self):
+      """Return he current length of the dataset unlimited dimension.
+
+      Args:
+        no argument
+      Returns:
+        current length of the dataset unlimited dimension, or -1
+        if no unlimited dimension has been defined.
+
+      C library equivalent : none
+                                                     """
+
+      unlim = self.inq_unlimdim()
+      if unlim < 0:
+        n = -1
+      else:
+        n = self.dim(unlim).inq_len()
+
+      return n
 
     def attr(self, name_id):
         """Obtain an CDFAttr instance for a global attribute,
@@ -2172,7 +2206,7 @@ class CDFVar(object):
         # Dataset mode: data mode.
 
         # Compute arguments to 'nc_get_var_0()'.
-        start, count, stride = self.__buildStartCountStride(elem)
+        start, count, stride = self._buildStartCountStride(elem)
 	# Force the dataset in data mode.
         self._ncid._forceDataMode()
         # Get elements.
@@ -2189,9 +2223,9 @@ class CDFVar(object):
         # Dataset mode: data mode.
 
         # Compute arguments to 'nc_put_var_0()'.
-        # A negative count indicates that the dimension was indexed, not sliced,
-        # and will be dropped.
-        start, count, stride = self.__buildStartCountStride(elem)
+        # A negative count indicates that the dimension was indexed,
+        # not sliced, and will be dropped.
+        start, count, stride = self._buildStartCountStride(elem)
         
         # Shape of the lhs. Negative values inside 'count' indicate dimensions
         # for which scalar indices have been specified. Those dimensions will
@@ -2201,8 +2235,8 @@ class CDFVar(object):
 	# Force the dataset in data mode.
         self._ncid._forceDataMode()
 
-        # Verify that the assignment makes sense. The type of the rhs must be one of
-        # the following:
+        # Verify that the assignment makes sense. The type of the rhs must
+        # be one of the following:
         #   array
         #   integer or float
         #   sequence of integers or floats, or sequences thereof
@@ -2212,39 +2246,45 @@ class CDFVar(object):
         # compatible with the shape defined by the right-hand-side.
         if type(data) == type(array(0)):
             if lhsShape != data.shape:
-                raise ValueError, ("incompatible array shapes, lhs=%s vs rhs=%s" %
+                raise ValueError, ("incompatible array shapes, "
+                                   "lhs=%s vs rhs=%s" %
                                    (lhsShape, data.shape))
 
-        # Maybe rhs is an array, but not of the type for which pycdf was compiled
-        # eg a 'numarray' array when pycdf was compiled for 'Numeric' arrays.
-        # Take a chance, and see if the the rhs has a 'shape' attribute and supports
-        # 'typecode()' and 'itemsize()' methods. If so, assume it is really an array,
-        # so as to accomodate users who prefer to us an array package different from
-        # the one for which pycdf was initially compiled.
+        # Maybe rhs is an array, but not of the type for which pycdf was
+        # compiled eg a 'numarray' array when pycdf was compiled for
+        # 'Numeric' arrays.
+        # Take a chance, and see if the the rhs has a 'shape' attribute and
+        # supports 'typecode()' and 'itemsize()' methods. If so, assume it
+        # is really an array, so as to accomodate users who prefer to us an
+        # array package different from the one for which pycdf was initially
+        # compiled.
         elif _assumeArray(data):
             if lhsShape != data.shape:
-                raise ValueError, ("incompatible array shapes, lhs=%s vs rhs=%s" %
+                raise ValueError, ("incompatible array shapes, "
+                                   "lhs=%s vs rhs=%s" %
                                    (lhsShape, data.shape))
           
             
         # If rhs is a cdf var, then it is implicitly an array.
         elif type(data) == type(CDFVar(0, 0)):
             if lhsShape != data.shape():
-                raise ValueError, ("incompatible array shapes, lhs=%s vs rhs=%s" %
+                raise ValueError, ("incompatible array shapes, "
+                                   " lhs=%s vs rhs=%s" %
                                    (lhsShape, data.shape()))
             # Create a Numeric array from the netcdf variable.
             data = data[...]
 
-        # If the rhs is a scalar value, convert it to a list that matches the shape of
-        # the slice, so as to correctly broadcast the value over the slice elements.
+        # If the rhs is a scalar value, convert it to a list that matches
+        # the shape of the slice, so as to correctly broadcast the value
+        # over the slice elements.
         elif type(data) in [types.IntType, types.FloatType, types.LongType]:
             for i in range(len(count)):
                 data = [data]
                 if count[i] > 0:
                     data = data * count[i]
 
-        # If the rhs is a sequence, verify it holds only integers, floats or sequences
-        # thereof, and count the number of such scalars it holds.
+        # If the rhs is a sequence, verify it holds only integers, floats or
+        # sequences thereof, and count the number of such scalars it holds.
         elif type(data) in [types.ListType, types.TupleType]:
             nRhs = _checkSeq(data)
             # Count the number of values which need to be assigned in the lhs.
@@ -2252,21 +2292,22 @@ class CDFVar(object):
             for k in count:
                 if k > 0:
                     nLhs *= k
-            # The number of scalars in the rhs must match the number of elements assigned
-            # in the lhs.
+            # The number of scalars in the rhs must match the number of
+            # elements assigned in the lhs.
             if nRhs != nLhs:
                 print "debug count=",count,"start=",start,"stride=",stride
-                raise ValueError, "%d values assigned, %d needed" % (nRhs, nLhs)
+                raise ValueError, ("%d values assigned, %d needed" %
+                                   (nRhs, nLhs))
 
         # Bad assignment.
         else:
-            raise TypeError, "the cdf var cannot be assigned a value of type %s" \
-                  % type(data)
+            raise TypeError, ("the cdf var cannot be assigned a "
+                              "value of type %s" % type(data))
         
         # Assign.
         self.put(data, start, count, stride)
 
-    def __buildStartCountStride(self, elem):
+    def _buildStartCountStride(self, elem):
 
         # Create the 'start', 'count', 'slice' and 'stride' tuples that
         # will be passed to 'nc_get_var_0'/'nc_put_var_0'.
@@ -2283,7 +2324,7 @@ class CDFVar(object):
         if self.isrecord():
             unlim = 0
         else:
-            unnlim = -1
+            unlim = -1
         
         # Handle a scalar variable as a 1-dimensional array of length 1.
         shape = self.shape()
@@ -2303,18 +2344,23 @@ class CDFVar(object):
             
         # 'elem' is a tuple whose element types can be one of:
         #    IntType      for standard indexing
-        #    SliceType    for extended slicing (using 'start', 'stop' and 'step' attributes)
-        #    EllipsisType for an ellipsis (...); at most one ellipsis can occur in the
-        #                 slicing expression, otherwise the expressionis ambiguous
-        # Recreate the 'elem' tuple, replacing a possible ellipsis with empty slices.
+        #    SliceType    for extended slicing (using 'start', 'stop' and
+        #                 'step' attributes)
+        #    EllipsisType for an ellipsis (...); at most one ellipsis can
+        #                 occur in the slicing expression, otherwise the
+        #                 expression is ambiguous
+        # Recreate the 'elem' tuple, replacing a possible ellipsis with
+        # empty slices.
         hasEllipsis = 0
         newElem = []
         for e in elem:
             if type(e) == types.EllipsisType:
                 if hasEllipsis:
-                    raise IndexError, "at most one ellipsis allowed in a slicing expression"
+                    raise IndexError, ("at most one ellipsis allowed in "
+                                       "a slicing expression")
                 # The ellipsis stands for the missing dimensions.
-                newElem.extend((slice(None, None, None),) * (nDims - len(elem) + 1))
+                newElem.extend((slice(None, None, None),) *
+                               (nDims - len(elem) + 1))
             else:
                 newElem.append(e)
         elem = newElem
@@ -2525,7 +2571,7 @@ class CDFVar(object):
 
         C library equivalent : None
 
-        This method was taken from HDF4 library.
+        This method was borrowed from HDF4 library.
                                                                   """
         
         return self.inq_dimid()[0] == self._ncid.inq_unlimdim()
@@ -2554,7 +2600,7 @@ class CDFVar(object):
         except:    # Transform scalar into sequence
             ndims = 1
             indices = [indices]
-        buf = _C.array_size_t((ndims > 0) and ndims or 1)    # allocate at least 1
+        buf = _C.array_size_t((ndims > 0) and ndims or 1) # allocate at least 1
         for n in range(ndims):
             buf[n] = indices[n]
 
@@ -2605,7 +2651,7 @@ class CDFVar(object):
         except:    # Transform scalar into sequence
             ndims = 1
             indices = [indices]
-        buf = _C.array_size_t((ndims > 0) and ndims or 1)    # allocate at least 1
+        buf = _C.array_size_t((ndims > 0) and ndims or 1) # allocate at least 1
         for n in range(ndims):
             buf[n] = indices[n]
 
@@ -2674,8 +2720,8 @@ class CDFVar(object):
         try:
             name, data_type, dimids, nattr = self.inq()
             rank = len(dimids)
-            # Temporarily handle a scalar var as a 1-dimensional array of length 1.
-            # This faked array will be undone at exit.
+            # Temporarily handle a scalar var as a 1-dimensional array of
+            # length 1. This faked array will be undone at exit.
             if rank == 0:
                 scalar = 1
                 rank = 1
