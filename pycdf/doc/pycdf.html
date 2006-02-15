@@ -12,8 +12,8 @@
     <p><tt>Python&nbsp;interface&nbsp;to&nbsp;the&nbsp;Unidata&nbsp;netCDF&nbsp;library<br>
 (see:&nbsp;www.unidata.ucar.edu/packages/netcdf).<br>
 &nbsp;<br>
-Version:&nbsp;0.6-0<br>
-Date:&nbsp;&nbsp;&nbsp;&nbsp;Jan&nbsp;2&nbsp;2006&nbsp;&nbsp;&nbsp;<br>
+Version:&nbsp;0.6-2<br>
+Date:&nbsp;&nbsp;&nbsp;&nbsp;Feb&nbsp;14&nbsp;2006&nbsp;&nbsp;&nbsp;<br>
 &nbsp;<br>
 &nbsp;&nbsp;<br>
 Table&nbsp;of&nbsp;contents<br>
@@ -32,6 +32,7 @@ Table&nbsp;of&nbsp;contents<br>
 &nbsp;&nbsp;Working&nbsp;with&nbsp;scalar&nbsp;variables<br>
 &nbsp;&nbsp;Working&nbsp;with&nbsp;the&nbsp;unlimited&nbsp;dimension<br>
 &nbsp;&nbsp;Open&nbsp;issues&nbsp;and&nbsp;current&nbsp;limitations&nbsp;:&nbsp;scipy_core<br>
+&nbsp;&nbsp;Quirks<br>
 &nbsp;&nbsp;Functions&nbsp;summary<br>
 &nbsp;&nbsp;Classes&nbsp;summary<br>
 &nbsp;&nbsp;Examples<br>
@@ -66,7 +67,8 @@ pycdf&nbsp;key&nbsp;features&nbsp;are&nbsp;as&nbsp;follows.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-netCDF&nbsp;attributes&nbsp;can&nbsp;be&nbsp;read/written&nbsp;like&nbsp;ordinary&nbsp;python&nbsp;class<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attributes<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-netCDF&nbsp;variables&nbsp;can&nbsp;be&nbsp;read/written&nbsp;like&nbsp;ordinary&nbsp;python&nbsp;lists&nbsp;using<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multidimensional&nbsp;indices&nbsp;and&nbsp;so-called&nbsp;"extended&nbsp;slice&nbsp;syntax",&nbsp;with<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multidimensionaldef&nbsp;variable<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;indices&nbsp;and&nbsp;so-called&nbsp;"extended&nbsp;slice&nbsp;syntax",&nbsp;with<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strides&nbsp;allowed<br>
 &nbsp;&nbsp;&nbsp;See&nbsp;"High&nbsp;level&nbsp;attribute&nbsp;access"&nbsp;and&nbsp;"High&nbsp;level&nbsp;variable&nbsp;access"<br>
 &nbsp;&nbsp;&nbsp;sections&nbsp;for&nbsp;details.<br>
@@ -85,7 +87,7 @@ Array&nbsp;package&nbsp;:&nbsp;Numeric&nbsp;and&nbsp;numarray<br>
 ------------------------------------<br>
 netCDF&nbsp;variables&nbsp;are&nbsp;read/written&nbsp;using&nbsp;high-level&nbsp;"array"&nbsp;objects.<br>
 Arrays&nbsp;used&nbsp;to&nbsp;be&nbsp;provided&nbsp;solely&nbsp;by&nbsp;the&nbsp;python&nbsp;Numeric&nbsp;package.&nbsp;Beginning<br>
-with&nbsp;version&nbsp;0.6-0,&nbsp;the&nbsp;python&nbsp;numarray&nbsp;package&nbsp;can&nbsp;now&nbsp;be&nbsp;used.&nbsp;The&nbsp;choice<br>
+with&nbsp;version&nbsp;0.6,&nbsp;the&nbsp;python&nbsp;numarray&nbsp;package&nbsp;can&nbsp;now&nbsp;be&nbsp;used.&nbsp;The&nbsp;choice<br>
 of&nbsp;the&nbsp;array&nbsp;package&nbsp;on&nbsp;which&nbsp;to&nbsp;base&nbsp;pycdf&nbsp;is&nbsp;made&nbsp;at&nbsp;install&nbsp;time&nbsp;(see<br>
 the&nbsp;INSTALL&nbsp;file&nbsp;in&nbsp;the&nbsp;pycdf&nbsp;distribution).&nbsp;Only&nbsp;one&nbsp;style&nbsp;of&nbsp;install&nbsp;is<br>
 possible&nbsp;:&nbsp;a&nbsp;Numeric-based&nbsp;and&nbsp;a&nbsp;numarray-based&nbsp;pycdf&nbsp;cannot&nbsp;coexist&nbsp;on&nbsp;the<br>
@@ -114,7 +116,7 @@ to&nbsp;install&nbsp;pycdf.&nbsp;Thus&nbsp;:<br>
 should&nbsp;usually&nbsp;work&nbsp;even&nbsp;if&nbsp;pycdf&nbsp;has&nbsp;been&nbsp;installed&nbsp;using&nbsp;numarray.&nbsp;In&nbsp;the<br>
 rest&nbsp;of&nbsp;this&nbsp;documentation,&nbsp;when&nbsp;one&nbsp;reads&nbsp;"from&nbsp;Numeric&nbsp;import&nbsp;...",&nbsp;it<br>
 should&nbsp;be&nbsp;assumed&nbsp;that&nbsp;"from&nbsp;numarray&nbsp;import&nbsp;..."&nbsp;could&nbsp;also&nbsp;be&nbsp;used,<br>
-unless&nbsp;explicitly&nbsp;stated&nbsp;otherwise.<br>
+uCDFMFVarnless&nbsp;explicitly&nbsp;stated&nbsp;otherwise.<br>
 &nbsp;<br>
 It&nbsp;is&nbsp;however&nbsp;deemed&nbsp;safer&nbsp;to&nbsp;import&nbsp;the&nbsp;same&nbsp;array&nbsp;package&nbsp;as&nbsp;the&nbsp;one<br>
 used&nbsp;when&nbsp;installing&nbsp;pycdf.&nbsp;To&nbsp;obtain&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;package&nbsp;on&nbsp;which&nbsp;the<br>
@@ -506,13 +508,13 @@ returned.<br>
 &nbsp;<br>
 Rules&nbsp;governing&nbsp;array&nbsp;assignment<br>
 --------------------------------<br>
-pycdf&nbsp;releases&nbsp;before&nbsp;0.6-0&nbsp;were&nbsp;somewhat&nbsp;careless&nbsp;when&nbsp;dealing&nbsp;with<br>
+pycdf&nbsp;releases&nbsp;before&nbsp;0.6&nbsp;were&nbsp;somewhat&nbsp;careless&nbsp;when&nbsp;dealing&nbsp;with<br>
 array&nbsp;assignments.&nbsp;For&nbsp;example,&nbsp;no&nbsp;validity&nbsp;check&nbsp;was&nbsp;performed&nbsp;when<br>
 attempting&nbsp;to&nbsp;assign&nbsp;the&nbsp;contents&nbsp;of&nbsp;an&nbsp;array&nbsp;to&nbsp;an&nbsp;array&nbsp;of&nbsp;a&nbsp;different<br>
 shape.&nbsp;This&nbsp;could&nbsp;result&nbsp;in&nbsp;garbage&nbsp;being&nbsp;assigned,&nbsp;fatal&nbsp;errors,&nbsp;<br>
 and&nbsp;hard&nbsp;to&nbsp;catch&nbsp;rampant&nbsp;bugs.<br>
 &nbsp;<br>
-Beginning&nbsp;with&nbsp;release&nbsp;0.6-0,&nbsp;when&nbsp;an&nbsp;array&nbsp;(or&nbsp;a&nbsp;slice&nbsp;of&nbsp;thereof)&nbsp;is<br>
+Beginning&nbsp;with&nbsp;release&nbsp;0.6,&nbsp;when&nbsp;an&nbsp;array&nbsp;(or&nbsp;a&nbsp;slice&nbsp;of&nbsp;thereof)&nbsp;is<br>
 assigned&nbsp;to,&nbsp;pycdf&nbsp;makes&nbsp;sure&nbsp;that&nbsp;the&nbsp;type&nbsp;of&nbsp;right-hand&nbsp;side&nbsp;is<br>
 acceptable,&nbsp;and&nbsp;that&nbsp;the&nbsp;values&nbsp;meet&nbsp;certain&nbsp;validity&nbsp;constraints.&nbsp;An<br>
 array&nbsp;can&nbsp;be&nbsp;assigned&nbsp;:<br>
@@ -589,6 +591,9 @@ variables&nbsp;using&nbsp;slicing&nbsp;constructs.&nbsp;We&nbsp;can&nbsp;thus&nb
 &nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;temp[:]&nbsp;=&nbsp;12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;equivalent&nbsp;to&nbsp;temp.put(12)<br>
 &nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;temp[:]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;equivalent&nbsp;to&nbsp;"print&nbsp;temp.get()"<br>
 &nbsp;<br>
+For&nbsp;a&nbsp;scalar&nbsp;variable&nbsp;'v',&nbsp;the&nbsp;methods&nbsp;inquiring&nbsp;about&nbsp;the&nbsp;dimensions&nbsp;of&nbsp;'v'&nbsp;will&nbsp;naturally<br>
+return&nbsp;empty&nbsp;sequences,&nbsp;eg:&nbsp;dimensions(),&nbsp;inq(),&nbsp;inq_dimid(),&nbsp;shape().&nbsp;Method<br>
+inq_ndims()&nbsp;will&nbsp;return&nbsp;0.<br>
 &nbsp;<br>
 Working&nbsp;with&nbsp;the&nbsp;unlimited&nbsp;dimension<br>
 ------------------------------------<br>
@@ -619,9 +624,16 @@ etc.&nbsp;Variable&nbsp;'v'&nbsp;is&nbsp;extended&nbsp;by&nbsp;adding&nbsp;"reco
 dimension&nbsp;'d',&nbsp;much&nbsp;as&nbsp;a&nbsp;traditional&nbsp;file&nbsp;is&nbsp;extended&nbsp;by&nbsp;writing&nbsp;data<br>
 records&nbsp;to&nbsp;it.<br>
 &nbsp;<br>
-Given&nbsp;a&nbsp;<a href="#CDFVar">CDFVar</a>&nbsp;instance&nbsp;v,&nbsp;method&nbsp;v.isrecord()&nbsp;can&nbsp;be&nbsp;called&nbsp;to&nbsp;check&nbsp;if<br>
-v&nbsp;is&nbsp;a&nbsp;record&nbsp;variable,&nbsp;eg&nbsp;if&nbsp;first&nbsp;dimension&nbsp;of&nbsp;v&nbsp;refers&nbsp;to&nbsp;the<br>
-unlimited&nbsp;dimension.<br>
+Here&nbsp;are&nbsp;some&nbsp;usefull&nbsp;methods&nbsp;to&nbsp;work&nbsp;with&nbsp;the&nbsp;unlimited&nbsp;dimension.<br>
+&nbsp;&nbsp;-Given&nbsp;a&nbsp;<a href="#CDF">CDF</a>&nbsp;dataset&nbsp;instance&nbsp;'nc':<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nc.inq_unlimdim()&nbsp;&nbsp;returns&nbsp;the&nbsp;index&nbsp;of&nbsp;the&nbsp;dataset&nbsp;unlimited&nbsp;dimension<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;-1&nbsp;if&nbsp;no&nbsp;unlimited&nbsp;dimension&nbsp;exists<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nc.inq_unlimlen()&nbsp;&nbsp;returns&nbsp;the&nbsp;current&nbsp;length&nbsp;of&nbsp;the&nbsp;unlimited<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimension&nbsp;(or&nbsp;-1&nbsp;if&nbsp;no&nbsp;unlimited&nbsp;dimension&nbsp;exists)<br>
+&nbsp;<br>
+&nbsp;&nbsp;-Given&nbsp;a&nbsp;<a href="#CDFVar">CDFVar</a>&nbsp;variable&nbsp;instance&nbsp;'v':<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v.isrecord()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;checks&nbsp;whether&nbsp;v&nbsp;is&nbsp;a&nbsp;record&nbsp;variable,&nbsp;eg&nbsp;if&nbsp;first<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimension&nbsp;of&nbsp;v&nbsp;refers&nbsp;to&nbsp;the&nbsp;unlimited&nbsp;dimension.<br>
 &nbsp;<br>
 Only&nbsp;ONE&nbsp;unlimited&nbsp;dimension&nbsp;is&nbsp;allowed&nbsp;inside&nbsp;a&nbsp;dataset,&nbsp;and&nbsp;ALL&nbsp;variables<br>
 based&nbsp;on&nbsp;that&nbsp;dimension&nbsp;grow&nbsp;"in&nbsp;synch".&nbsp;So,&nbsp;if&nbsp;variables&nbsp;'v1'&nbsp;and&nbsp;'v2'<br>
@@ -676,8 +688,26 @@ on&nbsp;those&nbsp;issues.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Numeric&nbsp;and&nbsp;numarray&nbsp;coud&nbsp;be&nbsp;deprecated&nbsp;once&nbsp;scipy_core<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;achieves&nbsp;a&nbsp;stable&nbsp;status&nbsp;(Numeric&nbsp;is&nbsp;said&nbsp;to&nbsp;have&nbsp;reached<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;its&nbsp;last&nbsp;release&nbsp;ever).&nbsp;pycdf&nbsp;does&nbsp;not&nbsp;currently&nbsp;support<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scipy_core,&nbsp;but&nbsp;wil&nbsp;certainly&nbsp;do&nbsp;in&nbsp;a&nbsp;not&nbsp;too&nbsp;far&nbsp;feature.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scipy_core,&nbsp;but&nbsp;wil&nbsp;certainly&nbsp;do&nbsp;in&nbsp;a&nbsp;not&nbsp;too&nbsp;far&nbsp;future.<br>
 &nbsp;<br>
+Quirks<br>
+------<br>
+&nbsp;<br>
+_FillValue&nbsp;attribute<br>
+&nbsp;<br>
+&nbsp;&nbsp;pycdf&nbsp;attaches&nbsp;no&nbsp;special&nbsp;significance&nbsp;to&nbsp;the&nbsp;_FillValue&nbsp;attribute,&nbsp;only&nbsp;the&nbsp;netcdf&nbsp;library<br>
+&nbsp;&nbsp;does.&nbsp;This&nbsp;can&nbsp;lead&nbsp;to&nbsp;the&nbsp;following&nbsp;nasty&nbsp;problem.&nbsp;If&nbsp;you&nbsp;write&nbsp;"v._FillValue&nbsp;=&nbsp;0",<br>
+&nbsp;&nbsp;pycdf&nbsp;defines&nbsp;a&nbsp;new&nbsp;attribute&nbsp;and&nbsp;deduces&nbsp;its&nbsp;type&nbsp;from&nbsp;that&nbsp;of&nbsp;the&nbsp;right&nbsp;hand&nbsp;side&nbsp;value,<br>
+&nbsp;&nbsp;eg&nbsp;an&nbsp;integer&nbsp;type.&nbsp;However,&nbsp;if&nbsp;variable&nbsp;'v'&nbsp;is&nbsp;defined&nbsp;as&nbsp;being&nbsp;of&nbsp;type&nbsp;real,&nbsp;then&nbsp;the<br>
+&nbsp;&nbsp;netcdf&nbsp;library&nbsp;(not&nbsp;pycdf!)&nbsp;will&nbsp;complain&nbsp;about&nbsp;a&nbsp;type&nbsp;mismatch&nbsp;when&nbsp;time&nbsp;comes&nbsp;to&nbsp;initialize<br>
+&nbsp;&nbsp;the&nbsp;variable&nbsp;with&nbsp;the&nbsp;fill&nbsp;value,&nbsp;and&nbsp;an&nbsp;exception&nbsp;will&nbsp;be&nbsp;thrown.<br>
+&nbsp;<br>
+&nbsp;&nbsp;To&nbsp;solve&nbsp;the&nbsp;problem,&nbsp;initialize&nbsp;the&nbsp;fill&nbsp;value&nbsp;with&nbsp;a&nbsp;value&nbsp;whose&nbsp;type&nbsp;is&nbsp;explicitly<br>
+&nbsp;&nbsp;identical&nbsp;to&nbsp;that&nbsp;of&nbsp;the&nbsp;variable.&nbsp;For&nbsp;example,&nbsp;if&nbsp;variable&nbsp;'v'&nbsp;is&nbsp;of&nbsp;type&nbsp;real,&nbsp;write<br>
+&nbsp;&nbsp;"v._FillValue&nbsp;=&nbsp;0.0"&nbsp;instead&nbsp;of&nbsp;"v._FillValue&nbsp;=&nbsp;0".<br>
+&nbsp;<br>
+&nbsp;&nbsp;Also&nbsp;do&nbsp;not&nbsp;forget&nbsp;to&nbsp;set&nbsp;the&nbsp;fill&nbsp;value&nbsp;*before*&nbsp;assigning&nbsp;to&nbsp;the&nbsp;variable.<br>
+&nbsp;&nbsp;<br>
 &nbsp;<br>
 Functions&nbsp;summary<br>
 -----------------<br>
@@ -744,6 +774,7 @@ pycdf&nbsp;defines&nbsp;the&nbsp;following&nbsp;classes.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_ndims()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;query&nbsp;number&nbsp;of&nbsp;dimensions<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_nvars()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;query&nbsp;number&nbsp;of&nbsp;variables<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_unlimdim()&nbsp;&nbsp;query&nbsp;id&nbsp;of&nbsp;the&nbsp;unlimited&nbsp;dimension<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_unlimlen()&nbsp;&nbsp;query&nbsp;the&nbsp;current&nbsp;length&nbsp;of&nbsp;the&nbsp;unlimited&nbsp;dimension<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;variables()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;a&nbsp;dictionnary&nbsp;describing&nbsp;the&nbsp;dataset<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;variables<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
@@ -785,6 +816,7 @@ pycdf&nbsp;defines&nbsp;the&nbsp;following&nbsp;classes.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methods:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inquiry<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;dimension&nbsp;name&nbsp;and&nbsp;length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_id()&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;dimension&nbsp;id<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_len()&nbsp;&nbsp;get&nbsp;the&nbsp;dimension&nbsp;length<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_name()&nbsp;get&nbsp;the&nbsp;dimension&nbsp;name<br>
 &nbsp;<br>
@@ -820,11 +852,12 @@ pycdf&nbsp;defines&nbsp;the&nbsp;following&nbsp;classes.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numbers&nbsp;and&nbsp;number&nbsp;of&nbsp;attributes<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_dimid()&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;dimensions&nbsp;index&nbsp;numbers<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_name()&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;variable&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_id()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;variable&nbsp;index&nbsp;number<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_natts()&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;variable&nbsp;number&nbsp;of&nbsp;attributes<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_ndims()&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;variable&nbsp;number&nbsp;of&nbsp;dimensions<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_type()&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;variable&nbsp;type<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isrecord()&nbsp;&nbsp;&nbsp;&nbsp;indicates&nbsp;wheter&nbsp;the&nbsp;variable&nbsp;is&nbsp;a&nbsp;record<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;variable&nbsp;(eg&nbsp;dimension&nbsp;0&nbsp;refers&nbsp;to&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;variable&nbsp;(eg&nbsp;if&nbsp;dimension&nbsp;0&nbsp;refers&nbsp;to&nbsp;the<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unlimited&nbsp;dimension)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shape()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;lengths&nbsp;of&nbsp;the&nbsp;variable&nbsp;dimensions<br>
 &nbsp;<br>
@@ -1128,7 +1161,12 @@ the&nbsp;contents&nbsp;of&nbsp;those&nbsp;dictionaries.<br>
 </font></dt><dd>
 <dl>
 <dt><font face="helvetica, arial"><a href="pycdf.pycdf.html#CDF">CDF</a>
-</font></dt><dt><font face="helvetica, arial"><a href="pycdf.pycdf.html#CDFAttr">CDFAttr</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="pycdf.pycdf.html#CDFMF">CDFMF</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="pycdf.pycdf.html#CDFAttr">CDFAttr</a>
 </font></dt><dt><font face="helvetica, arial"><a href="pycdf.pycdf.html#CDFDim">CDFDim</a>
 </font></dt><dt><font face="helvetica, arial"><a href="pycdf.pycdf.html#CDFVar">CDFVar</a>
 </font></dt><dt><font face="helvetica, arial"><a href="pycdf.pycdf.html#NC">NC</a>
@@ -1281,8 +1319,9 @@ opening&nbsp;the&nbsp;netCDF&nbsp;file.<br>
 &nbsp;<br>
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
 
-<dl><dt><a name="CDF-close"><strong>close</strong></a>(self)</dt><dd><tt>Close&nbsp;the&nbsp;dataset.&nbsp;This&nbsp;call&nbsp;is&nbsp;optional,&nbsp;since&nbsp;the&nbsp;dataset&nbsp;is&nbsp;automatically<br>
-closed&nbsp;when&nbsp;its&nbsp;instance&nbsp;variable&nbsp;goes&nbsp;out&nbsp;of&nbsp;scope&nbsp;or&nbsp;is&nbsp;reassigned.&nbsp;<br>
+<dl><dt><a name="CDF-close"><strong>close</strong></a>(self)</dt><dd><tt>Close&nbsp;the&nbsp;dataset.&nbsp;This&nbsp;call&nbsp;is&nbsp;optional,&nbsp;since&nbsp;the&nbsp;dataset&nbsp;is<br>
+automatically&nbsp;closed&nbsp;when&nbsp;its&nbsp;instance&nbsp;variable&nbsp;goes&nbsp;out&nbsp;of&nbsp;scope<br>
+or&nbsp;is&nbsp;reassigned.&nbsp;<br>
 &nbsp;<br>
 Args:<br>
 &nbsp;&nbsp;no&nbsp;argument<br>
@@ -1454,6 +1493,16 @@ Returns:<br>
 &nbsp;&nbsp;id&nbsp;of&nbsp;the&nbsp;unlimited&nbsp;dimension,&nbsp;or&nbsp;-1&nbsp;if&nbsp;none<br>
 &nbsp;<br>
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_inq_unlimdim</tt></dd></dl>
+
+<dl><dt><a name="CDF-inq_unlimlen"><strong>inq_unlimlen</strong></a>(self)</dt><dd><tt>Return&nbsp;he&nbsp;current&nbsp;length&nbsp;of&nbsp;the&nbsp;dataset&nbsp;unlimited&nbsp;dimension.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;current&nbsp;length&nbsp;of&nbsp;the&nbsp;dataset&nbsp;unlimited&nbsp;dimension,&nbsp;or&nbsp;-1<br>
+&nbsp;&nbsp;if&nbsp;no&nbsp;unlimited&nbsp;dimension&nbsp;has&nbsp;been&nbsp;defined.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;none</tt></dd></dl>
 
 <dl><dt><a name="CDF-inq_varid"><strong>inq_varid</strong></a>(self, name)</dt><dd><tt>Get&nbsp;a&nbsp;variable&nbsp;instance&nbsp;given&nbsp;its&nbsp;name.<br>
 Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
@@ -1717,6 +1766,16 @@ Returns:<br>
 &nbsp;<br>
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_inq_dim</tt></dd></dl>
 
+<dl><dt><a name="CDFDim-inq_id"><strong>inq_id</strong></a>(self)</dt><dd><tt>Obtain&nbsp;the&nbsp;id&nbsp;of&nbsp;the&nbsp;dimension&nbsp;instance.<br>
+Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;dimension&nbsp;id&nbsp;(integer)<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;none</tt></dd></dl>
+
 <dl><dt><a name="CDFDim-inq_len"><strong>inq_len</strong></a>(self)</dt><dd><tt>Obtain&nbsp;the&nbsp;length&nbsp;of&nbsp;the&nbsp;dimension&nbsp;instance.<br>
 Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
 &nbsp;<br>
@@ -1771,6 +1830,353 @@ Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception<
 <dl><dt><a name="CDFError-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
 
 <dl><dt><a name="CDFError-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CDFMF">class <strong>CDFMF</strong></a>(<a href="pycdf.pycdf.html#CDF">CDF</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>#&nbsp;Classes&nbsp;<a href="#CDFMF">CDFMF</a>&nbsp;and&nbsp;CDFMFVar&nbsp;allow&nbsp;handling&nbsp;a&nbsp;multi-file&nbsp;dataset.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="pycdf.pycdf.html#CDFMF">CDFMF</a></dd>
+<dd><a href="pycdf.pycdf.html#CDF">CDF</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="CDFMF-__init__"><strong>__init__</strong></a>(self, cdfFiles)</dt><dd><tt>Open&nbsp;a&nbsp;<a href="#CDF">CDF</a>&nbsp;dataset&nbsp;spanning&nbsp;multiple&nbsp;files,<br>
+making&nbsp;it&nbsp;look&nbsp;as&nbsp;if&nbsp;it&nbsp;was&nbsp;a&nbsp;single&nbsp;file.<br>
+&nbsp;<br>
+Arguments:<br>
+&nbsp;&nbsp;cdfFiles&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sequence&nbsp;of&nbsp;<a href="#CDF">CDF</a>&nbsp;files;&nbsp;the&nbsp;first&nbsp;one&nbsp;will&nbsp;become&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"master"&nbsp;file,&nbsp;defining&nbsp;all&nbsp;the&nbsp;record&nbsp;variables&nbsp;which&nbsp;may<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;span&nbsp;subsequent&nbsp;files<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+The&nbsp;files&nbsp;are&nbsp;always&nbsp;opened&nbsp;in&nbsp;read-only&nbsp;mode.</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-__setattr__"><strong>__setattr__</strong></a>(self, name, value)</dt><dd><tt>Intercept&nbsp;certain&nbsp;attributes&nbsp;proper&nbsp;to&nbsp;<a href="#CDFMF">CDFMF</a>&nbsp;class,<br>
+which&nbsp;should&nbsp;not&nbsp;be&nbsp;written&nbsp;to&nbsp;the&nbsp;underlying&nbsp;<a href="#CDF">CDF</a>&nbsp;data&nbsp;set.</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-dim"><strong>dim</strong></a>(self, name_num)</dt><dd><tt>Return&nbsp;an&nbsp;dimension&nbsp;instance&nbsp;from&nbsp;a&nbsp;<a href="#CDFMF">CDFMF</a>&nbsp;instance.</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-inq_unlimlen"><strong>inq_unlimlen</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;current&nbsp;length&nbsp;of&nbsp;the&nbsp;unlimited&nbsp;dimension,<br>
+summed&nbsp;over&nbsp;all&nbsp;the&nbsp;datasets&nbsp;of&nbsp;the&nbsp;<a href="#CDFMF">CDFMF</a>&nbsp;instance.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;Total&nbsp;length&nbsp;of&nbsp;the&nbsp;record&nbsp;variable.</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-var"><strong>var</strong></a>(self, name_num)</dt><dd><tt>Return&nbsp;an&nbsp;instance&nbsp;of&nbsp;a&nbsp;var&nbsp;from&nbsp;a&nbsp;<a href="#CDFMF">CDFMF</a>&nbsp;instance.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="pycdf.pycdf.html#CDF">CDF</a>:<br>
+<dl><dt><a name="CDFMF-__del__"><strong>__del__</strong></a>(self)</dt><dd><tt>Close&nbsp;the&nbsp;associated&nbsp;dataset&nbsp;when&nbsp;a&nbsp;<a href="#CDF">CDF</a>&nbsp;instance&nbsp;is&nbsp;deleted,<br>
+if&nbsp;this&nbsp;has&nbsp;not&nbsp;already&nbsp;been&nbsp;done.</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-__getattr__"><strong>__getattr__</strong></a>(self, name)</dt></dl>
+
+<dl><dt><a name="CDFMF-abort"><strong>abort</strong></a>(self)</dt><dd><tt>Back&nbsp;out&nbsp;of&nbsp;recent&nbsp;definitions&nbsp;to&nbsp;the&nbsp;dataset.&nbsp;Dataset&nbsp;is&nbsp;closed<br>
+at&nbsp;exit.<br>
+Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_abort</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-attr"><strong>attr</strong></a>(self, name_id)</dt><dd><tt>Obtain&nbsp;an&nbsp;<a href="#CDFAttr">CDFAttr</a>&nbsp;instance&nbsp;for&nbsp;a&nbsp;global&nbsp;attribute,<br>
+given&nbsp;its&nbsp;name&nbsp;or&nbsp;its&nbsp;index&nbsp;number.&nbsp;The&nbsp;attribute&nbsp;may&nbsp;or&nbsp;may<br>
+not&nbsp;exist.<br>
+Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name_id&nbsp;&nbsp;&nbsp;If&nbsp;a&nbsp;string&nbsp;argument&nbsp;is&nbsp;used,&nbsp;it&nbsp;is&nbsp;interpreted&nbsp;as&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attribute&nbsp;name,&nbsp;which&nbsp;may&nbsp;be&nbsp;non-existent.&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Otherwise,&nbsp;it&nbsp;must&nbsp;be&nbsp;a&nbsp;non&nbsp;negative&nbsp;integer&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;giving&nbsp;the&nbsp;index&nbsp;number&nbsp;of&nbsp;an&nbsp;existing&nbsp;attribute.<br>
+Returns:<br>
+&nbsp;&nbsp;<a href="#CDFAttr">CDFAttr</a>&nbsp;instance<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;None</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-attributes"><strong>attributes</strong></a>(self, full<font color="#909090">=0</font>)</dt><dd><tt>Return&nbsp;a&nbsp;dictionnary&nbsp;describing&nbsp;every&nbsp;global<br>
+attribute&nbsp;in&nbsp;the&nbsp;dataset.<br>
+Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;full&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true&nbsp;to&nbsp;get&nbsp;complete&nbsp;info&nbsp;about&nbsp;each&nbsp;attribute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;false&nbsp;to&nbsp;report&nbsp;only&nbsp;each&nbsp;attribute&nbsp;value<br>
+Returns:<br>
+&nbsp;&nbsp;Empty&nbsp;dictionnary&nbsp;if&nbsp;no&nbsp;global&nbsp;attribute&nbsp;defined<br>
+&nbsp;&nbsp;Otherwise,&nbsp;dictionnary&nbsp;where&nbsp;each&nbsp;key&nbsp;is&nbsp;the&nbsp;name&nbsp;of&nbsp;a<br>
+&nbsp;&nbsp;global&nbsp;attribute.&nbsp;If&nbsp;parameter&nbsp;`full'&nbsp;is&nbsp;false,<br>
+&nbsp;&nbsp;key&nbsp;value&nbsp;is&nbsp;the&nbsp;attribute&nbsp;value.&nbsp;If&nbsp;`full'&nbsp;is&nbsp;true,<br>
+&nbsp;&nbsp;key&nbsp;value&nbsp;is&nbsp;a&nbsp;tuple&nbsp;with&nbsp;the&nbsp;following&nbsp;elements:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;attribute&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;attribute&nbsp;index&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;attribute&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;attribute&nbsp;length<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-automode"><strong>automode</strong></a>(self, auto<font color="#909090">=1</font>)</dt><dd><tt>Activate&nbsp;/&nbsp;deactivate&nbsp;the&nbsp;transparent&nbsp;setting&nbsp;of&nbsp;the&nbsp;dataset<br>
+define&nbsp;and&nbsp;data&nbsp;mode.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;auto&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;true&nbsp;(!=&nbsp;0),&nbsp;the&nbsp;module&nbsp;will&nbsp;transparently&nbsp;set&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;define&nbsp;or&nbsp;data&nbsp;mode,&nbsp;depending&nbsp;on&nbsp;the&nbsp;call&nbsp;to&nbsp;be&nbsp;made,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;thus&nbsp;relieving&nbsp;the&nbsp;programmer&nbsp;of&nbsp;the&nbsp;responsability<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;set&nbsp;the&nbsp;dataset&nbsp;mode&nbsp;with&nbsp;calls&nbsp;to&nbsp;<a href="#CDFMF-redef">redef</a>()/<a href="#CDFMF-enddef">enddef</a>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methods.&nbsp;If&nbsp;false&nbsp;(==&nbsp;0),&nbsp;dataset&nbsp;mode&nbsp;must&nbsp;be&nbsp;set<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;explicitly.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+The&nbsp;<a href="#CDF">CDF</a>()&nbsp;constructor&nbsp;always&nbsp;sets&nbsp;the&nbsp;auto&nbsp;flag&nbsp;to&nbsp;false&nbsp;when<br>
+opening&nbsp;the&nbsp;netCDF&nbsp;file.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-close"><strong>close</strong></a>(self)</dt><dd><tt>Close&nbsp;the&nbsp;dataset.&nbsp;This&nbsp;call&nbsp;is&nbsp;optional,&nbsp;since&nbsp;the&nbsp;dataset&nbsp;is<br>
+automatically&nbsp;closed&nbsp;when&nbsp;its&nbsp;instance&nbsp;variable&nbsp;goes&nbsp;out&nbsp;of&nbsp;scope<br>
+or&nbsp;is&nbsp;reassigned.&nbsp;<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;&nbsp;nc_close</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-datamode"><strong>datamode</strong></a>(self)</dt><dd><tt>Put&nbsp;the&nbsp;dataset&nbsp;in&nbsp;data&nbsp;mode,&nbsp;ignoring&nbsp;possible&nbsp;error&nbsp;if&nbsp;already<br>
+in&nbsp;data&nbsp;mode.<br>
+&nbsp;<br>
+Args:&nbsp;<br>
+&nbsp;&nbsp;no&nbsp;argument&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-def_dim"><strong>def_dim</strong></a>(self, name, length)</dt><dd><tt>Add&nbsp;a&nbsp;new&nbsp;dimension&nbsp;to&nbsp;the&nbsp;dataset.<br>
+Dataset&nbsp;mode:&nbsp;define&nbsp;mode.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimension&nbsp;name<br>
+&nbsp;&nbsp;length&nbsp;&nbsp;&nbsp;&nbsp;dimension&nbsp;length;&nbsp;use&nbsp;<a href="#NC">NC</a>.UNLIMITED&nbsp;to&nbsp;create<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;unlimited&nbsp;dimension&nbsp;(only&nbsp;one&nbsp;such&nbsp;dimension<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;allowed&nbsp;in&nbsp;a&nbsp;dataset)<br>
+Returns:<br>
+&nbsp;&nbsp;<a href="#CDFDim">CDFDim</a>&nbsp;class&nbsp;instance<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_def_dim</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-def_var"><strong>def_var</strong></a>(self, name, xtype, dimids<font color="#909090">=[]</font>)</dt><dd><tt>Add&nbsp;a&nbsp;new&nbsp;variable&nbsp;to&nbsp;the&nbsp;dataset.<br>
+Dataset&nbsp;mode:&nbsp;define&nbsp;mode.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;variable&nbsp;name<br>
+&nbsp;&nbsp;xtype&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;variable&nbsp;type&nbsp;(one&nbsp;of&nbsp;<a href="#NC">NC</a>.BYTE,&nbsp;<a href="#NC">NC</a>.CHAR,&nbsp;<a href="#NC">NC</a>.SHORT,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.INT,&nbsp;<a href="#NC">NC</a>.FLOAT,&nbsp;<a href="#NC">NC</a>.DOUBLE)<br>
+&nbsp;&nbsp;dimids&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sequence&nbsp;defining&nbsp;the&nbsp;variable&nbsp;dimensions;&nbsp;can&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;mixture&nbsp;of&nbsp;<a href="#CDFDim">CDFDim</a>&nbsp;instances,&nbsp;dimension&nbsp;index<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numbers,&nbsp;or&nbsp;dimension&nbsp;names;&nbsp;omit&nbsp;this&nbsp;argument&nbsp;or<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;specify&nbsp;an&nbsp;empty&nbsp;sequence&nbsp;to&nbsp;define&nbsp;a&nbsp;scalar<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;variable;&nbsp;for&nbsp;a&nbsp;one-dimensional&nbsp;variable,&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimension&nbsp;can&nbsp;be&nbsp;specified&nbsp;directly&nbsp;and&nbsp;does&nbsp;not<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;need&nbsp;to&nbsp;be&nbsp;entered&nbsp;as&nbsp;a&nbsp;sequence;&nbsp;for&nbsp;a&nbsp;record&nbsp;variable<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(eg&nbsp;using&nbsp;an&nbsp;unlimited&nbsp;dimension),&nbsp;the&nbsp;unlimited<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimension&nbsp;must&nbsp;come&nbsp;first<br>
+Returns:<br>
+&nbsp;&nbsp;<a href="#CDFVar">CDFVar</a>&nbsp;instance&nbsp;identifying&nbsp;the&nbsp;variable<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_def_var</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-definemode"><strong>definemode</strong></a>(self)</dt><dd><tt>Put&nbsp;the&nbsp;dataset&nbsp;in&nbsp;define&nbsp;mode,&nbsp;ignoring&nbsp;possible&nbsp;error&nbsp;if<br>
+already&nbsp;in&nbsp;define&nbsp;mode.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-dimensions"><strong>dimensions</strong></a>(self, full<font color="#909090">=0</font>)</dt><dd><tt>Return&nbsp;a&nbsp;dictionnary&nbsp;holding&nbsp;the&nbsp;names&nbsp;and&nbsp;lengths&nbsp;of&nbsp;every<br>
+dimension&nbsp;defined&nbsp;in&nbsp;the&nbsp;dataset.<br>
+Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;full&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true&nbsp;to&nbsp;get&nbsp;complete&nbsp;info&nbsp;about&nbsp;each&nbsp;dimension<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;false&nbsp;to&nbsp;report&nbsp;only&nbsp;each&nbsp;dimension&nbsp;length<br>
+Returns:<br>
+&nbsp;&nbsp;Empty&nbsp;dictionnary&nbsp;if&nbsp;no&nbsp;dimension&nbsp;defined<br>
+&nbsp;&nbsp;Otherwise,&nbsp;dictionnary&nbsp;where&nbsp;each&nbsp;key&nbsp;is&nbsp;a&nbsp;dimension&nbsp;name.<br>
+&nbsp;&nbsp;If&nbsp;parameter&nbsp;`full'&nbsp;is&nbsp;false,&nbsp;key&nbsp;value&nbsp;is&nbsp;the&nbsp;dimension<br>
+&nbsp;&nbsp;length.&nbsp;If&nbsp;`full'&nbsp;is&nbsp;true,&nbsp;key&nbsp;value&nbsp;is&nbsp;a&nbsp;tuple&nbsp;with&nbsp;the<br>
+&nbsp;&nbsp;following&nbsp;elements:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;dimension&nbsp;length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;dimension&nbsp;index&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;1&nbsp;if&nbsp;the&nbsp;dimension&nbsp;is&nbsp;unlimited,&nbsp;0&nbsp;otherwise<br>
+&nbsp;<br>
+&nbsp;&nbsp;Note&nbsp;that&nbsp;for&nbsp;the&nbsp;unlimited&nbsp;dimension,&nbsp;the&nbsp;reported&nbsp;length<br>
+&nbsp;&nbsp;is&nbsp;the&nbsp;current&nbsp;length&nbsp;of&nbsp;the&nbsp;dimension.<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-enddef"><strong>enddef</strong></a>(self)</dt><dd><tt>Leave&nbsp;define&nbsp;mode&nbsp;and&nbsp;enter&nbsp;data&nbsp;mode.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;none<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_enddef</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-inq"><strong>inq</strong></a>(self)</dt><dd><tt>Return&nbsp;info&nbsp;about&nbsp;the&nbsp;dataset.<br>
+Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;4-element&nbsp;tuple&nbsp;holding:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-number&nbsp;of&nbsp;dimensions<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-number&nbsp;of&nbsp;variables<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-number&nbsp;of&nbsp;global&nbsp;attributes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-id&nbsp;of&nbsp;the&nbsp;unlimited&nbsp;dimension,&nbsp;or&nbsp;-1&nbsp;if&nbsp;none<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_inq</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-inq_dimid"><strong>inq_dimid</strong></a>(self, name)</dt><dd><tt>Get&nbsp;a&nbsp;dimension&nbsp;instance&nbsp;given&nbsp;its&nbsp;name.<br>
+Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;dimension&nbsp;name&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;<a href="#CDFDim">CDFDim</a>&nbsp;instance&nbsp;representing&nbsp;the&nbsp;given&nbsp;dimension<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_inq_dimid</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-inq_natts"><strong>inq_natts</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;global&nbsp;attributes&nbsp;in&nbsp;the&nbsp;dataset.<br>
+Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;number&nbsp;of&nbsp;global&nbsp;attributes<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_inq_natts</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-inq_ndims"><strong>inq_ndims</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;dimensions&nbsp;in&nbsp;the&nbsp;dataset.<br>
+Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;number&nbsp;of&nbsp;dimensions<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_inq_ndims</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-inq_nvars"><strong>inq_nvars</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;variables&nbsp;in&nbsp;the&nbsp;dataset.<br>
+Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;number&nbsp;of&nbsp;variables<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_inq_nvars</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-inq_unlimdim"><strong>inq_unlimdim</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;id&nbsp;of&nbsp;the&nbsp;unlimited&nbsp;dimension&nbsp;in&nbsp;the&nbsp;dataset.<br>
+Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;id&nbsp;of&nbsp;the&nbsp;unlimited&nbsp;dimension,&nbsp;or&nbsp;-1&nbsp;if&nbsp;none<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_inq_unlimdim</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-inq_varid"><strong>inq_varid</strong></a>(self, name)</dt><dd><tt>Get&nbsp;a&nbsp;variable&nbsp;instance&nbsp;given&nbsp;its&nbsp;name.<br>
+Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;variable&nbsp;name<br>
+Returns:<br>
+&nbsp;&nbsp;<a href="#CDFVar">CDFVar</a>&nbsp;instance&nbsp;identifying&nbsp;the&nbsp;variable<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_inq_varid</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-redef"><strong>redef</strong></a>(self)</dt><dd><tt>Put&nbsp;netCDF&nbsp;dataset&nbsp;into&nbsp;define&nbsp;mode.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_redef</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-set_fill"><strong>set_fill</strong></a>(self, fillmode)</dt><dd><tt>Set&nbsp;fill&nbsp;mode&nbsp;for&nbsp;writes&nbsp;to&nbsp;the&nbsp;dataset.<br>
+Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;fillmode&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.FILL&nbsp;&nbsp;&nbsp;prefill&nbsp;non-record&nbsp;variables&nbsp;with&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fill&nbsp;values&nbsp;(default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NC">NC</a>.NOFILL&nbsp;data&nbsp;not&nbsp;explicitly&nbsp;initialized&nbsp;is&nbsp;left&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;undetermined&nbsp;state<br>
+Returns:<br>
+&nbsp;&nbsp;previous&nbsp;fillmode<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_set_fill<br>
+&nbsp;<br>
+The&nbsp;value&nbsp;used&nbsp;as&nbsp;the&nbsp;fill&nbsp;value&nbsp;is&nbsp;the&nbsp;one&nbsp;set&nbsp;using&nbsp;the&nbsp;variable<br>
+'_FillValue'&nbsp;attribute,&nbsp;or&nbsp;a&nbsp;default&nbsp;implementation&nbsp;dependent&nbsp;value.</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-sync"><strong>sync</strong></a>(self)</dt><dd><tt>Synchronize&nbsp;the&nbsp;dataset&nbsp;to&nbsp;disk.<br>
+Dataset&nbsp;mode:&nbsp;data&nbsp;mode.&nbsp;<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;None<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_sync</tt></dd></dl>
+
+<dl><dt><a name="CDFMF-variables"><strong>variables</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dictionnary&nbsp;describing&nbsp;all&nbsp;the&nbsp;dataset&nbsp;variables.<br>
+Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;Empty&nbsp;dictionnary&nbsp;if&nbsp;no&nbsp;variable&nbsp;is&nbsp;defined.<br>
+&nbsp;&nbsp;Otherwise,&nbsp;dictionnary&nbsp;whose&nbsp;keys&nbsp;are&nbsp;the&nbsp;dataset&nbsp;variable&nbsp;names,<br>
+&nbsp;&nbsp;and&nbsp;values&nbsp;are&nbsp;tuples&nbsp;describing&nbsp;the&nbsp;corresponding&nbsp;variables.<br>
+&nbsp;&nbsp;Each&nbsp;tuple&nbsp;holds&nbsp;the&nbsp;following&nbsp;elements&nbsp;in&nbsp;order:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-tuple&nbsp;holding&nbsp;the&nbsp;names&nbsp;of&nbsp;the&nbsp;dimensions&nbsp;defining&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;variable&nbsp;coordinate&nbsp;axes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-tuple&nbsp;holding&nbsp;the&nbsp;variable&nbsp;shape&nbsp;(dimension&nbsp;lengths);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;a&nbsp;dimension&nbsp;is&nbsp;unlimited,&nbsp;the&nbsp;reported&nbsp;length&nbsp;corresponds<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;the&nbsp;dimension&nbsp;current&nbsp;length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-variable&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-variable&nbsp;index&nbsp;number<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="pycdf.pycdf.html#CDF">CDF</a>:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'CDF' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -1844,7 +2250,8 @@ Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
 Args:<br>
 &nbsp;&nbsp;no&nbsp;argument<br>
 Returns:<br>
-&nbsp;&nbsp;tuple&nbsp;storing&nbsp;the&nbsp;names&nbsp;of&nbsp;the&nbsp;variable&nbsp;dimensions<br>
+&nbsp;&nbsp;tuple&nbsp;storing&nbsp;the&nbsp;names&nbsp;of&nbsp;the&nbsp;variable&nbsp;dimensions;&nbsp;an&nbsp;empty&nbsp;tuple&nbsp;is&nbsp;returned<br>
+&nbsp;&nbsp;in&nbsp;the&nbsp;case&nbsp;of&nbsp;a&nbsp;scalar&nbsp;variable<br>
 &nbsp;<br>
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
 
@@ -1907,7 +2314,8 @@ Returns:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;-variable&nbsp;name<br>
 &nbsp;&nbsp;&nbsp;&nbsp;-variable&nbsp;type<br>
 &nbsp;&nbsp;&nbsp;&nbsp;-sequence&nbsp;holding&nbsp;the&nbsp;index&nbsp;numbers&nbsp;of&nbsp;the&nbsp;dimensions<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;associated&nbsp;with&nbsp;the&nbsp;variable<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;associated&nbsp;with&nbsp;the&nbsp;variable;&nbsp;an&nbsp;empty&nbsp;sequence&nbsp;is&nbsp;returned&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;case&nbsp;of&nbsp;a&nbsp;scalar&nbsp;variable<br>
 &nbsp;&nbsp;&nbsp;&nbsp;-number&nbsp;of&nbsp;attributes&nbsp;associated&nbsp;with&nbsp;the&nbsp;variable<br>
 &nbsp;<br>
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_inq_var</tt></dd></dl>
@@ -1919,9 +2327,20 @@ Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.&nbsp;&nbsp;&nbsp;<br>
 Args:<br>
 &nbsp;&nbsp;no&nbsp;argument<br>
 Returns:<br>
-&nbsp;&nbsp;sequence&nbsp;of&nbsp;dimension&nbsp;index&nbsp;numbers<br>
+&nbsp;&nbsp;sequence&nbsp;of&nbsp;dimension&nbsp;index&nbsp;numbers;&nbsp;an&nbsp;empty&nbsp;sequence&nbsp;is&nbsp;returned&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;case&nbsp;of&nbsp;a&nbsp;scalar&nbsp;variable<br>
 &nbsp;<br>
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_inq_vardimid</tt></dd></dl>
+
+<dl><dt><a name="CDFVar-inq_id"><strong>inq_id</strong></a>(self)</dt><dd><tt>Get&nbsp;the&nbsp;variable&nbsp;index&nbsp;number.<br>
+Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;no&nbsp;argument<br>
+Returns:<br>
+&nbsp;&nbsp;variable&nbsp;index&nbsp;number<br>
+&nbsp;<br>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;none</tt></dd></dl>
 
 <dl><dt><a name="CDFVar-inq_name"><strong>inq_name</strong></a>(self)</dt><dd><tt>Get&nbsp;the&nbsp;variable&nbsp;name.<br>
 Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
@@ -1949,7 +2368,7 @@ Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
 Args:<br>
 &nbsp;&nbsp;no&nbsp;argument<br>
 Returns:<br>
-&nbsp;&nbsp;number&nbsp;of&nbsp;dimensions<br>
+&nbsp;&nbsp;number&nbsp;of&nbsp;dimensions;&nbsp;0&nbsp;indicates&nbsp;a&nbsp;scalar&nbsp;variable<br>
 &nbsp;<br>
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_inq_varndims</tt></dd></dl>
 
@@ -1965,14 +2384,16 @@ Returns:<br>
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_inq_vartype</tt></dd></dl>
 
 <dl><dt><a name="CDFVar-isrecord"><strong>isrecord</strong></a>(self)</dt><dd><tt>Determines&nbsp;whether&nbsp;the&nbsp;variable&nbsp;is&nbsp;a&nbsp;record&nbsp;variable,&nbsp;eg<br>
-its&nbsp;first&nbsp;dimension&nbsp;is&nbsp;that&nbsp;of&nbsp;the&nbsp;unlimited&nbsp;dimension.<br>
+its&nbsp;first&nbsp;dimension&nbsp;refers&nbsp;to&nbsp;the&nbsp;unlimited&nbsp;dimension.<br>
 &nbsp;<br>
 Args:<br>
 &nbsp;&nbsp;no&nbsp;argument<br>
 Returns:<br>
 &nbsp;&nbsp;1&nbsp;if&nbsp;the&nbsp;variable&nbsp;is&nbsp;a&nbsp;record&nbsp;variable,&nbsp;0&nbsp;if&nbsp;not<br>
 &nbsp;<br>
-C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;None</tt></dd></dl>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;was&nbsp;borrowed&nbsp;from&nbsp;HDF4&nbsp;library.</tt></dd></dl>
 
 <dl><dt><a name="CDFVar-put"><strong>put</strong></a>(self, data, start<font color="#909090">=None</font>, count<font color="#909090">=None</font>, stride<font color="#909090">=None</font>, mapv<font color="#909090">=None</font>, ubyte<font color="#909090">=0</font>)</dt><dd><tt>Write&nbsp;data&nbsp;to&nbsp;the&nbsp;netCDF&nbsp;variable.<br>
 Dataset&nbsp;mode:&nbsp;data&nbsp;mode.<br>
@@ -2047,7 +2468,8 @@ Args:<br>
 &nbsp;&nbsp;no&nbsp;argument<br>
 Returns:<br>
 &nbsp;&nbsp;tuple&nbsp;storing&nbsp;the&nbsp;variable&nbsp;shape,&nbsp;i.e.&nbsp;the&nbsp;length&nbsp;of&nbsp;the<br>
-&nbsp;&nbsp;variable&nbsp;dimensions<br>
+&nbsp;&nbsp;variable&nbsp;dimensions;&nbsp;an&nbsp;empty&nbsp;tup;e&nbsp;is&nbsp;returned&nbsp;in&nbsp;the&nbsp;case&nbsp;of&nbsp;a<br>
+&nbsp;&nbsp;scalar&nbsp;variable<br>
 &nbsp;<br>
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;no&nbsp;equivalent</tt></dd></dl>
 
@@ -2153,5 +2575,5 @@ C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_strerror</tt></dd></dl>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>__all__</strong> = ['CDF', 'CDFAttr', 'CDFDim', 'CDFVar', 'NC', 'CDFError', 'pycdfVersion', 'pycdfArrayPkg', 'inq_libvers', 'strerror']</td></tr></table>
+<td width="100%"><strong>__all__</strong> = ['CDF', 'CDFAttr', 'CDFDim', 'CDFVar', 'CDFMF', 'NC', 'CDFError', 'pycdfVersion', 'pycdfArrayPkg', 'inq_libvers', 'strerror']</td></tr></table>
 </body></html>
