@@ -1,6 +1,9 @@
-# $Id: CHANGES,v 1.9 2006-01-09 04:16:26 gosselin_a Exp $
+# $Id: CHANGES,v 1.10 2006-02-15 03:13:58 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.9  2006/01/09 04:16:26  gosselin_a
+# Preparing new release 0.6-2 .
+#
 # Revision 1.8  2006/01/09 04:12:15  gosselin_a
 # New method CDF.inq_unlimlen().
 #
@@ -32,12 +35,38 @@ List of changes to 'pycdf' since the initial release.
 
 
 pycdf-0.6-2
- Date: 2006-01-???
+ Date: 2006-02-14
 
-    New method CDF.inq_unlimlen().
-      Calling method inq_unlimlen() of a CDF instance returns the current
-      length of the dataset unlimited dimension, or -1 if no unlimited
-      dimension has been defined in the dataset.
+    New features.
+
+      New class CDFMF
+        Class CDFMF is a subclass of CDF, and allows joining a sequence of
+        CDF files by concatenating their record variables together.
+        The set of files can then be manipulated as a whole like an ordinary 
+        CDF file. Thanks to Robert Hetland for suggesting this nice 
+        addition to pycdf.
+
+      New method CDF.inq_unlimlen()
+        Calling method inq_unlimlen() of a CDF instance returns the current
+        length of the dataset unlimited dimension, or -1 if no unlimited
+        dimension has been defined in the dataset.
+
+      New method CDFDim.inq_id()
+        Method inq_id() of a dimension instance returns the dimension index 
+        number.
+
+      New method CDFVar.inq_id()
+        Method inq_id() of a variable instance returns the variable index 
+        number.
+
+    Documentation additions
+      New section "Quirks" to document some not so obvious problems with netcdf 
+      and pycdf. Thanks to Ralph Gommers for prompting me to start this
+      section with comments about the _FillValue attribute.
+
+    Bug fixes.
+      Scalar variables were sometimes incorrectly handled, leading to index error
+      exceptions. Thanks to Rob Hetland for stimulating me to find this bug.
 
 pycdf-0.6-1
  Date: 2006-01-02

@@ -1,6 +1,9 @@
-# $Id: pycdf.py,v 1.9 2006-01-09 04:12:15 gosselin_a Exp $
+# $Id: pycdf.py,v 1.10 2006-02-15 03:13:59 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.9  2006/01/09 04:12:15  gosselin_a
+# New method CDF.inq_unlimlen().
+#
 # Revision 1.8  2006/01/03 23:14:04  gosselin_a
 # Fixed a bug with the unlimited dimension inside __buildStartCountStride().
 # Added CDFVar.isrecord() method.
@@ -48,8 +51,8 @@
 """Python interface to the Unidata netCDF library
 (see: www.unidata.ucar.edu/packages/netcdf).
 
-Version: 0.6-1
-Date:    Jan 3 2006   
+Version: 0.6-2
+Date:    Feb 14 2006   
 
   
 Table of contents
@@ -68,6 +71,7 @@ Table of contents
   Working with scalar variables
   Working with the unlimited dimension
   Open issues and current limitations : scipy_core
+  Quirks
   Functions summary
   Classes summary
   Examples
@@ -102,7 +106,8 @@ pycdf key features are as follows.
      -netCDF attributes can be read/written like ordinary python class
       attributes
      -netCDF variables can be read/written like ordinary python lists using
-      multidimensional indices and so-called "extended slice syntax", with
+      multidimensionaldef variable
+      indices and so-called "extended slice syntax", with
       strides allowed
    See "High level attribute access" and "High level variable access"
    sections for details.
@@ -150,7 +155,7 @@ to install pycdf. Thus :
 should usually work even if pycdf has been installed using numarray. In the
 rest of this documentation, when one reads "from Numeric import ...", it
 should be assumed that "from numarray import ..." could also be used,
-unless explicitly stated otherwise.
+uCDFMFVarnless explicitly stated otherwise.
 
 It is however deemed safer to import the same array package as the one
 used when installing pycdf. To obtain the name of the package on which the
@@ -625,6 +630,9 @@ variables using slicing constructs. We can thus write:
    >>> temp[:] = 12                      # equivalent to temp.put(12)
    >>> print temp[:]                     # equivalent to "print temp.get()"
 
+For a scalar variable 'v', the methods inquiring about the dimensions of 'v' will naturally
+return empty sequences, eg: dimensions(), inq(), inq_dimid(), shape(). Method
+inq_ndims() will return 0.
 
 Working with the unlimited dimension
 ------------------------------------
@@ -719,8 +727,26 @@ on those issues.
                Numeric and numarray coud be deprecated once scipy_core
                achieves a stable status (Numeric is said to have reached
                its last release ever). pycdf does not currently support
-               scipy_core, but wil certainly do in a not too far feature.
+               scipy_core, but wil certainly do in a not too far future.
 
+Quirks
+------
+
+_FillValue attribute
+
+  pycdf attaches no special significance to the _FillValue attribute, only the netcdf library
+  does. This can lead to the following nasty problem. If you write "v._FillValue = 0",
+  pycdf defines a new attribute and deduces its type from that of the right hand side value,
+  eg an integer type. However, if variable 'v' is defined as being of type real, then the
+  netcdf library (not pycdf!) will complain about a type mismatch when time comes to initialize
+  the variable with the fill value, and an exception will be thrown.
+
+  To solve the problem, initialize the fill value with a value whose type is explicitly
+  identical to that of the variable. For example, if variable 'v' is of type real, write
+  "v._FillValue = 0.0" instead of "v._FillValue = 0".
+
+  Also do not forget to set the fill value *before* assigning to the variable.
+  
 
 Functions summary
 -----------------
@@ -829,6 +855,7 @@ pycdf defines the following classes.
            methods:
              inquiry
                inq()      get the dimension name and length
+               inq_id()   get the dimension id
                inq_len()  get the dimension length
                inq_name() get the dimension name
 
@@ -864,6 +891,7 @@ pycdf defines the following classes.
                              numbers and number of attributes
                inq_dimid()   get the dimensions index numbers
                inq_name()    get the variable name
+               inq_id()      get the variable index number
                inq_natts()   get the variable number of attributes
                inq_ndims()   get the variable number of dimensions
                inq_type()    get the variable type
@@ -1117,7 +1145,7 @@ the contents of those dictionaries.
          
 """
 
-_VERSION = "0.6-1"
+_VERSION = "0.6-2"
 
 import os, os.path
 import sys
@@ -1133,7 +1161,7 @@ import pycdfext as _C
 # List of names we want to be imported by an "from pycdf import *"
 # statement
 
-__all__ = ['CDF', 'CDFAttr', 'CDFDim', 'CDFVar',
+__all__ = ['CDF', 'CDFAttr', 'CDFDim', 'CDFVar', 'CDFMF', 
            'NC',
            'CDFError',
            'pycdfVersion', 'pycdfArrayPkg',
@@ -1194,6 +1222,8 @@ def strerror(ncerr) :      # static method
     C library equivalent : nc_strerror
                                             """
     return _C.nc_strerror(ncerr)
+
+
 
 class NC(object):
     """This class holds constants defining data types and opening modes"""
@@ -2049,6 +2079,20 @@ class CDFDim(object):
         _checkCDFErr('inq_name', status)
         return name
 
+    def inq_id(self):
+        """Obtain the id of the dimension instance.
+        Dataset mode: does not matter.
+ 
+        Args:
+          no argument
+        Returns:
+          dimension id (integer)
+ 
+        C library equivalent : none
+                                                   """
+ 
+        return self._id
+
     def inq_len(self):
         """Obtain the length of the dimension instance.
         Dataset mode: does not matter.
@@ -2453,7 +2497,8 @@ class CDFVar(object):
             -variable name
             -variable type
             -sequence holding the index numbers of the dimensions
-             associated with the variable
+             associated with the variable; an empty sequence is returned in
+             the case of a scalar variable
             -number of attributes associated with the variable
  
         C library equivalent : nc_inq_var
@@ -2486,6 +2531,20 @@ class CDFVar(object):
         _checkCDFErr('inq_name', status)
         return name
 
+    def inq_id(self):
+        """Get the variable index number.
+        Dataset mode: does not matter.
+ 
+        Args:
+          no argument
+        Returns:
+          variable index number
+ 
+        C library equivalent : none
+                                               """
+ 
+        return self._id
+
     def inq_type(self):
         """Get the variable type.
         Dataset mode: does not matter.
@@ -2510,7 +2569,7 @@ class CDFVar(object):
         Args:
           no argument
         Returns:
-          number of dimensions
+          number of dimensions; 0 indicates a scalar variable
  
         C library equivalent : nc_inq_varndims
                                                   """
@@ -2527,7 +2586,8 @@ class CDFVar(object):
         Args:
           no argument
         Returns:
-          sequence of dimension index numbers
+          sequence of dimension index numbers; an empty sequence is returned in the
+          case of a scalar variable
  
         C library equivalent : nc_inq_vardimid
                                                   """
@@ -2574,7 +2634,10 @@ class CDFVar(object):
         This method was borrowed from HDF4 library.
                                                                   """
         
-        return self.inq_dimid()[0] == self._ncid.inq_unlimdim()
+        # Be carefull with a possible scalar variable.
+        return (self.inq_ndims() > 0 and
+                # Unlimited dimension always occupies first dimension.
+                self.inq_dimid()[0] == self._ncid.inq_unlimdim())
 
 
     def get_1(self, indices, ubyte=0):
@@ -2991,7 +3054,8 @@ class CDFVar(object):
         Args:
           no argument
         Returns:
-          tuple storing the names of the variable dimensions
+          tuple storing the names of the variable dimensions; an empty tuple is returned
+          in the case of a scalar variable
 
         C library equivalent : no equivalent
                                                   """
@@ -3016,7 +3080,8 @@ class CDFVar(object):
           no argument
         Returns:
           tuple storing the variable shape, i.e. the length of the
-          variable dimensions
+          variable dimensions; an empty tup;e is returned in the case of a
+          scalar variable
 
         C library equivalent : no equivalent
                                                   """
@@ -3372,6 +3437,318 @@ class CDFAttr(object):
         self._ncid = None
         self._varid = None
         self._name = None
+
+
+# Classes CDFMF and CDFMFVar allow handling a multi-file dataset.
+class CDFMF(CDF): 
+
+    def __init__(self, cdfFiles):
+        """Open a CDF dataset spanning multiple files,
+        making it look as if it was a single file.
+
+        Arguments:
+          cdfFiles      sequence of CDF files; the first one will become the
+                        "master" file, defining all the record variables which may
+                        span subsequent files
+
+        Returns:
+          None
+
+        The files are always opened in read-only mode.
+                                                        """
+
+        # Open the master file in the base class, so that the CDFMF instance
+        # can be used like a CDF instance.
+        master = cdfFiles[0]
+        CDF.__init__(self, master)
+
+        # Open the master again, this time as a classic CDF instance. This will avoid
+        # calling methods of the CDFMF subclass when querying the master file.
+        cdfm = CDF(master)
+
+        # Make sure the master defines an unlimited dimension.
+        unlimDimId = cdfm.inq_unlimdim()
+        if unlimDimId < 0:
+            raise CDFError("CDFMF", 0,
+                           "master %s does not define an unlimited dimension" % master)
+        unlimDimName = cdfm.dim(unlimDimId).inq_name()
+
+        # Get info on all record variables defined in the master.
+        # Make sure the master defines at least one record variable.
+        masterRecVar = {}
+        varInfo = cdfm.variables() 
+        for vName in varInfo:
+            dims, shape, type = varInfo[vName][:3]
+            # Be carefull: we may deal with a scalar (dimensionless) variable.
+            if (len(dims) > 0 and
+                # Unlimited dimension always occupies index 0.
+                unlimDimName == dims[0]):
+                masterRecVar[vName] = (dims, shape, type)
+        if len(masterRecVar) == 0:
+            raise CDFError("CDFMF", 0,
+                           "master %s does not define any record variable" % master)
+
+        # Create the following:
+        #   cdf       list of CDF instances
+        #   cdfVLen   list unlimited dimension lengths in each CDF instance
+        #   cdfRecVar dictionnary indexed by the record var names; each key holds
+        #             a list of the corresponding CDFVar instance, one for each
+        #             cdf file of the file set
+        cdf = [cdfm]
+        self._cdf = cdf        # Store this now, because dim() method needs it
+        cdfVLen = [cdfm.dim(unlimDimId).inq_len()]
+        cdfRecVar = {}
+        for v in masterRecVar:
+            cdfRecVar[v] = [cdfm.var(v)]
+        
+        # Open each remaining file in read-only mode.
+        # Make sure each file defines the same record variables as the master
+        # and that the variables are defined in the same way (name, shape and type)
+        for f in cdfFiles[1:]:
+            part = CDF(f)
+            varInfo = part.variables()
+            for v in masterRecVar:
+                # Make sure master rec var is also defined here.
+                if v not in varInfo:
+                    raise CDFError("CDFMF", 0,
+                                   "record variable %s not defined in %s" % (v, f))
+
+                # Make sure it is a record var.
+                vInst = part.var(v)
+                if not vInst.isrecord():
+                    raise CDFError("CDFMF", 0,
+                                   "variable %s is not a record var inside %s" % (v, f))
+
+                masterDims, masterShape, masterType = masterRecVar[v][:3]
+                extDims, extShape, extType = varInfo[v][:3]
+                # Check that dimension names are identical.
+                if masterDims != extDims:
+                    raise CDFError("CDFMF", 0,
+                                   "variable %s : dimensions mismatch between "
+                                   "master %s (%s) and extension %s (%s)" %
+                                   (v, master, masterDims, f, extDims))
+
+                # Check that the ranks are identical, and the dimension lengths are
+                # identical (except for that of the unlimited dimension, which of
+                # course may vary.
+                if len(masterShape) != len(extShape):
+                    raise CDFError("CDFMF", 0,
+                                   "variable %s : rank mismatch between "
+                                   "master %s (%s) and extension %s (%s)" %
+                                   (v, master, len(masterShape), f, len(extShape)))
+                if masterShape[1:] != extShape[1:]:
+                    raise CDFError("CDFMF", 0,
+                                   "variable %s : shape mismatch between "
+                                   "master %s (%s) and extension %s (%s)" %
+                                   (v, master, masterShape, f, extShape))
+
+                # Check that the data types are identical.
+                if masterType != extType:
+                    raise CDFError("CDFMF", 0,
+                                   "variable %s : data type mismatch between "
+                                   "master %s (%s) and extension %s (%s)" %
+                                   (v, master, masterType, f, extType))
+
+                # Everythig ok.
+                cdfRecVar[v].append(vInst)
+
+            cdf.append(part)
+            cdfVLen.append(part.dim(part.inq_unlimdim()).inq_len())
+
+        # Attach attributes to the CDFMF instance.
+        # A local __setattr__() method is required for them.
+        self._cdfFiles = cdfFiles            # list of cdf file names in the set
+        self._cdfVLen = cdfVLen              # list of unlimited lengths
+        self._cdfTLen = reduce(lambda x, y: x + y, cdfVLen) # total length
+        self._cdfRecVar = cdfRecVar          # dictionnary of CDFVar instances for all
+                                             # the record variables
+
+    def __setattr__(self, name, value):
+        """Intercept certain attributes proper to CDFMF class,
+        which should not be written to the underlying CDF data set.
+                                                                """
+
+        # Attributes proper to CDFMF class.
+        if name in ['_cdfFiles', '_cdf', '_cdfVLen', '_cdfTLen', '_cdfRecVar']:
+            self.__dict__[name] = value
+        # Let CDF class assign other attributes.
+        else:
+            CDF.__setattr__(self, name, value)
+
+    def inq_unlimlen(self):
+        """Return the current length of the unlimited dimension,
+        summed over all the datasets of the CDFMF instance.
+
+        Args:
+          no argument
+        Returns:
+          Total length of the record variable.
+                                                                  """
+        return self._cdfTLen
+
+    def dim(self, name_num):
+        """Return an dimension instance from a CDFMF instance.
+                                                                  """
+
+        return CDFMFDim(self, name_num)
+
+    def var(self, name_num):
+        """Return an instance of a var from a CDFMF instance.
+
+                                                                  """
+        return CDFMFVar(self, name_num)
+
+
+class CDFMFDim(CDFDim):
+  
+    def __init__(self, cdfmf, name_num):
+        """Create an instance of a variable from a CDFMF dataset.
+        
+        Args:
+          cdfmf      CDFMF instance
+          name_num   var name/id
+                                                      """
+        # Instantiate the master dimension instance.
+        master = cdfmf._cdf[0]
+        CDFDim.__init__(self, master, name_num)
+
+        # Dimension instance inside the master.
+        masterDim = master.dim(name_num)
+        self._masterDim = masterDim
+        # Force the dim id to be the master dim id. 
+        self._id = masterDim._id
+
+        # See if the dimension is unlimited.
+        if master.inq_unlimdim() == self._id:   # ADD: inq_dimid()
+            self._len = cdfmf.inq_unlimlen()
+        else:
+            self._len = masterDim.inq_len()
+
+    def inq(self):
+        """Return a tuple holding (name,len) of dimension."""
+
+        return self._masterDim.inq_name(), self._len
+
+    def inq_len(self):
+        """Return dimension length."""
+
+        return self._len
+        
+
+class CDFMFVar(CDFVar):
+
+    def __init__(self, cdfmf, name_num):
+        """Create an instance of a variable from a CDFMF dataset.
+
+        Args:
+          cdfmf      CDFMF instance
+          name_num   var name/id
+                                                      """
+        # Instantiate the underlying CDFVar instance.
+        master = cdfmf._cdf[0]
+        CDFVar.__init__(self, master, name_num)
+        # Force the id to be numeric.
+        self._id = master.var(name_num)._id
+        
+        # Verify if the variable is a record variable. If so,
+        # obtain the list of CDFVar instances of the same name,
+        # and the number of records in each instance.
+        if self.isrecord():
+            # We need the variable name, but we may have been passed the
+            # variable id.
+            name = master.var(name_num).inq_name()
+            self._recVar = cdfmf._cdfRecVar[name]
+            self._recLen = cdfmf._cdfVLen
+            self._ncid = cdfmf  # keep a reference of the CDFMF instance
+
+
+    def __getitem__(self, elem):
+        """Get records from a concatenated set of variables."""
+
+        if self.isrecord():
+            # Number of variables making up the CDFMFVar.
+            nv = len(self._recLen)
+            # Parse the slicing expression, needed to properly handle
+            # a possible ellipsis.
+            start, count, stride = self._buildStartCountStride(elem)
+            # Start, stop and step along 1st dimension, eg the unlimited
+            # dimension.
+            sta = start[0]
+            step = stride[0]
+            stop = sta + count[0] * step
+            
+            # Build a list representing the concatenated list of all records in
+            # the CDFMFVar variable set. The list is composed of 2-elem lists
+            # each holding:
+            #  the record index inside the variables, from 0 to n
+            #  the index of the CDFVAR instance to which each record belongs
+            idx = []    # list of record indices
+            vid = []    # list of CDFVar indices
+            for n in range(nv):
+                k = self._recLen[n]     # number of records in this variable
+                idx.extend(range(k))
+                vid.extend([n] * k)
+
+            # Merge the two lists to get a list of 2-elem lists.
+            # Slice this list along the first dimension.
+            lst = zip(idx, vid).__getitem__(slice(sta, stop, step))
+
+            # Rebuild the slicing expression for dimensions 1 and ssq.
+            newSlice = [slice(None, None, None)]
+            for n in range(1, len(start)):   # skip dimension 0
+                newSlice.append(slice(start[n],
+                                      start[n] + count[n] * stride[n], stride[n]))
+                
+            # Apply the slicing expression to each var in turn, extracting records
+            # in a list of arrays.
+            lstArr = []
+            for n in range(nv):
+                # Get the list of indices for variable 'n'.
+                idx = [i for i,numv in lst if numv == n]
+                if idx:
+                    # Rebuild slicing expression for dimension 0.
+                    newSlice[0] = slice(idx[0], idx[-1] + 1, step)
+                    # Extract records from the var, and append them to a list
+                    # of arrays.
+                    lstArr.append(CDFVar.__getitem__(self._recVar[n], tuple(newSlice)))
+            
+            # Return the extracted records as a unified array.
+            if lstArr:
+                lstArr = concatenate(lstArr)
+            return lstArr
+            
+        # Not a record variable.
+        else:
+            return CDFVar.__getitem__(self, elem)
+
+    def __setattr__(self, name, value):
+        """Intercept certain attributes proper to CDFMFVar class,
+        which should not be written to the underlying CDF dataset.
+                                                                """
+        # Attributes proper to CDFMFVar class.
+        if name in ['_ncid', '_recVar', '_recLen']:
+            self.__dict__[name] = value
+        # Let CDF class assign other attributes.
+        else:
+            CDFVar.__setattr__(self, name, value)
+
+    def shape(self):
+        """Return the shape of the variable. In case of a record variable,
+        account for the total length of the unlimited dimension.
+
+        Arguments:
+          no argument
+        Returns:
+          variable shape, as a tuple.
+                                                            """
+
+        shp = list(CDFVar.shape(self))
+        if self.isrecord():
+            shp[0] = self._ncid.inq_unlimlen()
+        return tuple(shp)
+
+
+        
 
 ###########################
 # Support functions
