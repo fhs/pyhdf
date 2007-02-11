@@ -1,6 +1,11 @@
-# $Id: pycdf.py,v 1.11 2007-02-11 22:30:30 gosselin_a Exp $
+# $Id: pycdf.py,v 1.12 2007-02-11 23:34:38 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.11  2007/02/11 22:30:30  gosselin_a
+# Improved the way the underlying array package is exposed to pycdf.
+# Improved documentation.
+# Updated function pycdfArrayPkg() API.
+#
 # Revision 1.10  2006/02/15 03:13:59  gosselin_a
 # Preliminary 0.6.2 release.
 # New CDFMF class, some new methods and a few bug fixes.
@@ -91,12 +96,19 @@ through 4 different types of objects:
   CDFVar   netCDF variable
   CDFAttr  netCDF attribute (dataset or variable attribute)
 
+Of secondary importance are the following classes, which let one produce
+a virtual netCDF dataset from the concatenation of two or more datasets
+based on the same record variables:
+  CDFMF    see a sequence of datasets as one consolidated dataset
+  CDFMFDim access a CDFMF dimension
+  CDFMFVar access a CDFMV variable
+
 pycdf key features are as follows.
 
   -pycdf is a complete implementation of the functionnality offered
    by the netCDF v3 C API. For almost every function offered by the C API 
    exists an equivalent method in one of the pycdf classes. pycdf does not
-   hide anything, and everything possible in C implementation is also
+   hide anything, and everything possible in the C implementation is also
    achievable in python. It is quite straightforward to go from C to python
    and vice-versa, and to learn pycdf usage by refering to the C API
    documentation.
@@ -136,24 +148,25 @@ package. Promotion of a new array package called 'numarray' was then
 attempted, which pycdf supported starting with version 0.6.
 With the advent in late 2006 of the much awaited 'numpy' package, which
 reconciliates Numeric and numarray while offering more functionnality,
-numarray should be considered deprecated. Beginning with release 0.6-3,
-pycdf fully supports numpy, while still offering support for the older Numeric
-and numarray pacakges for backwards compatibility.
+Numeric and numarray should be considered deprecated. Beginning with
+release 0.6-3,pycdf fully supports numpy, while still offering support
+for the older Numeric and numarray pacakges for backwards compatibility.
 
 The choice of the array package on which to base pycdf is made at install time
 (see the INSTALL file in the pycdf distribution). Only ONE style of install is
 possible : a numpy-based and a numarray-based pycdf cannot coexist on the
 same machine, unless one wants to play tricks with python search paths.
 
-Although the underlying API is very much identical, the two packages define
+Although the underlying API is very similar, the packages define
 the "array" somewhat differently. Since the contents of cdf variables are always
 returned as "arrays" to the calling program, the user must be carefull when
-processing those arrays using different packages : a numpy-style array may not
-always be acceptable to a numarray-based package, and vice-versa.
+processing those arrays using a package different from the one used by pycdf
+to generate them. A numpy-style array may not always be acceptable to a
+numarray-based package, and vice-versa.
 
 In the rest of this documentation, when one reads "from numpy import ...", it
-should be assumed that "from Numeric import ..." (or "from numarray") could also be used,
-unless explicitly stated otherwise.
+should be assumed that "from Numeric import ..." (or "from numarray")
+could also be used, unless explicitly stated otherwise.
 
 It may be helpfull at times to obtain the name of the package on which the current
 pycdf installation is based. For that, simply call function pycdfArrayPkg().
@@ -176,10 +189,22 @@ declarations specific to the type of array package used. The pycdf module
 imports the 'array' constructors indirectly through this utility module,
 which is configured at install time.
 
+Take note that, following the "import pycdf" or "from pycdf import *"
+statement, the pycdf package exposes only the function and class declarations
+documented herein. All references to the package modules are removed, and
+they become very difficult to get at from a user program. The objects
+exposed by pycdf are:
+
+  classes:
+    CDF, CDFAttr, CDFDim, CDFError, CDFMF, CDFVar, NC
+  functions:
+    inq_libvers, pycdfArrayPkg, pycdfVersion, strerror
+
 _pycdfext and pycdfext were generated with the SWIG preprocessor.
 SWIG is however *not* needed to run the package. Those two modules
 are meant to do their work in the background, and should never be called
-directly. Only 'pycdf' should be imported by the user program.
+directly (as noted above, they are almost impossible to get at anyway).
+Only 'pycdf' should be imported by the user program.
   
 Prerequisites
 -------------
@@ -322,7 +347,7 @@ To open the file:
 
 NOTE: You need to import the array package (numpy, Numeric, numarray)
       ONLY if you want to call methods or query attributes of the
-      array objects returned by pycdf.None of this is needed in the
+      array objects returned by pycdf. None of this is needed in the
       example statements given below. Thus, the 'from <pkg> import *'
       entered above could have been omitted without harm.
       
@@ -750,7 +775,7 @@ pycdf defines the following functions.
    strerror()       return the string associated with a netCDF error code
 
    pycdfVersion()   query pycdf version string
-   pycdfArrayPkg()  query the array package used when at install time
+   pycdfArrayPkg()  query the array package used at install time
 
 
 Classes summary
@@ -900,7 +925,7 @@ pycdf defines the following classes.
 
   
   CDFMF    The CDFMF class describes a pseudo-CDF file constructed by
-           concatenating in the pseudo-file record variables which are similarly
+           concatenating inside the pseudo-file record variables which are similarly
            defined in 2 or more CDF files. The resulting virtual CDF file is opened
            in read-only mode, and thus cannnot be updated. Otherwise, it can
            be manipulated similarly to a classic CDF dataset.
@@ -933,7 +958,7 @@ pycdf defines the following classes.
              constructors
                CDFMF()         create a multi-file dataset instance
                dim()           return a CDFMFDim() instance for the multi-file dataset
-               var()           return a CDFMVvar() instance for the multi-file dataset
+               var()           return a CDFMFVar() instance for the multi-file dataset
 
              query
                inq_unlimlen()  returns the current length of the unlimited dimension,
@@ -941,7 +966,7 @@ pycdf defines the following classes.
                                dataset
 
   CDFMFDim  The CDFMFDim class plays a role equivalent to the CDFDim class, this
-            time of a CDFMF object. The dimension instance applies to the
+            time for a CDFMF object. The dimension instance applies to the
             multi-file dataset, instead of just one dataset.
 
             To create a CDFMFDim intance, call the dim() method of a CDFMF instance,
@@ -970,7 +995,7 @@ pycdf defines the following classes.
                           of the unlimited dimension
             
    NOTE : there is no CDFMFAttr class. CDFMF and CDFMFVar objects inherit their
-          attribute handling methods from their superclass. CDF and CDFVar, resp.
+          attribute handling methods from their superclass, CDF and CDFVar, resp.
         
 
   NC       The NC class defines constants for setting file opening modes,
