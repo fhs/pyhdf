@@ -11,9 +11,14 @@ pycdf/pycdfext/numarray/pycdfext_array.py
 pycdf/pycdfext/numeric/pycdfext.py
 pycdf/pycdfext/numeric/pycdfext_wrap.c
 pycdf/pycdfext/numeric/pycdfext_array.py
+pycdf/pycdfext/numpy/pycdfext.py
+pycdf/pycdfext/numpy/pycdfext_wrap.c
+pycdf/pycdfext/numpy/pycdfext_array.py
 doc/pycdf.html
 doc/pycdf.txt
 examples/txttocdf/txttocdf.py
 examples/txttocdf/depth.txt
 examples/txttocdf/temp.txt
 examples/cdfstruct/cdfstruct.py
+examples/compr.py
+examples/multi.py
