@@ -1,6 +1,10 @@
-# $Id: pycdf.py,v 1.10 2006-02-15 03:13:59 gosselin_a Exp $
+# $Id: pycdf.py,v 1.11 2007-02-11 22:30:30 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.10  2006/02/15 03:13:59  gosselin_a
+# Preliminary 0.6.2 release.
+# New CDFMF class, some new methods and a few bug fixes.
+#
 # Revision 1.9  2006/01/09 04:12:15  gosselin_a
 # New method CDF.inq_unlimlen().
 #
@@ -51,26 +55,25 @@
 """Python interface to the Unidata netCDF library
 (see: www.unidata.ucar.edu/packages/netcdf).
 
-Version: 0.6-2
-Date:    Feb 14 2006   
+Version: 0.6-3
+Date:    Feb 10 2007   
 
   
 Table of contents
   Introduction
-  Array package : Numeric and numarray
+  Array packages : Numeric, numarray, numpy
   Package components
   Prerequisites
   Documentation
   Summary of differences between pycdf and C API
   Error handling
+  Primer on reading and querying a netcdf variable
   High level attribute access
   High level variable access : extended indexing, slicing and ellipsis
-  Primer on reading and querying a netcdf variable
   Reading/setting multivalued netCDF attributes and variables
   Rules governing array assignment
   Working with scalar variables
   Working with the unlimited dimension
-  Open issues and current limitations : scipy_core
   Quirks
   Functions summary
   Classes summary
@@ -79,9 +82,10 @@ Table of contents
   
 Introduction
 ------------
-pycdf is a python wrapper around the netCDF C API. It augments the API
-with an OOP framework where a netcdf file is accessed through 4 different
-types of objects:
+pycdf is a python wrapper around the netCDF v3 C API (up to version 3.6.2).
+Please note that netCDF v4 is NOT supported by pycdf.
+pycdf augments the API with an OOP framework where a netcdf file is accessed
+through 4 different types of objects:
   CDF      netCDF dataset (file)
   CDFDim   netCDF dimension
   CDFVar   netCDF variable
@@ -90,7 +94,7 @@ types of objects:
 pycdf key features are as follows.
 
   -pycdf is a complete implementation of the functionnality offered
-   by the netCDF C API. For almost every function offered by the C API 
+   by the netCDF v3 C API. For almost every function offered by the C API 
    exists an equivalent method in one of the pycdf classes. pycdf does not
    hide anything, and everything possible in C implementation is also
    achievable in python. It is quite straightforward to go from C to python
@@ -104,10 +108,9 @@ pycdf key features are as follows.
    programmer's task. Of greatest interest are those allowing netCDF
    access through familiar python idioms:   
      -netCDF attributes can be read/written like ordinary python class
-      attributes
+      and object attributes
      -netCDF variables can be read/written like ordinary python lists using
-      multidimensionaldef variable
-      indices and so-called "extended slice syntax", with
+      multidimensional indices and so-called "extended slice syntax", with
       strides allowed
    See "High level attribute access" and "High level variable access"
    sections for details.
@@ -118,55 +121,49 @@ pycdf key features are as follows.
       enddef(). See CDF.datamode() method for details.
      -pycdf offers methods to retrieve a dictionnary of the attributes,
       dimensions and variables defined on a dataset, and of the attributes
-      set on a variable. Querying a dataset is thus geatly simplified.
+      set on a variable. Querying a dataset is thus greatly simplified.
       See methods CDF.attributes(), CDF.dimensions(), CDF.variables(),
       and CDFVar.attributes() for details.
       
-Array package : Numeric and numarray
-------------------------------------
-netCDF variables are read/written using high-level "array" objects.
-Arrays used to be provided solely by the python Numeric package. Beginning
-with version 0.6, the python numarray package can now be used. The choice
-of the array package on which to base pycdf is made at install time (see
-the INSTALL file in the pycdf distribution). Only one style of install is
-possible : a Numeric-based and a numarray-based pycdf cannot coexist on the
+Array package : Numeric, numarray, numpy
+----------------------------------------
+netCDF variables are read/written using high-level "array" objects,
+since arrays offer the closest match to the nD matrices that netCDF
+implement.
+
+Before 2005, arrays used to be supported solely by the python 'Numeric'
+package. Promotion of a new array package called 'numarray' was then
+attempted, which pycdf supported starting with version 0.6.
+With the advent in late 2006 of the much awaited 'numpy' package, which
+reconciliates Numeric and numarray while offering more functionnality,
+numarray should be considered deprecated. Beginning with release 0.6-3,
+pycdf fully supports numpy, while still offering support for the older Numeric
+and numarray pacakges for backwards compatibility.
+
+The choice of the array package on which to base pycdf is made at install time
+(see the INSTALL file in the pycdf distribution). Only ONE style of install is
+possible : a numpy-based and a numarray-based pycdf cannot coexist on the
 same machine, unless one wants to play tricks with python search paths.
 
 Although the underlying API is very much identical, the two packages define
-the "array" somewhat differently :
+the "array" somewhat differently. Since the contents of cdf variables are always
+returned as "arrays" to the calling program, the user must be carefull when
+processing those arrays using different packages : a numpy-style array may not
+always be acceptable to a numarray-based package, and vice-versa.
 
-  >>> import Numeric, numarray
-  >>> type(Numeric.array('i')), type(numarray.array('i'))
-  ==> (<type 'array'>, <class 'numarray.numarraycore.NumArray'>)
+In the rest of this documentation, when one reads "from numpy import ...", it
+should be assumed that "from Numeric import ..." (or "from numarray") could also be used,
+unless explicitly stated otherwise.
 
-Since the contents of cdf variables are always returned as "arrays" to the
-calling program, the user must be carefull when processing those arrays
-using packages directly or indirectly based on Numeric/numarray : a
-Numeric-style array may not always be acceptable to a numarray-based
-package, and vice-versa.
-
-However, since pycdf simply dispatches "arrays" to the calling program and
-does not process them in any special way, it appears that the programmer
-can import either 'Numeric' or 'numarray', irrespective of the variant used
-to install pycdf. Thus :
-
-  >>> from Numeric import * 
-
-should usually work even if pycdf has been installed using numarray. In the
-rest of this documentation, when one reads "from Numeric import ...", it
-should be assumed that "from numarray import ..." could also be used,
-uCDFMFVarnless explicitly stated otherwise.
-
-It is however deemed safer to import the same array package as the one
-used when installing pycdf. To obtain the name of the package on which the
-current pycdf installation is based, call function pycdfArrayPkg().
+It may be helpfull at times to obtain the name of the package on which the current
+pycdf installation is based. For that, simply call function pycdfArrayPkg().
 
 
 Package components
 ------------------
 pycdf is a proper Python package, eg a collection of modules stored under
 a directory name identical to the package name and holding an __init__.py
-file. The pycdf package is composed of 3 modules:
+file. The pycdf package is composed of 3 main modules:
    _pycdfext   C extension module responsible for wrapping the
                netcdf library
    pycdfext    python module implementing some utility functions
@@ -174,7 +171,12 @@ file. The pycdf package is composed of 3 modules:
    pycdf       python module which wraps the extension module inside
                an OOP framework
 
-_pycdfext and pycdfest were generated with the SWIG preprocessor.
+A fourth small utility module named "pycdfext_array" is used to isolate
+declarations specific to the type of array package used. The pycdf module
+imports the 'array' constructors indirectly through this utility module,
+which is configured at install time.
+
+_pycdfext and pycdfext were generated with the SWIG preprocessor.
 SWIG is however *not* needed to run the package. Those two modules
 are meant to do their work in the background, and should never be called
 directly. Only 'pycdf' should be imported by the user program.
@@ -187,11 +189,12 @@ Prerequisites
   netCDF library
     pycdf does *not* include the netCDF library, which must
     be installed separately. netCDF is available at
-    "www.unidata.ucar.edu/packages/netcdf".
+    "www.unidata.ucar.edu/packages/netcdf". All versions
+    up to 3.6.2 are supported.
 
-  Numeric or numarray python package
+  numpy, Numeric or numarray python package
     netCDF variables are read/written using the array data type provided
-    by the Numeric or numarray python package. Numeric or nmarray are
+    by the numpy, Numeric or numarray python packages. Those packages are
     available at "numpy.sourceforge.net".
 
 Documentation
@@ -208,7 +211,7 @@ library. For this, the user is referred to the above mentioned manual.
   
 This document (in both its text and html versions) has been completely
 produced using "pydoc", the Python documentation generator (which
-made its debut in the 2.1 release). pydoc can also be used
+made its debut in the Python 2.1 release). pydoc can also be used
 as an on-line help tool. For example, to know everything about
 the CDFVar class, say:
   
@@ -294,11 +297,75 @@ etc) rather than a CDFError exception.
 Ex.:
   >>> from pycdf import *
   >>> try:
-  ...   d=CDF('toto.nc')
+  ...   d=CDF('foo.nc')
   ... except CDFError,err:
   ...   print "pycdf reported an error in function/method:",err[0]
   ...   print "      netCDF error ",err[1],":",err[2]
   >>>
+
+Primer on reading and querying a netcdf file
+--------------------------------------------
+Here are useful hints for a quick start on how to read and query a netcdf
+file.
+
+Assume the file is named 'table.nc' (as created for example by the
+'txttocdf.py' program inside the 'examples/txttocdf' directory accompanying
+the pycdf distribution).
+
+To open the file:
+
+  % python
+  
+  >>> from pycdf import *
+  >>> from numpy import *      # or "from Numeric import *"
+  >>> nc = CDF('table.nc')     # file opened in readonly mode
+
+NOTE: You need to import the array package (numpy, Numeric, numarray)
+      ONLY if you want to call methods or query attributes of the
+      array objects returned by pycdf.None of this is needed in the
+      example statements given below. Thus, the 'from <pkg> import *'
+      entered above could have been omitted without harm.
+      
+To get a dictionnary of attributes defined at the file level :
+
+  >>> ncattr = nc.attributes()  # key is attr name, value is attr value
+
+To get a dictionnary of the variables stored inside the file :
+  
+  >>> vardict = nc.variables()
+
+The keys are the variable names; the values store the variable properties,
+eg: dimension names, shape, and type
+
+To get a list of the variable names:
+
+  >>> varnames = nc.variables().keys()
+
+To retrieve and print the full array of values stored inside variable
+'varnames[0]' :
+
+  >>> v0 = nc.var(varnames[0])[:]  # without the [:], you would get a CDF
+                                   # var instance;  the slice gets you
+                                   # the array of values
+  >>> print v0                       
+
+To print the values of the last column of array v0 :
+
+  >>> print v0[:,-1]
+
+To print just the first two rows of values of variable 'varnames[1]' :
+
+  >>> v1_01 = nc.var(varnames[1])[:2]
+
+To get the dictionnary of attributes attached to variable 'varnames[0]' :
+
+  >>> v0_dict = nc.var(varnames[0]).attributes()
+
+Keys are the attribute names, and the dictionnary values store the
+attribute values.
+
+See the 'Examples' section below for a list of more comprehensive examples.
+
 
 High level attribute access
 ---------------------------
@@ -307,7 +374,7 @@ netCDF allow setting attributes either at the dataset or the variable
 level. Attributes are names storing information (in the form of scalars,
 strings, sequences) which help interpret the dataset or variable they
 are attached to. netCDF attributes rely on a set of conventions (see the
-netCDF manual) and are not enforced in ay way by the library. The only
+netCDF manual) and are not enforced in any way by the library. The only
 exception (known to the author) is the '_FillValue' attribute which, when
 attached to a variable, sets the value that is to be stored in
 uninitialized entries of this variable. All other attributes must be
@@ -378,7 +445,7 @@ if 'v' is a 4x4 array:
 
 The second way is by indexing and slicing the variable like a Python
 sequence. pycdf here follows most of the rules used to index and slice
-Numeric arrays. Thus a netCDF variable can be seen as a Numeric array,
+arrays. Thus a netCDF variable can be seen as an array,
 except that data is read from/written to a file instead of memory.
 
 Extended indexing let you access variable elements with the familiar
@@ -447,65 +514,6 @@ The only features exclusively available with the get()/put) methods are the
 specification of a mapping vector (which could be used for ex. to
 transpose an array), and the handling of NC.BYTE type values as unsigned.
 
-Primer on reading and querying a netcdf file
---------------------------------------------
-Here are useful hints for a quick start on how to read and query a netcdf
-file.
-
-Assume the file is named 'table.nc' (as created for example by the
-'txttocdf.py' program inside the 'examples/txttocdf' directory accompanying
-the pycdf distribution).
-
-To open the file:
-
-  % python
-  
-  >>> from pycdf import *
-  >>> from Numeric import *    # or "from numarray import *"
-  >>> nc = CDF('table.nc')     # file opened in readonly mode
-
-To get a dictionnary of attributes defined at the file level :
-
-  >>> ncattr = nc.attributes()  # key is attr name, value is attr value
-
-To get a dictionnary of the variables stored inside the file :
-  
-  >>> vardict = nc.variables()
-
-The keys are the variable names; the values store the variable properties,
-eg: dimension names, shape, and type
-
-To get a list of the variable names:
-
-  >>> varnames = nc.variables().keys()
-
-To retrieve and print the full array of values stored inside variable
-'varnames[0]' :
-
-  >>> v0 = nc.var(varnames[0])[:]  # without the [:], you would get a CDF
-                                   # var instance;  the slice gets you
-                                   # the array of values
-  >>> print v0                       
-
-To print the values of the last column of array v0 :
-
-  >>> print v0[:,-1]
-
-To print just the first two rows of values of variable 'varnames[1]' :
-
-  >>> v1_01 = nc.var(varnames[1])[:2]
-
-To get the dictionnary of attributes attached to variable 'varnames[0]' :
-
-  >>> v0_dict = nc.var(varnames[0]).attributes()
-
-Keys are the attribute names, and the dictionnary values store the
-attribute values.
-
-See 'examples/cdfstruct/cdfstruct.py' in the pycdf distribution for an
-example of a program that exercices many of the pycdf query and read
-methods.
-
 
 Reading/setting multivalued netCDF attributes and variables
 -----------------------------------------------------------
@@ -532,8 +540,7 @@ multdimensional variable. For example:
            # of 3 lists, each representing a row of v2.
     >>> v2[:]=[[1,2,3],[11,12,13],[21,22,23]]
 
-The assigned value can also be a Numeric/numarray array.
-Rewriting example above:
+The assigned value can also be an array. Rewriting example above:
     >>> v1=array([1,2,3])
     >>> v2=array([[1,2,3],[11,12,13],[21,22,23])
 
@@ -573,7 +580,7 @@ Assigning a scalar to an array
       >>> x[:2] = 0"    # zeroes the first  two rows of array "x"
       >>> x[:] = 1      # set 'x' to all 1's; equivalent to, but much
                         # simpler than :
-                        #   x[:] = Numeric.ones((x.shape()))
+                        #   x[:] = numpy.ones((x.shape()))
                         #   x[:] = NUMARRAY.ones((x.shape()))
 
   Note in the above example that we do not have to care about the shape of
@@ -715,30 +722,17 @@ extended, and newly created records inside those variables will be set to
 their variable fill value.
 
 
-Open issues and current limitiations : scipy_core
--------------------------------------------------
-
-The following limitations now affect the pycdf package. They may be
-lifted out in future releases. Users are encouraged to send their votes
-on those issues.
-
-  scipy_core   The Scientific Python project team is currently working on a
-               merge of Numeric and numarray called 'scipy_core'.
-               Numeric and numarray coud be deprecated once scipy_core
-               achieves a stable status (Numeric is said to have reached
-               its last release ever). pycdf does not currently support
-               scipy_core, but wil certainly do in a not too far future.
-
 Quirks
 ------
 
 _FillValue attribute
 
-  pycdf attaches no special significance to the _FillValue attribute, only the netcdf library
-  does. This can lead to the following nasty problem. If you write "v._FillValue = 0",
-  pycdf defines a new attribute and deduces its type from that of the right hand side value,
-  eg an integer type. However, if variable 'v' is defined as being of type real, then the
-  netcdf library (not pycdf!) will complain about a type mismatch when time comes to initialize
+  pycdf attaches no special significance to the _FillValue attribute, only
+  the netcdf library does. This can lead to the following nasty problem. If you
+  write "v._FillValue = 0", pycdf defines a new attribute and deduces its type
+  from that of the right hand side value, eg an integer type. However, if variable
+  'v' is defined as being of type real, then the  netcdf library (not pycdf!)
+  will complain about a type mismatch when time comes to initialize
   the variable with the fill value, and an exception will be thrown.
 
   To solve the problem, initialize the fill value with a value whose type is explicitly
@@ -756,7 +750,8 @@ pycdf defines the following functions.
    strerror()       return the string associated with a netCDF error code
 
    pycdfVersion()   query pycdf version string
-   pycdfArrayPkg()  query the array package used to install pycdf
+   pycdfArrayPkg()  query the array package used when at install time
+
 
 Classes summary
 ---------------
@@ -903,6 +898,80 @@ pycdf defines the following classes.
              misc
                rename()    rename the variable
 
+  
+  CDFMF    The CDFMF class describes a pseudo-CDF file constructed by
+           concatenating in the pseudo-file record variables which are similarly
+           defined in 2 or more CDF files. The resulting virtual CDF file is opened
+           in read-only mode, and thus cannnot be updated. Otherwise, it can
+           be manipulated similarly to a classic CDF dataset.
+           
+           For example, we could have a set of files holding similar
+           (time x lat x lon) variables, where time is
+           the unlimited dimension. File 1 could hold records at times t0, t1,
+           t2; file 2 could hold records at times t3, t4; file 3 could hold
+           records at times t4, t5, etc. The CDFMF class could let us see
+           those 3 files as a "unified" variable for times t0, t1, t2, t3,
+           etc. This functionnality lets one break into more manageable pieces
+           what could otherwise become a huge dataset. A multi-file variable
+           could also be easier to share with others, and more closely adapt
+           to reality (eg when data is acquired daily, each day worth of data
+           can be stored in a separate dataset).
+
+           To create a multi-file dataset, call the CDFMF() constructor, with
+           the sequence of files names as argument. In order to be concatenated,
+           variables must be based on the same unlimited dimension and be of the same
+           shape and datatype.
+
+           The first file named in a multi-file dataset becomes the "master" file.
+           It defines the record variables which must be found compatible in all
+           the other files. The attributes defined on the master variables apply
+           to the multi-file variables as a whole.
+
+           methods: A CDFMF object inherits methods from the CDF class, specialising
+                    the following.
+                    
+             constructors
+               CDFMF()         create a multi-file dataset instance
+               dim()           return a CDFMFDim() instance for the multi-file dataset
+               var()           return a CDFMVvar() instance for the multi-file dataset
+
+             query
+               inq_unlimlen()  returns the current length of the unlimited dimension,
+                               summed over all the data files in the multi-file
+                               dataset
+
+  CDFMFDim  The CDFMFDim class plays a role equivalent to the CDFDim class, this
+            time of a CDFMF object. The dimension instance applies to the
+            multi-file dataset, instead of just one dataset.
+
+            To create a CDFMFDim intance, call the dim() method of a CDFMF instance,
+            with the dimension name of id as argument.
+
+            methods: A CDFMFDim object inherits methods from CDFDim class, specialising
+                     the followings.
+                inq()      return a tuple holding the name and length of the dimension
+                           (length summed over all datasets for the unlimited dimension)
+                inq_len()  return the dimension length (sommed over all datasets for the
+                           unlimited dimension)
+
+  CDFMFVAR  The CDFMFVar class plays a rote equivalent to the CDFVar class, this
+            time for a CDFMF instance. It lets one manipulate a concatenated variable
+            as if it were one ordinary variable, ignoring file boundaries. A CDFMFVar
+            instance can be accessed like a "classic" CDFVar instance, using
+            slicing, indexing, attributes, etc.
+
+            To create a CDFMFVar instance, call the var() method of the CDFMF instance.
+
+            methods: A CDFMFVar object inherits methods from the CDFVar class, specialising
+                     the following.
+
+              query
+                shape()   returns the variable shape, taking into account the total length
+                          of the unlimited dimension
+            
+   NOTE : there is no CDFMFAttr class. CDFMF and CDFMFVar objects inherit their
+          attribute handling methods from their superclass. CDF and CDFVar, resp.
+        
 
   NC       The NC class defines constants for setting file opening modes,
            data Those constants are defined as class attributes.
@@ -939,233 +1008,88 @@ pycdf defines the following classes.
 Examples
 --------
 
-Example-1
+The pycdf distribution comes with a few non-trivial example programs
+located under directory 'examples'.
 
-The following simple example exercises some important pycdf methods. It
-shows how to create a netCDF dataset, define attributes and dimensions,
-create variables, and assign their contents.
+  compr.py
+    Shows how to create, index, slice, and update arrays. The results
+    are compared with what they should be, so this example can
+    be used to validate the installation.
 
-Suppose we have a series of text files each defining a 2-dimensional real
-matrix. First line holds the matrix dimensions, and following lines hold
-matrix values, one row per line. The following procedure will transfer to
-a netCDF variable the contents of any one of those text files. The
-procedure also computes the matrix min and max values, storing them as
-variable attributes. It also assigns to the variable the group of
-attributes passed as a dictionnary by the calling program. Note how simple
-such an assignment becomes with pycdf: the dictionnary can contain any
-number of attributes, of different types, single or multi-valued. Doing
-the same in a conventional language would be much more challenging.
+  multi.py
+    Shows how to use the CDFMF class to handle a multi-file dataset.
 
-Error checking is minimal, to keep example as simple as possible
-(admittedly a rather poor excuse ...).
+  cdfstruct
+    Utility program capable of analysing the structure of any netCDF file
+    you may want to throw at it. Handy when you want to quickly peek at
+    the contents of any netCDF file.
 
+  txttocdf
+    Example proram showing how you may convert to netCDF data stored in
+    flat file format.
 
-  from Numeric import *
-  from pycdf import *
-
-  def txtToCDF(txtFile, ncFile, varName, attr):
-    # Transfer contents of 'txtFile' to NC.FLOAT variable 'varName' inside
-    # netCDF file 'ncFile'. `attr' is a dictionnary holding attributes
-    # to assign to the variable.
-
-    try:   # Catch CDFError exceptions
-        # Open netCDF file in update mode, creating it if inexistent.
-        nc = CDF(ncFile, NC.WRITE|NC.CREATE)
-        # Automatically set define and data modes.
-        nc.automode()
-        # Open text file and get matrix dimensions on first line
-        # (admittedly a flaky design, it would be better to compute those
-        # values programmatically).
-        txt = open(txtFile)
-        ni, nj = map(int, txt.readline().split()) # split fields, then
-                                                  # convert to ints
-        # Defined netCDF dimensions. Should check for already existing
-        # dimensions of that name.
-        dimi = nc.def_dim(varName + '_i', ni) # create name like 'depth_i'
-        dimj = nc.def_dim(varName + '_j', nj) # and 'depth_j'
-        # Define netCDF variable of type NC.FLOAT with those dimensions.
-        # Should check that this variable does not already exist.
-        var = nc.def_var(varName, NC.FLOAT, (dimi, dimj))
-        # Assign attributes passed as argument inside dict `attr'.
-        for attrName in attr.keys():
-            setattr(var, attrName, attr[attrName])
-        # Load variable with lines of data. Compute min and max
-        # over the whole matrix.
-        i = 0
-        while i < ni:
-            # split fields, converting them to a list of floats
-            elems = map(float, txt.readline().split())
-            # assign to netCDF array
-            var[i] = elems
-            # compute min and max
-            minE = min(elems)
-            maxE = max(elems)
-            if i:
-                minVal = min(minVal, minE)
-                maxVal = max(maxVal, maxE)
-            else:
-                minVal = minE
-                maxVal = maxE
-            i += 1
-        # Set variable min and max attributes.
-        var.minVal = minVal
-        var.maxVal = maxVal
-        # Close files (not really necessary, since closing is
-        # automatic when file objects go out of scope.
-        nc.close()
-        txt.close()
-    except CDFError, msg:
-        print "CDF error:",msg
-
-We could now call the procedure as follows:
-
-  ncFile  = 'table.nc'   # netCDF file name
-  # Transfer contents of 'temp.txt' to variable 'temperature'
-  txtToCDF('temp.txt', ncFile, 'temperature',
-           # Dictionary of attributes to set on netCDF variable
-           {'title'      : 'temperature matrix',
-            'units'      : 'celsius',
-            'precision'  : 0.01,
-            'valid_range': (-2.8,27.0)})  # Note multivalued attribute
-
-  # Transfer contents of 'depth.txt' to variable 'depth'
-  txtToCDF('depth.txt', ncFile, 'depth',
-           # Dictionary of attributes to set on netCDF variable
-           {'title'      : 'depth matrix',
-            'units'      : 'meters',
-            'precision'  : 0.1,
-            'valid_range': (0, 500.0)})   # Note multivalued attribute
-
-
-
-Example 2
-
-This example shows a usefull python program that will display the
-structure of any netCDF file whose name is given on the command line.
-After the netCDF file is opened, high level inquiry methods are called
-to obtain dictionnaries descrybing dataset attributes, dimensions and
-variables. The rest of the program mostly consists in nicely formatting
-the contents of those dictionaries.
-
-
-  import sys
-  from pycdf import *
-  from Numeric import *
-
-  # Convert numeric type code to string representation
-  typeTab = {NC.BYTE:   'BYTE',
-             NC.CHAR:   'CHAR',
-             NC.SHORT:  'SHORT',
-             NC.INT:    'INT',
-             NC.FLOAT:  'FLOAT',
-             NC.DOUBLE: 'DOUBLE'}
-
-  printf = sys.stdout.write
-  ncFile = sys.argv[1]              # get file name from cmd line
-  try:
-      nc = CDF(ncFile)              # open netCDF file, read-only
-      attr = nc.attributes(full=1)  # dataset attributes dictionnary
-      dims = nc.dimensions(full=1)  # dataset dimensions dictionnary
-      vars = nc.variables()         # dataset variables disctionnary
-
-      # Dataset name, number of attributes, dimensions and variables.
-      printf("DATASET INFO\n")
-      printf("------------\n\n")
-      printf("%-25s%s\n" % ("netCDF file:", ncFile))
-      printf("%-25s%d\n" % ("  dataset attributes:", len(attr)))
-      printf("%-25s%d\n" % ("  dimensions:", len(dims)))
-      printf("%-25s%d\n" % ("  variables:", len(vars)))
-      printf("\n");
-
-      # Attribute table.
-      if len(attr) > 0:
-          printf("Dataset attributes\n\n")
-          printf("  name                 idx type   len value\n")
-          printf("  -------------------- --- ----   --- -----\n")
-          attNames = attr.keys()
-          attNames.sort()
-          for a in attNames:
-              t = attr[a]
-              printf("  %-20s %3d %-6s %3d %s\n" %
-                     (a, t[1], typeTab[t[2]], t[3], t[0]))
-          printf("\n")
-
-      # Dimensions table
-      if len(dims) > 0:
-          printf("Dataset dimensions\n\n")
-          printf("  name                 idx length unlimited\n")
-          printf("  -------------------- --- ------ ---------\n")
-          dimNames = dims.keys()
-          dimNames.sort()
-          for d in dimNames:
-              t = dims[d]
-              printf ("  %-20s %3d %6d %3s\n" %
-                      (d, t[1], t[0], t[2] and 'X' or ''))
-          printf("\n")
-
-      # Variables table
-      if len(vars) > 0:
-          printf("Dataset variables\n\n")
-          printf("  name                 idx type   nattr dimension(s)\n")
-          printf("  -------------------- --- ----   ----- ------------\n")
-          varNames = vars.keys()
-          varNames.sort()
-          for v in varNames:
-              vAttr = nc.var(v).attributes()
-              t = vars[v]
-              printf("  %-20s %3d %-6s %5d " %
-                     (v, t[3], typeTab[t[2]], len(vAttr)))
-              n = 0
-              for d in t[0]:
-                  printf("%s%s(%d)" % (n > 0 and ', ' or '', d, t[1][n]))
-                  n += 1
-              printf("\n")
-          printf("\n")
-
-          # Variables attributes
-          if len(varNames) > 0:
-              printf("VARIABLE INFO\n")
-              printf("-------------\n\n")
-              for v in varNames:
-                  vAttr = nc.var(v).attributes(full=1)
-                  if len(vAttr) > 0:
-                      printf("%s attributes\n\n" % v)
-                      printf("  name                 idx type   len value\n")
-                      printf("  -------------------- --- ----   --- -----\n")
-                      attNames = vAttr.keys()
-                      attNames.sort()
-                      for a in attNames:
-                          t = vAttr[a]
-                          printf("  %-20s %3d %-6s %3d %s\n" %
-                                 (a, t[1], typeTab[t[2]], t[3], t[0]))
-                      printf("\n")
-      
-  except CDFError, msg:       # Catch CDFError exceptions
-      print "CDFError", msg
          
 """
 
-_VERSION = "0.6-2"
+_VERSION = "0.6-3"
 
 import os, os.path
 import sys
 import types
 
-# 'pycdf_array' packages declarations dependent on which array package
-# (numarray, Numeric, ...) was chosen as the array package.
-from pycdfext_array import array, _ARRAYPKG
+# NOTE.
+# The 'pycdf_array' module encapsulates declarations dependent on
+# which array package (numarray, numeric, numpy) was selected as
+# the array package of choice when pycdf was first installed.
+# We import 'array' from this pycdfext_array module,
+# which itself imports it from the selected array package.
+# This "indirection" technique is similar to the one implemented
+# by the 'numpy.oldnumeric' module to masquerade Numeric declarations as
+# numpy declarations.
+#
+# The imported references are:
+#   _arrayPkg     reference to the specific array module used;
+#                 '_arrayPkg.bla' will let you get at the module
+#                 API, eg: _arrayPkg.concatenate()
+#   _ARRAYPKGNAME string holding the name of the package
+#                 ('numpy', 'Numeric', 'numarray')
+#   array         module array constructor, directly imported
+#                 as a convenience to avoid the equivalent, but lengthier
+#                 '_arrayPkg.array' notation
+
+from pycdfext_array import array, _ARRAYPKGNAME, _arrayPkg
     
+# We connect to the extension module through the _C alias, to increase
+# readability.
 import pycdfext as _C
 
 
-# List of names we want to be imported by an "from pycdf import *"
-# statement
+# Technically speaking, 'pycdf' is installed as a package
+# composed of the pycdf module, and three auxiliary modules. Inside the
+# pycdf package (not to be confused with the pycdf module inside the
+# pycdf package), file __init__.py executes a "from pycdf import *"
+# statement. This brings at the package level all visible references
+# from the pycdf module listed in the __all__ variable below.
+# __init__.py then deletes useless references to the
+# package modules from the package namespace. The private package data then
+# become completely hidden from the user, and almost impossible to get at
+# (unless __init__.py is edited to remove the del() statement removing
+# the references to the package modules.
+# Thus, only the useful references listed below populate the pycdf namespace
+# when a user program executes an "import pycdf" statement, or are imported
+# in the current namespace following an "from pycdf import *" statement.
 
-__all__ = ['CDF', 'CDFAttr', 'CDFDim', 'CDFVar', 'CDFMF', 
-           'NC',
+__all__ = ['CDF',
+           'CDFAttr',
+           'CDFDim',
            'CDFError',
-           'pycdfVersion', 'pycdfArrayPkg',
-           'inq_libvers', 'strerror']
+           'CDFMF', 
+           'CDFVar',
+           'NC',
+           'inq_libvers',
+           'pycdfArrayPkg',
+           'pycdfVersion',
+           'strerror']
 
 #############
 # Functions.
@@ -1184,18 +1108,30 @@ def pycdfVersion():
 
     return _VERSION
 
-def pycdfArrayPkg():
+def pycdfArrayPkg(name=True):
     """Query the array package used when installing pycdf.
 
     Arguments:
-      no argument
+      name      if True (default), the package name is returned
+                as a string.
+                if False, a reference to the array package imported by
+                pycdf is returned instead (the same reference
+                that an "import pkgName" would create inside the current
+                namespace if executed by the user program)
+                
     Returns:
-      string indentifying the array package ("Numeric", "numarray")
+      if parameter 'name' is True:
+        string indentifying the array package ("numpy", "Numeric", "numarray")
+      if parameter 'name' is False:
+        reference to the array package imported by pycdf
 
     C library equivalent : n/a
                                    """
 
-    return _ARRAYPKG
+    if name:
+      return _ARRAYPKGNAME
+    else:
+      return _arrayPkg
     
 
 def inq_libvers():     
@@ -2288,6 +2224,11 @@ class CDFVar(object):
         # If the rhs is an array of the type defined by the array package
         # used to compile pycdf, make sure its shape is
         # compatible with the shape defined by the right-hand-side.
+        # NOTE:
+        #   if isinstance(data, type(array(0))):
+        # would be cleaner and more general, but would it work
+        # with Numeric or numarray ?
+        # 
         if type(data) == type(array(0)):
             if lhsShape != data.shape:
                 raise ValueError, ("incompatible array shapes, "
@@ -3462,8 +3403,9 @@ class CDFMF(CDF):
         master = cdfFiles[0]
         CDF.__init__(self, master)
 
-        # Open the master again, this time as a classic CDF instance. This will avoid
-        # calling methods of the CDFMF subclass when querying the master file.
+        # Open the master again, this time as a classic CDF instance.
+        # This will avoid calling methods of the CDFMF subclass when
+        # querying the master file.
         cdfm = CDF(master)
 
         # Make sure the master defines an unlimited dimension.
@@ -3602,11 +3544,11 @@ class CDFMF(CDF):
 class CDFMFDim(CDFDim):
   
     def __init__(self, cdfmf, name_num):
-        """Create an instance of a variable from a CDFMF dataset.
+        """Create an instance of a dimension from a CDFMF dataset.
         
         Args:
           cdfmf      CDFMF instance
-          name_num   var name/id
+          name_num   dim name/id
                                                       """
         # Instantiate the master dimension instance.
         master = cdfmf._cdf[0]
@@ -3714,7 +3656,7 @@ class CDFMFVar(CDFVar):
             
             # Return the extracted records as a unified array.
             if lstArr:
-                lstArr = concatenate(lstArr)
+                lstArr = _arrayPkg.concatenate(lstArr)
             return lstArr
             
         # Not a record variable.
@@ -3809,11 +3751,21 @@ def _checkSeq(seq):
 
 def _assumeArray(data):
     """See if we can assume that 'data' is an array.
-       If 'data' has a 'shape' attribute defined as a sequence,
-       and 'typecode()' and 'itemsize()' methods, we assume 'data' is an array and
+       True if 'data' is an instance of the array type (this may work
+       only for numpy). Otherwise, if 'data' has a 'shape' attribute
+       defined as a sequence, and 'typecode()' and 'itemsize()' methods
+       (Numeric and numarray), we assume 'data' is an array and
        return True. Otherwise False is returned.
                                                              """
 
+    # The isinstance test may work only for numpy.
+    try:
+        if isinstance(a, type(array((0,)))):
+            return 1
+    except:
+        pass
+
+    # Keep test used for Numeric or numarray.
     try:
         if type(data.shape) not in [types.ListType, types.TupleType]:
             return 0
