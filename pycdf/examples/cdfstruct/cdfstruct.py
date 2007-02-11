@@ -1,8 +1,15 @@
 #!/usr/bin/env python
+"""\
+This example shows a usefull python program that will display the
+structure of any netCDF file whose name is given on the command line.
+After the netCDF file is opened, high level inquiry methods are called
+to obtain dictionnaries descrybing dataset attributes, dimensions and
+variables. The rest of the program mostly consists in nicely formatting
+the contents of those dictionaries.
+"""
 
 import sys
 from pycdf import *
-from Numeric import *
 
 typeTab = {NC.BYTE:   'BYTE',
            NC.CHAR:   'CHAR',

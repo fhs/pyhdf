@@ -1,6 +1,23 @@
 #!/usr/bin/env python
+"""\
+Suppose we have a series of text files each defining a 2-dimensional real
+matrix. First line holds the matrix dimensions, and following lines hold
+matrix values, one row per line. The following procedure will transfer to
+a netCDF variable the contents of any one of those text files. The
+procedure also computes the matrix min and max values, storing them as
+variable attributes. It also assigns to the variable the group of
+attributes passed as a dictionnary by the calling program. Note how simple
+such an assignment becomes with pycdf: the dictionnary can contain any
+number of attributes, of different types, single or multi-valued. Doing
+the same in a conventional language would be much more challenging.
 
-from Numeric import *
+You can later use the "cdfstruct" program to analyse the contents of
+the netCDF file produced by this example.
+
+Error checking is minimal, to keep example as simple as possible
+(admittedly a rather poor excuse ...).
+"""
+
 from pycdf import *
 
 import os
