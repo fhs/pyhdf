@@ -1,6 +1,10 @@
-# $Id: setup.py,v 1.6 2006-01-03 23:20:04 gosselin_a Exp $
+# $Id: setup.py,v 1.7 2007-02-11 22:14:52 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.6  2006/01/03 23:20:04  gosselin_a
+# A bug was found in the pycdf-0.6-0 release shortly after it
+# was made public. The new pycdf-0.6-1 release corrects that.
+#
 # Revision 1.5  2006/01/02 20:37:56  gosselin_a
 # New pycdf-0.6-0 release.
 #
@@ -23,35 +27,55 @@
 
 NUMERIC   = 1
 NUMARRAY  = 2
+NUMPY     = 3
 
-USE = NUMERIC         # use the Numeric package (default)
+nameDir = {
+            NUMARRAY: "numarray",
+            NUMERIC:  "numeric",
+            NUMPY:    "numpy",
+            }
+
+USE  = NUMPY            # use the numpy package (default)
+#USE = NUMERIC          # use the numeric package
 #USE = NUMARRAY         # use the numarray package
 
-import os, sys, shutil
+import os, os.path, sys, shutil
 from distutils.core import setup, Extension
 
+if not USE in nameDir:
+    print "USE set to an illegal value; set to one of: NUMPY (default), NUMERIC, NUMARRAY"
+    sys.exit(1)
+          
+extName = "pycdf._pycdfext"
+extDir  = os.path.join("pycdf", "pycdfext", nameDir[USE])
+CCode   = [os.path.join(extDir, "pycdfext_wrap.c")]
+
 if USE == NUMERIC:
-    _pycdf_ext = Extension('pycdf._pycdfext', 
-                           sources   = ["pycdf/pycdfext/numeric/pycdfext_wrap.c"],
+    _pycdf_ext = Extension(extName, 
+                           sources   = CCode,
                            #library_dirs=["non standard path where libs live"],
                            libraries = ["netcdf"])
-    shutil.copy("pycdf/pycdfext/numeric/pycdfext.py", "pycdf")
-    shutil.copy("pycdf/pycdfext/numeric/pycdfext_array.py", "pycdf")
 
 elif USE == NUMARRAY:
-    _pycdf_ext = Extension('pycdf._pycdfext', 
-                           sources   = ["pycdf/pycdfext/numarray/pycdfext_wrap.c"],
+    _pycdf_ext = Extension(extName, 
+                           sources   = CCode,
                            #library_dirs=["non standard path where libs live"],
                            libraries = ["netcdf"])
-    shutil.copy("pycdf/pycdfext/numarray/pycdfext.py", "pycdf")
-    shutil.copy("pycdf/pycdfext/numarray/pycdfext_array.py", "pycdf")
 
-else:
-    print "USE set to an illegal value, please use NUMERIC or NUMARRAY"
-    sys.exit(1)
+elif USE == NUMPY:
+    from numpy.distutils.misc_util import get_numpy_include_dirs
+    _pycdf_ext = Extension(extName, 
+                           sources   = CCode,
+                           #library_dirs=["non standard path where libs live"],
+                           include_dirs = get_numpy_include_dirs(), 
+                           libraries = ["netcdf"])
+
+toDir   = "pycdf"
+shutil.copy(os.path.join(extDir, "pycdfext.py"), toDir)
+shutil.copy(os.path.join(extDir, "pycdfext_array.py"), toDir)
 
 setup(name         = 'pycdf',
-      author       ='Andre Gosselin',
+      author       = 'Andre Gosselin',
       author_email = 'gosselina@dfo-mpo.gc.ca',
       description  = 'Python interface to the Unidata netCDF library',
       keywords     = ['netcdf', 'python'],
@@ -62,11 +86,12 @@ setup(name         = 'pycdf',
 			 'read/written through arrays provided by the '
 			 'Numeric or numarray package.',
       url          = 'http://pysclint.sourceforge.net/pycdf',
-      version      ='0.6-1',
+      version      ='0.6-3',
       packages     = ['pycdf'],
       ext_modules  = [_pycdf_ext]
 
       )
+
 # Cleanup
 os.remove("pycdf/pycdfext.py")
 os.remove("pycdf/pycdfext_array.py")
