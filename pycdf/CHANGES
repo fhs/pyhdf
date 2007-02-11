@@ -1,6 +1,10 @@
-# $Id: CHANGES,v 1.10 2006-02-15 03:13:58 gosselin_a Exp $
+# $Id: CHANGES,v 1.11 2007-02-11 22:28:51 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.10  2006/02/15 03:13:58  gosselin_a
+# Preliminary 0.6.2 release.
+# New CDFMF class, some new methods and a few bug fixes.
+#
 # Revision 1.9  2006/01/09 04:16:26  gosselin_a
 # Preparing new release 0.6-2 .
 #
@@ -32,6 +36,42 @@
 #
 
 List of changes to 'pycdf' since the initial release.
+
+
+pycdf-0.6-3
+  Date: 2007-02-11
+
+    New features.
+
+      Ported pycdf to NumPy.
+
+    File changes.
+
+      setup.py
+        New NUMPY case (now default). Thanks to Christian Marquardt
+        (christian@marquardt.sc) for having submitted his patches.
+        Clean up code.
+
+      pycdf/__init__.py
+        Clean up the package namespace, so that only the wanted references
+        are exposed to the user
+
+      pycdf/README
+        updated documentation for numpy
+
+      pycdf/pycdf/pycdf.py
+        Cleaned up documentation.
+        Added documentation for the CDFMF class.
+
+        Function pycdfArrayPkg() now takes a parameter to return 
+        either the name of the array package, or a reference to the 
+        array module used by pycdf.
+
+      pycdf/pycdfext/numpy/
+        New subdir, used when the 'numpy' array package is used.
+        
+      examples/
+         Added examples multi.py and compr.py .
 
 
 pycdf-0.6-2
