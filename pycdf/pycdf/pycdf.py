@@ -1,6 +1,10 @@
-# $Id: pycdf.py,v 1.13 2007-02-12 20:13:14 gosselin_a Exp $
+# $Id: pycdf.py,v 1.14 2007-02-12 20:36:42 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.13  2007/02/12 20:13:14  gosselin_a
+# Allow deleting CDF attributes using the standard del() function.
+# Allow querying dimension length using the standard len() functio.
+#
 # Revision 1.11  2007/02/11 22:30:30  gosselin_a
 # Improved the way the underlying array package is exposed to pycdf.
 # Improved documentation.
@@ -60,8 +64,8 @@
 """Python interface to the Unidata netCDF library
 (see: www.unidata.ucar.edu/packages/netcdf).
 
-Version: 0.6-3
-Date:    Feb 10 2007   
+Version: 0.6-3b
+Date:    Feb 13 2007   
 
   
 Table of contents

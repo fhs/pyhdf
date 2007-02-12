@@ -1,6 +1,10 @@
-# $Id: setup.py,v 1.7 2007-02-11 22:14:52 gosselin_a Exp $
+# $Id: setup.py,v 1.8 2007-02-12 20:36:41 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.7  2007/02/11 22:14:52  gosselin_a
+# Improved code to make it more robust and readable.
+# Added a new USE vale for numpy.
+#
 # Revision 1.6  2006/01/03 23:20:04  gosselin_a
 # A bug was found in the pycdf-0.6-0 release shortly after it
 # was made public. The new pycdf-0.6-1 release corrects that.
@@ -86,7 +90,7 @@ setup(name         = 'pycdf',
 			 'read/written through arrays provided by the '
 			 'Numeric or numarray package.',
       url          = 'http://pysclint.sourceforge.net/pycdf',
-      version      ='0.6-3',
+      version      ='0.6-3b',
       packages     = ['pycdf'],
       ext_modules  = [_pycdf_ext]
 

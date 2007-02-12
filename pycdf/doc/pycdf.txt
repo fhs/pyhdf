@@ -10,8 +10,8 @@ DESCRIPTION
     Python interface to the Unidata netCDF library
     (see: www.unidata.ucar.edu/packages/netcdf).
     
-    Version: 0.6-3
-    Date:    Feb 10 2007   
+    Version: 0.6-3b
+    Date:    Feb 13 2007   
     
       
     Table of contents
