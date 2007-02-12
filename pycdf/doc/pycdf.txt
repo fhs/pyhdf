@@ -812,7 +812,7 @@ DESCRIPTION
     
                  misc
                    copy()     copy attribute to another variable or dataset
-                   delete()   delete attribute
+                   delete()   delete attribute; equivalent to del(cdfVar.attr)
                    rename()   rename attribute
     
       CDFDim   The CDFDim class describes a netCDF dimension. It encapsulates
@@ -826,7 +826,7 @@ DESCRIPTION
                  inquiry
                    inq()      get the dimension name and length
                    inq_id()   get the dimension id
-                   inq_len()  get the dimension length
+                   inq_len()  get the dimension length; equivalent to len(cdfDim)
                    inq_name() get the dimension name
     
                  misc
@@ -1489,6 +1489,10 @@ CLASSES
      |      Returns:
      |        None
      |      
+     |      NOTE: An attribute can also be deleted by calling
+     |            the standard Python function del(),
+     |            eg: del(cdfVar.attr)
+     |      
      |      C library equivalent : nc_del_att
      |  
      |  get(self, ubyte=0)
@@ -1620,6 +1624,10 @@ CLASSES
      |      user program should call the `def_dim()', `inq_dimid()'
      |      or dim() methods of a CDF instance.
      |  
+     |  __len__(self)
+     |      Return dimension length.
+     |      Equivalent to inq_len() method.
+     |  
      |  inq(self)
      |      Obtain the name and length of the dimension instance.
      |      Dataset mode: does not matter.
@@ -1656,6 +1664,9 @@ CLASSES
      |        the number of records written so far
      |      
      |      C library equivalent : nc_inq_dimlen
+     |      
+     |      NOTE: dimension length can also be obtained through the
+     |            standard function len(), eg: len(cdfDim)
      |  
      |  inq_name(self)
      |      Obtain the name of the dimension instance.
@@ -2099,6 +2110,10 @@ CLASSES
      |  ----------------------------------------------------------------------
      |  Methods inherited from CDFDim:
      |  
+     |  __len__(self)
+     |      Return dimension length.
+     |      Equivalent to inq_len() method.
+     |  
      |  inq_id(self)
      |      Obtain the id of the dimension instance.
      |      Dataset mode: does not matter.
@@ -2176,6 +2191,12 @@ CLASSES
      |  
      |  ----------------------------------------------------------------------
      |  Methods inherited from CDFVar:
+     |  
+     |  __delattr__(self, name)
+     |      Delete attribute 'name'.
+     |      Dataset mode: define mode.
+     |      
+     |      NOTE: del(cdfVar.attr) is equivalent to attr.delete().
      |  
      |  __getattr__(self, name)
      |      Get value of variable attribute 'name'.
@@ -2471,6 +2492,12 @@ CLASSES
      |  this instance: def_var(), inq_var(id) or var() .
      |  
      |  Methods defined here:
+     |  
+     |  __delattr__(self, name)
+     |      Delete attribute 'name'.
+     |      Dataset mode: define mode.
+     |      
+     |      NOTE: del(cdfVar.attr) is equivalent to attr.delete().
      |  
      |  __getattr__(self, name)
      |      Get value of variable attribute 'name'.

@@ -814,7 +814,7 @@ pycdf&nbsp;defines&nbsp;the&nbsp;following&nbsp;classes.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;misc<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;copy()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;copy&nbsp;attribute&nbsp;to&nbsp;another&nbsp;variable&nbsp;or&nbsp;dataset<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delete()&nbsp;&nbsp;&nbsp;delete&nbsp;attribute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delete()&nbsp;&nbsp;&nbsp;delete&nbsp;attribute;&nbsp;equivalent&nbsp;to&nbsp;del(cdfVar.attr)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rename()&nbsp;&nbsp;&nbsp;rename&nbsp;attribute<br>
 &nbsp;<br>
 &nbsp;&nbsp;<a href="#CDFDim">CDFDim</a>&nbsp;&nbsp;&nbsp;The&nbsp;<a href="#CDFDim">CDFDim</a>&nbsp;class&nbsp;describes&nbsp;a&nbsp;netCDF&nbsp;dimension.&nbsp;It&nbsp;encapsulates<br>
@@ -828,7 +828,7 @@ pycdf&nbsp;defines&nbsp;the&nbsp;following&nbsp;classes.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inquiry<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;dimension&nbsp;name&nbsp;and&nbsp;length<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_id()&nbsp;&nbsp;&nbsp;get&nbsp;the&nbsp;dimension&nbsp;id<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_len()&nbsp;&nbsp;get&nbsp;the&nbsp;dimension&nbsp;length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_len()&nbsp;&nbsp;get&nbsp;the&nbsp;dimension&nbsp;length;&nbsp;equivalent&nbsp;to&nbsp;len(cdfDim)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inq_name()&nbsp;get&nbsp;the&nbsp;dimension&nbsp;name<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;misc<br>
@@ -1506,6 +1506,10 @@ Args:<br>
 Returns:<br>
 &nbsp;&nbsp;None<br>
 &nbsp;<br>
+NOTE:&nbsp;An&nbsp;attribute&nbsp;can&nbsp;also&nbsp;be&nbsp;deleted&nbsp;by&nbsp;calling<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;standard&nbsp;Python&nbsp;function&nbsp;del(),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eg:&nbsp;del(cdfVar.attr)<br>
+&nbsp;<br>
 C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_del_att</tt></dd></dl>
 
 <dl><dt><a name="CDFAttr-get"><strong>get</strong></a>(self, ubyte<font color="#909090">=0</font>)</dt><dd><tt>Return&nbsp;the&nbsp;attribute&nbsp;value(s).<br>
@@ -1630,6 +1634,9 @@ own&nbsp;internal&nbsp;use.&nbsp;To&nbsp;instantiate&nbsp;a&nbsp;netCDF&nbsp;dim
 user&nbsp;program&nbsp;should&nbsp;call&nbsp;the&nbsp;`def_dim()',&nbsp;`inq_dimid()'<br>
 or&nbsp;dim()&nbsp;methods&nbsp;of&nbsp;a&nbsp;<a href="#CDF">CDF</a>&nbsp;instance.</tt></dd></dl>
 
+<dl><dt><a name="CDFDim-__len__"><strong>__len__</strong></a>(self)</dt><dd><tt>Return&nbsp;dimension&nbsp;length.<br>
+Equivalent&nbsp;to&nbsp;<a href="#CDFDim-inq_len">inq_len</a>()&nbsp;method.</tt></dd></dl>
+
 <dl><dt><a name="CDFDim-inq"><strong>inq</strong></a>(self)</dt><dd><tt>Obtain&nbsp;the&nbsp;name&nbsp;and&nbsp;length&nbsp;of&nbsp;the&nbsp;dimension&nbsp;instance.<br>
 Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
 &nbsp;<br>
@@ -1662,7 +1669,10 @@ Returns:<br>
 &nbsp;&nbsp;dimension&nbsp;length;&nbsp;for&nbsp;the&nbsp;unlimited&nbsp;dimension,&nbsp;this&nbsp;is<br>
 &nbsp;&nbsp;the&nbsp;number&nbsp;of&nbsp;records&nbsp;written&nbsp;so&nbsp;far<br>
 &nbsp;<br>
-C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_inq_dimlen</tt></dd></dl>
+C&nbsp;library&nbsp;equivalent&nbsp;:&nbsp;nc_inq_dimlen<br>
+&nbsp;<br>
+NOTE:&nbsp;dimension&nbsp;length&nbsp;can&nbsp;also&nbsp;be&nbsp;obtained&nbsp;through&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;standard&nbsp;function&nbsp;len(),&nbsp;eg:&nbsp;len(cdfDim)</tt></dd></dl>
 
 <dl><dt><a name="CDFDim-inq_name"><strong>inq_name</strong></a>(self)</dt><dd><tt>Obtain&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;dimension&nbsp;instance.<br>
 Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
@@ -2081,6 +2091,9 @@ Args:<br>
 
 <hr>
 Methods inherited from <a href="pycdf.pycdf.html#CDFDim">CDFDim</a>:<br>
+<dl><dt><a name="CDFMFDim-__len__"><strong>__len__</strong></a>(self)</dt><dd><tt>Return&nbsp;dimension&nbsp;length.<br>
+Equivalent&nbsp;to&nbsp;<a href="#CDFMFDim-inq_len">inq_len</a>()&nbsp;method.</tt></dd></dl>
+
 <dl><dt><a name="CDFMFDim-inq_id"><strong>inq_id</strong></a>(self)</dt><dd><tt>Obtain&nbsp;the&nbsp;id&nbsp;of&nbsp;the&nbsp;dimension&nbsp;instance.<br>
 Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.<br>
 &nbsp;<br>
@@ -2154,6 +2167,11 @@ Returns:<br>
 
 <hr>
 Methods inherited from <a href="pycdf.pycdf.html#CDFVar">CDFVar</a>:<br>
+<dl><dt><a name="CDFMFVar-__delattr__"><strong>__delattr__</strong></a>(self, name)</dt><dd><tt>Delete&nbsp;attribute&nbsp;'name'.<br>
+Dataset&nbsp;mode:&nbsp;define&nbsp;mode.<br>
+&nbsp;<br>
+NOTE:&nbsp;del(cdfVar.attr)&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;attr.delete().</tt></dd></dl>
+
 <dl><dt><a name="CDFMFVar-__getattr__"><strong>__getattr__</strong></a>(self, name)</dt><dd><tt>Get&nbsp;value&nbsp;of&nbsp;variable&nbsp;attribute&nbsp;'name'.<br>
 Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.</tt></dd></dl>
 
@@ -2433,6 +2451,11 @@ To&nbsp;instantiate&nbsp;a&nbsp;netCDF&nbsp;variable,&nbsp;first&nbsp;obtain&nbs
 this&nbsp;instance:&nbsp;def_var(),&nbsp;inq_var(id)&nbsp;or&nbsp;var()&nbsp;.<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
+<dl><dt><a name="CDFVar-__delattr__"><strong>__delattr__</strong></a>(self, name)</dt><dd><tt>Delete&nbsp;attribute&nbsp;'name'.<br>
+Dataset&nbsp;mode:&nbsp;define&nbsp;mode.<br>
+&nbsp;<br>
+NOTE:&nbsp;del(cdfVar.attr)&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;attr.delete().</tt></dd></dl>
+
 <dl><dt><a name="CDFVar-__getattr__"><strong>__getattr__</strong></a>(self, name)</dt><dd><tt>Get&nbsp;value&nbsp;of&nbsp;variable&nbsp;attribute&nbsp;'name'.<br>
 Dataset&nbsp;mode:&nbsp;does&nbsp;not&nbsp;matter.</tt></dd></dl>
 

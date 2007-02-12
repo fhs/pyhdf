@@ -89,7 +89,6 @@ if __name__ == '__main__':
     cdfmf = CDFMF(('c1.nc', 'c2.nc', 'c3.nc'))
     unlimid = cdfmf.inq_unlimdim()
     print "unlimid=",unlimid
-    print "unlim lengths=", cdfmf._cdfVLen
     print "total unlim length=", cdfmf.inq_unlimlen()
     A = cdfmf.var('A') ; print "A.title=", A.title
     B = cdfmf.var('B') ; print "B.title=", B.title

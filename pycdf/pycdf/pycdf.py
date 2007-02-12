@@ -1,4 +1,4 @@
-# $Id: pycdf.py,v 1.12 2007-02-11 23:34:38 gosselin_a Exp $
+# $Id: pycdf.py,v 1.13 2007-02-12 20:13:14 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
 # Revision 1.11  2007/02/11 22:30:30  gosselin_a
@@ -862,7 +862,7 @@ pycdf defines the following classes.
 
              misc
                copy()     copy attribute to another variable or dataset
-               delete()   delete attribute
+               delete()   delete attribute; equivalent to del(cdfVar.attr)
                rename()   rename attribute
 
   CDFDim   The CDFDim class describes a netCDF dimension. It encapsulates
@@ -876,7 +876,7 @@ pycdf defines the following classes.
              inquiry
                inq()      get the dimension name and length
                inq_id()   get the dimension id
-               inq_len()  get the dimension length
+               inq_len()  get the dimension length; equivalent to len(cdfDim)
                inq_name() get the dimension name
 
              misc
@@ -2065,11 +2065,20 @@ class CDFDim(object):
           the number of records written so far
  
         C library equivalent : nc_inq_dimlen
+
+        NOTE: dimension length can also be obtained through the
+              standard function len(), eg: len(cdfDim)
                                                    """
  
         status, length = _C.nc_inq_dimlen(self._ncid._id, self._id)
         _checkCDFErr('inq_len', status)
         return length
+
+    def __len__(self):
+        """Return dimension length.
+           Equivalent to inq_len() method."""
+
+        return self.inq_len()
 
     def rename(self, name):
         """Rename the dimension.
@@ -2137,6 +2146,26 @@ class CDFVar(object):
 	# Return attribute value(s).
 	return a.get()
 
+    def __delattr__(self, name):
+        """Delete attribute 'name'.
+        Dataset mode: define mode.
+
+        NOTE: del(cdfVar.attr) is equivalent to attr.delete().
+
+                                      """
+
+	# See if this is a netCDF attribute.
+	a = CDFAttr(self._ncid, self, name)
+	# Check existence.
+	try:
+	    type, values = a.inq()
+	except CDFError:
+	    raise AttributeError, \
+                  "CDF variable attribute '%s' not found" % name
+        
+	# Delete attribute 'name'.
+        a.delete()
+        
     def __setattr__(self, name, value):
         """Set value(s) of variable attribute 'name'.
 	Dataset mode: define mode.
@@ -3387,6 +3416,10 @@ class CDFAttr(object):
         Returns:
           None
 
+        NOTE: An attribute can also be deleted by calling
+              the standard Python function del(),
+              eg: del(cdfVar.attr)
+
         C library equivalent : nc_del_att
                                                """
         if self._varid is not None:
@@ -3600,8 +3633,8 @@ class CDFMFDim(CDFDim):
         """Return dimension length."""
 
         return self._len
-        
 
+       
 class CDFMFVar(CDFVar):
 
     def __init__(self, cdfmf, name_num):
