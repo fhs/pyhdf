@@ -7,6 +7,8 @@
 
 
 
+
+  
   
   
   
@@ -18,6 +20,8 @@
 
 
 
+
+  
   
   
   
@@ -34,7 +38,9 @@
 
 
 
+
 <h1>pycdf - A python interface to Unidata netCDF library</h1>
+
 
 
 
@@ -46,9 +52,11 @@ the Unidata
 <a href="http://my.unidata.ucar.edu/content/software/netcdf/index.html">netCDF</a>
 library. &nbsp;It provides an almost complete coverage of the
 netCDF C API, wrapping it &nbsp;inside easy to use python classes.&nbsp;</p>
-<p>netCDF arrays are handled using&nbsp;<em>array</em> objects provided either by the python Numeric or numarray packages. The Numeric and numarray packages are closely related, and are hosted on the same <a href="http://sourceforge.net/projects/numpy/">SourceForge project</a>,
+
+<p>netCDF arrays are handled using&nbsp;<em>array</em> objects provided either by the python <span style="font-weight: bold;">numpy</span>, <span style="font-weight: bold;">Numeric</span> or <span style="font-weight: bold;">numarray</span> packages. Those&nbsp;packages are closely related, and are hosted on the same <a href="http://sourceforge.net/projects/numpy/">SourceForge project</a>,
 from which the source code can be downloaded. Ready-made binary
 distributions are available for most Unix/Linux environments.&nbsp;</p>
+<a href="http://numpy.scipy.org/"><span style="font-weight: bold;">numpy</span> </a>is the most up-to-date array package, and the other two packages should be considerated deprecated. 
 
 
 
@@ -62,6 +70,7 @@ distributions are available for most Unix/Linux environments.&nbsp;</p>
 
 
 
+
 <ul>
 
 
@@ -69,7 +78,9 @@ distributions are available for most Unix/Linux environments.&nbsp;</p>
 
 
 
-  <li> pycdf-0.6-0, &nbsp;January 02 2006 <span style="font-weight: bold;">&nbsp; &nbsp;NEW!</span></li>
+
+  <li> pycdf-0.6-3, &nbsp;February 11 2007 <span style="font-weight: bold;">&nbsp; &nbsp;NEW!</span></li>
+
 
 
 
@@ -77,16 +88,28 @@ distributions are available for most Unix/Linux environments.&nbsp;</p>
 
 
 </ul>
+
 <br>
-<span style="font-weight: bold;">New with the 0.6-0 release</span>:<br>
+
+<span style="font-weight: bold;">New with the 0.6-3 release</span>:<br>
+
 <ul>
-  <li>numarray support</li>
+
+  <li>numpy support</li>
+  <li>multi-file dataset (CDFMF class)</li>
+
   <li>netCDF large file support (CDF2 64-bit format), which appeared in netCDF 3.6</li>
+
   <li>ellipsis notation in slices</li>
+
   <li>validity checks in array assignments, scalar broadcasting</li>
+
   <li>improved documentation</li>
-  <li>many bug fixes</li>
+
+  <li>bug fixes</li>
+
 </ul>
+
 
 
 
@@ -100,6 +123,7 @@ distributions are available for most Unix/Linux environments.&nbsp;</p>
 
 
 
+
 <ul>
 
 
@@ -107,17 +131,22 @@ distributions are available for most Unix/Linux environments.&nbsp;</p>
 
 
 
+
   <li>Python v2.2 and above.</li>
+
   <li> netCDF library versions up
-to 3.6.1. </li>
+to 3.6.2. </li>
 
 
 
 
 
 
-  <li>Numeric version 22 or above.&nbsp;</li>
-  <li>numarray can also be used. The only numarray version tested so far is 1.3.3.</li>
+
+  <li>NumPy 1.0 or above.&nbsp;</li>
+
+  <li>Numeric or numarray can also be used. Numric has been tested up to v 23. The only numarray version tested so far is 1.3.3.</li>
+
 
 
 
@@ -133,7 +162,8 @@ to 3.6.1. </li>
   <li>pycdf should work on most Unix/Linux systems where the
 above software can be installed.It has been installed (among others) on
 the following environments : Linux (kernel 2.4.19 and above), Tru64
-4.0.f and above, Solaris 8, AIX 4.</li>
+4.0.f and above, Solaris 8, AIX 4, Mac OSX.</li>
+
 
 
 
@@ -147,6 +177,7 @@ the following environments : Linux (kernel 2.4.19 and above), Tru64
 
 
 
+
 <p>Links</p>
 
 
@@ -154,7 +185,9 @@ the following environments : Linux (kernel 2.4.19 and above), Tru64
 
 
 
+
 <ul>
+
 
 
 
@@ -169,6 +202,7 @@ the following environments : Linux (kernel 2.4.19 and above), Tru64
 
 
 
+
   <li> <a href="CHANGES">changes</a> </li>
 
 
@@ -176,7 +210,9 @@ the following environments : Linux (kernel 2.4.19 and above), Tru64
 
 
 
+
   <li> <a href="INSTALL">install notes</a> </li>
+
 
 
 
@@ -191,7 +227,9 @@ the following environments : Linux (kernel 2.4.19 and above), Tru64
 
 
 
+
   <li> <a href="examples">examples</a></li>
+
 
 
 
@@ -202,19 +240,12 @@ the following environments : Linux (kernel 2.4.19 and above), Tru64
 
 
 
-</ul>
-Open issues<br>
-<ul>
-  <li>scipy_core support</li>
+
 </ul>
 
+<p><em></em></p>
+<p><em>Last update: 2006-02-11</em></p>
 
-
-
-
-
-<hr>
-<p><em>Last update: 2006-01-02</em></p>
 
 
 
@@ -223,6 +254,7 @@ Open issues<br>
 
 <p style="text-align: right;"> <a href="http://sourceforge.net"><img style="border: 0px solid ; width: 88px; height: 31px;" title="www.sourceforge.net" src="http://sourceforge.net/sflogo.php?group_id=63486&amp;type=1" alt="www.sourceforge.net">
 </a></p>
+
 
 
 

@@ -4,32 +4,32 @@ NAME
     pycdf.pycdf
 
 FILE
-    /usr/lib/python2.4/site-packages/pycdf/pycdf.py
+    /usr/lib/python2.3/site-packages/pycdf/pycdf.py
 
 DESCRIPTION
     Python interface to the Unidata netCDF library
     (see: www.unidata.ucar.edu/packages/netcdf).
     
-    Version: 0.6-0
-    Date:    Jan 2 2006   
+    Version: 0.6-3
+    Date:    Feb 10 2007   
     
       
     Table of contents
       Introduction
-      Array package : Numeric and numarray
+      Array packages : Numeric, numarray, numpy
       Package components
       Prerequisites
       Documentation
       Summary of differences between pycdf and C API
       Error handling
+      Primer on reading and querying a netcdf variable
       High level attribute access
       High level variable access : extended indexing, slicing and ellipsis
-      Primer on reading and querying a netcdf variable
       Reading/setting multivalued netCDF attributes and variables
       Rules governing array assignment
       Working with scalar variables
       Working with the unlimited dimension
-      Open issues and current limitations : scipy_core
+      Quirks
       Functions summary
       Classes summary
       Examples
@@ -37,20 +37,28 @@ DESCRIPTION
       
     Introduction
     ------------
-    pycdf is a python wrapper around the netCDF C API. It augments the API
-    with an OOP framework where a netcdf file is accessed through 4 different
-    types of objects:
+    pycdf is a python wrapper around the netCDF v3 C API (up to version 3.6.2).
+    Please note that netCDF v4 is NOT supported by pycdf.
+    pycdf augments the API with an OOP framework where a netcdf file is accessed
+    through 4 different types of objects:
       CDF      netCDF dataset (file)
       CDFDim   netCDF dimension
       CDFVar   netCDF variable
       CDFAttr  netCDF attribute (dataset or variable attribute)
     
+    Of secondary importance are the following classes, which let one produce
+    a virtual netCDF dataset from the concatenation of two or more datasets
+    based on the same record variables:
+      CDFMF    see a sequence of datasets as one consolidated dataset
+      CDFMFDim access a CDFMF dimension
+      CDFMFVar access a CDFMV variable
+    
     pycdf key features are as follows.
     
       -pycdf is a complete implementation of the functionnality offered
-       by the netCDF C API. For almost every function offered by the C API 
+       by the netCDF v3 C API. For almost every function offered by the C API 
        exists an equivalent method in one of the pycdf classes. pycdf does not
-       hide anything, and everything possible in C implementation is also
+       hide anything, and everything possible in the C implementation is also
        achievable in python. It is quite straightforward to go from C to python
        and vice-versa, and to learn pycdf usage by refering to the C API
        documentation.
@@ -62,7 +70,7 @@ DESCRIPTION
        programmer's task. Of greatest interest are those allowing netCDF
        access through familiar python idioms:   
          -netCDF attributes can be read/written like ordinary python class
-          attributes
+          and object attributes
          -netCDF variables can be read/written like ordinary python lists using
           multidimensional indices and so-called "extended slice syntax", with
           strides allowed
@@ -75,55 +83,50 @@ DESCRIPTION
           enddef(). See CDF.datamode() method for details.
          -pycdf offers methods to retrieve a dictionnary of the attributes,
           dimensions and variables defined on a dataset, and of the attributes
-          set on a variable. Querying a dataset is thus geatly simplified.
+          set on a variable. Querying a dataset is thus greatly simplified.
           See methods CDF.attributes(), CDF.dimensions(), CDF.variables(),
           and CDFVar.attributes() for details.
           
-    Array package : Numeric and numarray
-    ------------------------------------
-    netCDF variables are read/written using high-level "array" objects.
-    Arrays used to be provided solely by the python Numeric package. Beginning
-    with version 0.6-0, the python numarray package can now be used. The choice
-    of the array package on which to base pycdf is made at install time (see
-    the INSTALL file in the pycdf distribution). Only one style of install is
-    possible : a Numeric-based and a numarray-based pycdf cannot coexist on the
+    Array package : Numeric, numarray, numpy
+    ----------------------------------------
+    netCDF variables are read/written using high-level "array" objects,
+    since arrays offer the closest match to the nD matrices that netCDF
+    implement.
+    
+    Before 2005, arrays used to be supported solely by the python 'Numeric'
+    package. Promotion of a new array package called 'numarray' was then
+    attempted, which pycdf supported starting with version 0.6.
+    With the advent in late 2006 of the much awaited 'numpy' package, which
+    reconciliates Numeric and numarray while offering more functionnality,
+    Numeric and numarray should be considered deprecated. Beginning with
+    release 0.6-3,pycdf fully supports numpy, while still offering support
+    for the older Numeric and numarray pacakges for backwards compatibility.
+    
+    The choice of the array package on which to base pycdf is made at install time
+    (see the INSTALL file in the pycdf distribution). Only ONE style of install is
+    possible : a numpy-based and a numarray-based pycdf cannot coexist on the
     same machine, unless one wants to play tricks with python search paths.
     
-    Although the underlying API is very much identical, the two packages define
-    the "array" somewhat differently :
+    Although the underlying API is very similar, the packages define
+    the "array" somewhat differently. Since the contents of cdf variables are always
+    returned as "arrays" to the calling program, the user must be carefull when
+    processing those arrays using a package different from the one used by pycdf
+    to generate them. A numpy-style array may not always be acceptable to a
+    numarray-based package, and vice-versa.
     
-      >>> import Numeric, numarray
-      >>> type(Numeric.array('i')), type(numarray.array('i'))
-      ==> (<type 'array'>, <class 'numarray.numarraycore.NumArray'>)
+    In the rest of this documentation, when one reads "from numpy import ...", it
+    should be assumed that "from Numeric import ..." (or "from numarray")
+    could also be used, unless explicitly stated otherwise.
     
-    Since the contents of cdf variables are always returned as "arrays" to the
-    calling program, the user must be carefull when processing those arrays
-    using packages directly or indirectly based on Numeric/numarray : a
-    Numeric-style array may not always be acceptable to a numarray-based
-    package, and vice-versa.
-    
-    However, since pycdf simply dispatches "arrays" to the calling program and
-    does not process them in any special way, it appears that the programmer
-    can import either 'Numeric' or 'numarray', irrespective of the variant used
-    to install pycdf. Thus :
-    
-      >>> from Numeric import * 
-    
-    should usually work even if pycdf has been installed using numarray. In the
-    rest of this documentation, when one reads "from Numeric import ...", it
-    should be assumed that "from numarray import ..." could also be used,
-    unless explicitly stated otherwise.
-    
-    It is however deemed safer to import the same array package as the one
-    used when installing pycdf. To obtain the name of the package on which the
-    current pycdf installation is based, call function pycdfArrayPkg().
+    It may be helpfull at times to obtain the name of the package on which the current
+    pycdf installation is based. For that, simply call function pycdfArrayPkg().
     
     
     Package components
     ------------------
     pycdf is a proper Python package, eg a collection of modules stored under
     a directory name identical to the package name and holding an __init__.py
-    file. The pycdf package is composed of 3 modules:
+    file. The pycdf package is composed of 3 main modules:
        _pycdfext   C extension module responsible for wrapping the
                    netcdf library
        pycdfext    python module implementing some utility functions
@@ -131,10 +134,27 @@ DESCRIPTION
        pycdf       python module which wraps the extension module inside
                    an OOP framework
     
-    _pycdfext and pycdfest were generated with the SWIG preprocessor.
+    A fourth small utility module named "pycdfext_array" is used to isolate
+    declarations specific to the type of array package used. The pycdf module
+    imports the 'array' constructors indirectly through this utility module,
+    which is configured at install time.
+    
+    Take note that, following the "import pycdf" or "from pycdf import *"
+    statement, the pycdf package exposes only the function and class declarations
+    documented herein. All references to the package modules are removed, and
+    they become very difficult to get at from a user program. The objects
+    exposed by pycdf are:
+    
+      classes:
+        CDF, CDFAttr, CDFDim, CDFError, CDFMF, CDFVar, NC
+      functions:
+        inq_libvers, pycdfArrayPkg, pycdfVersion, strerror
+    
+    _pycdfext and pycdfext were generated with the SWIG preprocessor.
     SWIG is however *not* needed to run the package. Those two modules
     are meant to do their work in the background, and should never be called
-    directly. Only 'pycdf' should be imported by the user program.
+    directly (as noted above, they are almost impossible to get at anyway).
+    Only 'pycdf' should be imported by the user program.
       
     Prerequisites
     -------------
@@ -144,11 +164,12 @@ DESCRIPTION
       netCDF library
         pycdf does *not* include the netCDF library, which must
         be installed separately. netCDF is available at
-        "www.unidata.ucar.edu/packages/netcdf".
+        "www.unidata.ucar.edu/packages/netcdf". All versions
+        up to 3.6.2 are supported.
     
-      Numeric or numarray python package
+      numpy, Numeric or numarray python package
         netCDF variables are read/written using the array data type provided
-        by the Numeric or numarray python package. Numeric or nmarray are
+        by the numpy, Numeric or numarray python packages. Those packages are
         available at "numpy.sourceforge.net".
     
     Documentation
@@ -165,7 +186,7 @@ DESCRIPTION
       
     This document (in both its text and html versions) has been completely
     produced using "pydoc", the Python documentation generator (which
-    made its debut in the 2.1 release). pydoc can also be used
+    made its debut in the Python 2.1 release). pydoc can also be used
     as an on-line help tool. For example, to know everything about
     the CDFVar class, say:
       
@@ -251,11 +272,75 @@ DESCRIPTION
     Ex.:
       >>> from pycdf import *
       >>> try:
-      ...   d=CDF('toto.nc')
+      ...   d=CDF('foo.nc')
       ... except CDFError,err:
       ...   print "pycdf reported an error in function/method:",err[0]
       ...   print "      netCDF error ",err[1],":",err[2]
       >>>
+    
+    Primer on reading and querying a netcdf file
+    --------------------------------------------
+    Here are useful hints for a quick start on how to read and query a netcdf
+    file.
+    
+    Assume the file is named 'table.nc' (as created for example by the
+    'txttocdf.py' program inside the 'examples/txttocdf' directory accompanying
+    the pycdf distribution).
+    
+    To open the file:
+    
+      % python
+      
+      >>> from pycdf import *
+      >>> from numpy import *      # or "from Numeric import *"
+      >>> nc = CDF('table.nc')     # file opened in readonly mode
+    
+    NOTE: You need to import the array package (numpy, Numeric, numarray)
+          ONLY if you want to call methods or query attributes of the
+          array objects returned by pycdf. None of this is needed in the
+          example statements given below. Thus, the 'from <pkg> import *'
+          entered above could have been omitted without harm.
+          
+    To get a dictionnary of attributes defined at the file level :
+    
+      >>> ncattr = nc.attributes()  # key is attr name, value is attr value
+    
+    To get a dictionnary of the variables stored inside the file :
+      
+      >>> vardict = nc.variables()
+    
+    The keys are the variable names; the values store the variable properties,
+    eg: dimension names, shape, and type
+    
+    To get a list of the variable names:
+    
+      >>> varnames = nc.variables().keys()
+    
+    To retrieve and print the full array of values stored inside variable
+    'varnames[0]' :
+    
+      >>> v0 = nc.var(varnames[0])[:]  # without the [:], you would get a CDF
+                                       # var instance;  the slice gets you
+                                       # the array of values
+      >>> print v0                       
+    
+    To print the values of the last column of array v0 :
+    
+      >>> print v0[:,-1]
+    
+    To print just the first two rows of values of variable 'varnames[1]' :
+    
+      >>> v1_01 = nc.var(varnames[1])[:2]
+    
+    To get the dictionnary of attributes attached to variable 'varnames[0]' :
+    
+      >>> v0_dict = nc.var(varnames[0]).attributes()
+    
+    Keys are the attribute names, and the dictionnary values store the
+    attribute values.
+    
+    See the 'Examples' section below for a list of more comprehensive examples.
+    
     
     High level attribute access
     ---------------------------
@@ -264,7 +349,7 @@ DESCRIPTION
     level. Attributes are names storing information (in the form of scalars,
     strings, sequences) which help interpret the dataset or variable they
     are attached to. netCDF attributes rely on a set of conventions (see the
-    netCDF manual) and are not enforced in ay way by the library. The only
+    netCDF manual) and are not enforced in any way by the library. The only
     exception (known to the author) is the '_FillValue' attribute which, when
     attached to a variable, sets the value that is to be stored in
     uninitialized entries of this variable. All other attributes must be
@@ -335,7 +420,7 @@ DESCRIPTION
     
     The second way is by indexing and slicing the variable like a Python
     sequence. pycdf here follows most of the rules used to index and slice
-    Numeric arrays. Thus a netCDF variable can be seen as a Numeric array,
+    arrays. Thus a netCDF variable can be seen as an array,
     except that data is read from/written to a file instead of memory.
     
     Extended indexing let you access variable elements with the familiar
@@ -404,65 +489,6 @@ DESCRIPTION
     specification of a mapping vector (which could be used for ex. to
     transpose an array), and the handling of NC.BYTE type values as unsigned.
     
-    Primer on reading and querying a netcdf file
-    --------------------------------------------
-    Here are useful hints for a quick start on how to read and query a netcdf
-    file.
-    
-    Assume the file is named 'table.nc' (as created for example by the
-    'txttocdf.py' program inside the 'examples/txttocdf' directory accompanying
-    the pycdf distribution).
-    
-    To open the file:
-    
-      % python
-      
-      >>> from pycdf import *
-      >>> from Numeric import *    # or "from numarray import *"
-      >>> nc = CDF('table.nc')     # file opened in readonly mode
-    
-    To get a dictionnary of attributes defined at the file level :
-    
-      >>> ncattr = nc.attributes()  # key is attr name, value is attr value
-    
-    To get a dictionnary of the variables stored inside the file :
-      
-      >>> vardict = nc.variables()
-    
-    The keys are the variable names; the values store the variable properties,
-    eg: dimension names, shape, and type
-    
-    To get a list of the variable names:
-    
-      >>> varnames = nc.variables().keys()
-    
-    To retrieve and print the full array of values stored inside variable
-    'varnames[0]' :
-    
-      >>> v0 = nc.var(varnames[0])[:]  # without the [:], you would get a CDF
-                                       # var instance;  the slice gets you
-                                       # the array of values
-      >>> print v0                       
-    
-    To print the values of the last column of array v0 :
-    
-      >>> print v0[:,-1]
-    
-    To print just the first two rows of values of variable 'varnames[1]' :
-    
-      >>> v1_01 = nc.var(varnames[1])[:2]
-    
-    To get the dictionnary of attributes attached to variable 'varnames[0]' :
-    
-      >>> v0_dict = nc.var(varnames[0]).attributes()
-    
-    Keys are the attribute names, and the dictionnary values store the
-    attribute values.
-    
-    See 'examples/cdfstruct/cdfstruct.py' in the pycdf distribution for an
-    example of a program that exercices many of the pycdf query and read
-    methods.
-    
     
     Reading/setting multivalued netCDF attributes and variables
     -----------------------------------------------------------
@@ -489,8 +515,7 @@ DESCRIPTION
                # of 3 lists, each representing a row of v2.
         >>> v2[:]=[[1,2,3],[11,12,13],[21,22,23]]
     
-    The assigned value can also be a Numeric/numarray array.
-    Rewriting example above:
+    The assigned value can also be an array. Rewriting example above:
         >>> v1=array([1,2,3])
         >>> v2=array([[1,2,3],[11,12,13],[21,22,23])
     
@@ -504,13 +529,13 @@ DESCRIPTION
     
     Rules governing array assignment
     --------------------------------
-    pycdf releases before 0.6-0 were somewhat careless when dealing with
+    pycdf releases before 0.6 were somewhat careless when dealing with
     array assignments. For example, no validity check was performed when
     attempting to assign the contents of an array to an array of a different
     shape. This could result in garbage being assigned, fatal errors, 
     and hard to catch rampant bugs.
     
-    Beginning with release 0.6-0, when an array (or a slice of thereof) is
+    Beginning with release 0.6, when an array (or a slice of thereof) is
     assigned to, pycdf makes sure that the type of right-hand side is
     acceptable, and that the values meet certain validity constraints. An
     array can be assigned :
@@ -530,7 +555,7 @@ DESCRIPTION
           >>> x[:2] = 0"    # zeroes the first  two rows of array "x"
           >>> x[:] = 1      # set 'x' to all 1's; equivalent to, but much
                             # simpler than :
-                            #   x[:] = Numeric.ones((x.shape()))
+                            #   x[:] = numpy.ones((x.shape()))
                             #   x[:] = NUMARRAY.ones((x.shape()))
     
       Note in the above example that we do not have to care about the shape of
@@ -587,6 +612,9 @@ DESCRIPTION
        >>> temp[:] = 12                      # equivalent to temp.put(12)
        >>> print temp[:]                     # equivalent to "print temp.get()"
     
+    For a scalar variable 'v', the methods inquiring about the dimensions of 'v' will naturally
+    return empty sequences, eg: dimensions(), inq(), inq_dimid(), shape(). Method
+    inq_ndims() will return 0.
     
     Working with the unlimited dimension
     ------------------------------------
@@ -617,9 +645,16 @@ DESCRIPTION
     dimension 'd', much as a traditional file is extended by writing data
     records to it.
     
-    Given a CDFVar instance v, method v.isrecord() can be called to check if
-    v is a record variable, eg if first dimension of v refers to the
-    unlimited dimension.
+    Here are some usefull methods to work with the unlimited dimension.
+      -Given a CDF dataset instance 'nc':
+         nc.inq_unlimdim()  returns the index of the dataset unlimited dimension
+                            or -1 if no unlimited dimension exists
+         nc.inq_unlimlen()  returns the current length of the unlimited
+                            dimension (or -1 if no unlimited dimension exists)
+    
+      -Given a CDFVar variable instance 'v':
+         v.isrecord()       checks whether v is a record variable, eg if first
+                            dimension of v refers to the unlimited dimension.
     
     Only ONE unlimited dimension is allowed inside a dataset, and ALL variables
     based on that dimension grow "in synch". So, if variables 'v1' and 'v2'
@@ -662,20 +697,25 @@ DESCRIPTION
     their variable fill value.
     
     
-    Open issues and current limitiations : scipy_core
-    -------------------------------------------------
+    Quirks
+    ------
     
-    The following limitations now affect the pycdf package. They may be
-    lifted out in future releases. Users are encouraged to send their votes
-    on those issues.
+    _FillValue attribute
     
-      scipy_core   The Scientific Python project team is currently working on a
-                   merge of Numeric and numarray called 'scipy_core'.
-                   Numeric and numarray coud be deprecated once scipy_core
-                   achieves a stable status (Numeric is said to have reached
-                   its last release ever). pycdf does not currently support
-                   scipy_core, but wil certainly do in a not too far feature.
+      pycdf attaches no special significance to the _FillValue attribute, only
+      the netcdf library does. This can lead to the following nasty problem. If you
+      write "v._FillValue = 0", pycdf defines a new attribute and deduces its type
+      from that of the right hand side value, eg an integer type. However, if variable
+      'v' is defined as being of type real, then the  netcdf library (not pycdf!)
+      will complain about a type mismatch when time comes to initialize
+      the variable with the fill value, and an exception will be thrown.
     
+      To solve the problem, initialize the fill value with a value whose type is explicitly
+      identical to that of the variable. For example, if variable 'v' is of type real, write
+      "v._FillValue = 0.0" instead of "v._FillValue = 0".
+    
+      Also do not forget to set the fill value *before* assigning to the variable.
+      
     
     Functions summary
     -----------------
@@ -685,7 +725,8 @@ DESCRIPTION
        strerror()       return the string associated with a netCDF error code
     
        pycdfVersion()   query pycdf version string
-       pycdfArrayPkg()  query the array package used to install pycdf
+       pycdfArrayPkg()  query the array package used at install time
+    
     
     Classes summary
     ---------------
@@ -742,6 +783,7 @@ DESCRIPTION
                inq_ndims()     query number of dimensions
                inq_nvars()     query number of variables
                inq_unlimdim()  query id of the unlimited dimension
+               inq_unlimlen()  query the current length of the unlimited dimension
                variables()     get a dictionnary describing the dataset
                                variables
                
@@ -783,6 +825,7 @@ DESCRIPTION
                methods:
                  inquiry
                    inq()      get the dimension name and length
+                   inq_id()   get the dimension id
                    inq_len()  get the dimension length
                    inq_name() get the dimension name
     
@@ -818,17 +861,92 @@ DESCRIPTION
                                  numbers and number of attributes
                    inq_dimid()   get the dimensions index numbers
                    inq_name()    get the variable name
+                   inq_id()      get the variable index number
                    inq_natts()   get the variable number of attributes
                    inq_ndims()   get the variable number of dimensions
                    inq_type()    get the variable type
                    isrecord()    indicates wheter the variable is a record
-                                 variable (eg dimension 0 refers to the
+                                 variable (eg if dimension 0 refers to the
                                  unlimited dimension)
                    shape()       get the lengths of the variable dimensions
     
                  misc
                    rename()    rename the variable
     
+      
+      CDFMF    The CDFMF class describes a pseudo-CDF file constructed by
+               concatenating inside the pseudo-file record variables which are similarly
+               defined in 2 or more CDF files. The resulting virtual CDF file is opened
+               in read-only mode, and thus cannnot be updated. Otherwise, it can
+               be manipulated similarly to a classic CDF dataset.
+               
+               For example, we could have a set of files holding similar
+               (time x lat x lon) variables, where time is
+               the unlimited dimension. File 1 could hold records at times t0, t1,
+               t2; file 2 could hold records at times t3, t4; file 3 could hold
+               records at times t4, t5, etc. The CDFMF class could let us see
+               those 3 files as a "unified" variable for times t0, t1, t2, t3,
+               etc. This functionnality lets one break into more manageable pieces
+               what could otherwise become a huge dataset. A multi-file variable
+               could also be easier to share with others, and more closely adapt
+               to reality (eg when data is acquired daily, each day worth of data
+               can be stored in a separate dataset).
+    
+               To create a multi-file dataset, call the CDFMF() constructor, with
+               the sequence of files names as argument. In order to be concatenated,
+               variables must be based on the same unlimited dimension and be of the same
+               shape and datatype.
+    
+               The first file named in a multi-file dataset becomes the "master" file.
+               It defines the record variables which must be found compatible in all
+               the other files. The attributes defined on the master variables apply
+               to the multi-file variables as a whole.
+    
+               methods: A CDFMF object inherits methods from the CDF class, specialising
+                        the following.
+                        
+                 constructors
+                   CDFMF()         create a multi-file dataset instance
+                   dim()           return a CDFMFDim() instance for the multi-file dataset
+                   var()           return a CDFMFVar() instance for the multi-file dataset
+    
+                 query
+                   inq_unlimlen()  returns the current length of the unlimited dimension,
+                                   summed over all the data files in the multi-file
+                                   dataset
+    
+      CDFMFDim  The CDFMFDim class plays a role equivalent to the CDFDim class, this
+                time for a CDFMF object. The dimension instance applies to the
+                multi-file dataset, instead of just one dataset.
+    
+                To create a CDFMFDim intance, call the dim() method of a CDFMF instance,
+                with the dimension name of id as argument.
+    
+                methods: A CDFMFDim object inherits methods from CDFDim class, specialising
+                         the followings.
+                    inq()      return a tuple holding the name and length of the dimension
+                               (length summed over all datasets for the unlimited dimension)
+                    inq_len()  return the dimension length (sommed over all datasets for the
+                               unlimited dimension)
+    
+      CDFMFVAR  The CDFMFVar class plays a rote equivalent to the CDFVar class, this
+                time for a CDFMF instance. It lets one manipulate a concatenated variable
+                as if it were one ordinary variable, ignoring file boundaries. A CDFMFVar
+                instance can be accessed like a "classic" CDFVar instance, using
+                slicing, indexing, attributes, etc.
+    
+                To create a CDFMFVar instance, call the var() method of the CDFMF instance.
+    
+                methods: A CDFMFVar object inherits methods from the CDFVar class, specialising
+                         the following.
+    
+                  query
+                    shape()   returns the variable shape, taking into account the total length
+                              of the unlimited dimension
+                
+       NOTE : there is no CDFMFAttr class. CDFMF and CDFMFVar objects inherit their
+              attribute handling methods from their superclass, CDF and CDFVar, resp.
+            
     
       NC       The NC class defines constants for setting file opening modes,
                data Those constants are defined as class attributes.
@@ -865,254 +983,38 @@ DESCRIPTION
     Examples
     --------
     
-    Example-1
+    The pycdf distribution comes with a few non-trivial example programs
+    located under directory 'examples'.
     
-    The following simple example exercises some important pycdf methods. It
-    shows how to create a netCDF dataset, define attributes and dimensions,
-    create variables, and assign their contents.
+      compr.py
+        Shows how to create, index, slice, and update arrays. The results
+        are compared with what they should be, so this example can
+        be used to validate the installation.
     
-    Suppose we have a series of text files each defining a 2-dimensional real
-    matrix. First line holds the matrix dimensions, and following lines hold
-    matrix values, one row per line. The following procedure will transfer to
-    a netCDF variable the contents of any one of those text files. The
-    procedure also computes the matrix min and max values, storing them as
-    variable attributes. It also assigns to the variable the group of
-    attributes passed as a dictionnary by the calling program. Note how simple
-    such an assignment becomes with pycdf: the dictionnary can contain any
-    number of attributes, of different types, single or multi-valued. Doing
-    the same in a conventional language would be much more challenging.
+      multi.py
+        Shows how to use the CDFMF class to handle a multi-file dataset.
     
-    Error checking is minimal, to keep example as simple as possible
-    (admittedly a rather poor excuse ...).
+      cdfstruct
+        Utility program capable of analysing the structure of any netCDF file
+        you may want to throw at it. Handy when you want to quickly peek at
+        the contents of any netCDF file.
     
-    
-      from Numeric import *
-      from pycdf import *
-    
-      def txtToCDF(txtFile, ncFile, varName, attr):
-        # Transfer contents of 'txtFile' to NC.FLOAT variable 'varName' inside
-        # netCDF file 'ncFile'. `attr' is a dictionnary holding attributes
-        # to assign to the variable.
-    
-        try:   # Catch CDFError exceptions
-            # Open netCDF file in update mode, creating it if inexistent.
-            nc = CDF(ncFile, NC.WRITE|NC.CREATE)
-            # Automatically set define and data modes.
-            nc.automode()
-            # Open text file and get matrix dimensions on first line
-            # (admittedly a flaky design, it would be better to compute those
-            # values programmatically).
-            txt = open(txtFile)
-            ni, nj = map(int, txt.readline().split()) # split fields, then
-                                                      # convert to ints
-            # Defined netCDF dimensions. Should check for already existing
-            # dimensions of that name.
-            dimi = nc.def_dim(varName + '_i', ni) # create name like 'depth_i'
-            dimj = nc.def_dim(varName + '_j', nj) # and 'depth_j'
-            # Define netCDF variable of type NC.FLOAT with those dimensions.
-            # Should check that this variable does not already exist.
-            var = nc.def_var(varName, NC.FLOAT, (dimi, dimj))
-            # Assign attributes passed as argument inside dict `attr'.
-            for attrName in attr.keys():
-                setattr(var, attrName, attr[attrName])
-            # Load variable with lines of data. Compute min and max
-            # over the whole matrix.
-            i = 0
-            while i < ni:
-                # split fields, converting them to a list of floats
-                elems = map(float, txt.readline().split())
-                # assign to netCDF array
-                var[i] = elems
-                # compute min and max
-                minE = min(elems)
-                maxE = max(elems)
-                if i:
-                    minVal = min(minVal, minE)
-                    maxVal = max(maxVal, maxE)
-                else:
-                    minVal = minE
-                    maxVal = maxE
-                i += 1
-            # Set variable min and max attributes.
-            var.minVal = minVal
-            var.maxVal = maxVal
-            # Close files (not really necessary, since closing is
-            # automatic when file objects go out of scope.
-            nc.close()
-            txt.close()
-        except CDFError, msg:
-            print "CDF error:",msg
-    
-    We could now call the procedure as follows:
-    
-      ncFile  = 'table.nc'   # netCDF file name
-      # Transfer contents of 'temp.txt' to variable 'temperature'
-      txtToCDF('temp.txt', ncFile, 'temperature',
-               # Dictionary of attributes to set on netCDF variable
-               {'title'      : 'temperature matrix',
-                'units'      : 'celsius',
-                'precision'  : 0.01,
-                'valid_range': (-2.8,27.0)})  # Note multivalued attribute
-    
-      # Transfer contents of 'depth.txt' to variable 'depth'
-      txtToCDF('depth.txt', ncFile, 'depth',
-               # Dictionary of attributes to set on netCDF variable
-               {'title'      : 'depth matrix',
-                'units'      : 'meters',
-                'precision'  : 0.1,
-                'valid_range': (0, 500.0)})   # Note multivalued attribute
-    
-    
-    
-    Example 2
-    
-    This example shows a usefull python program that will display the
-    structure of any netCDF file whose name is given on the command line.
-    After the netCDF file is opened, high level inquiry methods are called
-    to obtain dictionnaries descrybing dataset attributes, dimensions and
-    variables. The rest of the program mostly consists in nicely formatting
-    the contents of those dictionaries.
-    
-    
-      import sys
-      from pycdf import *
-      from Numeric import *
-    
-      # Convert numeric type code to string representation
-      typeTab = {NC.BYTE:   'BYTE',
-                 NC.CHAR:   'CHAR',
-                 NC.SHORT:  'SHORT',
-                 NC.INT:    'INT',
-                 NC.FLOAT:  'FLOAT',
-                 NC.DOUBLE: 'DOUBLE'}
-    
-      printf = sys.stdout.write
-      ncFile = sys.argv[1]              # get file name from cmd line
-      try:
-          nc = CDF(ncFile)              # open netCDF file, read-only
-          attr = nc.attributes(full=1)  # dataset attributes dictionnary
-          dims = nc.dimensions(full=1)  # dataset dimensions dictionnary
-          vars = nc.variables()         # dataset variables disctionnary
-    
-          # Dataset name, number of attributes, dimensions and variables.
-          printf("DATASET INFO
-    ")
-          printf("------------
-    
-    ")
-          printf("%-25s%s
-    " % ("netCDF file:", ncFile))
-          printf("%-25s%d
-    " % ("  dataset attributes:", len(attr)))
-          printf("%-25s%d
-    " % ("  dimensions:", len(dims)))
-          printf("%-25s%d
-    " % ("  variables:", len(vars)))
-          printf("
-    ");
-    
-          # Attribute table.
-          if len(attr) > 0:
-              printf("Dataset attributes
-    
-    ")
-              printf("  name                 idx type   len value
-    ")
-              printf("  -------------------- --- ----   --- -----
-    ")
-              attNames = attr.keys()
-              attNames.sort()
-              for a in attNames:
-                  t = attr[a]
-                  printf("  %-20s %3d %-6s %3d %s
-    " %
-                         (a, t[1], typeTab[t[2]], t[3], t[0]))
-              printf("
-    ")
-    
-          # Dimensions table
-          if len(dims) > 0:
-              printf("Dataset dimensions
-    
-    ")
-              printf("  name                 idx length unlimited
-    ")
-              printf("  -------------------- --- ------ ---------
-    ")
-              dimNames = dims.keys()
-              dimNames.sort()
-              for d in dimNames:
-                  t = dims[d]
-                  printf ("  %-20s %3d %6d %3s
-    " %
-                          (d, t[1], t[0], t[2] and 'X' or ''))
-              printf("
-    ")
-    
-          # Variables table
-          if len(vars) > 0:
-              printf("Dataset variables
-    
-    ")
-              printf("  name                 idx type   nattr dimension(s)
-    ")
-              printf("  -------------------- --- ----   ----- ------------
-    ")
-              varNames = vars.keys()
-              varNames.sort()
-              for v in varNames:
-                  vAttr = nc.var(v).attributes()
-                  t = vars[v]
-                  printf("  %-20s %3d %-6s %5d " %
-                         (v, t[3], typeTab[t[2]], len(vAttr)))
-                  n = 0
-                  for d in t[0]:
-                      printf("%s%s(%d)" % (n > 0 and ', ' or '', d, t[1][n]))
-                      n += 1
-                  printf("
-    ")
-              printf("
-    ")
-    
-              # Variables attributes
-              if len(varNames) > 0:
-                  printf("VARIABLE INFO
-    ")
-                  printf("-------------
-    
-    ")
-                  for v in varNames:
-                      vAttr = nc.var(v).attributes(full=1)
-                      if len(vAttr) > 0:
-                          printf("%s attributes
-    
-    " % v)
-                          printf("  name                 idx type   len value
-    ")
-                          printf("  -------------------- --- ----   --- -----
-    ")
-                          attNames = vAttr.keys()
-                          attNames.sort()
-                          for a in attNames:
-                              t = vAttr[a]
-                              printf("  %-20s %3d %-6s %3d %s
-    " %
-                                     (a, t[1], typeTab[t[2]], t[3], t[0]))
-                          printf("
-    ")
-          
-      except CDFError, msg:       # Catch CDFError exceptions
-          print "CDFError", msg
+      txttocdf
+        Example proram showing how you may convert to netCDF data stored in
+        flat file format.
 
 CLASSES
-    __builtin__.object
-        CDF
-        CDFAttr
-        CDFDim
-        CDFVar
-        NC
     exceptions.Exception
         CDFError
+    __builtin__.object
+        CDF
+            CDFMF
+        CDFAttr
+        CDFDim
+            CDFMFDim
+        CDFVar
+            CDFMFVar
+        NC
     
     class CDF(__builtin__.object)
      |  The CDF class describes a netCDF dataset.
@@ -1256,8 +1158,9 @@ CLASSES
      |      C library equivalent : no equivalent
      |  
      |  close(self)
-     |      Close the dataset. This call is optional, since the dataset is automatically
-     |      closed when its instance variable goes out of scope or is reassigned. 
+     |      Close the dataset. This call is optional, since the dataset is
+     |      automatically closed when its instance variable goes out of scope
+     |      or is reassigned. 
      |      
      |      Args:
      |        no argument
@@ -1442,6 +1345,17 @@ CLASSES
      |        id of the unlimited dimension, or -1 if none
      |      
      |      C library equivalent : nc_inq_unlimdim
+     |  
+     |  inq_unlimlen(self)
+     |      Return he current length of the dataset unlimited dimension.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        current length of the dataset unlimited dimension, or -1
+     |        if no unlimited dimension has been defined.
+     |      
+     |      C library equivalent : none
      |  
      |  inq_varid(self, name)
      |      Get a variable instance given its name.
@@ -1720,6 +1634,17 @@ CLASSES
      |      
      |      C library equivalent : nc_inq_dim
      |  
+     |  inq_id(self)
+     |      Obtain the id of the dimension instance.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        dimension id (integer)
+     |      
+     |      C library equivalent : none
+     |  
      |  inq_len(self)
      |      Obtain the length of the dimension instance.
      |      Dataset mode: does not matter.
@@ -1776,6 +1701,768 @@ CLASSES
      |  __getitem__(...)
      |  
      |  __str__(...)
+    
+    class CDFMF(CDF)
+     |  # Classes CDFMF and CDFMFVar allow handling a multi-file dataset.
+     |  
+     |  Method resolution order:
+     |      CDFMF
+     |      CDF
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(self, cdfFiles)
+     |      Open a CDF dataset spanning multiple files,
+     |      making it look as if it was a single file.
+     |      
+     |      Arguments:
+     |        cdfFiles      sequence of CDF files; the first one will become the
+     |                      "master" file, defining all the record variables which may
+     |                      span subsequent files
+     |      
+     |      Returns:
+     |        None
+     |      
+     |      The files are always opened in read-only mode.
+     |  
+     |  __setattr__(self, name, value)
+     |      Intercept certain attributes proper to CDFMF class,
+     |      which should not be written to the underlying CDF data set.
+     |  
+     |  dim(self, name_num)
+     |      Return an dimension instance from a CDFMF instance.
+     |  
+     |  inq_unlimlen(self)
+     |      Return the current length of the unlimited dimension,
+     |      summed over all the datasets of the CDFMF instance.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        Total length of the record variable.
+     |  
+     |  var(self, name_num)
+     |      Return an instance of a var from a CDFMF instance.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from CDF:
+     |  
+     |  __del__(self)
+     |      Close the associated dataset when a CDF instance is deleted,
+     |      if this has not already been done.
+     |  
+     |  __getattr__(self, name)
+     |  
+     |  abort(self)
+     |      Back out of recent definitions to the dataset. Dataset is closed
+     |      at exit.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        None
+     |      
+     |      C library equivalent : nc_abort
+     |  
+     |  attr(self, name_id)
+     |      Obtain an CDFAttr instance for a global attribute,
+     |      given its name or its index number. The attribute may or may
+     |      not exist.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        name_id   If a string argument is used, it is interpreted as the
+     |                  attribute name, which may be non-existent. 
+     |                  Otherwise, it must be a non negative integer 
+     |                  giving the index number of an existing attribute.
+     |      Returns:
+     |        CDFAttr instance
+     |      
+     |      C library equivalent : None
+     |  
+     |  attributes(self, full=0)
+     |      Return a dictionnary describing every global
+     |      attribute in the dataset.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        full      true to get complete info about each attribute
+     |                  false to report only each attribute value
+     |      Returns:
+     |        Empty dictionnary if no global attribute defined
+     |        Otherwise, dictionnary where each key is the name of a
+     |        global attribute. If parameter `full' is false,
+     |        key value is the attribute value. If `full' is true,
+     |        key value is a tuple with the following elements:
+     |          - attribute value
+     |          - attribute index number
+     |          - attribute type
+     |          - attribute length
+     |      
+     |      C library equivalent : no equivalent
+     |  
+     |  automode(self, auto=1)
+     |      Activate / deactivate the transparent setting of the dataset
+     |      define and data mode.
+     |      
+     |      Args:
+     |        auto     If true (!= 0), the module will transparently set the
+     |                 define or data mode, depending on the call to be made,
+     |                 thus relieving the programmer of the responsability
+     |                 to set the dataset mode with calls to redef()/enddef()
+     |                 methods. If false (== 0), dataset mode must be set
+     |                 explicitly.
+     |      
+     |      Returns:
+     |        None
+     |      
+     |      The CDF() constructor always sets the auto flag to false when
+     |      opening the netCDF file.
+     |      
+     |      C library equivalent : no equivalent
+     |  
+     |  close(self)
+     |      Close the dataset. This call is optional, since the dataset is
+     |      automatically closed when its instance variable goes out of scope
+     |      or is reassigned. 
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        None
+     |      
+     |      C library equivalent :  nc_close
+     |  
+     |  datamode(self)
+     |      Put the dataset in data mode, ignoring possible error if already
+     |      in data mode.
+     |      
+     |      Args: 
+     |        no argument 
+     |      Returns:
+     |        None
+     |      
+     |      C library equivalent : no equivalent
+     |  
+     |  def_dim(self, name, length)
+     |      Add a new dimension to the dataset.
+     |      Dataset mode: define mode.
+     |      
+     |      Args:
+     |        name      dimension name
+     |        length    dimension length; use NC.UNLIMITED to create
+     |                  an unlimited dimension (only one such dimension
+     |                  is allowed in a dataset)
+     |      Returns:
+     |        CDFDim class instance
+     |      
+     |      C library equivalent : nc_def_dim
+     |  
+     |  def_var(self, name, xtype, dimids=[])
+     |      Add a new variable to the dataset.
+     |      Dataset mode: define mode.
+     |      
+     |      Args:
+     |        name        variable name
+     |        xtype       variable type (one of NC.BYTE, NC.CHAR, NC.SHORT,
+     |                    NC.INT, NC.FLOAT, NC.DOUBLE)
+     |        dimids      sequence defining the variable dimensions; can be
+     |                    a mixture of CDFDim instances, dimension index
+     |                    numbers, or dimension names; omit this argument or
+     |                    specify an empty sequence to define a scalar
+     |                    variable; for a one-dimensional variable, the
+     |                    dimension can be specified directly and does not
+     |                    need to be entered as a sequence; for a record variable
+     |                    (eg using an unlimited dimension), the unlimited
+     |                    dimension must come first
+     |      Returns:
+     |        CDFVar instance identifying the variable
+     |      
+     |      C library equivalent : nc_def_var
+     |  
+     |  definemode(self)
+     |      Put the dataset in define mode, ignoring possible error if
+     |      already in define mode.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        None
+     |      
+     |      C library equivalent : no equivalent
+     |  
+     |  dimensions(self, full=0)
+     |      Return a dictionnary holding the names and lengths of every
+     |      dimension defined in the dataset.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        full      true to get complete info about each dimension
+     |                  false to report only each dimension length
+     |      Returns:
+     |        Empty dictionnary if no dimension defined
+     |        Otherwise, dictionnary where each key is a dimension name.
+     |        If parameter `full' is false, key value is the dimension
+     |        length. If `full' is true, key value is a tuple with the
+     |        following elements:
+     |          - dimension length
+     |          - dimension index number
+     |          - 1 if the dimension is unlimited, 0 otherwise
+     |      
+     |        Note that for the unlimited dimension, the reported length
+     |        is the current length of the dimension.
+     |      
+     |      C library equivalent : no equivalent
+     |  
+     |  enddef(self)
+     |      Leave define mode and enter data mode.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        none
+     |      
+     |      C library equivalent : nc_enddef
+     |  
+     |  inq(self)
+     |      Return info about the dataset.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        4-element tuple holding:
+     |          -number of dimensions
+     |          -number of variables
+     |          -number of global attributes
+     |          -id of the unlimited dimension, or -1 if none
+     |      
+     |      C library equivalent : nc_inq
+     |  
+     |  inq_dimid(self, name)
+     |      Get a dimension instance given its name.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        name    dimension name 
+     |      Returns:
+     |        CDFDim instance representing the given dimension
+     |      
+     |      C library equivalent : nc_inq_dimid
+     |  
+     |  inq_natts(self)
+     |      Return the number of global attributes in the dataset.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        number of global attributes
+     |      
+     |      C library equivalent : nc_inq_natts
+     |  
+     |  inq_ndims(self)
+     |      Return the number of dimensions in the dataset.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        number of dimensions
+     |      
+     |      C library equivalent : nc_inq_ndims
+     |  
+     |  inq_nvars(self)
+     |      Return the number of variables in the dataset.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        number of variables
+     |      
+     |      C library equivalent : nc_inq_nvars
+     |  
+     |  inq_unlimdim(self)
+     |      Return the id of the unlimited dimension in the dataset.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        id of the unlimited dimension, or -1 if none
+     |      
+     |      C library equivalent : nc_inq_unlimdim
+     |  
+     |  inq_varid(self, name)
+     |      Get a variable instance given its name.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        name       variable name
+     |      Returns:
+     |        CDFVar instance identifying the variable
+     |      
+     |      C library equivalent : nc_inq_varid
+     |  
+     |  redef(self)
+     |      Put netCDF dataset into define mode.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        None
+     |      
+     |      C library equivalent : nc_redef
+     |  
+     |  set_fill(self, fillmode)
+     |      Set fill mode for writes to the dataset.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        fillmode   NC.FILL   prefill non-record variables with 
+     |                             fill values (default)
+     |                   NC.NOFILL data not explicitly initialized is left in
+     |                             an undetermined state
+     |      Returns:
+     |        previous fillmode
+     |      
+     |      C library equivalent : nc_set_fill
+     |      
+     |      The value used as the fill value is the one set using the variable
+     |      '_FillValue' attribute, or a default implementation dependent value.
+     |  
+     |  sync(self)
+     |      Synchronize the dataset to disk.
+     |      Dataset mode: data mode. 
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        None
+     |      
+     |      C library equivalent : nc_sync
+     |  
+     |  variables(self)
+     |      Return a dictionnary describing all the dataset variables.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        Empty dictionnary if no variable is defined.
+     |        Otherwise, dictionnary whose keys are the dataset variable names,
+     |        and values are tuples describing the corresponding variables.
+     |        Each tuple holds the following elements in order:
+     |          -tuple holding the names of the dimensions defining the
+     |           variable coordinate axes
+     |          -tuple holding the variable shape (dimension lengths);
+     |           if a dimension is unlimited, the reported length corresponds
+     |           to the dimension current length
+     |          -variable type
+     |          -variable index number
+     |      
+     |      C library equivalent : no equivalent
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from CDF:
+     |  
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__ = <attribute '__weakref__' of 'CDF' objects>
+     |      list of weak references to the object (if defined)
+    
+    class CDFMFDim(CDFDim)
+     |  Method resolution order:
+     |      CDFMFDim
+     |      CDFDim
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(self, cdfmf, name_num)
+     |      Create an instance of a dimension from a CDFMF dataset.
+     |      
+     |      Args:
+     |        cdfmf      CDFMF instance
+     |        name_num   dim name/id
+     |  
+     |  inq(self)
+     |      Return a tuple holding (name,len) of dimension.
+     |  
+     |  inq_len(self)
+     |      Return dimension length.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from CDFDim:
+     |  
+     |  inq_id(self)
+     |      Obtain the id of the dimension instance.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        dimension id (integer)
+     |      
+     |      C library equivalent : none
+     |  
+     |  inq_name(self)
+     |      Obtain the name of the dimension instance.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        dimension name (string)
+     |      
+     |      C library equivalent : nc_inq_dimname
+     |  
+     |  rename(self, name)
+     |      Rename the dimension.
+     |      Dataset mode: define mode (except if the new name is shorter than
+     |      the current one).
+     |      
+     |      Args:
+     |        name    new dimension name; it is illegal to use the name of an
+     |                existing dimension
+     |      Returns
+     |        None
+     |      
+     |      C library equivalent : nc_rename_dim
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from CDFDim:
+     |  
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__ = <attribute '__weakref__' of 'CDFDim' objects>
+     |      list of weak references to the object (if defined)
+    
+    class CDFMFVar(CDFVar)
+     |  Method resolution order:
+     |      CDFMFVar
+     |      CDFVar
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __getitem__(self, elem)
+     |      Get records from a concatenated set of variables.
+     |  
+     |  __init__(self, cdfmf, name_num)
+     |      Create an instance of a variable from a CDFMF dataset.
+     |      
+     |      Args:
+     |        cdfmf      CDFMF instance
+     |        name_num   var name/id
+     |  
+     |  __setattr__(self, name, value)
+     |      Intercept certain attributes proper to CDFMFVar class,
+     |      which should not be written to the underlying CDF dataset.
+     |  
+     |  shape(self)
+     |      Return the shape of the variable. In case of a record variable,
+     |      account for the total length of the unlimited dimension.
+     |      
+     |      Arguments:
+     |        no argument
+     |      Returns:
+     |        variable shape, as a tuple.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from CDFVar:
+     |  
+     |  __getattr__(self, name)
+     |      Get value of variable attribute 'name'.
+     |      Dataset mode: does not matter.
+     |  
+     |  __len__(self)
+     |  
+     |  __setitem__(self, elem, data)
+     |  
+     |  __str__(self)
+     |      Retrun a string representationof the cdf var.
+     |  
+     |  attr(self, name_id)
+     |      Obtain an CDFAttr instance for a variable attribute,
+     |      given its name or its index number. The attribute may or may
+     |      not exist.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        name_id   If a string argment is used, it is interpreted as the
+     |                  attribute name, which may be non-existent. 
+     |                  Otherwise, it must be a non negative integer 
+     |                  giving the index number of an existing attribute.
+     |      Returns:
+     |        CDFAttr instance
+     |      
+     |      C library equivalent : None
+     |  
+     |  attributes(self, full=0)
+     |      Return a dictionnary describing every attribute
+     |      attached to the variable.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |          full      true to get complete info about each attribute
+     |                    false to report only each attribute value
+     |      Returns:
+     |          Empty dictionnary if no variable attribute defined.
+     |          Otherwise, dictionnary where each key is the name of a
+     |          variable attribute. If parameter `full' is false,
+     |          key value is the attribute value. If `full' is true,
+     |          key value is a tuple with the following elements:
+     |            - attribute value
+     |            - attribute index number
+     |            - attribute type
+     |            - attribute length
+     |      
+     |      C library equivalent : no equivalent
+     |  
+     |  dimensions(self)
+     |      Return the names of the variable dimensions.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        tuple storing the names of the variable dimensions; an empty tuple is returned
+     |        in the case of a scalar variable
+     |      
+     |      C library equivalent : no equivalent
+     |  
+     |  get(self, start=None, count=None, stride=None, map=None, ubyte=0)
+     |      Read data from the netCDF variable.
+     |      Dataset mode: data mode.
+     |      
+     |      Args:
+     |        start   : indices where to start reading in the data array;
+     |                  default to 0 on all dimensions
+     |        count   : number of values to read along each dimension;
+     |                  a value of -1 is treated like 1, except that the
+     |                  corresponding dimension will be dropped from the output
+     |                  array; default to the current length of all dimensions
+     |        stride  : sampling interval along each dimension;
+     |                  default to 1 on all dimensions
+     |        map     : mapping vector (none by default)
+     |        ubyte   : if variable is of type NC.BYTE, this argument serves as
+     |                  a boolean indicating if the byte value should be
+     |                  treated as an unsigned (ubyte != 0) or a signed
+     |                  (ubyte == 0) value
+     |      
+     |        For n-dimensional variables, last 4 parameters are entered 
+     |        using sequences. For rank-0 or -1 variables, integers
+     |        can also be used.
+     |      
+     |        Note that, to read the whole variable contents, one should
+     |        simply call the method with no argument.
+     |      
+     |      Returns: 
+     |        Numeric array initialized with the data.
+     |      
+     |      C library equivalent : nc_get_var_<type>
+     |                             nc_get_vara_<type>
+     |                             nc_get_vars_<type>
+     |                             nc_get_varm_<type>
+     |  
+     |  get_1(self, indices, ubyte=0)
+     |      Retrieve a single value from the netCDF variable.
+     |      Dataset mode: data mode.
+     |      
+     |      Args:
+     |        indices   sequence holding the indices from where to retrieve
+     |                  the value from; a scalar can be used for a rank-1
+     |                  variable
+     |        ubyte     if variable is of type NC.BYTE, this argument serves as
+     |                  a boolean indicating if the byte value should be
+     |                  treated as an unsigned (ubyte != 0) or a signed
+     |                  (ubyte == 0) value
+     |      Returns:
+     |        value at the given indices
+     |      
+     |      C library equivalent : nc_get_var1_<type>
+     |  
+     |  inq(self)
+     |      Return information about the variable.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        4-element tuple holding:
+     |          -variable name
+     |          -variable type
+     |          -sequence holding the index numbers of the dimensions
+     |           associated with the variable; an empty sequence is returned in
+     |           the case of a scalar variable
+     |          -number of attributes associated with the variable
+     |      
+     |      C library equivalent : nc_inq_var
+     |  
+     |  inq_dimid(self)
+     |      Get the index numbers of the dimensions associated
+     |      with the variable.
+     |      Dataset mode: does not matter.   
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        sequence of dimension index numbers; an empty sequence is returned in the
+     |        case of a scalar variable
+     |      
+     |      C library equivalent : nc_inq_vardimid
+     |  
+     |  inq_id(self)
+     |      Get the variable index number.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        variable index number
+     |      
+     |      C library equivalent : none
+     |  
+     |  inq_name(self)
+     |      Get the variable name.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        the name of the variable
+     |      
+     |      C library equivalent : nc_inq_varname
+     |  
+     |  inq_natts(self)
+     |      Get the number of attributes associated with the variable
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        number of attributes associated with the variable
+     |      
+     |      C library equivalent : nc_inq_varnatts
+     |  
+     |  inq_ndims(self)
+     |      Get the number of dimensions associated with the variable.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        number of dimensions; 0 indicates a scalar variable
+     |      
+     |      C library equivalent : nc_inq_varndims
+     |  
+     |  inq_type(self)
+     |      Get the variable type.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        variable type (one of: NC.BYTE, NC.CHAR, NC.SHORT, NC.INT,
+     |                               NC.FLOAT, NC.DOUBLE)
+     |      
+     |      C library equivalent : nc_inq_vartype
+     |  
+     |  isrecord(self)
+     |      Determines whether the variable is a record variable, eg
+     |      its first dimension refers to the unlimited dimension.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        1 if the variable is a record variable, 0 if not
+     |      
+     |      C library equivalent : None
+     |      
+     |      This method was borrowed from HDF4 library.
+     |  
+     |  put(self, data, start=None, count=None, stride=None, mapv=None, ubyte=0)
+     |      Write data to the netCDF variable.
+     |      Dataset mode: data mode.
+     |      
+     |      Args:
+     |        data    : array of data to write; can be given as a Numeric
+     |                  array, or as Python sequence (whose elements can be
+     |                  imbricated sequences); for a scalar variable, directly
+     |                  specify the value
+     |        start   : indices where to start writing in the variable;
+     |                  default to 0 on all dimensions
+     |        count   : number of values to write along each dimension;
+     |                  default to the current length of the variable
+     |                  dimensions
+     |        stride  : sampling interval along each dimension;
+     |                  default to 1 on all dimensions
+     |        mapv    : mapping vector (none by default)
+     |        ubyte   : if variable is of type NC.BYTE, this argument serves as
+     |                  a boolean indicating if the byte value should be
+     |                  treated as an unsigned (ubyte != 0) or a signed
+     |                  (ubyte == 0) value
+     |      
+     |        For n-dimensional variables, last 4 parameters are entered 
+     |        using sequences. For rank-0 or -1 variables, integers
+     |        can also be used.
+     |      
+     |        Note that, to write the whole variable at once, one has simply
+     |        to call the method with the values in parameter
+     |        `data', omitting all other parameters.
+     |      
+     |      Returns: 
+     |        None.
+     |      
+     |      C library equivalent : nc_put_var_<type>
+     |                             nc_put_vara_<type>
+     |                             nc_put_vars_<type>
+     |                             nc_put_varm_<type>
+     |  
+     |  put_1(self, indices, value, ubyte=0)
+     |      Store a single value in the netCDF variable. 
+     |      Dataset mode: data mode.
+     |      
+     |      Args:
+     |        indices   sequence holding the indices where to store the value;
+     |                  a scalar can be used for a rank-1 variable
+     |        value     value to store
+     |        ubyte     if variable is of type NC.BYTE, this argument serves as
+     |                  a boolean indicating if the byte value should be
+     |                  treated as an unsigned (ubyte != 0) or a signed
+     |                  (ubyte == 0) value
+     |      
+     |      Returns:
+     |        None
+     |      
+     |      C library equivalent : nc_put_var1_<type> family
+     |  
+     |  rename(self, name)
+     |      Rename the ntCDF variable.
+     |      Dataset mode: define mode, unless the new name length is shorter
+     |      or equal to that of the former one.
+     |      
+     |      Args:
+     |        name    new variable name
+     |      Returns:       
+     |        None
+     |      
+     |      C library equivalent : nc_rename_var
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from CDFVar:
+     |  
+     |  __dict__ = <dictproxy object>
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__ = <attribute '__weakref__' of 'CDFVar' objects>
+     |      list of weak references to the object (if defined)
     
     class CDFVar(__builtin__.object)
      |  The CDFVar class defines a netCDF variable.
@@ -1851,7 +2538,8 @@ CLASSES
      |      Args:
      |        no argument
      |      Returns:
-     |        tuple storing the names of the variable dimensions
+     |        tuple storing the names of the variable dimensions; an empty tuple is returned
+     |        in the case of a scalar variable
      |      
      |      C library equivalent : no equivalent
      |  
@@ -1917,7 +2605,8 @@ CLASSES
      |          -variable name
      |          -variable type
      |          -sequence holding the index numbers of the dimensions
-     |           associated with the variable
+     |           associated with the variable; an empty sequence is returned in
+     |           the case of a scalar variable
      |          -number of attributes associated with the variable
      |      
      |      C library equivalent : nc_inq_var
@@ -1930,9 +2619,21 @@ CLASSES
      |      Args:
      |        no argument
      |      Returns:
-     |        sequence of dimension index numbers
+     |        sequence of dimension index numbers; an empty sequence is returned in the
+     |        case of a scalar variable
      |      
      |      C library equivalent : nc_inq_vardimid
+     |  
+     |  inq_id(self)
+     |      Get the variable index number.
+     |      Dataset mode: does not matter.
+     |      
+     |      Args:
+     |        no argument
+     |      Returns:
+     |        variable index number
+     |      
+     |      C library equivalent : none
      |  
      |  inq_name(self)
      |      Get the variable name.
@@ -1963,7 +2664,7 @@ CLASSES
      |      Args:
      |        no argument
      |      Returns:
-     |        number of dimensions
+     |        number of dimensions; 0 indicates a scalar variable
      |      
      |      C library equivalent : nc_inq_varndims
      |  
@@ -1981,7 +2682,7 @@ CLASSES
      |  
      |  isrecord(self)
      |      Determines whether the variable is a record variable, eg
-     |      its first dimension is that of the unlimited dimension.
+     |      its first dimension refers to the unlimited dimension.
      |      
      |      Args:
      |        no argument
@@ -1989,6 +2690,8 @@ CLASSES
      |        1 if the variable is a record variable, 0 if not
      |      
      |      C library equivalent : None
+     |      
+     |      This method was borrowed from HDF4 library.
      |  
      |  put(self, data, start=None, count=None, stride=None, mapv=None, ubyte=0)
      |      Write data to the netCDF variable.
@@ -2067,7 +2770,8 @@ CLASSES
      |        no argument
      |      Returns:
      |        tuple storing the variable shape, i.e. the length of the
-     |        variable dimensions
+     |        variable dimensions; an empty tup;e is returned in the case of a
+     |        scalar variable
      |      
      |      C library equivalent : no equivalent
      |  
@@ -2128,6 +2832,36 @@ CLASSES
      |      list of weak references to the object (if defined)
 
 FUNCTIONS
+    array(...)
+        array(object, dtype=None, copy=1,order=None, subok=0,ndmin=0)
+        
+        Return an array from object with the specified date-type.
+        
+        Inputs:
+          object - an array, any object exposing the array interface, any
+                    object whose __array__ method returns an array, or any
+                    (nested) sequence.
+          dtype  - The desired data-type for the array.  If not given, then
+                    the type will be determined as the minimum type required
+                    to hold the objects in the sequence.  This argument can only
+                    be used to 'upcast' the array.  For downcasting, use the
+                    .astype(t) method.
+          copy   - If true, then force a copy.  Otherwise a copy will only occur
+                    if __array__ returns a copy, obj is a nested sequence, or
+                    a copy is needed to satisfy any of the other requirements
+          order  - Specify the order of the array.  If order is 'C', then the
+                    array will be in C-contiguous order (last-index varies the
+                    fastest).  If order is 'FORTRAN', then the returned array
+                    will be in Fortran-contiguous order (first-index varies the
+                    fastest).  If order is None, then the returned array may
+                    be in either C-, or Fortran-contiguous order or even
+                    discontiguous.
+          subok  - If True, then sub-classes will be passed-through, otherwise
+                    the returned array will be forced to be a base-class array
+          ndmin  - Specifies the minimum number of dimensions that the resulting
+                    array should have.  1's will be pre-pended to the shape as
+                    needed to meet this requirement.
+    
     inq_libvers()
         Return the netCDF library version.
         
@@ -2138,13 +2872,22 @@ FUNCTIONS
         
         C library equivalent : nc_inq_libvers
     
-    pycdfArrayPkg()
+    pycdfArrayPkg(name=True)
         Query the array package used when installing pycdf.
         
         Arguments:
-          no argument
+          name      if True (default), the package name is returned
+                    as a string.
+                    if False, a reference to the array package imported by
+                    pycdf is returned instead (the same reference
+                    that an "import pkgName" would create inside the current
+                    namespace if executed by the user program)
+                    
         Returns:
-          string indentifying the array package ("Numeric", "numarray")
+          if parameter 'name' is True:
+            string indentifying the array package ("numpy", "Numeric", "numarray")
+          if parameter 'name' is False:
+            reference to the array package imported by pycdf
         
         C library equivalent : n/a
     
@@ -2169,6 +2912,6 @@ FUNCTIONS
         C library equivalent : nc_strerror
 
 DATA
-    __all__ = ['CDF', 'CDFAttr', 'CDFDim', 'CDFVar', 'NC', 'CDFError', 'py...
+    __all__ = ['CDF', 'CDFAttr', 'CDFDim', 'CDFError', 'CDFMF', 'CDFVar', ...
 
 

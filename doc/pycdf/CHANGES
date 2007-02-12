@@ -1,6 +1,19 @@
-# $Id: CHANGES,v 1.4 2006-01-03 23:41:58 gosselin_a Exp $
+# $Id: CHANGES,v 1.5 2007-02-12 00:18:37 gosselin_a Exp $
 # $Name: not supported by cvs2svn $
 # $Log: not supported by cvs2svn $
+# Revision 1.11  2007/02/11 22:28:51  gosselin_a
+# Documented changes for release 0.6-3 .
+#
+# Revision 1.10  2006/02/15 03:13:58  gosselin_a
+# Preliminary 0.6.2 release.
+# New CDFMF class, some new methods and a few bug fixes.
+#
+# Revision 1.9  2006/01/09 04:16:26  gosselin_a
+# Preparing new release 0.6-2 .
+#
+# Revision 1.8  2006/01/09 04:12:15  gosselin_a
+# New method CDF.inq_unlimlen().
+#
 # Revision 1.7  2006/01/03 23:20:04  gosselin_a
 # A bug was found in the pycdf-0.6-0 release shortly after it
 # was made public. The new pycdf-0.6-1 release corrects that.
@@ -27,6 +40,76 @@
 
 List of changes to 'pycdf' since the initial release.
 
+
+pycdf-0.6-3
+  Date: 2007-02-11
+
+    New features.
+
+      Ported pycdf to NumPy.
+
+    File changes.
+
+      setup.py
+        New NUMPY case (now default). Thanks to Christian Marquardt
+        (christian@marquardt.sc) for having submitted his patches.
+        Clean up code.
+
+      pycdf/__init__.py
+        Clean up the package namespace, so that only the wanted references
+        are exposed to the user
+
+      pycdf/README
+        updated documentation for numpy
+
+      pycdf/pycdf/pycdf.py
+        Cleaned up documentation.
+        Added documentation for the CDFMF class.
+
+        Function pycdfArrayPkg() now takes a parameter to return 
+        either the name of the array package, or a reference to the 
+        array module used by pycdf.
+
+      pycdf/pycdfext/numpy/
+        New subdir, used when the 'numpy' array package is used.
+        
+      examples/
+         Added examples multi.py and compr.py .
+
+
+pycdf-0.6-2
+ Date: 2006-02-14
+
+    New features.
+
+      New class CDFMF
+        Class CDFMF is a subclass of CDF, and allows joining a sequence of
+        CDF files by concatenating their record variables together.
+        The set of files can then be manipulated as a whole like an ordinary 
+        CDF file. Thanks to Robert Hetland for suggesting this nice 
+        addition to pycdf.
+
+      New method CDF.inq_unlimlen()
+        Calling method inq_unlimlen() of a CDF instance returns the current
+        length of the dataset unlimited dimension, or -1 if no unlimited
+        dimension has been defined in the dataset.
+
+      New method CDFDim.inq_id()
+        Method inq_id() of a dimension instance returns the dimension index 
+        number.
+
+      New method CDFVar.inq_id()
+        Method inq_id() of a variable instance returns the variable index 
+        number.
+
+    Documentation additions
+      New section "Quirks" to document some not so obvious problems with netcdf 
+      and pycdf. Thanks to Ralph Gommers for prompting me to start this
+      section with comments about the _FillValue attribute.
+
+    Bug fixes.
+      Scalar variables were sometimes incorrectly handled, leading to index error
+      exceptions. Thanks to Rob Hetland for stimulating me to find this bug.
 
 pycdf-0.6-1
  Date: 2006-01-02
