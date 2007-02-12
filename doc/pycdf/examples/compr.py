@@ -52,7 +52,7 @@ try:
     
     # Get the current number of records in the table,
     # and append 2 new records to the table.
-    nrecs = rec_num.inq_len()
+    nrecs = len(rec_num)    # equiv to rec_num.inq_len()
     newrecs = ((12,-45,13, 0, 8),
                (0,56,-10,16,13))
     #obs_table.put(newrecs,               # data
@@ -65,7 +65,7 @@ try:
     print array(newrecs)
 
     # Get values of column 2. col_2 is a Numeric array.
-    nrecs = rec_num.inq_len()
+    nrecs = len(rec_num)
     col_2 = obs_table[:,2]
     print "\nstep 4, col 2 of obs_table"
     print array(col_2)[:,newaxis]
