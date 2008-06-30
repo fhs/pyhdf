@@ -13,11 +13,9 @@ Description: The pyhdf package wraps the functionality
 of the NCSA HDF4 library inside a Python OOP
 framework. The SD (scientific dataset), VS
 (Vdata) and V (Vgroup) APIs are currently implemented.
-Other APIs should be covered in the
-near future. SD datasets are read/written
-through Numeric arrays. netCDF files can also
-be read and modified with pyhdf.
-Keywords: hdf,netcdf,Numeric,python
+SD datasets are read/written through numpy arrays. 
+netCDF files can also be read and modified with pyhdf.
+Keywords: hdf,netcdf,numpy,python
 Platform: unix, linux
 Classifier: Development Status :: 4 - Beta
 Classifier: Environment :: Console

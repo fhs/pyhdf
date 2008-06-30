@@ -1,6 +1,13 @@
 /*
- * $Id: hdfext.i,v 1.6 2005-07-14 01:36:41 gosselin_a Exp $
+ * $Id: hdfext.i,v 1.7 2008-06-30 02:41:44 gosselin_a Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.6  2005/07/14 01:36:41  gosselin_a
+ * pyhdf-0.7-3
+ * Ported to HDF4.2r1.
+ * Support for SZIP compression on SDS datasets.
+ * All classes are now 'new-style' classes, deriving from 'object'.
+ * Update documentation.
+ *
  * Revision 1.5  2004/11/02 21:33:39  gosselin
  * *** empty log message ***
  *
@@ -178,12 +185,12 @@ extern void _HEprint(void);
  */
 
 /* 
- * Interface to Numeric, which is used to read and write
+ * Interface to numpy, which is used to read and write
  * SD array data.
  */
 
 %init %{
-  /* Init Numeric. Mandatory, otherwise the extension will bomb. */
+  /* Init numpy. Mandatory, otherwise the extension will bomb. */
   import_array();
   %}
 
@@ -191,7 +198,7 @@ extern void _HEprint(void);
 %{
 #include "hdfi.h"     /* declares int32, float32, etc */
 
-#include "Numeric/arrayobject.h"
+#include "numpy/oldnumeric.h"
 
 #define DFNT_FLOAT32     5
 #define DFNT_FLOAT       5  /* For backward compat; don't use */
@@ -284,7 +291,7 @@ static PyObject * _SDreaddata_0(int32 sds_id, int32 data_type,
             return NULL;
             }
             /*
-             * Do as Numeric when a dimension is indexed (indicated by
+             * Do as numpy when a dimension is indexed (indicated by
              * a count of -1).
              * This dimension is then dropped from the output array,
              * producing a subarray. For ex., if m is a 3x3 array, m[0]
@@ -308,10 +315,10 @@ static PyObject * _SDreaddata_0(int32 sds_id, int32 data_type,
         }
 
         /*
-         * Create output Numeric array.
+         * Create output numpy array.
          */
     if ((num_type = HDFtoNumericType(data_type)) < 0)    {
-        PyErr_SetString(PyExc_ValueError, "data_type not compatible with Numeric");
+        PyErr_SetString(PyExc_ValueError, "data_type not compatible with numpy");
         return NULL;
         }
     if ((array = (PyArrayObject *) 
@@ -416,11 +423,11 @@ static PyObject * _SDwritedata_0(int32 sds_id, int32 data_type,
         }
 
         /*
-         * Convert input to a contiguous Numeric array (no penalty if
+         * Convert input to a contiguous numpy array (no penalty if
          * input already in this format).
          */
     if ((num_type = HDFtoNumericType(data_type)) < 0)    {
-        PyErr_SetString(PyExc_ValueError, "data_type not compatible with Numeric");
+        PyErr_SetString(PyExc_ValueError, "data_type not compatible with numpy");
         return NULL;
         }
     if ((array = (PyArrayObject *) 
@@ -598,6 +605,9 @@ static int32 _SDgetcompress(int32 sds_id, int32 *comp_type, int32 *value,
     comp_info c_info;
     int32 status;
 
+#ifdef NOCOMPRESS
+    status = -1;
+#else
     status = SDgetcompress(sds_id, comp_type, &c_info);
     switch (*comp_type)  {
         case COMP_CODE_NONE:
@@ -619,6 +629,8 @@ static int32 _SDgetcompress(int32 sds_id, int32 *comp_type, int32 *value,
             break;
 #endif
         }
+#endif
+
     return status;
     }
 
@@ -626,7 +638,11 @@ static int32 _SDsetcompress(int32 sds_id, int32 comp_type, int32 value,
                             int32 v2)    {
 
     comp_info c_info;
+    int32 status;
 
+#ifdef NOCOMPRESS
+    status = -1;
+#else
     switch (comp_type)  {
         case COMP_CODE_NONE:
         case COMP_CODE_RLE :
@@ -644,9 +660,10 @@ static int32 _SDsetcompress(int32 sds_id, int32 comp_type, int32 value,
             break;
 #endif
         }
-    return SDsetcompress(sds_id, comp_type, &c_info);
+    status = SDsetcompress(sds_id, comp_type, &c_info);
+#endif
+    return status;
     }
-
 %}
 
 extern int32 _SDgetcompress(int32 sds_id, int32 *OUTPUT, int32 *OUTPUT,

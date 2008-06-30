@@ -1,5 +1,12 @@
-# $Id: CHANGES,v 1.7 2005-07-14 01:36:40 gosselin_a Exp $
+# $Id: CHANGES,v 1.8 2008-06-30 02:41:44 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.7  2005/07/14 01:36:40  gosselin_a
+# pyhdf-0.7-3
+# Ported to HDF4.2r1.
+# Support for SZIP compression on SDS datasets.
+# All classes are now 'new-style' classes, deriving from 'object'.
+# Update documentation.
+#
 # Revision 1.6  2004/08/02 17:04:38  gosselin
 # pyhdf-0.7-2
 #
@@ -17,6 +24,25 @@
 #
 
 List of changes to 'pyhdf' since the initial release.
+
+pyhdf-0.8
+---------
+  July 1 2008
+    - pyhdf is now based on 'numpy'. Support for the now phased out 'Numeric'
+      package has been dropped.
+    - The swig interface file is now part of the distribution.
+    - Fixed bug in the 'setscale()' method of an SDim instance.
+    - Users working with a debian-based linux distro reported problems with
+      the HDF SDgetcompress() / SDsetcompress() compression-related functions.
+      The cause seems to be related to the use of an HDF library whose version
+      predates 4.2r1. Debian appears very slow moving to the most 
+      recent HDF release. To avoid depriving debian users of the use of pyhdf,
+      macro 'NOCOMPRESS' can be set inside 'setup.py'. This will transform
+      functions SDsetcompress() and SDgetcompress() into no-ops which 
+      will return -1 (HDF error code) if called.
+    - Examples of the use of the HDF compression functionnalities have been 
+      completely reworked.  See directory 'examples/compress' for details.
+
 
 pyhdf 0.7-3
 -----------

@@ -1,5 +1,12 @@
-# $Id: SD.py,v 1.7 2005-07-14 01:36:41 gosselin_a Exp $
+# $Id: SD.py,v 1.8 2008-06-30 02:41:44 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.7  2005/07/14 01:36:41  gosselin_a
+# pyhdf-0.7-3
+# Ported to HDF4.2r1.
+# Support for SZIP compression on SDS datasets.
+# All classes are now 'new-style' classes, deriving from 'object'.
+# Update documentation.
+#
 # Revision 1.6  2005/01/25 18:17:53  gosselin_a
 # Importer le symbole 'HDF4Error' a partir du module SD.
 #
@@ -20,11 +27,15 @@ dataset) API of the NCSA HDF4 library.
 (see: hdf.ncsa.uiuc.edu)
 
 Author: Andre Gosselin
-        Maurice-Lamontagne Institute
-        gosselina@dfo-mpo.gc.ca
+        Maurice Lamontagne Institute
+        Andre.Gosselin@dfo-mpo.gc.ca
+
+Maintainer:     Enthough, Inc.
+                Austin, TX
+                enthought-dev@mail.enthought.com
         
-Version: 0.7-3
-Date:    July 13 2005
+Version: 0.8
+Date:    July 1 2008
 
 Table of contents
 -----------------
@@ -95,9 +106,9 @@ SD key features are as follows.
       set on a variable and a dimension. Querying a dataset is thus geatly
       simplified.
 
-  -SD datasets are read/written through "Numeric", a sophisticated
+  -SD datasets are read/written through "numpy", a sophisticated
    python package for efficiently handling multi-dimensional arrays of
-   numbers. Numeric can nicely extend the SD functionnality, eg.
+   numbers. numpy can nicely extend the SD functionnality, eg.
    adding/subtracting arrays with the '+/-' operators.
 
 Accessing the SD module
@@ -110,9 +121,9 @@ To access the SD API a python program can say one of:
 
 This document assumes the last import style is used.
 
-Numeric will also need to be imported:
+numpy will also need to be imported:
 
-  >>> from Numeric import *
+  >>> from numpy import *
  
 Package components
 ------------------
@@ -141,7 +152,7 @@ directly. Only 'pyhdf.SD' should be imported by the user program.
 
 Prerequisites
 -------------
-The following software must be installed in order for pyhdf release 0.7-3 to
+The following software must be installed in order for pyhdf release 0.8 to
 work.
   
   HDF (v4) library, release 4.2r1
@@ -151,22 +162,22 @@ work.
     HDF is available at:
     "http://hdf.ncsa.uiuc.edu/obtain.html".
 
-  HDF4.2r1 in turn needs the following packages :
+  HDF4.2r1 in turn relies on the following packages :
   
     libjpeg (jpeg library) release 6b
     libz    (zlib library) release 1.1.4 or above
-    libsz   (SZIP library) release 2.0
+    libsz   (SZIP library) release 2.0; this package is optional
+                           if pyhdf is installed with NOSZIP macro set
 
 The SD module also needs:
 
-  Numeric python package
+  numpy python package
     SD variables are read/written using the array data type provided
-    by the python Numeric package. Note that since version 0.6-1 of
-    pyhdf, version 22 or above of Numeric is needed for the support
-    of unsigned integer types.
+    by the python numpy package. Note that since version 0.8 of
+    pyhdf, version 1.0.5 or above of numpy is needed.
 
-    Numeric is available at:
-    "http://numpy.sourceforge.net".
+    numpy is available at:
+    "http://www.numpy.org".
 
 Documentation
 -------------
@@ -296,7 +307,7 @@ if 'v' is a 4x4 array:
 
 The second way is by indexing and slicing the variable like a Python
 sequence. pyhdf here follows most of the rules used to index and slice
-Numeric arrays. Thus an HDF dataset can be seen almost as a Numeric,
+numpy arrays. Thus an HDF dataset can be seen almost as a numpy
 array, except that data is read from/written to a file instead of memory.
 
 Extended indexing let you access variable elements with the familiar
@@ -371,15 +382,15 @@ dataset. For example:
            # of 3 lists, each representing a row of v2.
     >>> v2[:]=[[1,2,3],[11,12,13],[21,22,23]]
 
-The assigned value can also be a Numeric array. Rewriting example above:
+The assigned value can also be a numpy array. Rewriting example above:
     >>> v1=array([1,2,3])
     >>> v2=array([[1,2,3],[11,12,13],[21,22,23])
 
 Note how we use indexing expressions 'v1[:]' and 'v2[:]' when assigning
-using python sequences, and just the variable names when assigning Numeric
+using python sequences, and just the variable names when assigning numpy
 arrays.
 
-Reading an HDF dataset always returns a Numeric array, except if
+Reading an HDF dataset always returns a numpy array, except if
 indexing is used and produces a rank-0 array, in which case a scalar is
 returned.
 
@@ -662,9 +673,9 @@ It shows how to use the most important functionnalities
 of the SD interface needed to initialize a dataset.
 A real program should of course add error handling.
 
-    # Import SD and Numeric.
+    # Import SD and numpy.
     from pyhdf.SD import *
-    from Numeric import *
+    from numpy import *
 
     fileName = 'template.hdf'
     # Create HDF file.
@@ -698,9 +709,9 @@ Reading
 The following code, which reads the dataset created above, can also serve as
 a model for any program which needs to access an SD dataset.
 
-    # Import SD and Numeric.
+    # Import SD and numpy.
     from pyhdf.SD import *
-    from Numeric import *
+    from numpy import *
 
     fileName = 'template.hdf'
     # Open file in read-only mode (default)
@@ -757,7 +768,7 @@ Error checking is minimal, to keep example as simple as possible
 (admittedly a rather poor excuse ...).
 
 
-from Numeric import *
+from numpy import *
 from pyhdf.SD import *
 
 import os
@@ -836,7 +847,7 @@ the contents of those dictionaries.
 
 import sys
 from pyhdf.SD import *
-from Numeric import *
+from numpy import *
 
 # Dictionnary used to convert from a numeric data type to its symbolic
 # representation
@@ -990,10 +1001,10 @@ from error import _checkErr, HDF4Error
 __all__ = ['SD', 'SDAttr', 'SDC', 'SDS', 'SDim', 'HDF4Error']
 
 try:
-    import Numeric as _toto
+    import numpy as _toto
     del _toto
 except ImportError:
-    raise HDF4Error, "Numeric package required but not installed"
+    raise HDF4Error, "numpy package required but not installed"
 
 class SDC(object):
     """The SDC class holds contants defining opening modes and data types.
@@ -1073,11 +1084,11 @@ class SDC(object):
     COMP_SZIP_NN  =  32
     COMP_SZIP_RAW = 128
 
-    # Types with an equivalent in the Numeric package
+    # Types with an equivalent in the numpy package
     # NOTE:
     #  CHAR8 and INT8 are handled similarly (signed byte -128,...,0,...127)
     #  UCHAR8 and UINT8 are treated equivalently (unsigned byte: 0,1,...,255)
-    #  UINT16 and UINT32 are supported depending on the version of Numeric
+    #  UINT16 and UINT32 are supported depending on the version of numpy
     #  installed (supported in version 22 and up)
     #  INT64 and UINT64 are not yet supported py pyhdf
     equivNumericTypes = [FLOAT32, FLOAT64,
@@ -1085,14 +1096,8 @@ class SDC(object):
                          INT16, 
                          INT32,
                          CHAR8, UCHAR8]
-    try:
-        from Numeric import UInt16 as _bozo
-        equivNumericTypes.append(UINT16)
-        from Numeric import UInt32 as _bozo
-        equivNumericTypes.append(UINT32)
-        del _bozo
-    except ImportError:
-        pass
+    equivNumericTypes.append(UINT16)
+    equivNumericTypes.append(UINT32)
 
 
 class SDAttr(object):
@@ -1817,7 +1822,7 @@ class SDS(object):
           simply call the method with no argument.
    
         Returns: 
-          Numeric array initialized with the data.
+          numpy array initialized with the data.
   
         C library equivalent : SDreaddata
 
@@ -1869,7 +1874,7 @@ class SDS(object):
         """Write data to the dataset.
  
         Args:
-          data    : array of data to write; can be given as a Numeric
+          data    : array of data to write; can be given as a numpy
                     array, or as Python sequence (whose elements can be
                     imbricated sequences)
           start   : indices where to start writing in the dataset;
@@ -2562,9 +2567,10 @@ class SDS(object):
         Returns: 
           tuple holding :
             -compression type (one of the SDC.COMP_xxx constants)
-            -one one more auxiliary values, depending on the compression type
+            -optional values, depending on the compression type
+               COMP_NONE       0 value    no additional value
                COMP_SKPHUFF    1 value  : skip size
-               COMP_DEFLATE    1 value  : level (1 to 9)
+               COMP_DEFLATE    1 value  : gzip compression level (1 to 9)
                COMP_SZIP       5 values : options mask,
                                           pixels per block (2 to 32)
                                           pixels per scanline,
@@ -2580,13 +2586,17 @@ class SDS(object):
                                                 print "EC encoding scheme used"
 
         An exception is raised if dataset is not compressed.
+        NOTE. Starting with v0.8, an exception is always raised if
+              pyhdf was installed with the NOCOMPRESS macro set.
   
         C library equivalent: SDgetcompress
                                                            """
 
         status, comp_type, value, v2, v3, v4, v5 = _C._SDgetcompress(self._id)
         _checkErr('getcompress', status, 'no compression')
-        if comp_type == SDC.COMP_SZIP:
+        if comp_type == SDC.COMP_NONE:
+            return (comp_type,)
+        elif comp_type == SDC.COMP_SZIP:
                return comp_type, value, v2, v3, v4, v5
         else:
             return comp_type, value
@@ -2598,11 +2608,13 @@ class SDS(object):
           comp_type    compression type, identified by one of the
                        SDC.COMP_xxx constants
           value,v2     auxiliary value(s) needed by some compression types
-                         SDC.COMP_SKPHUFF   value=data size, v2 is ignored
-                         SDC.COMP_DEFLATE   value=deflate level (1 to 9), v2 is ignored
-                         SDC.COMP_SZIP      value=encoding scheme (SDC.COMP_SZIP_EC or
+                         SDC.COMP_SKPHUFF   Skipping-Huffman; compression value=data size in bytes, v2 is ignored
+                         SDC.COMP_DEFLATE   Gzip compression; value=deflate level (1 to 9), v2 is ignored
+                         SDC.COMP_SZIP      Szip compression; value=encoding scheme (SDC.COMP_SZIP_EC or
 			                    SDC.COMP_SZIP_NN), v2=pixels per block (2 to 32)
         Returns: None
+                 NOTE. Starting with v0.8, an exception is always raised if
+                       pyhdf was installed with the NOCOMPRESS macro set.
   
         SDC.COMP_DEFLATE applies the GZIP compression to the dataset,
         and the value varies from 1 to 9, according to the level of
@@ -2924,7 +2936,11 @@ class SDim(object):
             n_values = 1
 
         # Validate args
-        dim_size = self._sds.info()[2][self._index]
+        info = self._sds.info()
+        if info[1] == 1:
+            dim_size = info[2]
+        else:
+            dim_size = info[2][self._index]
         if n_values != dim_size:
             raise HDF4Error, 'number of scale values (%d) does not match ' \
                              'dimension size (%d)' % (n_values, dim_size)

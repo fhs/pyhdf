@@ -1,5 +1,8 @@
-# $Id: README,v 1.5 2004-08-02 17:04:38 gosselin Exp $
+# $Id: README,v 1.6 2008-06-30 02:41:44 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.5  2004/08/02 17:04:38  gosselin
+# pyhdf-0.7-2
+#
 # Revision 1.3  2004/08/02 15:29:52  gosselin
 # pyhdf-0.7-1
 #
@@ -10,14 +13,21 @@
 # Initial revision
 #
 
-Author: Andre Gosselin
-        Maurice-Lamontagne Institute
-        Fisheries and Oceans Department
-        Mont-Joli, Canada
-        gosselina@dfo-mpo.gc.ca
+Maintainer:     Enthough, Inc.
+                Austin, TX
+                enthought-dev@mail.enthought.com
 
-Latest version: 0.7-2
-Date:  June 9 2004
+
+Original Author: Andre Gosselin
+                 Maurice Lamontagne Institute
+                 Fisheries and Oceans Department
+                 Government of Canada
+                 Mont-Joli, Canada
+                 Andre.Gosselin@dfo-mpo.gc.ca
+
+
+Latest version: 0.8
+Date:  July 1 2008
 
 pyhdf is a python wrapper around the NCSA HDF version 4 library.
 The SD (Scientific Dataset), VS (Vdata) and V (Vgroup) API's 
@@ -50,5 +60,7 @@ Please report all bugs and problems to the author at the
 address given above.
 
 Following people helped improve pyhdf by reporting bugs and making
-suggestions. Author wants to thanks:
+suggestions. Thanks to :
   Richard.Andrews@esands.com
+  Field.cady@gmail.com
+
