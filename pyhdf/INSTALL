@@ -1,5 +1,8 @@
-# $Id: INSTALL,v 1.4 2005-07-17 03:59:41 gosselin_a Exp $
+# $Id: INSTALL,v 1.5 2008-06-30 02:41:44 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2005/07/17 03:59:41  gosselin_a
+# Fixed typo in header line.
+#
 # Revision 1.3  2005/07/14 01:36:41  gosselin_a
 # pyhdf-0.7-3
 # Ported to HDF4.2r1.
@@ -23,7 +26,7 @@ the following platforms:
   -Solaris 8
   -AIX 4
 
-Please inform the author (gosselina@dfo-mpo.gc.ca) of any
+Please inform the maintainer (rkern@enthought.com) of any
 successfull installation on a different platform, and of
 problems encountered.
 
@@ -37,12 +40,11 @@ To install, follow these steps.
   HDF4.2 in turn requires some libraries : libjpeg, libz, and libsz
   if the SZIP compression method is to be used.
 
-2-Install the python Numeric package. Source code is
-  available at: numpy.sourceforge.net. Binary packages
+2-Install the python NumPy package. Source code is
+  available at: http://numpy.scipy.org/. Binary packages
   are available for most popular environments.
-  Note that version 22 or above is needed to compile
-  support for unsigned integer types. See details inside
-  `setup.py' if you want to use an earlier version of Numeric.
+  Note that previous releases of pyhdf used the Numeric
+  package rather than NumPy.
 
 3-Uncompress and untar the pyhdf tar ball, then cd to the
   pyhdf-xxx directory just created.
@@ -64,17 +66,59 @@ To install, follow these steps.
     include_dirs = ["/usr/local/hdf-4.2r1/include"]
     library_dirs = ["/usr/local/hdf-4.2r1/lib"],
 
-  HDF4.2 no more provides its own copies of the jpeg and z libraries.
-  Those must be installed separately (on Linux, they should be part of
-  any standard distribution). The sz 2.0 library must be installed if the SZIP
-  compression method is to be used, and HDF must have been compiled with
-  SZIP support. Note that if you installed precompiled HDF binaries provided
-  by NCSA, you *must* install SZIP in a separate step (see NCSA hdf site for
-  details). In case your HDF library does not include SZIP support,
-  set the following inside file 'setup.py' (see comments inside this file) :
 
-    extra_compile_args=["-DNOSZIP"]
+  External libraries
+
+  HDF4.2 no longer provides its own copies of the jpeg and z libraries.
+  Those must be installed separately (on Linux, they should be part of
+  any standard distribution). 
+
+  The sz library (versions 2.0 or higher) must be installed if the SZIP 
+  compression method is to be used with SDsetcompress(). HDF v4.2 must also 
+  have been compiled with SZIP support. Precompiled HDF packages usually
+  lack this feature, as in Fedora linux distributions. Getting
+  an SZIP enabled HDF library may require compiling the library from source
+  with the "--with-szlib" configuration option.
+  Note that you *must* install SZIP in a separate step. For more details,
+  see NCSA hdf site at : http://hdf.ncsa.uiuc.edu/doc_resource/SZIP/ ;
+  source code and precompiled binaries are available at :
+  ftp://ftp.hdfgroup.org/lib-external/szip/ . 
+
+  In case your HDF library was compiled without SZIP support, or you cannot
+  abide by the szip licensing terms, set the following inside file 
+  'setup.py' (see comments inside this file) :
+
+    extra_compile_args = ["-DNOSZIP"]
     libraries = ["mfhdf", "df", "jpeg", "z"]
+
+  If you get error messages related to the SDgetcompress() / SDsetcompress()
+  functions, eg.: "undefined symbol: SDgetcompress" (this seems to affect
+  users of Debian based distros), try also setting the NOCOMPRESS macro :
+
+    extra_compile_args = ["-DNOSZIP", "-DNOCOMPRESS"]
+
+  With NOCOMPRESS set, SDgetcompress() and SDsetcompress() will be transformed
+  into no-ops which will immediately raise an exception, and will not be resolved
+  against the HDF library symbols. This may help you work with an HDF library
+  earlier than v4.2.
+
+
+  Swig-generated interface files
+
+    Interface files 'hdfext.py' and 'hdfext_wrap.c' (located under the
+    'pyhdf/' subdirectory) have been generated using the 'swig' tool.
+    Those two files should be usable as is on most environments.
+    It could happen however that, for a reason related to your environment,
+    your C compiler does not accept the '.c' file and provokes a compilation
+    error. If this is so, the interface files will need to be regenerated.
+    For this you will first need to have the swig tool installed
+    (see: http://www.swig.org). Then execute :
+
+      # cd pyhdf
+      # swig -python hdfext.i
+
+    swig should silently regenerate the two interface files, and the install should now
+    proceed correctly.
 
 
   TRU64 note
@@ -108,8 +152,15 @@ To install, follow these steps.
     where <python-stdlib-path> stands for the python standard library path
     (on linux: /usr/lib/pythonx.x).
 
+   Warning messages about the implicit declaration of some functions can be produced.
+   Those are due to the way the swig tool generates the C code, and can be safely ignored.
+
 6- Before experimenting with pyhdf, exit root privileges and leave the installation directory
    (the one where you untarred the product). Failing to do so may cause all sorts
    of mysterious problems.
+
+7- As a first test, run the 'hdfstruct.py' script (found under directory 'examples/hdfstruct')
+   on one of your HDF4 files. The script should display the file structure. This is
+   a handy tool to have around when you want to explore the contents of any HDF4 file.
 
 Enjoy!

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from Numeric import *
+from numpy import *
 from pyhdf.SD import *
 
 import os

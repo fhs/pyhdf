@@ -2,9 +2,8 @@
 
 import sys
 from pyhdf.SD import *
-from Numeric import *
 
-# Dictionnary used to convert from a numeric data type to its symbolic
+# Dictionary used to convert from a numeric data type to its symbolic
 # representation
 typeTab = {
            SDC.CHAR:    'CHAR',

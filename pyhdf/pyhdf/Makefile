@@ -1,5 +1,12 @@
-# $Id: Makefile,v 1.3 2005-07-14 01:36:41 gosselin_a Exp $
+# $Id: Makefile,v 1.4 2008-06-30 02:41:44 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2005/07/14 01:36:41  gosselin_a
+# pyhdf-0.7-3
+# Ported to HDF4.2r1.
+# Support for SZIP compression on SDS datasets.
+# All classes are now 'new-style' classes, deriving from 'object'.
+# Update documentation.
+#
 # Revision 1.2  2004/11/03 16:02:06  gosselin_a
 # Change include and lib directories to the Python2.4 distribution
 # (previously Python2.3).
@@ -31,16 +38,22 @@
 #      'method' describes what is being built.
 #---------------------------------------------------------------
 
+# Adjust for the local installation
+# See also PYTHON section below
+# 
+INCLUDES = -I/usr/include/hdf
+LIBS       = -L/usr/lib/hdf -lmfhdf -ldf -lz -ljpeg 
+#LIBS       = -L/usr/lib/hdf -lmfhdf -ldf -lz -ljpeg -lsz
+
 TARGET     = hdfext
+INTERFACE  = hdfext.i
+
 CC         = gcc
 CXX        = g++
 CFLAGS     =
-prefix     = /usr/local
+prefix     = /usr
 exec_prefix= ${prefix}
 SRCS       = 
-INCLUDES   = -I/usr/local/hdf-4.2r1/include
-LIBS       = -lmfhdf -ldf -lz -ljpeg -lsz
-INTERFACE  = hdfext.i
 SWIGOPT    = 
 SWIG       = swig
 RUNTIMEDIR = $(exec_prefix)/lib
@@ -257,8 +270,12 @@ perl5_clean:
 ##################################################################
 
 # Make sure these locate your Python installation
-PYTHON_INCLUDE= -DHAVE_CONFIG_H -I/usr/include/python2.4 -I/usr/lib/python2.4/config
-PYTHON_LIB    = /usr/lib/python2.4/config
+PYTHON_VER = python2.4
+PYTHON_INCLUDE= -DHAVE_CONFIG_H \
+                -I/usr/include/${PYTHON_VER} \
+                -I/usr/lib/${PYTHON_VER}/config \
+                -I/usr/lib/${PYTHON_VER}/site-packages/numpy/core/include
+PYTHON_LIB    = /usr/lib/${PYTHON_VER}/config
 
 # Extra Python specific dynamic linking options
 PYTHON_DLNK   = 
