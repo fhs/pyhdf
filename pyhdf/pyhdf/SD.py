@@ -1,5 +1,11 @@
-# $Id: SD.py,v 1.8 2008-06-30 02:41:44 gosselin_a Exp $
+# $Id: SD.py,v 1.9 2008-06-30 02:59:57 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.8  2008/06/30 02:41:44  gosselin_a
+# Preleminary check-in of changes leading to the 0.8 revision.
+#   - switch to numpy, Numeric now unsupported
+#   - better documentation of the compression features
+#   - some bug fixes
+#
 # Revision 1.7  2005/07/14 01:36:41  gosselin_a
 # pyhdf-0.7-3
 # Ported to HDF4.2r1.
@@ -1088,17 +1094,13 @@ class SDC(object):
     # NOTE:
     #  CHAR8 and INT8 are handled similarly (signed byte -128,...,0,...127)
     #  UCHAR8 and UINT8 are treated equivalently (unsigned byte: 0,1,...,255)
-    #  UINT16 and UINT32 are supported depending on the version of numpy
-    #  installed (supported in version 22 and up)
+    #  UINT16 and UINT32 are supported 
     #  INT64 and UINT64 are not yet supported py pyhdf
     equivNumericTypes = [FLOAT32, FLOAT64,
                          INT8, UINT8,
-                         INT16, 
-                         INT32,
+                         INT16, UINT16,
+                         INT32, UINT32,
                          CHAR8, UCHAR8]
-    equivNumericTypes.append(UINT16)
-    equivNumericTypes.append(UINT32)
-
 
 class SDAttr(object):
 
