@@ -29,7 +29,7 @@ print "-" * len(header)
 print header
 print "-" * len(header)
 
-# Read all records at once, and loop over the seauence.
+# Read all records at once, and loop over the sequence.
 for rec in vd[:]:
     print "%-7s %-12s %3d %4.1f %8.2f" % tuple(rec)
 

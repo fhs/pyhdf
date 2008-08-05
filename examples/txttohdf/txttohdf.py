@@ -6,6 +6,16 @@ from pyhdf.SD import *
 import os
 
 def txtToHDF(txtFile, hdfFile, varName, attr):
+    """Inputs:
+        txtFile = name of .txt file (passed as string)
+        hdfFile = name of .hdf file (passed as string)
+        varName = name of dataset to be added (passed as string)
+        attr = dataset attributes (passed as dictionary)
+    txtFile indicates a dataset, and varName and attr give information
+    about it.  txtToHDF puts this information into an SD (Scientific
+    Dataset) object and stores that object as in hdfFile, creating
+    hdfFile if need be, otherwise updating it.
+    """
 
     try:  # Catch pyhdf errors
         # Open HDF file in update mode, creating it if non existent.
@@ -52,16 +62,21 @@ if __name__ == '__main__':
         pass
 
     # Transfer contents of file 'temp.txt' to dataset 'temperature'
-    # an assign the attributes 'title', 'units' and 'valid_range'.
+    # and assign the attributes 'title', 'units' and 'valid_range'.
     txtToHDF('temp.txt', hdfFile, 'temperature',
              {'title'      : 'temperature matrix',
 	      'units'      : 'celsius',
 	      'valid_range': (-2.8,27.0)})
+    print "Temperature data successfully written to HDF file"
 
     # Transfer contents of file 'depth.txt' to dataset 'depth'
-    # an assign the same attributes as above.
+    # and assign the same attributes as above.
     txtToHDF('depth.txt', hdfFile, 'depth',
              {'title'      : 'depth matrix',
 	      'units'      : 'meters',
 	      'valid_range': (0, 500.0)})
-    
+    print "Depth data successfully written to HDF file"
+
+    # TODO: open up hdfFile and access the information that
+    # was in temp.txt and depth.txt
+

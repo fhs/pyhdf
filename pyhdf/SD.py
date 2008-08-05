@@ -1,5 +1,8 @@
-# $Id: SD.py,v 1.9 2008-06-30 02:59:57 gosselin_a Exp $
+# $Id: SD.py,v 1.10 2008-08-05 00:20:44 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.9  2008/06/30 02:59:57  gosselin_a
+# Fixed definition of equivNumericTypes list.
+#
 # Revision 1.8  2008/06/30 02:41:44  gosselin_a
 # Preleminary check-in of changes leading to the 0.8 revision.
 #   - switch to numpy, Numeric now unsupported
@@ -40,8 +43,8 @@ Maintainer:     Enthough, Inc.
                 Austin, TX
                 enthought-dev@mail.enthought.com
         
-Version: 0.8
-Date:    July 1 2008
+Version: 0.8-1
+Date:    August 4 2008
 
 Table of contents
 -----------------
@@ -179,8 +182,8 @@ The SD module also needs:
 
   numpy python package
     SD variables are read/written using the array data type provided
-    by the python numpy package. Note that since version 0.8 of
-    pyhdf, version 1.0.5 or above of numpy is needed.
+    by the python NumPy package. Note that since version 0.8 of
+    pyhdf, version 1.0.5 or above of NumPy is needed.
 
     numpy is available at:
     "http://www.numpy.org".

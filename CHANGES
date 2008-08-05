@@ -1,5 +1,11 @@
-# $Id: CHANGES,v 1.8 2008-06-30 02:41:44 gosselin_a Exp $
+# $Id: CHANGES,v 1.9 2008-08-05 00:20:43 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.8  2008/06/30 02:41:44  gosselin_a
+# Preleminary check-in of changes leading to the 0.8 revision.
+#   - switch to numpy, Numeric now unsupported
+#   - better documentation of the compression features
+#   - some bug fixes
+#
 # Revision 1.7  2005/07/14 01:36:40  gosselin_a
 # pyhdf-0.7-3
 # Ported to HDF4.2r1.
@@ -25,11 +31,13 @@
 
 List of changes to 'pyhdf' since the initial release.
 
-pyhdf-0.8
+pyhdf-0.8-1
 ---------
-  July 1 2008
-    - pyhdf is now based on 'numpy'. Support for the now phased out 'Numeric'
-      package has been dropped.
+  August 4 2008
+    - Numeric replaced with NumPy as underlying numerical package.
+      Support for the now phased out 'Numeric' package has been dropped.
+    - Parser for ODL (Object Description Language) added
+      (courtesy of Enthought Inc).
     - The swig interface file is now part of the distribution.
     - Fixed bug in the 'setscale()' method of an SDim instance.
     - Users working with a debian-based linux distro reported problems with
@@ -44,7 +52,7 @@ pyhdf-0.8
       completely reworked.  See directory 'examples/compress' for details.
 
 
-pyhdf 0.7-3
+pyhdf-0.7-3
 -----------
   July 13 2005
     Interim release.
