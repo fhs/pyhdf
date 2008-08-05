@@ -1404,7 +1404,7 @@ CLASSES
      |  __weakref__ = <attribute '__weakref__' of 'SDC' objects>
      |      list of weak references to the object (if defined)
      |  
-     |  equivNumericTypes = [5, 6, 20, 21, 22, 24, 4, 3, 23, 25]
+     |  equivNumericTypes = [5, 6, 20, 21, 22, 23, 24, 25, 4, 3]
     
     class SDS(__builtin__.object)
      |  The SDS class implements an HDF dataset object.
