@@ -2,9 +2,9 @@ Metadata-Version: 1.0
 Name: pyhdf
 Version: 0.7-3
 Author: Andre Gosselin
-Author-email: gosselina@dfo-mpo.gc.ca
-Maintainer: Andre Gosselin
-Maintainer-email: gosselina@dfo-mpo.gc.ca
+Author-email: Andre.Gosselin@dfo-mpo.gc.ca
+Maintainer: Enthought Inc.
+Maintainer-email: enthought-dev@mail.enthought.com
 Home-page: www.sourceforge.net/projects/pysclint
 Download-url: www.sourceforge.net/projects/pysclint
 Summary: Python interface to the NCSA HDF4 library

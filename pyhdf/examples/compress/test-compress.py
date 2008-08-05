@@ -2,12 +2,13 @@
 
 # Generate test HDF files using different compression configurations,
 # and validate each resulting file to make sure its contents is OK.
-# Adapted from example "hdf.ncsa.uiuc.edu/doc_resource/SZIP/h4_examples/szip32.c".
-# A bigger dataset is defined to better show the size reduction achieved by the SZIP
-# compression.
-# Note that when applied to HDF4 SDS, the word "pixels" as used inside the SZIP
-# documentation should really be understood as a "data element", eg a cell
-# value inside a multidimensional array.
+# Adapted from example:
+# "hdf.ncsa.uiuc.edu/doc_resource/SZIP/h4_examples/szip32.c".
+# A bigger dataset is defined to better show the size reduction achieved
+# by the SZIP compression.
+# Note that when applied to HDF4 SDS, the word "pixels" as used inside
+# the SZIP documentation should really be understood as a "data element",
+# eg a cell value inside a multidimensional array.
 #
 # On our systems, the program produced the following file sizes :
 #
@@ -118,8 +119,8 @@ def doCompress(compType, value=0, v2=0):
         sds_id.setcompress(compType,        # compression type
                            value, v2)         # args depend on compression type
     except HDF4Error, msg:
-        print "Error compressing the dataset with params: (%d,%d,%d) : %s" % \
-              (compType, value, v2, msg)
+        print "Error compressing the dataset with params: " +
+                "(%d,%d,%d) : %s" % \ (compType, value, v2, msg)
         sds_id.endaccess()
         sd_id.end()
         os.remove(fileName)
@@ -183,7 +184,8 @@ def doCompress(compType, value=0, v2=0):
     for i in range(LENGTH):
         for j in range(WIDTH):
             if data[i,j] != out_data[i,j]:
-                print "bad value at %d,%d expected: %d got: %d" % (i,j,data[i,j],out_data[i,j])
+                print "bad value at %d,%d expected: %d got: %d" \
+                      % (i,j,data[i,j],out_data[i,j])
                 num_errs += 1
 
     # Close dataset and hdf file.

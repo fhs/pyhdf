@@ -1,5 +1,11 @@
-# $Id: setup.py,v 1.7 2008-06-30 02:41:44 gosselin_a Exp $
+# $Id: setup.py,v 1.8 2008-08-05 00:20:43 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.7  2008/06/30 02:41:44  gosselin_a
+# Preleminary check-in of changes leading to the 0.8 revision.
+#   - switch to numpy, Numeric now unsupported
+#   - better documentation of the compression features
+#   - some bug fixes
+#
 # Revision 1.6  2005/07/14 01:36:41  gosselin_a
 # pyhdf-0.7-3
 # Ported to HDF4.2r1.
@@ -82,7 +88,7 @@ setup(name         = 'pyhdf',
                          'deal specifically with data in the ODL\n'
                          '(Object Desdription Language) format.',
       url          = 'www.sourceforge.net/projects/pysclint',
-      version      = '0.8',
+      version      = '0.8-1',
       packages     = ['pyhdf'],
       ext_modules  = [_hdfext]
       )

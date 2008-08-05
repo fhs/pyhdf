@@ -1,5 +1,11 @@
-# $Id: README,v 1.6 2008-06-30 02:41:44 gosselin_a Exp $
+# $Id: README,v 1.7 2008-08-05 00:20:43 gosselin_a Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.6  2008/06/30 02:41:44  gosselin_a
+# Preleminary check-in of changes leading to the 0.8 revision.
+#   - switch to numpy, Numeric now unsupported
+#   - better documentation of the compression features
+#   - some bug fixes
+#
 # Revision 1.5  2004/08/02 17:04:38  gosselin
 # pyhdf-0.7-2
 #
@@ -13,31 +19,41 @@
 # Initial revision
 #
 
-Maintainer:     Enthough, Inc.
+Author:         Andre Gosselin
+                Maurice Lamontagne Institute
+                Fisheries and Oceans Department
+                Government of Canada
+                Mont-Joli, Canada
+                Andre.Gosselin@dfo-mpo.gc.ca
+
+Maintainer:     Enthought, Inc.
                 Austin, TX
                 enthought-dev@mail.enthought.com
 
 
-Original Author: Andre Gosselin
-                 Maurice Lamontagne Institute
-                 Fisheries and Oceans Department
-                 Government of Canada
-                 Mont-Joli, Canada
-                 Andre.Gosselin@dfo-mpo.gc.ca
 
-
-Latest version: 0.8
-Date:  July 1 2008
+Latest version: 0.8-1
+Date:  August 4 2008
 
 pyhdf is a python wrapper around the NCSA HDF version 4 library.
 The SD (Scientific Dataset), VS (Vdata) and V (Vgroup) API's 
 are currently implemented. netCDF files can also be 
 read and modified.
 
-Installation:
+Functionality of version 0.8 is same as 0.7-3, but it uses 
+NumPy package rather than Numeric.
+Version 0.8 also incorporates a parser for ODL (Object
+Description Language), a common format for the content
+of information in HDF files.  Note that the parser does
+not support the full ODL specification.
+
+
+INSTALLATION:
+
   To install, see file INSTALL.
 
-Documentation:
+DOCUMENTATION:
+
   For documentation, see the doc/ subdirectory:
     -pyhdf.HDF.txt  text format
     -pyhdf.HDF.html html format
@@ -48,19 +64,16 @@ Documentation:
     -pyhdf.V.txt    text format
     -pyhdf.V.html   html format
 
-Note that the documentation was totally produced using the
-Python pydoc module.
+  Additional documentation on the HDF4 format can be
+  found in the User Guide:
+    http://hdf.ncsa.uiuc.edu/training/HDFtraining/UsersGuide/
 
-Examples:
+EXAMPLES:
 
   Example python programs using the pyhdf package
   can be found inside the examples/ subdirectory.
 
-Please report all bugs and problems to the author at the
-address given above.
+FINAL NOTES:
 
-Following people helped improve pyhdf by reporting bugs and making
-suggestions. Thanks to :
-  Richard.Andrews@esands.com
-  Field.cady@gmail.com
-
+  Please report all bugs and problems to the maintainer at the
+  address given above. Author can also be contacted.
