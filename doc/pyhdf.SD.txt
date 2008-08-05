@@ -19,8 +19,8 @@ DESCRIPTION
                     Austin, TX
                     enthought-dev@mail.enthought.com
             
-    Version: 0.8
-    Date:    July 1 2008
+    Version: 0.8-1
+    Date:    August 4 2008
     
     Table of contents
     -----------------
@@ -158,8 +158,8 @@ DESCRIPTION
     
       numpy python package
         SD variables are read/written using the array data type provided
-        by the python numpy package. Note that since version 0.8 of
-        pyhdf, version 1.0.5 or above of numpy is needed.
+        by the python NumPy package. Note that since version 0.8 of
+        pyhdf, version 1.0.5 or above of NumPy is needed.
     
         numpy is available at:
         "http://www.numpy.org".
