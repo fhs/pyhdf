@@ -1,21 +1,18 @@
 from numpy.distutils.core import setup, Extension
 
-# --- Configure your environment here ---
-include_dirs = ["/usr/include"]
-library_dirs = ["/usr/lib/"]
-szip_installed = True # Set to False if your library was compiled without
-                      # libsz support
-compress = True # Set to False if the HDF library reports errors
-                # related to SDgetcompress() / SDsetgompress()
-
-# --- End configuration ---
+import os
+include_dirs = os.environ.get('INCLUDE_DIRS', '/usr/include').split(os.pathsep)
+library_dirs = os.environ.get('LIBRARY_DIRS', '/usr/lib').split(os.pathsep)
+szip_installed = not os.environ.has_key('NO_SZIP')
+compress = not os.environ.has_key('NO_COMPRESS')
+extra_link_args = os.environ.get('LINK_ARGS', '')
 
 import os.path as path
 for p in include_dirs + library_dirs:
     if not path.exists(p):
         raise RuntimeError('Cannot proceed without the HDF4 library.  Please '
-                           'edit include paths in "setup.py" and read the '
-                           'INSTALL file for further instructions.')
+                           'export INCLUDE_DIRS and LIBRARY_DIRS as explained'
+                           'in the INSTALL file.')
 
 libraries = ["mfhdf", "df", "jpeg", "z"]
 if szip_installed:
@@ -32,7 +29,7 @@ _hdfext = Extension('pyhdf._hdfext',
                     include_dirs = include_dirs,
                     extra_compile_args = extra_compile_args,
                     library_dirs = library_dirs,
-                    #extra_link_args=["extra stuff passed to the linker"],
+                    extra_link_args=[extra_link_args],
                     libraries = libraries,
                     )
 

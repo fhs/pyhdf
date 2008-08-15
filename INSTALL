@@ -45,20 +45,18 @@ Step-by-step instructions
    2. If your HDF4 libraries or include files reside in directories
       that are not searched by default on your system,
       the installation script will complain about missing files.
-      Edit the following lines in ``setup.py`` to point to the right
-      paths::
 
-        include_dirs = ["/usr/include"]
-        library_dirs = ["/usr/lib/"]
+      Add to the search path by exporting ``INCLUDE_DIRS`` and
+      ``LIBRARY_DIRS``, e.g.::
 
-      For example, if HDF has been installed in
-      ``/usr/local/hdf-4.2r1``, use::
+        export INCLUDE_DIRS="/usr/local/hdf-4.2r1/include"
+        export LIBRARY_DIRS="/usr/local/hdf-4.2r1/lib"
 
-        include_dirs = ["/usr/local/hdf-4.2r1/include"]
-        library_dirs = ["/usr/local/hdf-4.2r1/lib"],
+        (or SET INCLUDE_DIRS="C:\\hdf4" on Windows)
 
-      In case szlib is not available, also set ``szip_installed`` to
-      ``False``.
+      In case szlib is not available, also set ``NO_SZIP``::
+
+        export NO_SZIP=1
 
       If anything goes wrong, read the detailed notes below.
       Warning messages about implicit declarations of some functions
@@ -102,15 +100,12 @@ abide by the szip licensing terms, set the ``szip_installed`` variable
 inside 'setup.py' to ``False``.
 
 If you get error messages related to the ``SDgetcompress()`` /
-``SDsetcompress()`` functions, eg.: ``"undefined symbol:
-SDgetcompress"`` (this seems to affect users of Debian based distros),
-also set ``compress`` to ``False``.
-
-With ``compress`` set to ``False``, ``SDgetcompress()`` and
-``SDsetcompress()`` will be transformed into no-ops, which will
-immediately raise an exception, and will not be resolved against the
-HDF library symbols. This may make it possible to work with an HDF
-library earlier than v4.2.
+``SDsetcompress()`` functions, e.g. ``"undefined symbol:
+SDgetcompress"``, set the environment variable ``NO_COMPRESS`` to "1".
+This will transform ``SDgetcompress()`` and ``SDsetcompress()`` into
+no-ops, which will immediately raise an exception, and will not be
+resolved against the HDF library symbols. This may make it possible to
+work with an HDF library earlier than v4.2.
 
 Swig-generated interface files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -136,14 +131,9 @@ for shareable libraries in every directory, then in a second round
 for archive files. This means that if there is a libjpeg.so somewhere
 on the standard linker search paths, it will be found first, even if
 the HDF libjpeg.a file exists in the directory pointed by "library_dirs".
-To solve the problem, edit the line:
+To solve the problem, set the environment variable ``LINK_ARGS``::
 
-  #extra_link_args=["extra stuff passed to the linker"],
-
-changing it to:
-
-  extra_link_args = ["-oldstyle_liblookup"],
+  export LINK_ARGS="-oldstyle_liblookup"
 
 This will tell the linker to look for .so then for .a files in each visited
 directory.
-
