@@ -3,10 +3,10 @@ Installing pyhdf
 ================
 
 ``pyhdf`` has been successfully installed under Python 2.4 and above on
-several platforms, including Linux 2.4.19, Tru64 4.0.f, Solaris 8,
+several platforms, including Windows 32-bit, Linux 2.4.19, Tru64 4.0.f, Solaris 8,
 AIX 4 and MacOSX 10.5.
 
-Please inform the maintainer (Andre.Gosselin@dfo-mpo.gc.ca) of any
+Please inform the maintainer (Andre.Gosselin@dfo-mpo.gc.ca or info@enthought.com) of any
 problems encountered during installation.
 
 Download
