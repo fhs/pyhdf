@@ -42,10 +42,6 @@ read and modified.
 
 Functionality of version 0.8 is same as 0.7-3, but it uses 
 NumPy package rather than Numeric.
-Version 0.8 also incorporates a parser for ODL (Object
-Description Language), a common format for the content
-of information in HDF files.  Note that the parser does
-not support the full ODL specification.
 
 
 INSTALLATION:

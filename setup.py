@@ -37,7 +37,7 @@ setup(name         = 'pyhdf',
       author       = 'Andre Gosselin',
       author_email = 'Andre.Gosselin@dfo-mpo.gc.ca',
       description  = 'Python interface to the NCSA HDF4 library',
-      keywords     = ['hdf', 'numpy', 'python', 'pyhdf'],
+      keywords     = ['hdf', 'netcdf', 'numpy', 'python', 'pyhdf'],
       license      = 'public',
       long_description = 'The pyhdf package wraps the functionality\n '
                          'of the NCSA HDF version 4 library inside a Python OOP\n '
@@ -45,7 +45,7 @@ setup(name         = 'pyhdf',
                          '(Vdata) and V (Vgroup) APIs are currently implemented.\n '
                          'SD datasets are read/written\n '
                          'through numpy arrays. netCDF files can also\n '
-                         'be read and modified with pyhdf.'
+                         'be read and modified with pyhdf.',
       url          = 'www.sourceforge.net/projects/pysclint',
       version      = '0.8-2',
       packages     = ['pyhdf'],
