@@ -3,7 +3,7 @@ from numpy.distutils.core import setup, Extension
 import os
 include_dirs = os.environ.get('INCLUDE_DIRS', '/usr/include').split(os.pathsep)
 library_dirs = os.environ.get('LIBRARY_DIRS', '/usr/lib').split(os.pathsep)
-szip_installed = not os.environ.has_key('NO_SZIP')
+szip_installed = os.environ.has_key('SZIP')
 compress = not os.environ.has_key('NO_COMPRESS')
 extra_link_args = os.environ.get('LINK_ARGS', '')
 

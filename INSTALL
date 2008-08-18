@@ -3,86 +3,153 @@ Installing pyhdf
 ================
 
 ``pyhdf`` has been successfully installed under Python 2.4 and above on
-several platforms, including Windows 32-bit, Linux 2.4.19, Tru64 4.0.f, Solaris 8,
-AIX 4 and MacOSX 10.5.
+several platforms, including 
 
-Please inform the maintainer (Andre.Gosselin@dfo-mpo.gc.ca or info@enthought.com) of any
+* Windows XP
+
+* Linux 2.4.19
+
+* Tru64 4.0.f
+
+* Solaris 8
+
+* AIX 4
+
+* MacOSX 10.5.
+
+Please inform the maintainer (Andre.Gosselin@dfo-mpo.gc.ca) of any
 problems encountered during installation.
 
-Download
---------
-The source repository is located at
+There are several available options for installing pyhdf:
 
-::
+1.  Download and install EPD version 2.5.3001 (Enthought Python Distribution)
+    which includes pyhdf 0.8.  This makes sense if Python isn't already
+    installed on you computer.
+2.  Download and install pyhdf 0.8 from PyPi / the cheeseshop.
+3.  Download and install pyhdf 0.8 from source
 
-  https://pysclint.svn.sourceforge.net/svnroot/pysclint/trunk/pyhdf
 
-Binaries and source tarballs can be downloaded from the `SourceForge
-project page <http://www.sourceforge.net/projects/pysclint>`_.
+1. Installing EPD
+-----------------
 
-Step-by-step instructions
--------------------------
+EPD (The Enthought Python Distribution) is a python release which includes
+many of the major python packages (such as NumPy, SciPy, etc), along
+with pyhdf.  As such, you don't need to worry about install other packages.
+The EPD is available at 
+`the Enthought website <http://www.enthought.com>`_.
+Follow the instructions on the page.
 
-1. **Install the HDF4 library.**
 
-   Source code is available at
-   http://hdf.ncsa.uiuc.edu/hdf4.html. Binary packages
-   are available for most popular environments.  Version
-   4.2r1 or greater is required.
+2. Installing from the Cheeseshop
+---------------------------------
 
-   HDF4.2 itself depends on libjpeg and libz (and optionally libsz for
-   SZIP compression).
+**Requirements**:
 
-2. **Install NumPy.**
+- Python 2.5+
+- Numpy 1.1+
 
-   See http://www.scipy.org for more detail.  Binary packages
-   are available for most distributions.
+The Python Package Index, also known as the Cheeseshop, is
+a site on the web where many open-source python packages are stored.
 
-3. **Compile and install pyhdf**
+a. Install Python 2.5+: go to `the Python webpage <http://www.python.org>`_
+   and follow the instructions to install Python
 
-   1. Change to the ``pyhdf`` source directory.
+b. Install Numpy 1.1+: go to `the Scipy webpage <http://www.scipy.org>`_
+   and follow the instructions to install Numpy
 
-   2. If your HDF4 libraries or include files reside in directories
-      that are not searched by default on your system,
-      the installation script will complain about missing files.
+c. Install PyHDF v0.8+: open a command prompt in the main python directory 
+    and type::
 
-      Add to the search path by exporting ``INCLUDE_DIRS`` and
-      ``LIBRARY_DIRS``, e.g.::
+        easy_install pyHDF
 
-         export INCLUDE_DIRS="/usr/local/hdf-4.2r1/include"
-         export LIBRARY_DIRS="/usr/local/hdf-4.2r1/lib"
 
-      (or on Windows 
-         SET INCLUDE_DIRS="C:\\hdf4\include"
-         SET LIBRARY_DIRS="C:\\hdf4\lib"
-      )
+3. Install from Source
+----------------------
 
-      In case szlib is not available, also set ``NO_SZIP``::
+**Requirements**:
 
-        export NO_SZIP=1
+- Python v2.5+
+- Subversion
+- Numpy v1.1+
+- GCC Compiler suite
+- HDF4.2r1 libraries
+- Pyhdf v0.8
 
-      If anything goes wrong, read the detailed notes below.
-      Warning messages about implicit declarations of some functions
-      may be produced.  Those are due to SWIG, and may be safely
-      ignored.
+This option requires that you download and install Python, Subversion,
+Numpy and the GCC compiler suite before you download and install pyhdf.
 
-   3. Install system-wide or locally:
+a. Install Python 2.5+: go to `the Python webpage <http://www.python.org>`_
+   and follow the instructions to install Python
 
-      # sudo python setup.py install
-      $ python setup.py install --prefix=/usr/local (or prefix of choice)
+b. Install Numpy 1.1+: go to `the Scipy webpage <http://www.scipy.org>`_
+   and follow the instructions to install Numpy
+
+c. Install the GCC compiler: go to http://gcc.gnu.org and follow the
+   instructions to download and install the GCC C and FORTRAN
+   compilers.
+
+d. Download the HDF4.x libraries: go to http://hdf.ncsa.uiuc.edu/ and
+   follow the download instructions. Prebuilt binaries are available
+   for most platforms.  Note that HDF4.2 itself depends on libjpeg and
+   libz (and optionally libsz for SZIP compression).
+
+e. Install Subversion: go to http://www.tigris.org and follow the
+   instructions to install Subversion. If you are a Windows user it is
+   worthwhile to also download and install TortoiseSVN which
+   integrates a user friendly interface to SVN in to Windows Explorer.
+
+f. Download pyhdf using Subversion: There are several ways to download
+   pyhdf with Subversion. From the command prompt::
+
+     svn checkout https://pysclint.svn.sourceforge.net/svnroot/pysclint/trunk/pyhdf
+
+   Binaries and source tarballs can be downloaded from the
+   `SourceForge project page <http://www.sourceforge.net/projects/pysclint>`_.
+
+Step-by-step instructions for installing pyhdf
+----------------------------------------------
+
+1. Go to the ``pyhdf`` source directory.
+
+2. If your HDF4 libraries or include files reside in directories
+   that are not searched by default on your system,
+   the installation script will complain about missing files.
+
+   Add to the search path by exporting ``INCLUDE_DIRS`` and
+   ``LIBRARY_DIRS``, e.g.::
+
+        export INCLUDE_DIRS="/usr/local/hdf-4.2r1/include"
+        export LIBRARY_DIRS="/usr/local/hdf-4.2r1/lib"
+
+        (or SET INCLUDE_DIRS="C:\\hdf4" on Windows)
+
+   In case szlib is available, also set ``SZIP``::
+
+        export SZIP=1
+
+   If anything goes wrong, read the detailed notes below.
+   Warning messages about implicit declarations of some functions
+   may be produced.  Those are due to SWIG, and may be safely
+   ignored.
+
+3. Install system-wide or locally::
+
+        # sudo python setup.py install
+        $ python setup.py install --prefix=/usr/local (or prefix of choice)
 
 To make sure everything works as expected, run the ``hdfstruct.py``
 script (under ``examples/hdfstruct``) on one of your HDF4 files. The
 script should display the file structure. This is a handy tool to have
 around when you want to explore the contents of any HDF4 file.
 
-Enjoy!
 
+=============
 Further notes
--------------
+=============
 
 External libraries
-~~~~~~~~~~~~~~~~~~
+------------------
+
 HDF4.2 no longer provides its own copies of the jpeg and z libraries.
 Those must be installed separately (on Linux, they should be part of
 any standard distribution).
@@ -111,7 +178,7 @@ resolved against the HDF library symbols. This may make it possible to
 work with an HDF library earlier than v4.2.
 
 Swig-generated interface files
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------
 Interface files ``hdfext.py`` and ``hdfext_wrap.c`` (located under the
 ``pyhdf`` subdirectory) have been generated using the SWIG tool.
 Those two files should be usable as is on most environments.  It could
@@ -127,7 +194,7 @@ SWIG should silently regenerate the two interface files, after which
 installation should proceed correctly.
 
 TRU64 note
-~~~~~~~~~~
+----------
 The HDF installation creates its libraries as archive (.a) files,
 not shareable (.so) ones. On TRU64, the linker by default first looks
 for shareable libraries in every directory, then in a second round
