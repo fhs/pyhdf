@@ -7,10 +7,6 @@ doc/pyhdf.V.html
 doc/pyhdf.V.txt
 doc/pyhdf.VS.html
 doc/pyhdf.VS.txt
-examples/aster/ASTER_example.py
-examples/aster/aster_module.py
-examples/aster/projection_module.py
-examples/aster/README_aster.txt
 examples/compress/README_compress.txt
 examples/compress/test-compress.py
 examples/hdfstruct/hdfstruct.py
@@ -21,8 +17,6 @@ examples/inventory/inventory_1-3.py
 examples/inventory/inventory_1-4.py
 examples/inventory/inventory_1-5.py
 examples/inventory/README_inventory.txt
-examples/odl_parsing/ODL_example.py
-examples/odl_parsing/README_odl.txt
 examples/txttohdf/depth.txt
 examples/txttohdf/README_txttohdf.txt
 examples/txttohdf/temp.txt
@@ -38,7 +32,6 @@ pyhdf/hdfext.py
 pyhdf/hdfext_wrap.c
 pyhdf/HC.py
 pyhdf/HDF.py
-pyhdf/parse_odl.py
 pyhdf/SD.py
 pyhdf/VS.py
 pyhdf/V.py
