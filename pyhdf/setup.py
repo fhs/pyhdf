@@ -37,7 +37,7 @@ setup(name         = 'pyhdf',
       author       = 'Andre Gosselin',
       author_email = 'Andre.Gosselin@dfo-mpo.gc.ca',
       description  = 'Python interface to the NCSA HDF4 library',
-      keywords     = ['hdf', 'netcdf', 'numpy', 'python', 'pyhdf', 'parse_odl'],
+      keywords     = ['hdf', 'numpy', 'python', 'pyhdf'],
       license      = 'public',
       long_description = 'The pyhdf package wraps the functionality\n '
                          'of the NCSA HDF version 4 library inside a Python OOP\n '
@@ -46,12 +46,8 @@ setup(name         = 'pyhdf',
                          'SD datasets are read/written\n '
                          'through numpy arrays. netCDF files can also\n '
                          'be read and modified with pyhdf.'
-                         '\n'
-                         'The function parse_odl is also provided to\n'
-                         'deal specifically with data in the ODL\n'
-                         '(Object Desdription Language) format.',
       url          = 'www.sourceforge.net/projects/pysclint',
-      version      = '0.8-1',
+      version      = '0.8-2',
       packages     = ['pyhdf'],
       ext_modules  = [_hdfext]
       )

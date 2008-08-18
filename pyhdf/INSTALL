@@ -49,10 +49,13 @@ Step-by-step instructions
       Add to the search path by exporting ``INCLUDE_DIRS`` and
       ``LIBRARY_DIRS``, e.g.::
 
-        export INCLUDE_DIRS="/usr/local/hdf-4.2r1/include"
-        export LIBRARY_DIRS="/usr/local/hdf-4.2r1/lib"
+         export INCLUDE_DIRS="/usr/local/hdf-4.2r1/include"
+         export LIBRARY_DIRS="/usr/local/hdf-4.2r1/lib"
 
-        (or SET INCLUDE_DIRS="C:\\hdf4" on Windows)
+      (or on Windows 
+         SET INCLUDE_DIRS="C:\\hdf4\include"
+         SET LIBRARY_DIRS="C:\\hdf4\lib"
+      )
 
       In case szlib is not available, also set ``NO_SZIP``::
 
