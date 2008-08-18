@@ -31,6 +31,12 @@
 
 List of changes to 'pyhdf' since the initial release.
 
+pyhdf-0.8-2
+---------
+  August 18, 2008
+    - Removed ODL parser including examples and aster examples.  These are now
+       in scikits.rsformats.
+
 pyhdf-0.8-1
 ---------
   August 4 2008
