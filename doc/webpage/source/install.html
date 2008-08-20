@@ -1,0 +1,201 @@
+<div class="section">
+<h1><a id="installing-pyhdf" name="installing-pyhdf">Installing pyhdf</a></h1>
+<p><tt class="docutils literal"><span class="pre">pyhdf</span></tt> has been successfully installed under Python 2.4 and above on
+several platforms, including</p>
+<ul class="simple">
+<li>Windows XP</li>
+<li>Linux 2.4.19</li>
+<li>Tru64 4.0.f</li>
+<li>Solaris 8</li>
+<li>AIX 4</li>
+<li>MacOSX 10.5.</li>
+</ul>
+<p>Please inform the maintainer (<a class="reference" href="mailto:Andre.Gosselin&#64;dfo-mpo.gc.ca">Andre.Gosselin&#64;dfo-mpo.gc.ca</a>) of any
+problems encountered during installation.</p>
+<p>There are several available options for installing pyhdf:</p>
+<ol class="arabic simple">
+<li>Download and install EPD version 2.5.3001 (Enthought Python Distribution)
+which includes pyhdf 0.8.  This makes sense if Python isn't already
+installed on you computer.</li>
+<li>Download and install pyhdf 0.8 from PyPi / the cheeseshop.</li>
+<li>Download and install pyhdf 0.8 from source</li>
+</ol>
+<div class="section">
+<h2><a id="installing-epd" name="installing-epd">1. Installing EPD</a></h2>
+<p>EPD (The Enthought Python Distribution) is a python release which includes
+many of the major python packages (such as NumPy, SciPy, etc), along
+with pyhdf.  As such, you don't need to worry about install other packages.
+The EPD is available at
+<a class="reference" href="http://www.enthought.com">the Enthought website</a>.
+Follow the instructions on the page.</p>
+</div>
+<div class="section">
+<h2><a id="installing-from-the-cheeseshop" name="installing-from-the-cheeseshop">2. Installing from the Cheeseshop</a></h2>
+<p><strong>Requirements</strong>:</p>
+<ul class="simple">
+<li>Python 2.5+</li>
+<li>Numpy 1.1+</li>
+</ul>
+<p>The Python Package Index, also known as the Cheeseshop, is
+a site on the web where many open-source python packages are stored.</p>
+<ol class="loweralpha">
+<li><p class="first">Install Python 2.5+: go to <a class="reference" href="http://www.python.org">the Python webpage</a>
+and follow the instructions to install Python</p>
+</li>
+<li><p class="first">Install Numpy 1.1+: go to <a class="reference" href="http://www.scipy.org">the Scipy webpage</a>
+and follow the instructions to install Numpy</p>
+</li>
+<li><dl class="first docutils">
+<dt>Install PyHDF v0.8+: open a command prompt in the main python directory</dt>
+<dd><p class="first">and type:</p>
+<pre class="last literal-block">
+easy_install pyHDF
+</pre>
+</dd>
+</dl>
+</li>
+</ol>
+</div>
+<div class="section">
+<h2><a id="install-from-source" name="install-from-source">3. Install from Source</a></h2>
+<p><strong>Requirements</strong>:</p>
+<ul class="simple">
+<li>Python v2.5+</li>
+<li>Subversion</li>
+<li>Numpy v1.1+</li>
+<li>GCC Compiler suite</li>
+<li>HDF4.2r1 libraries</li>
+<li>Pyhdf v0.8</li>
+</ul>
+<p>This option requires that you download and install Python, Subversion,
+Numpy and the GCC compiler suite before you download and install pyhdf.</p>
+<ol class="loweralpha">
+<li><p class="first">Install Python 2.5+: go to <a class="reference" href="http://www.python.org">the Python webpage</a>
+and follow the instructions to install Python</p>
+</li>
+<li><p class="first">Install Numpy 1.1+: go to <a class="reference" href="http://www.scipy.org">the Scipy webpage</a>
+and follow the instructions to install Numpy</p>
+</li>
+<li><p class="first">Install the GCC compiler: go to <a class="reference" href="http://gcc.gnu.org">http://gcc.gnu.org</a> and follow the
+instructions to download and install the GCC C and FORTRAN
+compilers.</p>
+</li>
+<li><p class="first">Download the HDF4.x libraries: go to <a class="reference" href="http://hdf.ncsa.uiuc.edu/">http://hdf.ncsa.uiuc.edu/</a> and
+follow the download instructions. Prebuilt binaries are available
+for most platforms.  Note that HDF4.2 itself depends on libjpeg and
+libz (and optionally libsz for SZIP compression).</p>
+</li>
+<li><p class="first">Install Subversion: go to <a class="reference" href="http://www.tigris.org">http://www.tigris.org</a> and follow the
+instructions to install Subversion. If you are a Windows user it is
+worthwhile to also download and install TortoiseSVN which
+integrates a user friendly interface to SVN in to Windows Explorer.</p>
+</li>
+<li><p class="first">Download pyhdf using Subversion: There are several ways to download
+pyhdf with Subversion. From the command prompt:</p>
+<pre class="literal-block">
+svn checkout https://pysclint.svn.sourceforge.net/svnroot/pysclint/trunk/pyhdf
+</pre>
+<p>Binaries and source tarballs can be downloaded from the
+<a class="reference" href="http://www.sourceforge.net/projects/pysclint">SourceForge project page</a>.</p>
+</li>
+</ol>
+</div>
+<div class="section">
+<h2><a id="step-by-step-instructions-for-installing-pyhdf" name="step-by-step-instructions-for-installing-pyhdf">Step-by-step instructions for installing pyhdf</a></h2>
+<ol class="arabic">
+<li><p class="first">Go to the <tt class="docutils literal"><span class="pre">pyhdf</span></tt> source directory.</p>
+</li>
+<li><p class="first">If your HDF4 libraries or include files reside in directories
+that are not searched by default on your system,
+the installation script will complain about missing files.</p>
+<p>Add to the search path by exporting <tt class="docutils literal"><span class="pre">INCLUDE_DIRS</span></tt> and
+<tt class="docutils literal"><span class="pre">LIBRARY_DIRS</span></tt>, e.g.:</p>
+<pre class="literal-block">
+export INCLUDE_DIRS=&quot;/usr/local/hdf-4.2r1/include&quot;
+export LIBRARY_DIRS=&quot;/usr/local/hdf-4.2r1/lib&quot;
+
+(or SET INCLUDE_DIRS=&quot;C:\\hdf4&quot; on Windows)
+</pre>
+<p>In case szlib is available, also set <tt class="docutils literal"><span class="pre">SZIP</span></tt>:</p>
+<pre class="literal-block">
+export SZIP=1
+</pre>
+<p>If anything goes wrong, read the detailed notes below.
+Warning messages about implicit declarations of some functions
+may be produced.  Those are due to SWIG, and may be safely
+ignored.</p>
+</li>
+<li><p class="first">Install system-wide or locally:</p>
+<pre class="literal-block">
+# sudo python setup.py install
+$ python setup.py install --prefix=/usr/local (or prefix of choice)
+</pre>
+</li>
+</ol>
+<p>To make sure everything works as expected, run the <tt class="docutils literal"><span class="pre">hdfstruct.py</span></tt>
+script (under <tt class="docutils literal"><span class="pre">examples/hdfstruct</span></tt>) on one of your HDF4 files. The
+script should display the file structure. This is a handy tool to have
+around when you want to explore the contents of any HDF4 file.</p>
+</div>
+</div>
+<div class="section">
+<h1><a id="further-notes" name="further-notes">Further notes</a></h1>
+<div class="section">
+<h2><a id="external-libraries" name="external-libraries">External libraries</a></h2>
+<p>HDF4.2 no longer provides its own copies of the jpeg and z libraries.
+Those must be installed separately (on Linux, they should be part of
+any standard distribution).</p>
+<p>The sz library (versions 2.0 or higher) must be installed if the SZIP
+compression method is to be used with SDsetcompress(). HDF v4.2 must
+also then be compiled with SZIP support. Precompiled HDF packages
+usually lack this feature. Getting an SZIP enabled HDF library may
+require compiling the library from source with the &quot;--with-szlib&quot;
+configuration option.  Note that you <em>must</em> install SZIP in a separate
+step. For more details, see the
+<a class="reference" href="http://hdf.ncsa.uiuc.edu/doc_resource/SZIP/">NCSA hdf site</a>.
+Source code and binaries are
+<a class="reference" href="ftp://ftp.hdfgroup.org/lib-external/szip/">available for download</a>.</p>
+<p>In case your HDF library was compiled without SZIP support, or you cannot
+abide by the szip licensing terms, set the <tt class="docutils literal"><span class="pre">szip_installed</span></tt> variable
+inside 'setup.py' to <tt class="docutils literal"><span class="pre">False</span></tt>.</p>
+<p>If you get error messages related to the <tt class="docutils literal"><span class="pre">SDgetcompress()</span></tt> /
+<tt class="docutils literal"><span class="pre">SDsetcompress()</span></tt> functions, e.g. <tt class="docutils literal"><span class="pre">&quot;undefined</span> <span class="pre">symbol:</span>
+<span class="pre">SDgetcompress&quot;</span></tt>, set the environment variable <tt class="docutils literal"><span class="pre">NO_COMPRESS</span></tt> to &quot;1&quot;.
+This will transform <tt class="docutils literal"><span class="pre">SDgetcompress()</span></tt> and <tt class="docutils literal"><span class="pre">SDsetcompress()</span></tt> into
+no-ops, which will immediately raise an exception, and will not be
+resolved against the HDF library symbols. This may make it possible to
+work with an HDF library earlier than v4.2.</p>
+</div>
+<div class="section">
+<h2><a id="swig-generated-interface-files" name="swig-generated-interface-files">Swig-generated interface files</a></h2>
+<p>Interface files <tt class="docutils literal"><span class="pre">hdfext.py</span></tt> and <tt class="docutils literal"><span class="pre">hdfext_wrap.c</span></tt> (located under the
+<tt class="docutils literal"><span class="pre">pyhdf</span></tt> subdirectory) have been generated using the SWIG tool.
+Those two files should be usable as is on most environments.  It could
+happen however that, for reasons related to your environment, your C
+compiler does not accept the '.c' file and raises a compilation
+error. If so, the interface needs to be regenerated.  To do so,
+install <a class="reference" href="http://www.swig.org">SWIG</a>, then run:</p>
+<pre class="literal-block">
+$ cd pyhdf
+$ swig -python hdfext.i
+</pre>
+<p>SWIG should silently regenerate the two interface files, after which
+installation should proceed correctly.</p>
+</div>
+<div class="section">
+<h2><a id="tru64-note" name="tru64-note">TRU64 note</a></h2>
+<p>The HDF installation creates its libraries as archive (.a) files,
+not shareable (.so) ones. On TRU64, the linker by default first looks
+for shareable libraries in every directory, then in a second round
+for archive files. This means that if there is a libjpeg.so somewhere
+on the standard linker search paths, it will be found first, even if
+the HDF libjpeg.a file exists in the directory pointed by &quot;library_dirs&quot;.
+To solve the problem, set the environment variable <tt class="docutils literal"><span class="pre">LINK_ARGS</span></tt>:</p>
+<pre class="literal-block">
+export LINK_ARGS=&quot;-oldstyle_liblookup&quot;
+</pre>
+<p>This will tell the linker to look for .so then for .a files in each visited
+directory.</p>
+</div>
+</div>
+</div>

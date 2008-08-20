@@ -1,0 +1,176 @@
+<p>
+The usage examples below focus on how to work with datasets from
+airborne and satellite sensors stored in HDF4.x format with ``pyhdf``. These
+datasets are not included in the distribution.
+</p>
+
+<h2>Example 1. Opening an ASTER Surface Temperature Image</h2>
+
+<p>
+<img src="images/temperature.jpg" alt="Tahoe temperature image"
+     title="Tahoe temperature image" /><br/>
+Lake Tahoe, CA/NV USA
+</p>
+
+<h4>Step-by-step instructions</h4>
+<p>
+a. Open a python command prompt<br/>
+b. import Numpy
+</p>
+
+<pre class="wiki">In [1]: from numpy import *
+</pre><p>
+c. import the SD package from pyHDF
+</p>
+<pre class="wiki">In [2]: from pyhdf.SD import SD, SDC
+</pre><p>
+d. Open the ASTER file
+</p>
+<pre class="wiki">In [3]: astsd = SD('AST_08_00312022006060651_20070103125725_32653.hdf', SDC.READ)
+</pre><p>
+e. See what datasets are present in the file
+</p>
+<pre class="wiki">
+In [4]: astsd.datasets()
+</pre><p>
+which should return:
+</p>
+
+<pre class="wiki">Out [4]:
+{'GeodeticLatitude': (('GeoTrack:SurfaceKineticTemperature',
+                       'GeoXtrack:SurfaceKineticTemperature'),
+                      (11, 11),
+                      6,
+                      3),
+ 'KineticTemperature': (('ImageLine:SurfaceKineticTemperature',
+                         'ImagePixel:SurfaceKineticTemperature'),
+                        (700, 830),
+                        23,
+                        0),
+ 'Longitude': (('GeoTrack:SurfaceKineticTemperature',
+                'GeoXtrack:SurfaceKineticTemperature'),
+               (11, 11),
+               6,
+               4),
+ 'QA_DataPlane': (('ImageLine:SurfaceKineticTemperature',
+                   'ImagePixel:SurfaceKineticTemperature'),
+                  (700, 830),
+                  21,
+                  1),
+ 'QA_DataPlane2': (('ImageLine:SurfaceKineticTemperature',
+                    'ImagePixel:SurfaceKineticTemperature'),
+                   (700, 830),
+                   23,
+                   2)}
+
+In [5]:
+</pre><p> Details on what is included in ASTER product are available
+from the <a class="ext-link"
+href="http://asterweb.jpl.nasa.gov/data_products.asp">ASTER
+homepage</a>. In this case we want to read in the kinetic temperature
+image, which is a 700x830 array:
+</p>
+<pre class="wiki">In [6]: kt = astsd.select('KineticTemperature')
+</pre><p>
+Now lets look at the image. You could extract a particular area in the array with:
+</p>
+<pre class="wiki">
+In [7]: kt[300,50:150]
+</pre><p>
+This will return
+</p>
+<pre class="wiki">Out [7]:
+array([2000, 2000, 2000, 2000, 2000, 2692, 2698, 2688, 2689, 2692, 2693,
+       2694, 2680, 2694, 2687, 2692, 2697, 2702, 2698, 2693, 2696, 2692,
+       2689, 2682, 2674, 2692, 2694, 2708, 2717, 2720, 2724, 2722, 2725,
+       2721, 2711, 2701, 2706, 2734, 2762, 2803, 2817, 2799, 2798, 2801,
+       2803, 2802, 2802, 2802, 2804, 2804, 2803, 2803, 2804, 2807, 2804,
+       2805, 2808, 2806, 2806, 2806, 2806, 2803, 2805, 2825, 2807, 2806,
+       2805, 2806, 2805, 2806, 2805, 2805, 2806, 2804, 2804, 2804, 2804,
+       2805, 2805, 2803, 2805, 2804, 2802, 2802, 2801, 2802, 2801, 2801,
+       2801, 2801, 2801, 2800, 2801, 2799, 2799, 2800, 2802, 2798, 2801,
+       2800], dtype=uint16)
+</pre><p>
+The values listed are temperatures in Kelvin * 10 ((273.15 + tempC)*10). The first few values are fill values (2000). The last few values are all over water and around 2800 or 280K (6.85 C).
+</p>
+<p>
+or you can find the dimensions of the image with:
+</p>
+<pre class="wiki">In [8]: kt.dimensions()
+</pre><p>
+which returns:
+</p>
+<pre class="wiki">Out [8]:
+{'ImageLine:SurfaceKineticTemperature': 700,
+ 'ImagePixel:SurfaceKineticTemperature': 830}
+</pre><p>
+
+to find out what functions are available with the kt dataset, type:
+</p>
+<pre class="wiki">In [9]: dir(kt)
+</pre><p>
+which returns:
+</p>
+<pre class="wiki">Out [9]:
+['_SDS__buildStartCountStride',
+ '__class__',
+ '__del__',
+ '__delattr__',
+ '__dict__',
+ '__doc__',
+ '__getattr__',
+ '__getattribute__',
+ '__getitem__',
+ '__hash__',
+ '__init__',
+ '__len__',
+ '__module__',
+ '__new__',
+ '__reduce__',
+ '__reduce_ex__',
+ '__repr__',
+ '__setattr__',
+ '__setitem__',
+ '__str__',
+ '__weakref__',
+ '_id',
+ '_sd',
+ 'attr',
+ 'attributes',
+ 'checkempty',
+ 'dim',
+ 'dimensions',
+ 'endaccess',
+ 'get',
+ 'getcal',
+ 'getcompress',
+ 'getdatastrs',
+ 'getfillvalue',
+ 'getrange',
+ 'info',
+ 'iscoordvar',
+ 'isrecord',
+ 'ref',
+ 'set',
+ 'setcal',
+ 'setcompress',
+ 'setdatastrs',
+ 'setexternalfile',
+ 'setfillvalue',
+ 'setrange']
+</pre><p>
+The image can now be displayed using a visualization program, such as
+<a href="http://matplotlib.sf.net">matplotlib</a>, using the following
+code:
+</p>
+<pre class="wiki">from matplotlib.pyplot import imshow
+imshow(kt.get())
+</pre><p>
+This should display the image shown at the top of the page.
+</p>
+<h2 id="AdditionalInformation">Additional Information</h2>
+<p>
+<a href="http://lpdaac.usgs.gov/aster/asterdataprod.asp#on_demand_products">
+Description of the ASTER products</a>
+
+</p>
