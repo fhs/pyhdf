@@ -22,11 +22,11 @@ problems encountered during installation.
 
 There are several available options for installing pyhdf:
 
-1.  Download and install EPD version 2.5.3001 (Enthought Python Distribution)
-    which includes pyhdf 0.8.  This makes sense if Python isn't already
+1.  Download and install EPD (Enthought Python Distribution)
+    which includes pyhdf 0.8.2  This makes sense if Python isn't already
     installed on you computer.
-2.  Download and install pyhdf 0.8 from PyPi / the cheeseshop.
-3.  Download and install pyhdf 0.8 from source
+2.  Download and install pyhdf 0.8.2 from PyPi / the cheeseshop.
+3.  Download and install pyhdf 0.8.2 from source
 
 
 1. Installing EPD
@@ -35,8 +35,7 @@ There are several available options for installing pyhdf:
 EPD (The Enthought Python Distribution) is a python release which includes
 many of the major python packages (such as NumPy, SciPy, etc), along
 with pyhdf.  As such, you don't need to worry about install other packages.
-The EPD is available at 
-`the Enthought website <http://www.enthought.com>`_.
+The EPD is available at `the Enthought website <http://www.enthought.com>`_.
 Follow the instructions on the page.
 
 
@@ -60,7 +59,7 @@ b. Install Numpy 1.1+: go to `the Scipy webpage <http://www.scipy.org>`_
 c. Install PyHDF v0.8+: open a command prompt in the main python directory 
     and type::
 
-        easy_install pyHDF
+        easy_install pyhdf
 
 
 3. Install from Source
@@ -72,8 +71,8 @@ c. Install PyHDF v0.8+: open a command prompt in the main python directory
 - Subversion
 - Numpy v1.1+
 - GCC Compiler suite
-- HDF4.2r1 libraries
-- Pyhdf v0.8
+- HDF4.2r3 libraries
+- pyhdf 0.8.2
 
 This option requires that you download and install Python, Subversion,
 Numpy and the GCC compiler suite before you download and install pyhdf.
@@ -91,7 +90,9 @@ c. Install the GCC compiler: go to http://gcc.gnu.org and follow the
 d. Download the HDF4.x libraries: go to http://hdf.ncsa.uiuc.edu/ and
    follow the download instructions. Prebuilt binaries are available
    for most platforms.  Note that HDF4.2 itself depends on libjpeg and
-   libz (and optionally libsz for SZIP compression).
+   libz (and optionally libsz for SZIP compression).  Prebuilt binaries for
+   Windows built against SZIP without encoding (decoding only) are hosted
+   at pysclint site. 
 
 e. Install Subversion: go to http://www.tigris.org and follow the
    instructions to install Subversion. If you are a Windows user it is
@@ -118,24 +119,44 @@ Step-by-step instructions for installing pyhdf
    Add to the search path by exporting ``INCLUDE_DIRS`` and
    ``LIBRARY_DIRS``, e.g.::
 
-        export INCLUDE_DIRS="/usr/local/hdf-4.2r1/include"
-        export LIBRARY_DIRS="/usr/local/hdf-4.2r1/lib"
+        export INCLUDE_DIRS="/usr/local/hdf-4.2r3/include"
+        export LIBRARY_DIRS="/usr/local/hdf-4.2r3/lib"
 
-        (or SET INCLUDE_DIRS="C:\\hdf4" on Windows)
+    or on Windows something like (replace with actual location):
 
-   In case szlib is available, also set ``SZIP``::
+	set INCLUDE_DIRS=C:\hdf4\include
+	set LIBRARY_DIRS=C:\hdf4\lib;C:\hdf4\dll;C:\hdf4\jpeg6\lib;C:\hdf4\szip21\lib;C:\hdf4\zlib123\lib
+
+   Note that jpeg, z, and (optionally) szip libraries must be found as
+   well (but not the includes) so if they are not in a standard place
+   for the compiler, their location must be specified.
+  
+   If you are compiling against an HDF4 library that was built against 
+   szlib also set ``SZIP``::
 
         export SZIP=1
+
+	(or on Windows:  set SZIP=1)
 
    If anything goes wrong, read the detailed notes below.
    Warning messages about implicit declarations of some functions
    may be produced.  Those are due to SWIG, and may be safely
    ignored.
 
+   If you have downloaded pre-built binaries for Windows from the
+   pysclint site you may optionally set HDF4 to the location where
+   these binaries were unzipped (or pass in an argument to --hdf4 in
+   the command line). 
+
 3. Install system-wide or locally::
 
         # sudo python setup.py install
         $ python setup.py install --prefix=/usr/local (or prefix of choice)
+
+   Or, you might prefer to make a package (msi, rpm, egg, etc.) and install the 
+   package:
+
+        $ python setup.py bdist_<package>
 
 To make sure everything works as expected, run the ``hdfstruct.py``
 script (under ``examples/hdfstruct``) on one of your HDF4 files. The
@@ -156,14 +177,18 @@ any standard distribution).
 
 The sz library (versions 2.0 or higher) must be installed if the SZIP
 compression method is to be used with SDsetcompress(). HDF v4.2 must
-also then be compiled with SZIP support. Precompiled HDF packages
-usually lack this feature. Getting an SZIP enabled HDF library may
-require compiling the library from source with the "--with-szlib"
-configuration option.  Note that you *must* install SZIP in a separate
-step. For more details, see the
+also then be compiled with SZIP support.  The binaries available from
+NCSA are (at the time of this writing) compiled with SZIP support
+(including encoding).  The binaries Enthought has produced and which
+are available in EPD and for download from Sourceforge are compiled
+with SZIP support without encoding capability.  
+
+Getting an SZIP enabled HDF library may require compiling the library
+from source with the "--with-szlib" configuration option.  Note that
+you *must* install SZIP in a separate step. For more details, see the
 `NCSA hdf site <http://hdf.ncsa.uiuc.edu/doc_resource/SZIP/>`_.
-Source code and binaries are
-`available for download <ftp://ftp.hdfgroup.org/lib-external/szip/>`_.
+Source code and binaries are `available for download
+<ftp://ftp.hdfgroup.org/lib-external/szip/>`_.
 
 In case your HDF library was compiled without SZIP support, or you cannot
 abide by the szip licensing terms, set the ``szip_installed`` variable
