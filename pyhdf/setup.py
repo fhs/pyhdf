@@ -58,6 +58,8 @@ if sys.platform == 'win32':
         include_dirs = []
         library_dirs = []
         for adir in alldirs:
+            if not path.isdir(adir):
+                continue
             if adir.startswith('42'):
                 include_dirs.append(path.sep.join([baseloc, adir, 'include']))
                 library_dirs.append(path.sep.join([baseloc, adir, 'dll']))
@@ -128,7 +130,7 @@ setup(name         = 'pyhdf',
                          'SD datasets are read/written\n '
                          'through numpy arrays. netCDF files can also\n '
                          'be read and modified with pyhdf.',
-      url          = 'www.sourceforge.net/projects/pysclint',
+      url          = 'http://www.sourceforge.net/projects/pysclint',
       version      = '0.8.2',
       packages     = ['pyhdf'],
       ext_modules  = [_hdfext],
