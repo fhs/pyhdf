@@ -48,7 +48,7 @@ Installing from the Cheeseshop
 **Requirements**:
 
 - `Python 2.5+ <http://www.python.org>`_
-- `Numpy 1.1+  <http://www.scipy.org>`_
+- `NumPy 1.0.4+  <http://www.scipy.org>`_
 - `Setuptools 0.6c8+ <http://pypi.python.org/pypi/setuptools>`_ (provides easy_install command)
 
 The Python Package Index, also known as the Cheeseshop, is
@@ -58,17 +58,66 @@ PyHDF v0.8+: open a command prompt in the main python directory and type::
         easy_install pyhdf
 
 
+Quick install from Source for Windows Users
+-------------------------------------------
+
+**Requirements**:
+
+- `Python 2.5+ <http://www.python.org>`_
+- `NumPy 1.0.4+  <http://www.scipy.org>`_
+- `Mingw32 compiler <http://www.mingw.org>`_ or Visual Studio .NET 2003
+
+
+1. Download the complete HDF4 binary package from the link given
+   below.  These packages include all libraries needed to compile
+   pyhdf. There are two binary packages to choose from depending on
+   whether or not you want to compile pyhdf with SZIP encoding enabled
+   or disabled.  There are different licensing implications for each
+   choice (see `the HDF page
+   <http://hdfgroup.com/doc_resource/SZIP/>`_ for more details on the
+   licensing of SZIP).
+
+   - `HDF4 with encoding enabled <http://pysclint.sourceforge.net/pyhdf/hdf4-all-enc.zip>`_
+   - `HDF4 with encoding disabled <http://pysclint.sourceforge.net/pyhdf/hdf4-all-noenc.zip>`_
+
+2. Unzip the selected package into a directory of your choice (e.g. C:\HDF4).  
+
+3. Go to the ``pyhdf`` source directory.
+
+4. Build the package in one of the two following ways:
+
+   a) Set the HDF4 environment variable to the directory where you unpacked the binary and (e.g. C:\HDF4). Then run
+
+	``python setup.py build``
+
+   b) Run ``python setup.py build --hdf4 <directory of unzipped
+      package>`` where ``<directory of unzipped package>`` is the
+      location where you unzipped the downloaded HDF4 binary
+      (e.g. C:\HDF4).
+
+   *NOTE*: If you are using the mingw32 compiler and are using the
+   standard Python binary distribution, then you need to specify -c
+   mingw32 on the command line as well.
+
+5. Install ``pyhdf`` or build a binary distribution (bdist_msi,
+   bdist_wininst, bdist_egg, etc.) then run one of the following commands::
+
+	python setup.py install
+	python setup.py bdist_msi
+	python setup.py bdist_wininst
+	python setup.py bdist_egg
+
 Install from Source
 ----------------------
 
 **Requirements**:
 
 - `Python 2.5+ <http://www.python.org>`_
-- `Numpy 1.1+  <http://www.scipy.org>`_
-- `GCC Compiler suite <http://gcc.gnu.org>`_
-- `HDF4.2r3 libraries <http://hdf.ncsa.uiuc.edu/release4/obtain.html>`_ (to use the HDF4 binaries, you will also need szip, available from the same page)
+- `NumPy 1.0.4+  <http://www.scipy.org>`_
+- `Compiler suite e.g. <http://gcc.gnu.org>`_
+- `HDF4.2r3 libraries <http://hdf.ncsa.uiuc.edu/release4/obtain.html>`_ (to use their HDF4 binaries, you will also need szip, available from the same page)
 - `zlib <http://www.zlib.net/>`_
-- `libjpeg <http://www.ijg.org/>`_ (with headers)
+- `libjpeg <http://www.ijg.org/>`_ 
 
 *NOTE*: OS X users can obtain jpeg libraries `here <http://ethan.tira-thompson.com/Mac%20OS%20X%20Ports.html>`_. 
 Once the above packages are installed, you are ready to download and install pyhdf.
@@ -77,7 +126,6 @@ Binaries and source tarballs can be downloaded from the `SourceForge project pag
 To download pyhdf using Subversion, enter the following at the the command prompt::
 
     svn checkout https://pysclint.svn.sourceforge.net/svnroot/pysclint/trunk/pyhdf
-
    
 
 Step-by-step instructions for installing pyhdf
@@ -100,13 +148,16 @@ Step-by-step instructions for installing pyhdf
         set INCLUDE_DIRS=C:\hdf4\include
         set LIBRARY_DIRS=C:\hdf4\lib;C:\hdf4\dll;C:\hdf4\jpeg6\lib;C:\hdf4\szip21\lib;C:\hdf4\zlib123\lib
 
-   Note that jpeg, zlib, and (optionally) szip libraries must be found as
-   well. If they are not in a standard place for the compiler, their location
-   must be specified. On Mac OS X, ``/usr/local/lib`` and ``/usr/local/include``
-   may need to be specified if the libraries were installed there.
+   Note that jpeg, zlib, and (optionally) szip libraries must be found
+   as well. If they are not in a standard place for the compiler,
+   their location must be specified. On Mac OS X, ``/usr/local/lib``
+   and ``/usr/local/include`` may need to be specified if the
+   libraries were installed there.  You may need to install the devel
+   versions of these packages to get the statically-linked libraries
+   if your HDF binary is statically linked.
    
    If you are using the binary HDF4 library available from the HDF4 site, you
-   must also have szlib installed. If you do not with to use szlib, you will
+   must also have szlib installed. If you do not wish to use szlib, you will
    need to compile HDF4 from source. If this is the case, you will also need
    to set ``NOSZIP``::
 
@@ -119,18 +170,13 @@ Step-by-step instructions for installing pyhdf
    may be produced.  Those are due to SWIG, and may be safely
    ignored.
 
-   If you have downloaded pre-built binaries for Windows from the
-   pysclint site you may optionally set HDF4 to the location where
-   these binaries were unzipped (or pass in an argument to --hdf4 in
-   the command line). 
-
 3. Install system-wide or locally::
 
         # sudo python setup.py install
         $ python setup.py install --prefix=/usr/local (or prefix of choice)
 
    Or, you might prefer to make a package (msi, rpm, egg, etc.) and install the 
-   package:
+   package::
 
         $ python setup.py bdist_<package>
 
