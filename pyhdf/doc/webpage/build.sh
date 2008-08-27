@@ -1,8 +1,8 @@
-DOC_PATH=~/Documents/pyhdf
+DOC_PATH=~/code/pyhdf
 
 echo "Building installation instructions..."
 if [[ -x ${DOC_PATH} ]]; then
-  rst2html.py ${DOC_PATH}/INSTALL --stylesheet="default.css" \
+  rst2html ${DOC_PATH}/INSTALL --stylesheet="default.css" \
     --link-stylesheet | tools/grab_body.py | \
     tail -n +2 | head -n -1 \
     > source/install.html
