@@ -58,7 +58,7 @@ if sys.platform == 'win32':
         include_dirs = []
         library_dirs = []
         for adir in alldirs:
-            if not path.isdir(adir):
+            if not path.isdir(path.sep.join([baseloc, adir])):
                 continue
             if adir.startswith('42'):
                 include_dirs.append(path.sep.join([baseloc, adir, 'include']))
