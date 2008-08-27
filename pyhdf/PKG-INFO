@@ -1,31 +1,17 @@
 Metadata-Version: 1.0
 Name: pyhdf
-Version: 0.8-2
+Version: 0.8.2
+Summary: Python interface to the NCSA HDF4 library
+Home-page: http://www.sourceforge.net/projects/pysclint
 Author: Andre Gosselin
 Author-email: Andre.Gosselin@dfo-mpo.gc.ca
-Maintainer: Enthought Inc.
-Maintainer-email: enthought-dev@mail.enthought.com
-Home-page: www.sourceforge.net/projects/pysclint
-Download-url: www.sourceforge.net/projects/pysclint
-Summary: Python interface to the NCSA HDF4 library
 License: public
 Description: The pyhdf package wraps the functionality
-of the NCSA HDF4 library inside a Python OOP
-framework. The SD (scientific dataset), VS
-(Vdata) and V (Vgroup) APIs are currently implemented.
-SD datasets are read/written through numpy arrays. 
-netCDF files can also be read and modified with pyhdf.
+        of the NCSA HDF version 4 library inside a Python OOP
+        framework. The SD (scientific dataset), VS
+        (Vdata) and V (Vgroup) APIs are currently implemented.
+        SD datasets are read/written
+        through numpy arrays. netCDF files can also
+        be read and modified with pyhdf.
 Keywords: hdf,netcdf,numpy,python,pyhdf
-Platform: unix, linux
-Classifier: Development Status :: 4 - Beta
-Classifier: Environment :: Console
-Classifier: Intended Audience :: Science/Research
-Classifier: License :: Public Domain
-Classifier: Natural Language :: English
-Classifier: Operating System :: POSIX :: Linux
-Classifier: Operating System :: Unix
-Classifier: Programming Language :: C
-Classifier: Programming Language :: Python
-Classifier: Topic :: Scientific/Engineering
-Classifier: Topic :: Software Development :: Libraries
-
+Platform: UNKNOWN
