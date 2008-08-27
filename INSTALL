@@ -86,14 +86,11 @@ Quick install from Source for Windows Users
 
 4. Build the package in one of the two following ways:
 
-   a) Set the HDF4 environment variable to the directory where you unpacked the binary and (e.g. C:\HDF4). Then run
+   * Set the HDF4 environment variable to the directory where you unpacked the binary and (e.g. C:\HDF4). Then run the following::
 
-	``python setup.py build``
+	python setup.py build
 
-   b) Run ``python setup.py build --hdf4 <directory of unzipped
-      package>`` where ``<directory of unzipped package>`` is the
-      location where you unzipped the downloaded HDF4 binary
-      (e.g. C:\HDF4).
+   * Run ``python setup.py build --hdf4 <directory of unzipped package>`` where ``<directory of unzipped package>`` is the location where you unzipped the downloaded HDF4 binary (e.g. C:\HDF4).
 
    *NOTE*: If you are using the mingw32 compiler and are using the
    standard Python binary distribution, then you need to specify -c
