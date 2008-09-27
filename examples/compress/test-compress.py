@@ -119,8 +119,8 @@ def doCompress(compType, value=0, v2=0):
         sds_id.setcompress(compType,        # compression type
                            value, v2)         # args depend on compression type
     except HDF4Error, msg:
-        print "Error compressing the dataset with params: " +
-                "(%d,%d,%d) : %s" % \ (compType, value, v2, msg)
+        print("Error compressing the dataset with params: "
+              "(%d,%d,%d) : %s" % (compType, value, v2, msg))
         sds_id.endaccess()
         sd_id.end()
         os.remove(fileName)
