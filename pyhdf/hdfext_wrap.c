@@ -3032,7 +3032,8 @@ SWIGINTERN array_float64 *array_float64_frompointer(double *t){
   }
 
 
-#include "hdfi.h"   /* declares basic HDF types: int16 int32, etc */
+#include "hdf.h"
+#include "mfhdf.h"
 
 
 SWIGINTERN swig_type_info*

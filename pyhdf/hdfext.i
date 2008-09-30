@@ -119,7 +119,8 @@ typedef short         int16;
 typedef unsigned char uint8;
 
 %{
-#include "hdfi.h"   /* declares basic HDF types: int16 int32, etc */
+#include "hdf.h"
+#include "mfhdf.h"
 %}
 
 /* 
