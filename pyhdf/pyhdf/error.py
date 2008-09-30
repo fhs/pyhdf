@@ -8,9 +8,8 @@ import hdfext as _C
 # #################
 
 class HDF4Error(Exception):
-
-    def __init__(self, args=None):
-        self.args = args
+    """ An error from inside the HDF4 library.
+    """
 
 def _checkErr(procName, val, msg=""):
 
