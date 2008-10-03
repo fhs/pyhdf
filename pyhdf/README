@@ -32,8 +32,8 @@ Maintainer:     Enthought, Inc.
 
 
 
-Latest version: 0.8-1
-Date:  August 4 2008
+Latest version: 0.8-3
+Date:  October 2 2008
 
 pyhdf is a python wrapper around the NCSA HDF version 4 library.
 The SD (Scientific Dataset), VS (Vdata) and V (Vgroup) API's 

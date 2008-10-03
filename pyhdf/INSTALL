@@ -23,10 +23,10 @@ problems encountered during installation.
 There are several available options for installing pyhdf:
 
 *  Download and install EPD (Enthought Python Distribution)
-    which includes pyhdf 0.8.2  This makes sense if Python isn't already
+    which includes pyhdf 0.8.3 .  This makes sense if Python isn't already
     installed on you computer.
-*  Download and install pyhdf 0.8.2 from PyPi / the cheeseshop.
-*  Download and install pyhdf 0.8.2 from source
+*  Download and install pyhdf 0.8.3 from PyPi / the cheeseshop.
+*  Download and install pyhdf 0.8.3 from source
 
 
 Installing EPD

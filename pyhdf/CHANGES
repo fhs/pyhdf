@@ -31,14 +31,23 @@
 
 List of changes to 'pyhdf' since the initial release.
 
+pyhdf-0.8-3
+-----------
+  October 2, 2008
+    - Regenerated the SWIG files with SWIG 1.3.33 in order to work correctly on
+      some 64-bit systems.
+    - Fixed HDF4Error to properly handle its arguments.
+    - Use the full HDF4 headers in the extension module so as not to rely on
+      implicit declarations. This appears to fix some bugs on 64-bit platforms.
+
 pyhdf-0.8-2
----------
+-----------
   August 18, 2008
     - Removed ODL parser including examples and aster examples.  These are now
        in scikits.rsformats.
 
 pyhdf-0.8-1
----------
+-----------
   August 4 2008
     - Numeric replaced with NumPy as underlying numerical package.
       Support for the now phased out 'Numeric' package has been dropped.
