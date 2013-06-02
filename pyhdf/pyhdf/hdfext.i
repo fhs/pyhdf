@@ -266,7 +266,8 @@ static PyObject * _SDreaddata_0(int32 sds_id, int32 data_type,
          * Allocate those arrays on the stack for simplicity.
          * 80 dimensions should be more than enough!
          */
-    int startArr[80], strideArr[80], edgesArr[80], dims[80];
+    int startArr[80], strideArr[80], edgesArr[80];
+    npy_intp dims[80];
     float f32;
     double f64;
     int   i32;
@@ -323,7 +324,7 @@ static PyObject * _SDreaddata_0(int32 sds_id, int32 data_type,
         return NULL;
         }
     if ((array = (PyArrayObject *) 
-                 PyArray_FromDims(outRank, dims, num_type)) == NULL)
+                 PyArray_SimpleNew(outRank, dims, num_type)) == NULL)
         return NULL;
         /*
          * Load it from the SDS.
