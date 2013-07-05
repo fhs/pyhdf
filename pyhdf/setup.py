@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 # Allows bdist_egg to work if you have setuptools installed.
 # This import must be before the numpy.distutils import of setup.
 #  Otherwise, no harm.

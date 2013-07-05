@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from pyhdf.HDF import *
 from pyhdf.V   import *
 from pyhdf.VS  import *

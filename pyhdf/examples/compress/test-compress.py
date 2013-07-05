@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
+
 # Generate test HDF files using different compression configurations,
 # and validate each resulting file to make sure its contents is OK.
 # Adapted from example:
