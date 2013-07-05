@@ -22,7 +22,7 @@ def _find_args(pat, env):
         del sys.argv[k]
     except ValueError:
         pass
-    return val    
+    return val
 
 include_dirs = _find_args('-i', 'INCLUDE_DIRS')
 library_dirs = _find_args('-l', 'LIBRARY_DIRS')
@@ -66,7 +66,7 @@ if sys.platform == 'win32':
             library_dirs.append(path.sep.join([baseloc, adir, 'lib']))
         print("Using include_dirs = ", include_dirs)
         print("Using library_dirs = ", library_dirs)
-        
+
 for p in include_dirs + library_dirs:
     if not path.exists(p):
         print("\n******\n%s not found\n******\n\n" % p)

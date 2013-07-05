@@ -10,7 +10,7 @@ API of the NCSA HDF4 library.
 Author: Andre Gosselin
         Maurice-Lamontagne Institute
         gosselina@dfo-mpo.gc.ca
-        
+
 Version: 0.7-3
 Date:    july 13 2005
 
@@ -27,7 +27,7 @@ Table of contents
   Attribute access: low and high level
   Predefined attributes
   Programming models
- 
+
   Module documentation
 
 
@@ -129,7 +129,7 @@ Prerequisites
 -------------
 The following software must be installed in order for the V module to
 work.
-  
+
   HDF (v4) library
     pyhdf does *not* include the HDF4 library, which must
     be installed separately.
@@ -150,18 +150,18 @@ be summarized as follows.
     passed as arguments.
    -In pyhdf, error statuses are returned through the Python exception
     mechanism, and values are returned as the method result. When the
-    C API specifies that multiple values are returned, pyhdf returns a 
+    C API specifies that multiple values are returned, pyhdf returns a
     sequence of values, which are ordered similarly to the pointers in the
     C function argument list.
-   
+
 Error handling
 --------------
 All errors reported by the C V API with a SUCCESS/FAIL error code
 are reported by pyhdf using the Python exception mechanism.
 When the C library reports a FAIL status, pyhdf raises an HDF4Error
-exception (a subclass of Exception) with a descriptive message. 
-Unfortunately, the C library is rarely informative about the cause of 
-the error. pyhdf does its best to try to document the error, but most 
+exception (a subclass of Exception) with a descriptive message.
+Unfortunately, the C library is rarely informative about the cause of
+the error. pyhdf does its best to try to document the error, but most
 of the time cannot do more than saying "execution error".
 
 V needs support from the HDF module
@@ -198,7 +198,7 @@ In more detail:
 
   V     The V class implements the V (Vgroup) interface applied to an
         HDF file.
-        
+
         To instantiate a V class, call the vgstart() method of an
         HDF instance.
 
@@ -236,18 +236,18 @@ In more detail:
                           of the vgroup
             findattr()    search the vgroup for a given attribute,
                           returning a VGAttr instance for that attribute
-                          
+
           ending access to a vgroup
 
             detach()      terminate access to the vgroup
-            
+
           adding a member to a vgroup
 
             add()         add to the vgroup the HDF object identified by its
                           tag and reference number
             insert()      insert a vdata or a vgroup in the vgroup, given
                           the vdata or vgroup instance
-            
+
           deleting a member from a vgroup
 
             delete()      remove from the vgroup the HDF object identified
@@ -268,7 +268,7 @@ In more detail:
                           member, given the index number of that member
             tagrefs()     get the tags and reference numbers of all the
                           vgroup members
-                          
+
   VGAttr The VGAttr class provides methods to set and query vgroup
          attributes.
 
@@ -320,7 +320,7 @@ example.
   >>> attr = vg .attr('range')   # prepare to define attribute 'range'
   >>> attr.set(HC.INT32,(-10, 15)) # set attribute 'range' to a pair of ints
   >>> print(attr.get())             # get and print attribute value
-  
+
   >>> vg.detach()                # "close" the vgroup
   >>> v.end()                    # terminate the vgroup interface
   >>> f.close()                  # close the HDF file
@@ -375,7 +375,7 @@ character array of length 'n'). If 'vg' is a vgroup and we initialize its
 'a1' attribute as 'vg.a1 = "abcdef"', then a subsequent update attempt
 like 'vg.a1 = "12"' will fail, because we then try to change the order
 of the attribute (from 6 to 2). It is mandatory to keep the length of string
-attributes constant. 
+attributes constant.
 
 Predefined attributes
 ---------------------
@@ -385,7 +385,7 @@ having to call a class method. The names of predefined attributes all start
 with an underscore ('_').
 
 In the following table, the RW column holds an X if the attribute
-is read/write. 
+is read/write.
 
   VG predefined attributes
 
@@ -462,7 +462,7 @@ a vgroup.
 
     # Create vgroup named 'TOTAL'.
     vg = v.create('TOTAL')
-    
+
     # Add vdata to the vgroup
     vg.insert(vd)
     # We could also have written this:
@@ -472,7 +472,7 @@ a vgroup.
 
     # Add dataset to the vgroup
     vg.add(HC.DFTAG_NDG, sds.ref())
-    
+
     # Close vgroup, vdata and dataset.
     vg.detach()       # vgroup
     vd.detach()       # vdata
@@ -523,9 +523,9 @@ any HDF file.
     from pyhdf.V   import *
     from pyhdf.VS  import *
     from pyhdf.SD  import *
-    
+
     import sys
-    
+
     def describevg(refnum):
 
         # Describe the vgroup with the given refnum.
@@ -678,16 +678,16 @@ class V(object):
         # Not to be called directly by the user.
         # A V object is instantiated using the vgstart()
         # method of an HDF instance.
- 
+
         # Args:
         #    hinst    HDF instance
         # Returns:
         #    A V instance
         #
         # C library equivalent : Vstart (rather: Vinitialize)
- 
-	# Private attributes:
-	#  _hdf_inst:       HDF instance
+
+        # Private attributes:
+        #  _hdf_inst:       HDF instance
 
         # Note: Vstart is just a macro; use 'Vinitialize' instead
         # Note also thet the same C function is used to initialize the
@@ -695,10 +695,10 @@ class V(object):
         status = _C.Vinitialize(hinst._id),
         _checkErr('V', status, "cannot initialize V interface")
         self._hdf_inst = hinst
-        
+
 
     def __del__(self):
-        """Delete the instance, first calling the end() method 
+        """Delete the instance, first calling the end() method
         if not already done.          """
 
         try:
@@ -791,7 +791,7 @@ class V(object):
         if not refnum:
             raise HDF4Error("vgroup not found")
         return refnum
-        
+
     def findclass(self, name):
         """Find a vgroup given its class name, returning its reference
         number if found.
@@ -856,7 +856,7 @@ class V(object):
         num = _C.Vgetid(self._hdf_inst._id, ref)
         _checkErr('getid', num, "bad arguments or last vgroup reached")
         return num
-        
+
 
 class VG(object):
     """The VG class encapsulates the functionnality of a vgroup.
@@ -880,7 +880,7 @@ class VG(object):
         self._id = id
 
     def __del__(self):
-        """Delete the instance, first calling the detach() method 
+        """Delete the instance, first calling the detach() method
         if not already done.          """
 
         try:
@@ -906,21 +906,21 @@ class VG(object):
         _version   X   version number           Vgetversion
 
                                                          """
-        
+
         # NOTE: python will call this method only if the attribute
         #       is not found in the object dictionnary.
-        
+
         # Check for a user defined attribute first.
         att = self.attr(name)
         if att._index is not None:   # Then the attribute exists
             return att.get()
-        
+
         # Check for a predefined attribute
         if name == "_class":
             status, nm = _C.Vgetclass(self._id)
             _checkErr('_class', status, 'cannot get vgroup class')
             return nm
-        
+
         elif name == "_name":
             status, nm = _C.Vgetname(self._id)
             _checkErr('_name', status, 'cannot get vgroup name')
@@ -968,7 +968,7 @@ class VG(object):
         elif name == "_class":
             _checkErr(name, _C.Vsetclass(self._id, value),
                       'cannot set _class property')
-            
+
         elif name == "_name":
             _checkErr(name, _C.Vsetname(self._id, value),
                       'cannot set _name property')
@@ -994,7 +994,7 @@ class VG(object):
             id = inst._id
         else:
             raise HDF4Error("insrt: bad argument")
-            
+
         index = _C.Vinsert(self._id, id)
         _checkErr('insert', index, "cannot insert in vgroup")
         return index
@@ -1241,7 +1241,7 @@ class VGAttr(object):
         #  _v_inst        V instance
         #  _index         attribute index or None
         #  _name          attribute name or None
- 
+
         self._v_inst = obj
         # Name is given. Attribute may exist or not.
         if type(name_or_index) == type(''):
@@ -1255,24 +1255,24 @@ class VGAttr(object):
             status, self._name, data_type, n_values, size = \
                     _C.Vattrinfo(self._v_inst._id, self._index)
             _checkErr('attr', status, 'non-existent attribute')
-        
+
     def get(self):
         """Retrieve the attribute value.
- 
+
         Args:
           no argument
-        Returns: 
+        Returns:
           attribute value(s); a list is returned if the attribute
-          is made up of more than one value, except in the case of a 
-          string-valued attribute (data type HC.CHAR8) where the 
+          is made up of more than one value, except in the case of a
+          string-valued attribute (data type HC.CHAR8) where the
           values are returned as a string
 
         Note that a vgroup attribute can also be queried like a standard
         python class attribute by applying the usual "dot notation" to a
         VG instance.
- 
+
         C library equivalent : Vgetattr
-        
+
                                                 """
         # Make sure the attribute exists.
         if self._index is None:
@@ -1323,7 +1323,7 @@ class VGAttr(object):
 
     def set(self, data_type, values):
         """Set the attribute value.
- 
+
         Args:
           data_type    : attribute data type (see constants HC.xxx)
           values       : attribute value(s); specify a list to create
@@ -1335,14 +1335,14 @@ class VGAttr(object):
                          If the attribute already exists, it will be
                          updated. However, it is illegal to try to change
                          its data type or its order (number of values).
-                     
-        Returns: 
+
+        Returns:
           None
- 
+
         Note that a vgroup attribute can also be set like a standard
         python class attribute by applying the usual "dot notation" to a
         VG instance.
- 
+
         C library equivalent : Vsetattr
 
                                                   """
@@ -1353,7 +1353,7 @@ class VGAttr(object):
             n_values = 1
         if data_type == HC.CHAR8:
             buf = _C.array_byte(n_values)
-            # Allow values to be passed as a string. 
+            # Allow values to be passed as a string.
             # Noop if a list is passed.
             values = list(values)
             for n in range(n_values):
@@ -1518,6 +1518,3 @@ def _array_to_str(buf, nValues):
     if chrs[-1] == '\0':
         del chrs[-1]
     return ''.join(chrs)
-
-
-

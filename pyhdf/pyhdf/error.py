@@ -21,4 +21,3 @@ def _checkErr(procName, val, msg=""):
         else:
             str = "%s : %s" % (procName, msg)
         raise HDF4Error(str)
-

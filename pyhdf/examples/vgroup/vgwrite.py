@@ -6,7 +6,7 @@ from pyhdf.SD  import *
 def vdatacreate(vs, name):
 
     # Create vdata and define its structure
-    vd = vs.create(name, 
+    vd = vs.create(name,
                    (('partid',HC.CHAR8, 5),       # 5 char string
                     ('description',HC.CHAR8, 10), # 10 char string field
                     ('qty',HC.INT16, 1),          # 1 16 bit int field
@@ -20,7 +20,7 @@ def vdatacreate(vs, name):
               ('S7613', 'scissor', 2, 0.2, 3.75)  # record 3
              ))
     # "close" vdata
-    vd.detach()  
+    vd.detach()
 
 def sdscreate(sd, name):
 

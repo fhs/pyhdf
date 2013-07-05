@@ -36,19 +36,19 @@ def txtToHDF(txtFile, hdfFile, varName, attr):
             v[i] = elems
             minE = min(elems)
             maxE = max(elems)
-       	    if i:
-	        minVal = min(minVal, minE)
-	        maxVal = max(maxVal, maxE)
-	    else:
-	        minVal = minE
-	        maxVal = maxE
+            if i:
+                minVal = min(minVal, minE)
+                maxVal = max(maxVal, maxE)
+            else:
+                minVal = minE
+                maxVal = maxE
             i += 1
         # Set variable min and max attributes.
         v.minVal = minVal
         v.maxVal = maxVal
-        # Close dataset and file objects (not really necessary, 
-	# since closing is automatic when objects go out of scope.
-	v.endaccess()
+        # Close dataset and file objects (not really necessary,
+        # since closing is automatic when objects go out of scope.
+        v.endaccess()
         d.end()
         txt.close()
     except HDF4Error as msg:
@@ -65,18 +65,17 @@ if __name__ == '__main__':
     # and assign the attributes 'title', 'units' and 'valid_range'.
     txtToHDF('temp.txt', hdfFile, 'temperature',
              {'title'      : 'temperature matrix',
-	      'units'      : 'celsius',
-	      'valid_range': (-2.8,27.0)})
+              'units'      : 'celsius',
+              'valid_range': (-2.8,27.0)})
     print("Temperature data successfully written to HDF file")
 
     # Transfer contents of file 'depth.txt' to dataset 'depth'
     # and assign the same attributes as above.
     txtToHDF('depth.txt', hdfFile, 'depth',
              {'title'      : 'depth matrix',
-	      'units'      : 'meters',
-	      'valid_range': (0, 500.0)})
+              'units'      : 'meters',
+              'valid_range': (0, 500.0)})
     print("Depth data successfully written to HDF file")
 
     # TODO: open up hdfFile and access the information that
     # was in temp.txt and depth.txt
-

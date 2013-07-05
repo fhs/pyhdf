@@ -102,7 +102,7 @@ def doCompress(compType, value=0, v2=0):
     # compression. The following is used for a more realistic example.
     data = numpy.zeros((LENGTH, WIDTH), NUMPY_DATATYPE)
     for i in range(LENGTH):
-       for j in range(WIDTH):
+        for j in range(WIDTH):
             data[i,j] = (i+j)*(i-j)
 
     # Create HDF file, wiping it out it it already exists.
@@ -161,9 +161,9 @@ def doCompress(compType, value=0, v2=0):
         print("  compType = COMP_SZIP")
         optionMask  = compInfo[1]
         if optionMask & SDC.COMP_SZIP_NN:
-           print("  encoding scheme = NN")
+            print("  encoding scheme = NN")
         elif optionMask & SDC.COMP_SZIP_EC:
-           print("  encoding scheme = EC")
+            print("  encoding scheme = EC")
         else:
             print("  unknown encoding scheme")
             sys.exit(1)
@@ -228,10 +228,3 @@ print("SZIP compression")
 for scheme in SDC.COMP_SZIP_NN, SDC.COMP_SZIP_EC:
     for ppb in 4,8,16,32:
         doCompress(SDC.COMP_SZIP, scheme, ppb)  # scheme, pixels per block
-
-
-
-
-
-
-

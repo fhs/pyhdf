@@ -14,7 +14,7 @@ API of the NCSA HDF4 library.
 Author: Andre Gosselin
         Maurice-Lamontagne Institute
         gosselina@dfo-mpo.gc.ca
-        
+
 Version: 0.7-3
 Date:    July 13 2005
 
@@ -91,7 +91,7 @@ between fields. "partid" and "description" would be of "multicharacter" type
 floats. The text in parentheses could be stored as attributes. A "status"
 attribute could be defined for the table as a whole, and given the
 value "experimental". Likewise, a "unit" attribute could be associated
-with fields "wght" and "price", and given the values "lb" and "$", resp. 
+with fields "wght" and "price", and given the values "lb" and "$", resp.
 
 The VS API allows one to create, locate and open a vdata inside an
 HDF file, update and append records inside it, read records randomly
@@ -103,7 +103,7 @@ vdata as if it were a python sequence.
 VS module key features
 ----------------------
 VS key features are as follows.
-   
+
   -pyhdf implements almost every routine of the original VS API.
    Only a few have been ignored, most of them being of a rare use:
     - VSgetblocksize() / VSsetblocksize()
@@ -168,7 +168,7 @@ Prerequisites
 -------------
 The following software must be installed in order for VS to
 work.
-  
+
   HDF (v4) library
     pyhdf does *not* include the HDF4 library, which must
     be installed separately.
@@ -180,7 +180,7 @@ Numeric is also needed by the SD module. See the SD module documentation.
 
 Documentation
 -------------
-pyhdf has been written so as to stick as closely as possible to 
+pyhdf has been written so as to stick as closely as possible to
 the naming conventions and calling sequences documented inside the
 "HDF User s Guide" manual. Even if pyhdf gives an OOP twist
 to the C API, the manual can be easily used as a documentary source
@@ -191,13 +191,13 @@ will not attempt to provide an exhaustive coverage of the HDF VS
 API. For this, the user is referred to the above manual.
 The documentation of each pyhdf method will indicate the name
 of the equivalent routine as it is found inside the C API.
-  
+
 This document (in both its text and html versions) has been completely
 produced using "pydoc", the Python documentation generator (which
 made its debut in the 2.1 Python release). pydoc can also be used
 as an on-line help tool. For example, to know everything about
 the VS.VD class, say:
-  
+
   >>> from pydoc import help
   >>> from pyhdf.VS import *
   >>> help(VD)
@@ -205,13 +205,13 @@ the VS.VD class, say:
 To be more specific and get help only for the read() method of the
 VD class:
 
-  >>> help(VD.read) 
+  >>> help(VD.read)
 
 pydoc can also be called from the command line, as in:
 
   % pydoc pyhdf.VS.VD         # doc for the whole VD class
   % pydoc pyhdf.VS.VD.read    # doc for the VD.read method
-  
+
 Summary of differences between the pyhdf and C VS API
 -----------------------------------------------------
 Most of the differences between the pyhdf and C VS API can
@@ -222,18 +222,18 @@ be summarized as follows.
     passed as arguments.
    -In pyhdf, error statuses are returned through the Python exception
     mechanism, and values are returned as the method result. When the
-    C API specifies that multiple values are returned, pyhdf returns a 
+    C API specifies that multiple values are returned, pyhdf returns a
     sequence of values, which are ordered similarly to the pointers in the
     C function argument list.
-   
+
 Error handling
 --------------
 All errors reported by the C VS API with a SUCCESS/FAIL error code
 are reported by pyhdf using the Python exception mechanism.
 When the C library reports a FAIL status, pyhdf raises an HDF4Error
-exception (a subclass of Exception) with a descriptive message. 
-Unfortunately, the C library is rarely informative about the cause of 
-the error. pyhdf does its best to try to document the error, but most 
+exception (a subclass of Exception) with a descriptive message.
+Unfortunately, the C library is rarely informative about the cause of
+the error. pyhdf does its best to try to document the error, but most
 of the time cannot do more than saying "execution error".
 
 VS needs support from the HDF module
@@ -281,7 +281,7 @@ In more detail:
                             returning a VD instance
              create()       create a new vdata and define its structure,
                             returning a VD instance
-           
+
            creating and initializing a simple vdata
              storedata()    create a single-field vdata and initialize
                             its values
@@ -315,7 +315,7 @@ In more detail:
 
            closing vdata
              detach()       end access to the vdata
-             
+
            defining fields
              fdefine()      define the name, type and order of a new field
              setfields()    define the field names and field order for
@@ -326,7 +326,7 @@ In more detail:
            reading and writing
                             note: a vdata can be indexed and sliced like a
                             python sequence
-                            
+
              read()         return the values of a number of records
                             starting at the current record position
              seek()         reset the current record position
@@ -378,7 +378,7 @@ In more detail:
 
              info
                info()       retrieve info about the attribute
-               
+
 Data types
 ----------
 Data types come into play when first defining vdata fields and attributes,
@@ -386,7 +386,7 @@ and later when querying the definition of those fields and attributes.
 Data types are specified using the symbolic constants defined inside the
 HC class of the HDF module.
 
-  - CHAR and CHAR8 (equivalent): an 8-bit character. 
+  - CHAR and CHAR8 (equivalent): an 8-bit character.
   - UCHAR, UCHAR8 and UINT8 (equivalent): unsigned 8-bit values (0 to 255)
   - INT8:    signed 8-bit values (-128 to 127)
   - INT16:   signed 16-bit values
@@ -431,7 +431,7 @@ returns the current attribute value. Here is an example.
                                  # this field
   >>> attr.set(HC.INT32,(-10, 15)) # set attribute 'range' to a pair of ints
   >>> print(attr.get())             # get and print attribute value
-  
+
   >>> vd.detach()                # "close" the vdata
   >>> vs.end()                   # terminate the vdata interface
   >>> f.close()                  # close the HDF file
@@ -530,7 +530,7 @@ is read/write. See the HDF User s guide for details about more
     _nattrs         number of attributes       VSfnattrs
     _order          order (number of values)   VFfieldorder
     _type           field type (HC.xxx)        VFfieldtype
-    
+
 
 Record access: low and high level
 ---------------------------------
@@ -614,7 +614,7 @@ described in the "Introduction" section.
     f = HDF('inventory.hdf',    # Open file 'inventory.hdf' in write mode
             HC.WRITE|HC.CREATE) # creating it if it does not exist
     vs = f.vstart()             # init vdata interface
-    
+
     # Create vdata and define its structure
     vd = vs.create(             # create a new vdata
                    'INVENTORY', # name of the vdata
@@ -675,7 +675,7 @@ INVENTORY vdata created before is used.
     # We then assign a left justified string of exactly that length.
     len = vd.attr('status').info()[2]
     vd.status = '%-*s' % (len, 'phase 2 done')
-   
+
     vd[vd._nrecs:] = (                     # append 2 records
           ('A4321', 'axe', 5, 1.5, 25),    # first record
           ('C3214', 'cup', 100, 0.1, 3.25) # second record
@@ -704,7 +704,7 @@ before is used.
 
     from pyhdf.HDF import *
     from pyhdf.VS import *
-  
+
     f = HDF('inventory.hdf',         # Open 'inventory.hdf' in write mode
             HC.WRITE|HC.CREATE)      # creating it if it does not exist
     vs = f.vstart()                  # init vdata interface
@@ -716,7 +716,7 @@ before is used.
     # We then assign a left justified string of exactly that length.
     len = vd.attr('status').info()[2]
     vd.status = '%-*s' % (len, 'phase 3 done')
-    
+
     # Update record at index 1 (second record)
     vd[1]  = ('Z4367', 'surprise', 10, 3.1, 44.5)
     # Update record at index 4, and all those that follow
@@ -731,7 +731,7 @@ before is used.
 Reading a vdata
 ---------------
 The following example shows how read the vdata attributes and sequentially
-maneuver through its records. Note how we use the exception mechanism 
+maneuver through its records. Note how we use the exception mechanism
 to break out of the reading loop when we reach the end of the vdata.
 
     from pyhdf.HDF import *
@@ -745,16 +745,16 @@ to break out of the reading loop when we reach the end of the vdata.
     print "status:", vd.status
     print "vdata: ", vd._name        # predefined attribute: vdata name
     print "nrecs: ", vd._nrecs       # predefined attribute:  num records
-    
+
     # Display value of attribute 'unit' for all fields on which
     # this attribute is set
     print "units: ",
     for fieldName in vd._fields:     # loop over all field names
         try:
             # instantiate field and obtain value of attribute 'unit'
-            v = vd.field(fieldName).unit    
+            v = vd.field(fieldName).unit
             print "%s: %s" % (fieldName, v),
-        except:                      # no 'unit' attribute: ignore 
+        except:                      # no 'unit' attribute: ignore
             pass
     print ""
     print ""
@@ -828,25 +828,25 @@ class VS(object):
         # Not to be called directly by the user.
         # A VS object is instantiated using the vstart()
         # method of an HDF instance.
- 
+
         # Args:
         #    hinst    HDF instance
         # Returns:
         #    A VS instance
         #
         # C library equivalent : Vstart (rather: Vinitialize)
- 
-	# Private attributes:
-	#  _hdf_inst:       HDF instance
+
+        # Private attributes:
+        #  _hdf_inst:       HDF instance
 
         # Note: Vstart is just a macro; use 'Vinitialize' instead
         status = _C.Vinitialize(hinst._id),
         _checkErr('VS', status, "cannot initialize VS interface")
         self._hdf_inst = hinst
-        
+
 
     def __del__(self):
-        """Delete the instance, first calling the end() method 
+        """Delete the instance, first calling the end() method
         if not already done.          """
 
         try:
@@ -872,7 +872,7 @@ class VS(object):
         self._hdf_inst = None
 
     vend = end      # For backward compatibility
-    
+
     def attach(self, num_name, write=0):
         """Locate an existing vdata or create a new vdata in the HDF file,
         returning a VD instance.
@@ -1048,7 +1048,7 @@ class VS(object):
 
     def storedata(self, fieldName, values, data_type, vName, vClass):
         """Create and initialize a single field vdata, returning
-        the vdata reference number. 
+        the vdata reference number.
 
         Args:
           fieldName   Name of the single field in the vadata to create
@@ -1060,7 +1060,7 @@ class VS(object):
                       must be of the same type
           vName       Name of the vdata to create
           vClass      Vdata class (string)
-          
+
         Returns:
           vdata reference number
 
@@ -1082,7 +1082,7 @@ class VS(object):
         n_values = nrecs * order
         if data_type == HC.CHAR8:
             buf = _C.array_byte(n_values)
-            # Allow values to be passed as a string. 
+            # Allow values to be passed as a string.
             # Noop if a list is passed.
             values = list(values)
             for n in range(n_values):
@@ -1137,11 +1137,11 @@ class VS(object):
         else:
             vd = _C.VHstoredatam(self._hdf_inst._id, fieldName, buf,
                                 nrecs, data_type, vName, vClass, order)
-            
+
         _checkErr('storedata', vd, 'cannot create vdata')
 
         return vd
-        
+
 
 class VD(object):
     """The VD class encapsulates the functionnality of a vdata.
@@ -1168,8 +1168,8 @@ class VD(object):
         self._id = id
         self._offset = 0
         self._setfields = None
-        
-        
+
+
     def __getattr__(self, name):
         """Some vdata properties can be queried/set through the following
         attributes. Their names all start with an "_" to avoid
@@ -1193,18 +1193,18 @@ class VD(object):
         _tnattrs   X   total number of attr.    VSnattrs
 
                                                          """
-        
+
         # Check for a user defined attribute first.
         att = self.attr(name)
         if att._index is not None:   # Then the attribute exists
             return att.get()
-        
+
         # Check for a predefined attribute
         elif name == "_class":
             status, nm = _C.VSgetclass(self._id)
             _checkErr('_class', status, 'cannot get vdata class')
             return nm
-        
+
         elif name == "_fields":
             n, fields = _C.VSgetfields(self._id)
             _checkErr('_fields', n, "cannot get vdata field names")
@@ -1214,7 +1214,7 @@ class VD(object):
             mode = _C.VSgetinterlace(self._id)
             _checkErr('_interlace', mode, "cannot get vdata interlace mode")
             return mode
-        
+
         elif name == "_isattr":
             return _C.VSisattr(self._id)
 
@@ -1240,7 +1240,7 @@ class VD(object):
 
         elif name == "_recsize":
             return self.inquire()[3]
-        
+
         elif name == "_refnum":
             n = _C.VSQueryref(self._id)
             _checkErr('refnum', n, 'cannot get reference number')
@@ -1250,12 +1250,12 @@ class VD(object):
             n = _C.VSQuerytag(self._id)
             _checkErr('_tag', n, 'cannot get tag')
             return n
-        
+
         elif name == "_tnattrs":
             n = _C.VSnattrs(self._id)
             _checkErr('_tnattrs', n, 'execution error')
             return n
-        
+
         raise AttributeError
 
     def __setattr__(self, name, value):
@@ -1274,11 +1274,11 @@ class VD(object):
         elif name == "_class":
             _checkErr(name, _C.VSsetclass(self._id, value),
                       'cannot set _class property')
-            
+
         elif name == "_interlace":
             _checkErr(name, _C.VSsetinterlace(self._id, value),
                       'cannot set _interlace property')
-            
+
         elif name == "_name":
             _checkErr(name, _C.VSsetname(self._id, value),
                       'cannot set _name property')
@@ -1309,7 +1309,7 @@ class VD(object):
             f1 = f0 + count[1]
             for r in recs:
                 out.append(r[f0:f1])
-                
+
         # If an index was used (not a slice), return the record as
         # a list, instead of returning it inside a 2-level list,
         if count[0] < 0:
@@ -1349,7 +1349,7 @@ class VD(object):
         # Records cannot be partially written.
         if start[1] != 0 or count[1] != self._nfields:
             raise HDF4Error("each vdata field must be written")
-        
+
         # If an index (as opposed to a slice) was applied to the
         # vdata, a single record must be passed. Since write() requires
         # a 2-level list, wrap this record inside a list.
@@ -1372,7 +1372,7 @@ class VD(object):
         recs = self.write(data)
 
     def __del__(self):
-        """Delete the instance, first calling the detach() method 
+        """Delete the instance, first calling the detach() method
         if not already done.          """
 
         try:
@@ -1429,12 +1429,12 @@ class VD(object):
         setfields() indicates how to perform the matching between the vdata
         fields and the values passed to the write() method or returned
         by the read() method.
-        
+
         For example, if the vdata contains fields 'a', 'b' and 'c' and
         a "setfields('c','a')" call is made,  read() will thereafter return
         for each record the values of field 'c' and 'a', in that order.
         Field 'b' will be ignored.
-        
+
         When writing to a vdata, setfields() has a second usage. It is used
         to initialize the structure of the vdata, that is, the name and order
         of the fields that it will contain. The fields must have been
@@ -1444,13 +1444,13 @@ class VD(object):
         to the write() method. However, since it is mandatory to write
         whole records, subsequent calls to setfields() must specify every
         field name: only the field order can be changed.
-    
+
                                                    """
 
         _checkErr('setfields', _C.VSsetfields(self._id, ','.join(fldNames)),
                   'cannot execute')
         self._setfields = fldNames   # remember for read/write routines
-            
+
 
     def field(self, name_index):
         """Get a VDField instance representing a field of the vdata.
@@ -1465,8 +1465,8 @@ class VD(object):
 
         # Transform a name to an index number
         if type(name_index) == bytes:
-             status, index = _C.VSfindex(self._id, name_index)
-             _checkErr('field', status, "illegal field name: %s" % name_index)
+            status, index = _C.VSfindex(self._id, name_index)
+            _checkErr('field', status, "illegal field name: %s" % name_index)
         else:
             n = _C.VFnfields(self._id)
             _checkErr('field', n, 'cannot execute')
@@ -1474,7 +1474,7 @@ class VD(object):
             if index >= n:
                 raise HDF4Error("field: illegal index number")
         return VDField(self, index)
-        
+
 
     def seek(self, recIndex):
         """Seek to the beginning of the record identified by its
@@ -1486,7 +1486,7 @@ class VD(object):
                     starts at 0. Legal values range from 0
                     (start of vdata) to the current number of
                     records (at end of vdata).
-                    
+
         Returns:
           record index
 
@@ -1512,7 +1512,7 @@ class VD(object):
         _checkErr('seek', n, 'cannot seek')
         self._offset = n
         return n
-        
+
     def seekend(self):
         """Set the current record position past the last vdata record.
         Subsequent write() calls will append records to the vdata.
@@ -1546,7 +1546,7 @@ class VD(object):
                                              """
 
         return self._offset
-          
+
     def read(self, nRec=1):
         """Retrieve the values of a number of records, starting
         at the current record position. The current record position
@@ -1555,7 +1555,7 @@ class VD(object):
 
         Args:
           nRec    number of records to read
-          
+
         Returns:
           2-level list. First level is a sequence of records,
           second level gives the sequence of values for each record.
@@ -1573,7 +1573,7 @@ class VD(object):
         the number asked for by parameter 'nRec'. Setting 'nRec' to
         an arbitrarily large value can thus be used to retrieve the
         remaining records in the vdata.
-        
+
         C library equivalent : VSread
                                                        """
         # Validate number of records to read vs the current offset.
@@ -1585,7 +1585,7 @@ class VD(object):
             raise HDF4Error("end of vdata reached")
         if self._offset + nRec > n:
             nRec = self._offset + nRec - n
-            
+
         fields = self._setfields or self._fields
         nFields = len(fields)
         fieldList = ','.join(fields)
@@ -1600,7 +1600,7 @@ class VD(object):
         nRead = _C.VSread(self._id, bigBuf, nRec, 0)   # 0: FULL_INTERLACE
         _checkErr('read', nRead, 'read error')
         self._offset += nRec
-        
+
         # Allocate an array to store a pointer to the field buffer.
         fldArr = _C.new_array_voidp(1)
 
@@ -1654,7 +1654,7 @@ class VD(object):
                       _C.VSfpack(self._id, 1, fieldList, bigBuf, bufSize,
                                  nRead, fld._name, fldArr),
                       "cannot execute")
-            
+
             # Extract values from the field buffer.
             k = 0
             for numRec in range(nRead):
@@ -1681,7 +1681,7 @@ class VD(object):
             del buf
 
         return values
-        
+
 
     def write(self, values):
         """Write records to the vdata. Writing starts at the current
@@ -1715,7 +1715,7 @@ class VD(object):
         # last call to setfields()
         fields = self._setfields or self._fields
         # We must pack values using the effective field order in the vdata
-        fieldList = ','.join(self._fields) 
+        fieldList = ','.join(self._fields)
 
         # Validate the values argument.
         if nFields != len(fields):
@@ -1976,7 +1976,7 @@ class VD(object):
             dic[name] = (type, order, att.get(), size)
 
         return dic
-                  
+
     def __buildStartCount(self, elem, setitem=0):
 
         # Called by __getitem__() and __setitem__() methods
@@ -2055,7 +2055,7 @@ class VD(object):
             count.append(shape[1])
 
         return start, count
-    
+
 class VDField(object):
     """The VDField class represents a vdata field.
     To create a VDField instance, call the field() method of a
@@ -2098,7 +2098,7 @@ class VDField(object):
         att = self.attr(name)
         if att._index is not None:   # Then the attribute exists
             return att.get()
-        
+
         # Check for a predefined attribute.
         elif name == "_esize":
             n = _C.VFfieldesize(self._vd_inst._id, self._idx)
@@ -2117,7 +2117,7 @@ class VDField(object):
             n = _C.VFfieldname(self._vd_inst._id, self._idx)
             _checkErr('_name', n, "execution error")
             return n
-            
+
         elif name == "_nattrs":
             n = _C.VSfnattrs(self._vd_inst._id, self._idx)
             _checkErr('_nattrs', n, "execution error")
@@ -2134,7 +2134,7 @@ class VDField(object):
             return type
 
         raise AttributeError
-            
+
 
     def __setattr__(self, name, value):
 
@@ -2212,7 +2212,7 @@ class VDField(object):
             dic[name] = (type, order, att.get(), size)
 
         return dic
-                  
+
 
 class VDAttr(object):
     """The VDAttr class encapsulates methods used to set and query attributes
@@ -2264,20 +2264,20 @@ class VDAttr(object):
                     _C.VSattrinfo(self._vd_inst._id, self._fIndex,
                                   self._index)
             _checkErr('attr', status, 'non-existent attribute')
-        
+
     def get(self):
         """Retrieve the attribute value.
- 
+
         Args:
           no argument
-        Returns: 
+        Returns:
           attribute value(s); a list is returned if the attribute
-          is made up of more than one value, except in the case of a 
-          string-valued attribute (data type HC.CHAR8) where the 
+          is made up of more than one value, except in the case of a
+          string-valued attribute (data type HC.CHAR8) where the
           values are returned as a string
- 
+
         C library equivalent : VSgetattr
-        
+
                                                 """
         # Make sure th attribute exists.
         if self._index is None:
@@ -2330,7 +2330,7 @@ class VDAttr(object):
 
     def set(self, data_type, values):
         """Set the attribute value.
- 
+
         Args:
           data_type    : attribute data type (see constants HC.xxx)
           values       : attribute value(s); specify a list to create
@@ -2342,10 +2342,10 @@ class VDAttr(object):
                          If the attribute already exists, it will be
                          updated. However, it is illegal to try to change
                          its data type or its order (number of values).
-                     
-        Returns: 
+
+        Returns:
           None
- 
+
         C library equivalent : VSsetattr
 
                                                   """
@@ -2356,7 +2356,7 @@ class VDAttr(object):
             n_values = 1
         if data_type == HC.CHAR8:
             buf = _C.array_byte(n_values)
-            # Allow values to be passed as a string. 
+            # Allow values to be passed as a string.
             # Noop if a list is passed.
             values = list(values)
             for n in range(n_values):
@@ -2521,6 +2521,3 @@ def _array_to_str(buf, nValues):
     if chrs[-1] == '\0':
         del chrs[-1]
     return ''.join(chrs)
-
-
-

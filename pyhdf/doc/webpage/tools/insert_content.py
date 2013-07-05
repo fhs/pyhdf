@@ -20,4 +20,3 @@ for line in template:
         del content_blocks[0]
 
 print(''.join(out))
-

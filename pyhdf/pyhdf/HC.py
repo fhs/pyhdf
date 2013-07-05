@@ -61,7 +61,7 @@ Tags
 
     FULL_INTERLACE = 0
     NO_INTERLACE   =1
-    
+
 
 # NOTE:
 #  INT64 and UINT64 are not yet supported py pyhdf

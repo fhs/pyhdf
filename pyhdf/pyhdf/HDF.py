@@ -14,7 +14,7 @@ NCSA HDF4 library.
 Author: Andre Gosselin
         Maurice-Lamontagne Institute
         gosselina@dfo-mpo.gc.ca
-        
+
 Version: 0.7-3
 Date:    July 13 2005
 
@@ -52,21 +52,21 @@ The HDF module provides the following classes.
                     return a VS instance
           vgstart() initialize the V (Vgroup) interface over the HDF file
                     and return a V instance.
-          
+
 
         closing file
           close()  close the HDF file
 
         inquiry
-          getfileversion()  return info about the version of the  HDF file 
-                   
+          getfileversion()  return info about the version of the  HDF file
+
 The HDF module also offers the following functions.
 
   inquiry
     getlibversion()    return info about the version of the library
     ishdf()            determine whether a file is an HDF file
-  
-          
+
+
 """
 
 import os, sys, types
@@ -79,7 +79,7 @@ from .HC import HC
 #       two modules, but then they would always be loaded and this
 #       may not be what the user wants. Instead of forcing the
 #       systematic import, we import the package `pyhdf',
-#       and access the needed constructors by writing 
+#       and access the needed constructors by writing
 #       'pyhdf.VS.VS()' and 'pyhdf.V.V()'. Until the VS or
 #       V modules are imported, those statements will give an
 #       error (undefined attribute). Once the user has imported
@@ -138,13 +138,13 @@ class HDF(object):
     def __init__(self, path, mode=HC.READ, nblocks=0):
         """HDF constructor: open an HDF file, creating the file if
         necessary.
- 
+
         Args:
           path    name of the HDF file to open
           mode    file opening mode; this mode is a set of binary flags
-	          which can be ored together
-		      
-		      HC.CREATE   combined with HC.WRITE to create file 
+                  which can be ored together
+
+                      HC.CREATE   combined with HC.WRITE to create file
                                   if it does not exist
                       HC.READ     open file in read-only access (default)
                       HC.TRUNC    if combined with HC.WRITE, overwrite
@@ -176,15 +176,15 @@ class HDF(object):
           nblocks  number of data descriptor blocks in a block wit which
                    to create the file; the parameter is ignored if the file
                    is not created; 0 asks to use the default
-	
+
         Returns:
           an HDF instance
- 
+
         C library equivalent : Hopen
-	                                             """
-	# Private attributes:
-	#  _id:       file id (NOTE: not compatile with the SD file id)
-                                                   
+                                                     """
+        # Private attributes:
+        #  _id:       file id (NOTE: not compatile with the SD file id)
+
         # See if file exists.
         exists = os.path.exists(path)
 
@@ -211,14 +211,14 @@ class HDF(object):
                     raise HDF4Error("HDF: invalid mode")
             else:
                 raise HDF4Error("HDF: no such file")
-                
+
         id = _C.Hopen(path, mode, nblocks)
         _checkErr('HDF', id, "cannot open %s" % path)
         self._id = id
-        
+
 
     def __del__(self):
-        """Delete the instance, first calling the end() method 
+        """Delete the instance, first calling the end() method
         if not already done.          """
 
         try:
@@ -243,7 +243,7 @@ class HDF(object):
 
     def getfileversion(self):
         """Get file version info.
-        
+
         Args:
           no argument
         Returns:
@@ -252,7 +252,7 @@ class HDF(object):
             -minor version number (int)
             -complete library version number (int)
             -additional information (string)
-            
+
         C library equivalent : Hgetlibversion
                                                    """
 
@@ -270,7 +270,7 @@ class HDF(object):
 
         C library equivalent : Vstart (in fact: Vinitialize)
                                                               """
-	# See note at top of file.
+        # See note at top of file.
         return pyhdf.VS.VS(self)
 
     def vgstart(self):
@@ -283,7 +283,7 @@ class HDF(object):
 
         C library equivalent : Vstart (in fact: Vinitialize)
                                                               """
-	# See note at top of file.
+        # See note at top of file.
         return pyhdf.V.V(self)
 
 
@@ -322,5 +322,3 @@ def _array_to_str(buf, nValues):
     if chrs[-1] == '\0':
         del chrs[-1]
     return ''.join(chrs)
-
-
