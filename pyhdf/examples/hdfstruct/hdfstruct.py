@@ -48,7 +48,7 @@ try:  # Catch pyhdf.SD errors
       printf("  name                 idx type    len value"); eol()
       printf("  -------------------- --- ------- --- -----"); eol()
       # Get list of attribute names and sort them lexically
-      attNames = attr.keys()
+      attNames = list(attr.keys())
       attNames.sort()
       for name in attNames:
           t = attr[name]
@@ -67,7 +67,7 @@ try:  # Catch pyhdf.SD errors
       printf("  name                 idx type    na cv dimension(s)"); eol()
       printf("  -------------------- --- ------- -- -- ------------"); eol()
       # Get list of dataset names and sort them lexically
-      dsNames = dsets.keys()
+      dsNames = list(dsets.keys())
       dsNames.sort()
       for name in dsNames:
           # Get dataset instance
@@ -105,7 +105,7 @@ try:  # Catch pyhdf.SD errors
               printf("  name                 idx type    len value"); eol()
               printf("  -------------------- --- ------- --- -----"); eol()
 	      # Get the list of attribute names and sort them alphabetically.
-              attNames = dsAttr.keys()
+              attNames = list(dsAttr.keys())
               attNames.sort()
               for nm in attNames:
                   t = dsAttr[nm]
@@ -123,7 +123,7 @@ try:  # Catch pyhdf.SD errors
               printf("  name                 idx len   unl type    natt");eol()
 	      printf("  -------------------- --- ----- --- ------- ----");eol()
 	      # Get the list of dimension names and sort them alphabetically.
-	      dimNames = dsDim.keys()
+	      dimNames = list(dsDim.keys())
 	      dimNames.sort()
 	      for nm in dimNames:
 	          t = dsDim[nm]
@@ -138,5 +138,5 @@ try:  # Catch pyhdf.SD errors
 	      eol()
 
       
-except HDF4Error, msg:
-    print "HDF4Error", msg
+except HDF4Error as msg:
+    print("HDF4Error", msg)

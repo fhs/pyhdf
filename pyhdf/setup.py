@@ -26,8 +26,8 @@ def _find_args(pat, env):
 
 include_dirs = _find_args('-i', 'INCLUDE_DIRS')
 library_dirs = _find_args('-l', 'LIBRARY_DIRS')
-szip_installed = not os.environ.has_key('NOSZIP')
-compress = not os.environ.has_key('NO_COMPRESS')
+szip_installed = 'NOSZIP' not in os.environ
+compress = 'NO_COMPRESS' not in os.environ
 extra_link_args = os.environ.get('LINK_ARGS', '')
 
 
@@ -49,10 +49,10 @@ if sys.platform == 'win32':
         # fix include_dirs and library_dirs
         #  based on fixed set of paths
         if not path.exists(baseloc):
-            print "\n******\n%s not found\n******\n\n" % baseloc
+            print("\n******\n%s not found\n******\n\n" % baseloc)
             raise RuntimeError(msg)
         if not path.isdir(baseloc):
-            print "\n******\n%s not a directory \n******\n\n" % baseloc
+            print("\n******\n%s not a directory \n******\n\n" % baseloc)
             raise RuntimeError(msg)
         alldirs = os.listdir(baseloc)
         include_dirs = []
@@ -64,12 +64,12 @@ if sys.platform == 'win32':
                 include_dirs.append(path.sep.join([baseloc, adir, 'include']))
                 library_dirs.append(path.sep.join([baseloc, adir, 'dll']))
             library_dirs.append(path.sep.join([baseloc, adir, 'lib']))
-        print "Using include_dirs = ", include_dirs
-        print "Using library_dirs = ", library_dirs
+        print("Using include_dirs = ", include_dirs)
+        print("Using library_dirs = ", library_dirs)
         
 for p in include_dirs + library_dirs:
     if not path.exists(p):
-        print "\n******\n%s not found\n******\n\n" % p
+        print("\n******\n%s not found\n******\n\n" % p)
         raise RuntimeError(msg)
 
 if sys.platform == 'win32':

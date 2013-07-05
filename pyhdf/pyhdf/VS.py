@@ -136,7 +136,7 @@ VS is not self-contained, and needs functionnality provided by another
 pyhdf module, namely the HDF module. This module must thus be imported
 also:
 
-  >>> from HDF import *
+  >>> from .HDF import *
 
 Package components
 ------------------
@@ -425,12 +425,12 @@ returns the current attribute value. Here is an example.
   >>> attr = vd.attr('version')  # prepare to define the 'version' attribute
                                  # on the vdata
   >>> attr.set(HC.CHAR8,'1.0')   # set attribute 'version' to string '1.0'
-  >>> print attr.get()           # get and print attribute value
+  >>> print(attr.get())           # get and print attribute value
   >>> fld  = vd.field('fld1')    # obtain a field instance for field 'fld1'
   >>> attr = fld.attr('range')   # prepare to define attribute 'range' on
                                  # this field
   >>> attr.set(HC.INT32,(-10, 15)) # set attribute 'range' to a pair of ints
-  >>> print attr.get()             # get and print attribute value
+  >>> print(attr.get())             # get and print attribute value
   
   >>> vd.detach()                # "close" the vdata
   >>> vs.end()                   # terminate the vdata interface
@@ -447,11 +447,11 @@ then becomes:
   >>> vd = vs.attach('vtest', 1) # attach vdata 'vtest' in write mode
   >>> vd.version = '1.0'         # create vdata attribute 'version',
                                  # setting it to string '1.0'
-  >>> print vd.version           # print attribute value
+  >>> print(vd.version)           # print attribute value
   >>> fld  = vd.field('fld1')    # obtain a field instance for field 'fld1'
   >>> fld.range = (-10, 15)      # create field attribute 'range', setting
                                  # it to the pair of ints (-10, 15)
-  >>> print fld.range            # print attribute value
+  >>> print(fld.range)            # print attribute value
   >>> vd.detach()                # "close" the vdata
   >>> vs.end()                   # terminate the vdata interface
   >>> f.close()                  # close the HDF file
@@ -549,12 +549,12 @@ python sequence may often look simpler, and improve code legibility.
 
 Here are some examples of how a vdata 'vd' holding 3 fields could be read.
 
-  >>> print vd[0]         # print record 0
-  >>> print vd[-1]        # print last record
-  >>> print vd[2:]        # print records 2 and those that follow
-  >>> print vd[:]         # print all records
-  >>> print vd[:,0]       # print field 0 of all records
-  >>> print vd[:3,:2]     # print first 2 fields of first 3 records
+  >>> print(vd[0])         # print record 0
+  >>> print(vd[-1])        # print last record
+  >>> print(vd[2:])        # print records 2 and those that follow
+  >>> print(vd[:])         # print all records
+  >>> print(vd[:,0])       # print field 0 of all records
+  >>> print(vd[:3,:2])     # print first 2 fields of first 3 records
 
 As the above examples show, the usual python rules are obeyed regarding
 the interpretation of indexing and slicing values. Note that the vdata
@@ -808,10 +808,10 @@ is quite clean, and should look very familiar to python adepts.
 
 import os, sys, types
 
-import hdfext as _C
+from . import hdfext as _C
 
-from HC import HC
-from error import HDF4Error, _checkErr
+from .HC import HC
+from .error import HDF4Error, _checkErr
 
 # List of names we want to be imported by an "from pyhdf.VS import *"
 # statement
@@ -902,7 +902,7 @@ class VS(object):
                                                     """
 
         mode = write and 'w' or 'r'
-        if type(num_name) == types.StringType:
+        if type(num_name) == bytes:
             num = self.find(num_name)
         else:
             num = num_name
@@ -952,8 +952,8 @@ class VS(object):
             # Allocate fields to the vdata
             vd.setfields(*allNames)
             return vd
-        except HDF4Error, msg:
-            raise HDF4Error, "error creating vdata (%s)" % msg
+        except HDF4Error as msg:
+            raise HDF4Error("error creating vdata (%s)" % msg)
 
     def find(self, vName):
         """Get the reference number of a vdata given its name.
@@ -1069,7 +1069,7 @@ class VS(object):
 
         # See if the field is multi-valued.
         nrecs = len(values)
-        if type(values[0]) in [types.ListType, types.TupleType]:
+        if type(values[0]) in [list, tuple]:
             order = len(values[0])
             # Replace input list with a flattened list.
             newValues = []
@@ -1127,7 +1127,7 @@ class VS(object):
             buf = _C.array_float64(n_values)
 
         else:
-            raise HDF4Error, "storedata: illegal or unimplemented data_type"
+            raise HDF4Error("storedata: illegal or unimplemented data_type")
 
         for n in range(n_values):
             buf[n] = values[n]
@@ -1267,7 +1267,7 @@ class VD(object):
         # Forbid assigning to our predefined attributes
         if name in ["_fields", "_isattr", "_nattrs", "_nfields",
                     "_nrecs", "_recsize", "_refnum", "_tag", "_tnattrs"]:
-            raise AttributeError, "%s: read-only attribute" % name
+            raise AttributeError("%s: read-only attribute" % name)
 
         # Handle the 3 VS attributes: _class, _interlace
         # and _name. _interlace can only be set once.
@@ -1343,19 +1343,19 @@ class VD(object):
         #  vd[5:] = [reca,recb]      # appends 2 records to the vdata
 
         # Check that arg is a list.
-        if not type(data) in [types.TupleType, types.ListType]:
-            raise HDF4Error, "record(s) must be specified as a list"
+        if not type(data) in [tuple, list]:
+            raise HDF4Error("record(s) must be specified as a list")
         start, count = self.__buildStartCount(elem, setitem=1)
         # Records cannot be partially written.
         if start[1] != 0 or count[1] != self._nfields:
-            raise HDF4Error, "each vdata field must be written"
+            raise HDF4Error("each vdata field must be written")
         
         # If an index (as opposed to a slice) was applied to the
         # vdata, a single record must be passed. Since write() requires
         # a 2-level list, wrap this record inside a list.
         if count[0] < 0:
             if len(data) != self._nfields:
-                raise HDF4Error, "record does not specify all fields"
+                raise HDF4Error("record does not specify all fields")
             data = [data]
         # A slice was used. The slice length must match the number of
         # records, except if the end of the slice equals the number
@@ -1364,7 +1364,7 @@ class VD(object):
         else:
             if count[0] != len(data):
                 if start[0] + count[0] != self._nrecs:
-                    raise HDF4Error, "illegal number of records"
+                    raise HDF4Error("illegal number of records")
         # Reset current record position if necessary.
         if self._offset != start[0]:
             self.seek(start[0])
@@ -1464,7 +1464,7 @@ class VD(object):
                                                        """
 
         # Transform a name to an index number
-        if type(name_index) == types.StringType:
+        if type(name_index) == bytes:
              status, index = _C.VSfindex(self._id, name_index)
              _checkErr('field', status, "illegal field name: %s" % name_index)
         else:
@@ -1472,7 +1472,7 @@ class VD(object):
             _checkErr('field', n, 'cannot execute')
             index = name_index
             if index >= n:
-                raise HDF4Error, "field: illegal index number"
+                raise HDF4Error("field: illegal index number")
         return VDField(self, index)
         
 
@@ -1507,7 +1507,7 @@ class VD(object):
             if recIndex == self._nrecs:
                 return self.seekend()
             else:
-                raise HDF4Error, "attempt to seek past last record"
+                raise HDF4Error("attempt to seek past last record")
         n = _C.VSseek(self._id, recIndex)
         _checkErr('seek', n, 'cannot seek')
         self._offset = n
@@ -1532,7 +1532,7 @@ class VD(object):
             self.read(1)                         # updates _offset
             return self._nrecs
         except HDF4Error:
-            raise HDF4Error, "seekend: cannot execute"
+            raise HDF4Error("seekend: cannot execute")
 
     def tell(self):
         """Return current record position in the vdata.
@@ -1582,7 +1582,7 @@ class VD(object):
         # number of remaining records in the vdata.
         n = self._nrecs
         if self._offset == n:
-            raise HDF4Error, "end of vdata reached"
+            raise HDF4Error("end of vdata reached")
         if self._offset + nRec > n:
             nRec = self._offset + nRec - n
             
@@ -1645,8 +1645,8 @@ class VD(object):
                 buf = _C.array_float64(n_values)
 
             else:
-                raise HDF4Error, "read: illegal or unupported type %d" % \
-                                 data_type
+                raise HDF4Error("read: illegal or unupported type %d" % \
+                                 data_type)
 
             # Unpack the field values.
             _C.array_voidp_setitem(fldArr, 0, buf)
@@ -1719,17 +1719,17 @@ class VD(object):
 
         # Validate the values argument.
         if nFields != len(fields):
-            raise HDF4Error, "write: must write whole records"
-        if type(values) not in [types.ListType, types.TupleType]:
-            raise HDF4Error, "write: values must be a sequence"
+            raise HDF4Error("write: must write whole records")
+        if type(values) not in [list, tuple]:
+            raise HDF4Error("write: values must be a sequence")
         nRec = len(values)
         for n in range(nRec):
             rec = values[n]
-            if type(rec) not in [types.ListType, types.TupleType]:
-                raise HDF4Error, "write: records must be given as sequences"
+            if type(rec) not in [list, tuple]:
+                raise HDF4Error("write: records must be given as sequences")
             # Make sure each record is complete.
             if len(rec) != nFields:
-                raise HDF4Error, "write: records must specify every field"
+                raise HDF4Error("write: records must specify every field")
 
         # Allocate a buffer to store the packed records.
         bufSize = self._recsize * nRec
@@ -1771,8 +1771,8 @@ class VD(object):
                 buf = _C.array_float64(n_values)
 
             else:
-                raise HDF4Error, "write: illegal or unupported type %d" % \
-                                 data_type
+                raise HDF4Error("write: illegal or unupported type %d" % \
+                                 data_type)
 
             # Load the field buffer with values.
             k = 0
@@ -1786,17 +1786,15 @@ class VD(object):
                 else:
                     # Handle strings specially.
                     if data_type == HC.CHAR8:
-                        if type(val) != types.StringType:
-                            raise HDF4Error, \
-                                  "char fields must be set with strings"
+                        if type(val) != bytes:
+                            raise HDF4Error("char fields must be set with strings")
                         n = len(val)
                         for i in range(order):
                             buf[k] = i < n and ord(val[i]) or 0
                             k += 1
                     # Should validate field elements ...
-                    elif type(val) not in [types.ListType, types.TupleType]:
-                        raise HDF4Error,\
-                              "multi-values fields must be given as sequences"
+                    elif type(val) not in [list, tuple]:
+                        raise HDF4Error("multi-values fields must be given as sequences")
                     else:
                         for i in range(order):
                             buf[k] = val[i]
@@ -1884,7 +1882,7 @@ class VD(object):
         C library equivalent : VSsizeof
                                                    """
 
-        if type(fields) in [types.TupleType, types.ListType]:
+        if type(fields) in [tuple, list]:
             str = ','.join(fields)
         else:
             str = fields
@@ -1905,7 +1903,7 @@ class VD(object):
         C library equivalent : VSfexist
                                                          """
 
-        if type(fields) in [types.TupleType, types.ListType]:
+        if type(fields) in [tuple, list]:
             str = ','.join(fields)
         else:
             str = fields
@@ -1996,9 +1994,9 @@ class VD(object):
 
         # Make sure the indexing expression does not exceed the
         # vdata number of dimensions (2).
-        if type(elem) == types.TupleType:
+        if type(elem) == tuple:
             if len(elem) > 2:
-                raise HDF4Error, "illegal indexing expression"
+                raise HDF4Error("illegal indexing expression")
         else:    # Convert single index to sequence
             elem = [elem]
 
@@ -2009,7 +2007,7 @@ class VD(object):
         for e in elem:
             n += 1
             # Simple index
-            if type(e) == types.IntType:
+            if type(e) == int:
                 slice = 0
                 if e < 0:
                     e += shape[n]
@@ -2017,11 +2015,11 @@ class VD(object):
                     if e == shape[n] and setitem:
                         pass
                     else:
-                        raise HDF4Error, "index out of range"
+                        raise HDF4Error("index out of range")
                 beg = e
                 end = e + 1
             # Slice index
-            elif type(e) == types.SliceType:
+            elif type(e) == slice:
                 slice = 1
                 # None or 0 means not specified
                 if e.start:
@@ -2031,7 +2029,7 @@ class VD(object):
                 else:
                     beg = 0
                 # None or maxint means not specified
-                if e.stop and e.stop != sys.maxint:
+                if e.stop and e.stop != sys.maxsize:
                     end = e.stop
                     if end < 0:
                         end += shape[n]
@@ -2039,7 +2037,7 @@ class VD(object):
                     end = shape[n]
             # Bug
             else:
-                raise ValueError, "invalid indexing expression"
+                raise ValueError("invalid indexing expression")
 
             # Clip end index and compute number of elements to get
             if end > shape[n]:
@@ -2143,7 +2141,7 @@ class VDField(object):
         # Forbid assigning to our predefined attributes
         if name in ["_esize", "_index", "_isize", "_name",
                     "_nattrs", "_order", "_type"]:
-            raise AttributeError, "%s: read-only attribute" % name
+            raise AttributeError("%s: read-only attribute" % name)
 
         # Try to set the attribute.
         else:
@@ -2283,7 +2281,7 @@ class VDAttr(object):
                                                 """
         # Make sure th attribute exists.
         if self._index is None:
-            raise HDF4Error, "non existent attribute"
+            raise HDF4Error("non existent attribute")
         # Obtain attribute type and the number of values.
         status, aName, data_type, n_values, size = \
                     _C.VSattrinfo(self._vd_inst._id, self._fIndex,
@@ -2321,9 +2319,9 @@ class VDAttr(object):
             buf = _C.array_float64(n_values)
 
         else:
-            raise HDF4Error, "get: attribute index %d has an "\
+            raise HDF4Error("get: attribute index %d has an "\
                              "illegal or unupported type %d" % \
-                             (self._index, data_type)
+                             (self._index, data_type))
 
         status = _C.VSgetattr(self._vd_inst._id, self._fIndex,
                               self._index, buf)
@@ -2403,7 +2401,7 @@ class VDAttr(object):
             buf = _C.array_float64(n_values)
 
         else:
-            raise HDF4Error, "set: illegal or unimplemented data_type"
+            raise HDF4Error("set: illegal or unimplemented data_type")
 
         for n in range(n_values):
             buf[n] = values[n]
@@ -2414,7 +2412,7 @@ class VDAttr(object):
         self._index = _C.VSfindattr(self._vd_inst._id, self._fIndex,
                                     self._name);
         if self._index < 0:
-            raise HDF4Error, "set: error retrieving attribute index"
+            raise HDF4Error("set: error retrieving attribute index")
 
     def info(self):
         """Retrieve info about the attribute.
@@ -2433,7 +2431,7 @@ class VDAttr(object):
 
         # Make sure the attribute exists.
         if self._index is None:
-            raise HDF4Error, "non existent attribute"
+            raise HDF4Error("non existent attribute")
 
         status, name, type, order, size = \
                 _C.VSattrinfo(self._vd_inst._id, self._fIndex, self._index)
@@ -2460,39 +2458,39 @@ def _setattr(obj, name, value):
         return
 
     # Treat everything else as an HDF attribute.
-    if type(value) not in [types.ListType, types.TupleType]:
+    if type(value) not in [list, tuple]:
         value = [value]
     typeList = []
     for v in value:
         t = type(v)
         # Prohibit mixing numeric types and strings.
-        if t in [types.IntType, types.FloatType] and \
-               not types.StringType in typeList:
+        if t in [int, float] and \
+               not bytes in typeList:
             if t not in typeList:
                 typeList.append(t)
         # Prohibit sequence of strings or a mix of numbers and string.
-        elif t == types.StringType and not typeList:
+        elif t == bytes and not typeList:
             typeList.append(t)
         else:
             typeList = []
             break
-    if types.StringType in typeList:
+    if bytes in typeList:
         xtype = HC.CHAR8
         value = value[0]
     # double is "stronger" than int
-    elif types.FloatType in typeList:
+    elif float in typeList:
         xtype = HC.FLOAT64
-    elif types.IntType in typeList:
+    elif int in typeList:
         xtype = HC.INT32
     else:
-        raise HDF4Error, "Illegal attribute value"
+        raise HDF4Error("Illegal attribute value")
 
     # Assign value
     try:
         a = obj.attr(name)
         a.set(xtype, value)
-    except HDF4Error, msg:
-        raise HDF4Error, "cannot set attribute: %s" % msg
+    except HDF4Error as msg:
+        raise HDF4Error("cannot set attribute: %s" % msg)
 
 def _array_to_ret(buf, nValues):
 
@@ -2502,7 +2500,7 @@ def _array_to_ret(buf, nValues):
         ret = buf[0]
     else:
         ret = []
-        for i in xrange(nValues):
+        for i in range(nValues):
             ret.append(buf[i])
     return ret
 
@@ -2523,5 +2521,6 @@ def _array_to_str(buf, nValues):
     if chrs[-1] == '\0':
         del chrs[-1]
     return ''.join(chrs)
+
 
 

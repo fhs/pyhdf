@@ -11,14 +11,14 @@ def describevg(refnum):
 
     # Open vgroup in read mode.
     vg = v.attach(refnum)
-    print "----------------"
-    print "name:", vg._name, "class:",vg._class, "tag,ref:",vg._tag, vg._refnum
+    print("----------------")
+    print("name:", vg._name, "class:",vg._class, "tag,ref:",vg._tag, vg._refnum)
 
     # Show the number of members of each main object type.
-    print "# members:  ", vg._nmembers,\
+    print("# members:  ", vg._nmembers,\
            "# datasets:", vg.nrefs(HC.DFTAG_NDG),\
            "# vdatas:  ", vg.nrefs(HC.DFTAG_VH),\
-           "# vgroups: ", vg.nrefs(HC.DFTAG_VG)
+           "# vgroups: ", vg.nrefs(HC.DFTAG_VG))
 
     # Read the contents of the vgroup.
     members = vg.tagrefs()
@@ -27,34 +27,34 @@ def describevg(refnum):
     index = -1
     for tag, ref in members:
       index += 1
-      print "member index", index
+      print("member index", index)
       # Vdata tag
       if tag == HC.DFTAG_VH:        
           vd = vs.attach(ref)
           nrecs, intmode, fields, size, name = vd.inquire()
-          print "  vdata:",name, "tag,ref:",tag, ref
-          print "    fields:",fields
-          print "    nrecs:",nrecs
+          print("  vdata:",name, "tag,ref:",tag, ref)
+          print("    fields:",fields)
+          print("    nrecs:",nrecs)
           vd.detach()
 
       # SDS tag
       elif tag == HC.DFTAG_NDG:
           sds = sd.select(sd.reftoindex(ref))
           name, rank, dims, type, nattrs = sds.info()
-          print "  dataset:",name, "tag,ref:", tag, ref
-          print "    dims:",dims
-          print "    type:",type
+          print("  dataset:",name, "tag,ref:", tag, ref)
+          print("    dims:",dims)
+          print("    type:",type)
           sds.endaccess()
 
       # VS tag
       elif tag == HC.DFTAG_VG:
           vg0 = v.attach(ref)
-	  print "  vgroup:", vg0._name, "tag,ref:", tag, ref
+	  print("  vgroup:", vg0._name, "tag,ref:", tag, ref)
 	  vg0.detach()
 
       # Unhandled tag
       else:
-          print "unhandled tag,ref",tag,ref
+          print("unhandled tag,ref",tag,ref)
     
     # Close vgroup
     vg.detach()
@@ -73,7 +73,7 @@ ref = -1
 while 1:
     try:
         ref = v.getid(ref)
-    except HDF4Error,msg:    # no more vgroup
+    except HDF4Error as msg:    # no more vgroup
         break
     describevg(ref)
 

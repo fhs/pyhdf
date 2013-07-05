@@ -13,4 +13,4 @@ out = []
 for line in data:
     out.append(class_re.sub('', line))
 
-print ''.join(out)
+print(''.join(out))

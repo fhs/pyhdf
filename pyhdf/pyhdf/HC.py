@@ -4,7 +4,7 @@
 # Initial revision
 #
 
-import hdfext as _C
+from . import hdfext as _C
 
 class HC(object):
     """The HC class holds contants defining opening modes and data types.

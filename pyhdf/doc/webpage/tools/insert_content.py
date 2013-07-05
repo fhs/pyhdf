@@ -19,5 +19,5 @@ for line in template:
         out.extend(content_blocks[0])
         del content_blocks[0]
 
-print ''.join(out)
+print(''.join(out))
 

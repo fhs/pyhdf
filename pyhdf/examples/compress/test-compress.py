@@ -72,11 +72,11 @@ def doCompress(compType, value=0, v2=0):
         elif value == SDC.COMP_SZIP_EC:
             fileName += ".EC"
         else:
-            print "illegal value"
+            print("illegal value")
             sys.exit(1)
         fileName += ".%s" % v2
     else:
-        print "illegal compType"
+        print("illegal compType")
         sys.exit(1)
     fileName += ".hdf"
 
@@ -118,9 +118,9 @@ def doCompress(compType, value=0, v2=0):
     try:
         sds_id.setcompress(compType,        # compression type
                            value, v2)         # args depend on compression type
-    except HDF4Error, msg:
-        print("Error compressing the dataset with params: "
-              "(%d,%d,%d) : %s" % (compType, value, v2, msg))
+    except HDF4Error as msg:
+        print(("Error compressing the dataset with params: "
+              "(%d,%d,%d) : %s" % (compType, value, v2, msg)))
         sds_id.endaccess()
         sd_id.end()
         os.remove(fileName)
@@ -145,35 +145,35 @@ def doCompress(compType, value=0, v2=0):
     # Obtain compression info.
     compInfo = sds_id.getcompress()
     compType = compInfo[0]
-    print "file : %s" % fileName
-    print "  size = %d" % os.path.getsize(fileName)
+    print("file : %s" % fileName)
+    print("  size = %d" % os.path.getsize(fileName))
     if compType == SDC.COMP_NONE:
-        print "  compType =  COMP_NONE"
+        print("  compType =  COMP_NONE")
     elif compType == SDC.COMP_RLE:
-        print "  compType =  COMP_RLE"
+        print("  compType =  COMP_RLE")
     elif compType == SDC.COMP_SKPHUFF:
-        print "  compType = COMP_SKPHUFF"
-        print "  dataSize = %d" % compInfo[1]
+        print("  compType = COMP_SKPHUFF")
+        print("  dataSize = %d" % compInfo[1])
     elif compType == SDC.COMP_DEFLATE:
-        print "  compType = COMP_DEFLATE (GZIP)"
-        print "  level = %d" % compInfo[1]
+        print("  compType = COMP_DEFLATE (GZIP)")
+        print("  level = %d" % compInfo[1])
     elif compType == SDC.COMP_SZIP:
-        print "  compType = COMP_SZIP"
+        print("  compType = COMP_SZIP")
         optionMask  = compInfo[1]
         if optionMask & SDC.COMP_SZIP_NN:
-           print "  encoding scheme = NN"
+           print("  encoding scheme = NN")
         elif optionMask & SDC.COMP_SZIP_EC:
-           print "  encoding scheme = EC"
+           print("  encoding scheme = EC")
         else:
-            print "  unknown encoding scheme"
+            print("  unknown encoding scheme")
             sys.exit(1)
         pixelsPerBlock, pixelsPerScanline, bitsPerPixel, pixels  = compInfo[2:]
-        print "  pixelsPerBlock = %d" % pixelsPerBlock
-        print "  pixelsPerScanline = %d" % pixelsPerScanline
-        print "  bitsPerPixel = %d" % bitsPerPixel
-        print "  pixels = %d" % pixels
+        print("  pixelsPerBlock = %d" % pixelsPerBlock)
+        print("  pixelsPerScanline = %d" % pixelsPerScanline)
+        print("  bitsPerPixel = %d" % bitsPerPixel)
+        print("  pixels = %d" % pixels)
     else:
-        print "  unknown compression type"
+        print("  unknown compression type")
         sys.exit(1)
 
     # Read dataset contents.
@@ -184,8 +184,8 @@ def doCompress(compType, value=0, v2=0):
     for i in range(LENGTH):
         for j in range(WIDTH):
             if data[i,j] != out_data[i,j]:
-                print "bad value at %d,%d expected: %d got: %d" \
-                      % (i,j,data[i,j],out_data[i,j])
+                print("bad value at %d,%d expected: %d got: %d" \
+                      % (i,j,data[i,j],out_data[i,j]))
                 num_errs += 1
 
     # Close dataset and hdf file.
@@ -193,10 +193,10 @@ def doCompress(compType, value=0, v2=0):
     sd_id.end()
 
     if num_errs == 0:
-        print "  file validated"
+        print("  file validated")
     else:
-        print "  file invalid : %d errors" % num_errs
-    print ""
+        print("  file invalid : %d errors" % num_errs)
+    print("")
 
 # Try different compression configurations in turn.
 
@@ -204,27 +204,27 @@ def doCompress(compType, value=0, v2=0):
 # was installed with the NOCOMPRESS macro set.
 
 # No compression
-print "no compression"
+print("no compression")
 doCompress(SDC.COMP_NONE)
 
 # RLE compression
-print "run-length encoding"
+print("run-length encoding")
 doCompress(SDC.COMP_RLE)
 
 # Skipping-Huffman compression.
-print "Skipping-Huffman encoding"
+print("Skipping-Huffman encoding")
 for size in 2,4,8:
     doCompress(SDC.COMP_SKPHUFF, size)   # size in bytes of the data elements
 
 # Gzip compression
-print "GZIP compression"
+print("GZIP compression")
 for level in 1,2,3,4,5,6,7,8,9:
     doCompress(SDC.COMP_DEFLATE, level)   # compression level, from 1 to 9
 
 # SZIP compression
 # Those calls will fail with an "Encoder not available" exception if
 # pyhdf was installed with the NOSZIP macro set.
-print "SZIP compression"
+print("SZIP compression")
 for scheme in SDC.COMP_SZIP_NN, SDC.COMP_SZIP_EC:
     for ppb in 4,8,16,32:
         doCompress(SDC.COMP_SZIP, scheme, ppb)  # scheme, pixels per block

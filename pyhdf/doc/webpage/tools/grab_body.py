@@ -20,4 +20,4 @@ for line in data:
     if inside:
         out.append(line)
 
-print ''.join(out)
+print(''.join(out))

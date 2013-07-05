@@ -22,17 +22,17 @@ def txtToHDF(txtFile, hdfFile, varName, attr):
         d = SD(hdfFile, SDC.WRITE|SDC.CREATE)
         # Open text file and get matrix dimensions on first line.
         txt = open(txtFile)
-        ni, nj = map(int, txt.readline().split())
+        ni, nj = list(map(int, txt.readline().split()))
         # Define HDF dataset of type SDC.FLOAT32 with those dimensions.
         v = d.create(varName, SDC.FLOAT32, (ni, nj))
         # Assign attributes passed as argument inside dict `attr'.
-        for attrName in attr.keys():
+        for attrName in list(attr.keys()):
             setattr(v, attrName, attr[attrName])
         # Load variable with lines of data. Compute min and max
         # over the whole matrix.
         i = 0
         while i < ni:
-            elems = map(float, txt.readline().split())
+            elems = list(map(float, txt.readline().split()))
             v[i] = elems
             minE = min(elems)
             maxE = max(elems)
@@ -51,8 +51,8 @@ def txtToHDF(txtFile, hdfFile, varName, attr):
 	v.endaccess()
         d.end()
         txt.close()
-    except HDF4Error, msg:
-        print "HDF4Error:", msg
+    except HDF4Error as msg:
+        print("HDF4Error:", msg)
 
 if __name__ == '__main__':
     hdfFile  = 'table.hdf'
@@ -67,7 +67,7 @@ if __name__ == '__main__':
              {'title'      : 'temperature matrix',
 	      'units'      : 'celsius',
 	      'valid_range': (-2.8,27.0)})
-    print "Temperature data successfully written to HDF file"
+    print("Temperature data successfully written to HDF file")
 
     # Transfer contents of file 'depth.txt' to dataset 'depth'
     # and assign the same attributes as above.
@@ -75,7 +75,7 @@ if __name__ == '__main__':
              {'title'      : 'depth matrix',
 	      'units'      : 'meters',
 	      'valid_range': (0, 500.0)})
-    print "Depth data successfully written to HDF file"
+    print("Depth data successfully written to HDF file")
 
     # TODO: open up hdfFile and access the information that
     # was in temp.txt and depth.txt

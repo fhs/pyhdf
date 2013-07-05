@@ -262,7 +262,7 @@ in two ways.
      >>> d = SD('example.hdf',SDC.WRITE|SDC.CREATE)  # create file
      >>> att = d.attr('title')            # create attribute instance
      >>> att.set(SDC.CHAR, 'example')     # set attribute type and value
-     >>> print att.get()                  # get attribute value
+     >>> print(att.get())                  # get attribute value
      >>>
 
   -By handling the attribute like an ordinary Python class attribute.
@@ -270,7 +270,7 @@ in two ways.
      >>> from pyhdf.SD import *
      >>> d = SD('example.hdf',SDC.WRITE|SDC.CREATE)  # create dataset
      >>> d.title = 'example'              # set attribute type and value
-     >>> print d.title                    # get attribute value
+     >>> print(d.title)                    # get attribute value
      >>>
 
 What has been said above applies as well to multi-valued attributes.
@@ -393,7 +393,7 @@ dataset. For example:
 
 The assigned value can also be a numpy array. Rewriting example above:
     >>> v1=array([1,2,3])
-    >>> v2=array([[1,2,3],[11,12,13],[21,22,23])
+    >>> v2=array([[1,2,3],[11,12,13],[21,22,23]])
 
 Note how we use indexing expressions 'v1[:]' and 'v2[:]' when assigning
 using python sequences, and just the variable names when assigning numpy
@@ -1001,8 +1001,8 @@ except HDF4Error, msg:
 """
 import os, sys, types
 
-import hdfext as _C
-from error import _checkErr, HDF4Error
+from . import hdfext as _C
+from .error import _checkErr, HDF4Error
 
 # List of names we want to be imported by an "from pyhdf.SD import *"
 # statement
@@ -1013,7 +1013,7 @@ try:
     import numpy as _toto
     del _toto
 except ImportError:
-    raise HDF4Error, "numpy package required but not installed"
+    raise HDF4Error("numpy package required but not installed")
 
 class SDC(object):
     """The SDC class holds contants defining opening modes and data types.
@@ -1156,7 +1156,7 @@ class SDAttr(object):
             try:
                 self._index = self._obj.findattr(self._name)
             except HDF4Error:
-                raise HDF4Error, "info: cannot convert name to index"
+                raise HDF4Error("info: cannot convert name to index")
         status, self._name, data_type, n_values = \
                               _C.SDattrinfo(self._obj._id, self._index)
         _checkErr('info', status, 'illegal attribute index')
@@ -1199,7 +1199,7 @@ class SDAttr(object):
             try:
                 self._index = self._obj.findattr(self._name)
             except HDF4Error:
-                raise HDF4Error, "get: cannot convert name to index"
+                raise HDF4Error("get: cannot convert name to index")
 
         # Obtain attribute type and the number of values.
         status, self._name, data_type, n_values = \
@@ -1237,9 +1237,9 @@ class SDAttr(object):
             buf = _C.array_float64(n_values)
 
         else:
-            raise HDF4Error, "read: attribute index %d has an "\
+            raise HDF4Error("read: attribute index %d has an "\
                              "illegal or unupported type %d" % \
-                             (self._index, data_type)
+                             (self._index, data_type))
 
         status = _C.SDreadattr(self._obj._id, self._index, buf)
         _checkErr('read', status, 'illegal attribute index')
@@ -1317,7 +1317,7 @@ class SDAttr(object):
             buf = _C.array_float64(n_values)
 
         else:
-            raise HDF4Error, "set: illegal or unimplemented data_type"
+            raise HDF4Error("set: illegal or unimplemented data_type")
 
         for n in range(n_values):
             buf[n] = values[n]
@@ -1398,8 +1398,8 @@ class SD(object):
                 if SDC.TRUNC & mode:
                     try:
                         os.remove(path)
-                    except Exception, msg:
-                        raise HDF4Error, msg
+                    except Exception as msg:
+                        raise HDF4Error(msg)
                     mode = SDC.CREATE|SDC.WRITE
                 else:
                     mode = SDC.WRITE
@@ -1407,14 +1407,14 @@ class SD(object):
                 if SDC.CREATE & mode:
                     mode |= SDC.WRITE
                 else:
-                    raise HDF4Error, "SD: no such file"
+                    raise HDF4Error("SD: no such file")
         elif SDC.READ & mode:
             if exists:
                 mode = SDC.READ
             else:
-                raise HDF4Error, "SD: no such file"
+                raise HDF4Error("SD: no such file")
         else:
-            raise HDF4Error, "SD: bad mode, READ or WRITE must be set"
+            raise HDF4Error("SD: bad mode, READ or WRITE must be set")
                 
         id = _C.SDstart(path, mode)
         _checkErr('SD', id, "cannot open %s" % path)
@@ -1528,7 +1528,7 @@ class SD(object):
                                                             """
 
         if not fill_mode in [SDC.FILL, SDC.NOFILL]:
-            raise HDF4Error, "bad fill mode"
+            raise HDF4Error("bad fill mode")
         old_mode = _C.SDsetfillmode(self._id, fill_mode)
         _checkErr('setfillmode', old_mode, 'cannot execute')
         return old_mode
@@ -1592,7 +1592,7 @@ class SD(object):
             try:
                 idx = self.nametoindex(name_or_index)
             except HDF4Error:
-                raise HDF4Error, "select: non-existent dataset"
+                raise HDF4Error("select: non-existent dataset")
         id = _C.SDselect(self._id, idx)
         _checkErr('select', id, "cannot execute")
         return SDS(self, id)
@@ -1771,7 +1771,7 @@ class SDS(object):
         # Compute arguments to 'SDwritedata_0()'.
         start, count, stride = self.__buildStartCountStride(elem)
         # A sequence type is needed. Convert a single number to a list.
-        if type(data) in [types.IntType, types.FloatType]:
+        if type(data) in [int, float]:
             data = [data]
         # Assign.
         self.set(data, start, count, stride)
@@ -1843,7 +1843,7 @@ class SDS(object):
             if type(dim_sizes) == type(1):
                 dim_sizes = [dim_sizes]
         except HDF4Error:
-            raise HDF4Error, 'get : cannot execute'
+            raise HDF4Error('get : cannot execute')
 
         # Validate args.
         if start is None:
@@ -1861,17 +1861,17 @@ class SDS(object):
         elif type(stride) == type(1):
             stride = [stride]
         if len(start) != rank or len(count) != rank or len(stride) != rank:
-            raise HDF4Error, 'get : start, stride or count ' \
-                             'do not match SDS rank'
+            raise HDF4Error('get : start, stride or count ' \
+                             'do not match SDS rank')
         for n in range(rank):
             if start[n] < 0 or start[n] + \
                   (abs(count[n]) - 1) * stride[n] >= dim_sizes[n]:
-                raise HDF4Error, 'get arguments violate ' \
+                raise HDF4Error('get arguments violate ' \
                                  'the size (%d) of dimension %d' \
-                                 % (dim_sizes[n], n)
+                                 % (dim_sizes[n], n))
         if not data_type in SDC.equivNumericTypes:
-            raise HDF4Error, 'get cannot currrently deal with '\
-                             'the SDS data type'
+            raise HDF4Error('get cannot currrently deal with '\
+                             'the SDS data type')
 
         return _C._SDreaddata_0(self._id, data_type, start, count, stride)
 
@@ -1915,7 +1915,7 @@ class SDS(object):
             if type(dim_sizes) == type(1):
                 dim_sizes = [dim_sizes]
         except HDF4Error:
-            raise HDF4Error, 'set : cannot execute'
+            raise HDF4Error('set : cannot execute')
 
         # Validate args.
         if start is None:
@@ -1933,8 +1933,8 @@ class SDS(object):
         elif type(stride) == type(1):
             stride = [stride]
         if len(start) != rank or len(count) != rank or len(stride) != rank:
-            raise HDF4Error, 'set : start, stride or count '\
-                             'do not match SDS rank'
+            raise HDF4Error('set : start, stride or count '\
+                             'do not match SDS rank')
         unlimited = self.isrecord()    
         for n in range(rank):
             ok = 1
@@ -1944,13 +1944,13 @@ class SDS(object):
                 if start[n] + (abs(count[n]) - 1) * stride[n] >= dim_sizes[n]:
                     ok = 0
             if not ok:
-                raise HDF4Error, 'set arguments violate '\
+                raise HDF4Error('set arguments violate '\
                                  'the size (%d) of dimension %d' \
-                                 % (dim_sizes[n], n)
+                                 % (dim_sizes[n], n))
         # ??? Check support for UINT16
         if not data_type in SDC.equivNumericTypes:
-            raise HDF4Error, 'set cannot currrently deal '\
-                             'with the SDS data type'
+            raise HDF4Error('set cannot currrently deal '\
+                             'with the SDS data type')
 
         _C._SDwritedata_0(self._id, data_type, start, count, data, stride)
 
@@ -1969,14 +1969,14 @@ class SDS(object):
         # Make sure the indexing expression does not exceed the variable
         # number of dimensions.
         dsName, nDims, shape, dsType, nAttr = self.info()
-        if type(elem) == types.TupleType:
+        if type(elem) == tuple:
             if len(elem) > nDims:
                 raise HDF4Error("get", 0,
                                "indexing expression exceeds variable "
                                "number of dimensions")
         else:   # Convert single index to sequence
             elem = [elem]
-        if type(shape) == types.IntType:
+        if type(shape) == int:
             shape = [shape]
 
         start = []
@@ -1989,7 +1989,7 @@ class SDS(object):
             # See if the dimension is unlimited (always at index 0)
             unlim = n == 0 and unlimited
             # Simple index
-            if type(e) == types.IntType:
+            if type(e) == int:
                 slice = 0
                 if e < 0 :
                     e += shape[n]
@@ -1997,14 +1997,14 @@ class SDS(object):
                 # specify an out of bound index (except for the
                 # unlimited dimension).
                 if e < 0 or (not unlim and e >= shape[n]):
-                    raise IndexError, "index out of range"
+                    raise IndexError("index out of range")
                 beg = e
                 end = e + 1
                 inc = 1
             # Slice index. Respect Python syntax for slice upper bounds,
             # which are not included in the resulting slice. Also, if the
             # upper bound exceed the dimension size, truncate it.
-            elif type(e) == types.SliceType:
+            elif type(e) == slice:
                 slice = 1
                 # None or 0 means not specified
                 if e.start:
@@ -2014,7 +2014,7 @@ class SDS(object):
                 else:
                     beg = 0
                 # None of maxint means not specified
-                if e.stop and e.stop != sys.maxint:
+                if e.stop and e.stop != sys.maxsize:
                     end = e.stop
                     if end < 0:
                         end += shape[n]
@@ -2027,8 +2027,7 @@ class SDS(object):
                     inc = 1
             # Bug
             else:
-                raise ValueError, \
-                      "Bug: unexpected element type to __getitem__"
+                raise ValueError("Bug: unexpected element type to __getitem__")
 
             # Clip end index (except if unlimited dimension)
             # and compute number of elements to get.
@@ -2225,7 +2224,7 @@ class SDS(object):
             sds_name, rank, dim_sizes, data_type, n_attrs = \
                                 self.info()
         except HDF4Error:
-            raise HDF4Error, 'getfillvalue : invalid SDS identifier'
+            raise HDF4Error('getfillvalue : invalid SDS identifier')
         n_values = 1   # Fill value stands for 1 value.
 
         convert = _array_to_ret
@@ -2258,8 +2257,8 @@ class SDS(object):
             buf = _C.array_float64(n_values)
 
         else:
-            raise HDF4Error, "getfillvalue: SDS has an illegal type or " \
-                             "unsupported type %d" % data_type
+            raise HDF4Error("getfillvalue: SDS has an illegal type or " \
+                             "unsupported type %d" % data_type)
 
         status = _C.SDgetfillvalue(self._id, buf)
         _checkErr('getfillvalue', status, 'fill value not set')
@@ -2292,7 +2291,7 @@ class SDS(object):
             sds_name, rank, dim_sizes, data_type, n_attrs = \
                                self.info()
         except HDF4Error:
-            raise HDF4Error, 'getrange : invalid SDS identifier'
+            raise HDF4Error('getrange : invalid SDS identifier')
         n_values = 1
 
         convert = _array_to_ret
@@ -2334,8 +2333,8 @@ class SDS(object):
             buf2 = _C.array_float64(n_values)
 
         else:
-            raise HDF4Error, "getrange: SDS has an illegal or " \
-                             "unsupported type %d" % data
+            raise HDF4Error("getrange: SDS has an illegal or " \
+                             "unsupported type %d" % data)
 
         # Note: The C routine returns the max in buf1 and the min 
         # in buf2. We swap the values returned by the Python
@@ -2421,7 +2420,7 @@ class SDS(object):
         try:
             sds_name, rank, dim_sizes, data_type, n_attrs = self.info()
         except HDF4Error:
-            raise HDF4Error, 'setfillvalue : cannot execute'
+            raise HDF4Error('setfillvalue : cannot execute')
         n_values = 1   # Fill value stands for 1 value.
 
         if data_type == SDC.CHAR8:
@@ -2462,8 +2461,8 @@ class SDS(object):
             buf = _C.array_float64(n_values)
 
         else:
-            raise HDF4Error, "setfillvalue: SDS has an illegal or " \
-                             "unsupported type %d" % data_type
+            raise HDF4Error("setfillvalue: SDS has an illegal or " \
+                             "unsupported type %d" % data_type)
 
         buf[0] = fill_val
         status = _C.SDsetfillvalue(self._id, buf)
@@ -2494,7 +2493,7 @@ class SDS(object):
         try:
             sds_name, rank, dim_sizes, data_type, n_attrs = self.info()
         except HDF4Error:
-            raise HDF4Error, 'setrange : cannot execute'
+            raise HDF4Error('setrange : cannot execute')
         n_values = 1
 
         if data_type == SDC.CHAR8:
@@ -2556,8 +2555,8 @@ class SDS(object):
             buf2 = _C.array_float64(n_values)
 
         else:
-            raise HDF4Error, "SDsetrange: SDS has an illegal or " \
-                             "unsupported type %d" % data_type
+            raise HDF4Error("SDsetrange: SDS has an illegal or " \
+                             "unsupported type %d" % data_type)
 
         buf1[0] = max
         buf2[0] = min
@@ -2737,7 +2736,7 @@ class SDS(object):
 
         # Get the number of dimensions and their lengths.
         nDims, dimLen = self.info()[1:3]
-        if type(dimLen) == types.IntType:    # need a sequence
+        if type(dimLen) == int:    # need a sequence
             dimLen = [dimLen]
         # Check if the dataset is appendable.
         unlim = self.isrecord()
@@ -2874,7 +2873,7 @@ class SDim(object):
         status, dim_name, dim_size, data_type, n_attrs = _C.SDdiminfo(self._id)
         _checkErr('getscale', status, 'cannot execute')
         if data_type == 0:
-            raise HDF4Error, "no scale set on that dimension"
+            raise HDF4Error("no scale set on that dimension")
 
         # dim_size is 0 for an unlimited dimension. The actual length is
         # obtained through SDgetinfo.
@@ -2907,8 +2906,8 @@ class SDim(object):
             buf = _C.array_float64(dim_size)
 
         else:
-            raise HDF4Error, "getscale: dimension has an "\
-                             "illegal or unsupported type %d" % data_type
+            raise HDF4Error("getscale: dimension has an "\
+                             "illegal or unsupported type %d" % data_type)
 
         status = _C.SDgetdimscale(self._id, buf)
         _checkErr('getscale', status, 'cannot execute')
@@ -2947,8 +2946,8 @@ class SDim(object):
         else:
             dim_size = info[2][self._index]
         if n_values != dim_size:
-            raise HDF4Error, 'number of scale values (%d) does not match ' \
-                             'dimension size (%d)' % (n_values, dim_size)
+            raise HDF4Error('number of scale values (%d) does not match ' \
+                             'dimension size (%d)' % (n_values, dim_size))
 
         if data_type == SDC.CHAR8:
             buf = _C.array_byte(n_values)
@@ -2997,7 +2996,7 @@ class SDim(object):
             buf = _C.array_float64(n_values)
 
         else:
-            raise HDF4Error, "setscale: illegal or usupported data_type"
+            raise HDF4Error("setscale: illegal or usupported data_type")
 
         if n_values == 1:
             buf[0] = scale
@@ -3120,7 +3119,7 @@ def _getattr(obj, name):
     try:
         index = a.index()
     except HDF4Error:
-        raise AttributeError, "attribute not found"
+        raise AttributeError("attribute not found")
     # Return attribute value(s).
     return a.get()
 
@@ -3134,39 +3133,39 @@ def _setattr(obj, name, value, privAttr):
         return
 
     # Treat everything else as an HDF attribute.
-    if type(value) not in [types.ListType, types.TupleType]:
+    if type(value) not in [list, tuple]:
         value = [value]
     typeList = []
     for v in value:
         t = type(v)
         # Prohibit mixing numeric types and strings.
-        if t in [types.IntType, types.FloatType] and \
-               not types.StringType in typeList:
+        if t in [int, float] and \
+               not bytes in typeList:
             if t not in typeList:
                 typeList.append(t)
         # Prohibit sequence of strings or a mix of numbers and string.
-        elif t == types.StringType and not typeList:
+        elif t == bytes and not typeList:
             typeList.append(t)
         else:
             typeList = []
             break
-    if types.StringType in typeList:
+    if bytes in typeList:
         xtype = SDC.CHAR8
         value = value[0]
     # double is "stronger" than int
-    elif types.FloatType in typeList:
+    elif float in typeList:
         xtype = SDC.FLOAT64
-    elif types.IntType in typeList:
+    elif int in typeList:
         xtype = SDC.INT32
     else:
-        raise HDF4Error, "Illegal attribute value"
+        raise HDF4Error("Illegal attribute value")
 
     # Assign value
     try:
         a = SDAttr(obj, name)
         a.set(xtype, value)
-    except HDF4Error, msg:
-        raise HDF4Error, "cannot set attribute: %s" % msg
+    except HDF4Error as msg:
+        raise HDF4Error("cannot set attribute: %s" % msg)
 
 def _array_to_ret(buf, nValues):
 
@@ -3176,7 +3175,7 @@ def _array_to_ret(buf, nValues):
         ret = buf[0]
     else:
         ret = []
-        for i in xrange(nValues):
+        for i in range(nValues):
             ret.append(buf[i])
     return ret
 
@@ -3194,4 +3193,5 @@ def _array_to_str(buf, nValues):
     else:
         chrs = [chr(b) for b in _array_to_ret(buf, nValues)]
     return ''.join(chrs)
+
 

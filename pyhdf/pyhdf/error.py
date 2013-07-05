@@ -1,7 +1,7 @@
 # $Id: error.py,v 1.1 2004-08-02 15:00:34 gosselin Exp $
 # $Log: not supported by cvs2svn $
 
-import hdfext as _C
+from . import hdfext as _C
 
 # #################
 # Error processing
@@ -20,5 +20,5 @@ def _checkErr(procName, val, msg=""):
             str = "%s (%d): %s" % (procName, errCode, _C.HEstring(errCode))
         else:
             str = "%s : %s" % (procName, msg)
-        raise HDF4Error, str
+        raise HDF4Error(str)
 

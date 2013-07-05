@@ -71,8 +71,8 @@ The HDF module also offers the following functions.
 
 import os, sys, types
 
-import hdfext as _C
-from HC import HC
+from . import hdfext as _C
+from .HC import HC
 
 # NOTE: The vstart() and vgstart() modules need to access the
 #       VS and V modules, resp. We could simply import those
@@ -87,7 +87,7 @@ from HC import HC
 
 import pyhdf
 
-from error import HDF4Error, _checkErr
+from .error import HDF4Error, _checkErr
 
 # List of names we want to be imported by an "from pyhdf.HDF import *"
 # statement
@@ -193,8 +193,8 @@ class HDF(object):
                 if HC.TRUNC & mode:
                     try:
                         os.remove(path)
-                    except Exception, msg:
-                        raise HDF4Error, msg
+                    except Exception as msg:
+                        raise HDF4Error(msg)
                     mode = HC.CREATE
                 else:
                     mode = HC.WRITE
@@ -202,15 +202,15 @@ class HDF(object):
                 if HC.CREATE & mode:
                     mode = HC.CREATE
                 else:
-                    raise HDF4Error, "HDF: no such file"
+                    raise HDF4Error("HDF: no such file")
         else:
             if exists:
                 if mode & HC.READ:
                     mode = HC.READ     # clean mode
                 else:
-                    raise HDF4Error, "HDF: invalid mode"
+                    raise HDF4Error("HDF: invalid mode")
             else:
-                raise HDF4Error, "HDF: no such file"
+                raise HDF4Error("HDF: no such file")
                 
         id = _C.Hopen(path, mode, nblocks)
         _checkErr('HDF', id, "cannot open %s" % path)
@@ -301,7 +301,7 @@ def _array_to_ret(buf, nValues):
         ret = buf[0]
     else:
         ret = []
-        for i in xrange(nValues):
+        for i in range(nValues):
             ret.append(buf[i])
     return ret
 

@@ -95,7 +95,7 @@ V is not self-contained, and needs functionnality provided by another
 pyhdf module, namely the HDF module. This module must thus be imported
 also:
 
-  >>> from HDF import *
+  >>> from .HDF import *
 
 
 Package components
@@ -316,10 +316,10 @@ example.
   >>> attr = vg.attr('version')  # prepare to define the 'version' attribute
                                  # on the vdata
   >>> attr.set(HC.CHAR8,'1.0')   # set attribute 'version' to string '1.0'
-  >>> print attr.get()           # get and print attribute value
+  >>> print(attr.get())           # get and print attribute value
   >>> attr = vg .attr('range')   # prepare to define attribute 'range'
   >>> attr.set(HC.INT32,(-10, 15)) # set attribute 'range' to a pair of ints
-  >>> print attr.get()             # get and print attribute value
+  >>> print(attr.get())             # get and print attribute value
   
   >>> vg.detach()                # "close" the vgroup
   >>> v.end()                    # terminate the vgroup interface
@@ -336,10 +336,10 @@ then becomes:
   >>> vg = v.attach('vtest', 1)  # attach vdata 'vtest' in write mode
   >>> vg.version = '1.0'         # create vdata attribute 'version',
                                  # setting it to string '1.0'
-  >>> print vg.version           # print attribute value
+  >>> print(vg.version)           # print attribute value
   >>> vg.range = (-10, 15)       # create attribute 'range', setting
                                  # it to the pair of ints (-10, 15)
-  >>> print vg.range             # print attribute value
+  >>> print(vg.range)             # print attribute value
   >>> vg.detach()                # "close" the vdata
   >>> v.end()                    # terminate the vdata interface
   >>> f.close()                  # close the HDF file
@@ -657,11 +657,11 @@ by the HDF library for its own internal needs.
 
 import os, sys, types
 
-import hdfext as _C
+from . import hdfext as _C
 
-from HC import HC
-from VS import VD
-from error import HDF4Error, _checkErr
+from .HC import HC
+from .VS import VD
+from .error import HDF4Error, _checkErr
 
 # List of names we want to be imported by an "from pyhdf.V import *"
 # statement
@@ -746,7 +746,7 @@ class V(object):
         C library equivalent : Vattach
                                                 """
 
-        if type(num_name) == types.StringType:
+        if type(num_name) == bytes:
             num = self.find(num_name)
         else:
             num = num_name
@@ -789,7 +789,7 @@ class V(object):
 
         refnum = _C.Vfind(self._hdf_inst._id, name)
         if not refnum:
-            raise HDF4Error, "vgroup not found"
+            raise HDF4Error("vgroup not found")
         return refnum
         
     def findclass(self, name):
@@ -808,7 +808,7 @@ class V(object):
 
         refnum = _C.Vfindclass(self._hdf_inst._id, name)
         if not refnum:
-            raise HDF4Error, "vgroup not found"
+            raise HDF4Error("vgroup not found")
         return refnum
 
     def delete(self, num_name):
@@ -826,8 +826,8 @@ class V(object):
 
         try:
             vg = self.attach(num_name, 1)
-        except HDF4Error, msg:
-            raise HDF4Error,"delete: no such vgroup"
+        except HDF4Error as msg:
+            raise HDF4Error("delete: no such vgroup")
 
         # ATTENTION: The HDF documentation says that the vgroup_id
         #            is passed to Vdelete(). This is wrong.
@@ -962,7 +962,7 @@ class VG(object):
 
         # Forbid assigning to readonly attributes
         if name in ["_nattrs", "_nmembers", "_refnum", "_tag", "_version"]:
-            raise AttributeError, "%s: read-only attribute" % name
+            raise AttributeError("%s: read-only attribute" % name)
 
         # Read-write predefined attributes
         elif name == "_class":
@@ -993,7 +993,7 @@ class VG(object):
         elif isinstance(inst, VG):
             id = inst._id
         else:
-            raise HDF4Error, "insrt: bad argument"
+            raise HDF4Error("insrt: bad argument")
             
         index = _C.Vinsert(self._id, id)
         _checkErr('insert', index, "cannot insert in vgroup")
@@ -1087,7 +1087,7 @@ class VG(object):
             refs = _C.array_int32(n)
             k = _C.Vgettagrefs(self._id, tags, refs, n)
             _checkErr('tagrefs', k, "error getting tags and refs")
-            for m in xrange(k):
+            for m in range(k):
                 ret.append((tags[m], refs[m]))
 
         return ret
@@ -1276,7 +1276,7 @@ class VGAttr(object):
                                                 """
         # Make sure the attribute exists.
         if self._index is None:
-            raise HDF4Error, "non existent attribute"
+            raise HDF4Error("non existent attribute")
         # Obtain attribute type and the number of values.
         status, aName, data_type, n_values, size = \
                     _C.Vattrinfo(self._v_inst._id, self._index)
@@ -1313,9 +1313,9 @@ class VGAttr(object):
             buf = _C.array_float64(n_values)
 
         else:
-            raise HDF4Error, "get: attribute index %d has an "\
+            raise HDF4Error("get: attribute index %d has an "\
                              "illegal or unupported type %d" % \
-                             (self._index, data_type)
+                             (self._index, data_type))
 
         status = _C.Vgetattr(self._v_inst._id, self._index, buf)
         _checkErr('get', status, 'illegal attribute ')
@@ -1398,7 +1398,7 @@ class VGAttr(object):
             buf = _C.array_float64(n_values)
 
         else:
-            raise HDF4Error, "set: illegal or unimplemented data_type"
+            raise HDF4Error("set: illegal or unimplemented data_type")
 
         for n in range(n_values):
             buf[n] = values[n]
@@ -1408,7 +1408,7 @@ class VGAttr(object):
         # Update the attribute index
         self._index = _C.Vfindattr(self._v_inst._id, self._name)
         if self._index < 0:
-            raise HDF4Error, "set: error retrieving attribute index"
+            raise HDF4Error("set: error retrieving attribute index")
 
     def info(self):
         """Retrieve info about the attribute.
@@ -1427,7 +1427,7 @@ class VGAttr(object):
 
         # Make sure the attribute exists.
         if self._index is None:
-            raise HDF4Error, "non existent attribute"
+            raise HDF4Error("non existent attribute")
 
         status, name, type, order, size = \
                 _C.Vattrinfo(self._v_inst._id, self._index)
@@ -1453,39 +1453,39 @@ def _setattr(obj, name, value):
         return
 
     # Treat everything else as an HDF attribute.
-    if type(value) not in [types.ListType, types.TupleType]:
+    if type(value) not in [list, tuple]:
         value = [value]
     typeList = []
     for v in value:
         t = type(v)
         # Prohibit mixing numeric types and strings.
-        if t in [types.IntType, types.FloatType] and \
-               not types.StringType in typeList:
+        if t in [int, float] and \
+               not bytes in typeList:
             if t not in typeList:
                 typeList.append(t)
         # Prohibit sequence of strings or a mix of numbers and string.
-        elif t == types.StringType and not typeList:
+        elif t == bytes and not typeList:
             typeList.append(t)
         else:
             typeList = []
             break
-    if types.StringType in typeList:
+    if bytes in typeList:
         xtype = HC.CHAR8
         value = value[0]
     # double is "stronger" than int
-    elif types.FloatType in typeList:
+    elif float in typeList:
         xtype = HC.FLOAT64
-    elif types.IntType in typeList:
+    elif int in typeList:
         xtype = HC.INT32
     else:
-        raise HDF4Error, "Illegal attribute value"
+        raise HDF4Error("Illegal attribute value")
 
     # Assign value
     try:
         a = obj.attr(name)
         a.set(xtype, value)
-    except HDF4Error, msg:
-        raise HDF4Error, "cannot set attribute: %s" % msg
+    except HDF4Error as msg:
+        raise HDF4Error("cannot set attribute: %s" % msg)
 
 
 
@@ -1497,7 +1497,7 @@ def _array_to_ret(buf, nValues):
         ret = buf[0]
     else:
         ret = []
-        for i in xrange(nValues):
+        for i in range(nValues):
             ret.append(buf[i])
     return ret
 
@@ -1518,5 +1518,6 @@ def _array_to_str(buf, nValues):
     if chrs[-1] == '\0':
         del chrs[-1]
     return ''.join(chrs)
+
 
 
