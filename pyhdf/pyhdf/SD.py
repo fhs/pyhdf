@@ -1990,7 +1990,7 @@ class SDS(object):
             unlim = n == 0 and unlimited
             # Simple index
             if type(e) == int:
-                slice = 0
+                isslice = False
                 if e < 0 :
                     e += shape[n]
                 # Respect standard python list behavior: it is illegal to
@@ -2005,7 +2005,7 @@ class SDS(object):
             # which are not included in the resulting slice. Also, if the
             # upper bound exceed the dimension size, truncate it.
             elif type(e) == slice:
-                slice = 1
+                isslice = True
                 # None or 0 means not specified
                 if e.start:
                     beg = e.start
@@ -2033,8 +2033,8 @@ class SDS(object):
             # and compute number of elements to get.
             if not unlim and end > shape[n]:
                 end = shape[n]
-            if slice:
-                cnt = (end - beg) / inc
+            if isslice:
+                cnt = (end - beg) // inc
                 if cnt * inc < end - beg:
                     cnt += 1
             else:

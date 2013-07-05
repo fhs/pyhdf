@@ -840,7 +840,7 @@ class VS(object):
         #  _hdf_inst:       HDF instance
 
         # Note: Vstart is just a macro; use 'Vinitialize' instead
-        status = _C.Vinitialize(hinst._id),
+        status = _C.Vinitialize(hinst._id)
         _checkErr('VS', status, "cannot initialize VS interface")
         self._hdf_inst = hinst
 
@@ -902,7 +902,7 @@ class VS(object):
                                                     """
 
         mode = write and 'w' or 'r'
-        if type(num_name) == bytes:
+        if isinstance(num_name, str):
             num = self.find(num_name)
         else:
             num = num_name
@@ -1464,7 +1464,7 @@ class VD(object):
                                                        """
 
         # Transform a name to an index number
-        if type(name_index) == bytes:
+        if isinstance(name_index, str):
             status, index = _C.VSfindex(self._id, name_index)
             _checkErr('field', status, "illegal field name: %s" % name_index)
         else:
@@ -1786,7 +1786,7 @@ class VD(object):
                 else:
                     # Handle strings specially.
                     if data_type == HC.CHAR8:
-                        if type(val) != bytes:
+                        if not isinstance(val, str):
                             raise HDF4Error("char fields must be set with strings")
                         n = len(val)
                         for i in range(order):

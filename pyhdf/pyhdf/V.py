@@ -692,7 +692,7 @@ class V(object):
         # Note: Vstart is just a macro; use 'Vinitialize' instead
         # Note also thet the same C function is used to initialize the
         # VS interface.
-        status = _C.Vinitialize(hinst._id),
+        status = _C.Vinitialize(hinst._id)
         _checkErr('V', status, "cannot initialize V interface")
         self._hdf_inst = hinst
 

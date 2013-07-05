@@ -13,11 +13,11 @@ class HDF4Error(Exception):
 
 def _checkErr(procName, val, msg=""):
 
-    if val < 0:
+    if val is None or (not isinstance(val, str) and val < 0):
         #_C._HEprint();
         errCode = _C.HEvalue(1)
         if errCode != 0:
-            str = "%s (%d): %s" % (procName, errCode, _C.HEstring(errCode))
+            err = "%s (%d): %s" % (procName, errCode, _C.HEstring(errCode))
         else:
-            str = "%s : %s" % (procName, msg)
-        raise HDF4Error(str)
+            err = "%s : %s" % (procName, msg)
+        raise HDF4Error(err)
