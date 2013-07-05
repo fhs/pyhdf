@@ -3140,16 +3140,16 @@ def _setattr(obj, name, value, privAttr):
         t = type(v)
         # Prohibit mixing numeric types and strings.
         if t in [int, float] and \
-               not bytes in typeList:
+               not str in typeList:
             if t not in typeList:
                 typeList.append(t)
         # Prohibit sequence of strings or a mix of numbers and string.
-        elif t == bytes and not typeList:
+        elif t == str and not typeList:
             typeList.append(t)
         else:
             typeList = []
             break
-    if bytes in typeList:
+    if str in typeList:
         xtype = SDC.CHAR8
         value = value[0]
     # double is "stronger" than int
