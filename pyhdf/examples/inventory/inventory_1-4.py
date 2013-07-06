@@ -33,7 +33,7 @@ print("-" * len(header))
 
 # Loop over the vdata records, displaying each record as a table row.
 # Current record position is 0 after attaching the vdata.
-while 1:
+while True:
     try:
         rec = vd.read()          # read next record
         # equivalent to:

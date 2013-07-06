@@ -1024,7 +1024,7 @@ class VS(object):
 
         lst = []
         ref = -1      # start at beginning
-        while 1:
+        while True:
             try:
                 nxtRef = self.next(ref)
             except HDF4Error:    # no vdata left
@@ -1994,7 +1994,7 @@ class VD(object):
 
         # Make sure the indexing expression does not exceed the
         # vdata number of dimensions (2).
-        if type(elem) == tuple:
+        if isinstance(elem, tuple):
             if len(elem) > 2:
                 raise HDF4Error("illegal indexing expression")
         else:    # Convert single index to sequence
@@ -2007,7 +2007,7 @@ class VD(object):
         for e in elem:
             n += 1
             # Simple index
-            if type(e) == int:
+            if isinstance(e, int):
                 slice = 0
                 if e < 0:
                     e += shape[n]
@@ -2019,7 +2019,7 @@ class VD(object):
                 beg = e
                 end = e + 1
             # Slice index
-            elif type(e) == slice:
+            elif isinstance(e, slice):
                 slice = 1
                 # None or 0 means not specified
                 if e.start:
@@ -2251,7 +2251,7 @@ class VDAttr(object):
             self._vdf_inst = obj
             self._fIndex = fIndex
         # Name is given. Attribute may exist or not.
-        if type(name_or_index) == type(''):
+        if isinstance(name_or_index, type('')):
             self._name = name_or_index
             self._index = _C.VSfindattr(self._vd_inst._id, self._fIndex,
                                         self._name);

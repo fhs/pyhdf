@@ -1124,7 +1124,7 @@ class SDAttr(object):
 
         self._obj = obj
         # Name is given, may exist or not.
-        if type(index_or_name) == type(''):
+        if isinstance(index_or_name, type('')):
             self._name = index_or_name
             self._index = None
         # Index is given. Must exist.
@@ -1563,7 +1563,7 @@ class SD(object):
                                                                     """
 
         # Validate args.
-        if type(dim_sizes) == type(1):  # allow k instead of [k]
+        if isinstance(dim_sizes, type(1)):  # allow k instead of [k]
                                         # for a 1-dim arr
             dim_sizes = [dim_sizes]
         rank = len(dim_sizes)
@@ -1586,7 +1586,7 @@ class SD(object):
         C library equivalent : SDselect
                                                                     """
 
-        if type(name_or_index) == type(1):
+        if isinstance(name_or_index, type(1)):
             idx = name_or_index
         else:
             try:
@@ -1840,7 +1840,7 @@ class SDS(object):
         # Obtain SDS info.
         try:
             sds_name, rank, dim_sizes, data_type, n_attrs = self.info()
-            if type(dim_sizes) == type(1):
+            if isinstance(dim_sizes, type(1)):
                 dim_sizes = [dim_sizes]
         except HDF4Error:
             raise HDF4Error('get : cannot execute')
@@ -1848,17 +1848,17 @@ class SDS(object):
         # Validate args.
         if start is None:
             start = [0] * rank
-        elif type(start) == type(1):
+        elif isinstance(start, type(1)):
             start = [start]
         if count is None:
             count = dim_sizes
             if count[0] == 0:
                 count[0] = 1
-        elif type(count) == type(1):
+        elif isinstance(count, type(1)):
             count = [count]
         if stride is None:
             stride = [1] * rank
-        elif type(stride) == type(1):
+        elif isinstance(stride, type(1)):
             stride = [stride]
         if len(start) != rank or len(count) != rank or len(stride) != rank:
             raise HDF4Error('get : start, stride or count ' \
@@ -1912,7 +1912,7 @@ class SDS(object):
         # Obtain SDS info.
         try:
             sds_name, rank, dim_sizes, data_type, n_attrs = self.info()
-            if type(dim_sizes) == type(1):
+            if isinstance(dim_sizes, type(1)):
                 dim_sizes = [dim_sizes]
         except HDF4Error:
             raise HDF4Error('set : cannot execute')
@@ -1920,17 +1920,17 @@ class SDS(object):
         # Validate args.
         if start is None:
             start = [0] * rank
-        elif type(start) == type(1):
+        elif isinstance(start, type(1)):
             start = [start]
         if count is None:
             count = dim_sizes
             if count[0] == 0:
                 count[0] = 1
-        elif type(count) == type(1):
+        elif isinstance(count, type(1)):
             count = [count]
         if stride is None:
             stride = [1] * rank
-        elif type(stride) == type(1):
+        elif isinstance(stride, type(1)):
             stride = [stride]
         if len(start) != rank or len(count) != rank or len(stride) != rank:
             raise HDF4Error('set : start, stride or count '\
@@ -1969,14 +1969,14 @@ class SDS(object):
         # Make sure the indexing expression does not exceed the variable
         # number of dimensions.
         dsName, nDims, shape, dsType, nAttr = self.info()
-        if type(elem) == tuple:
+        if isinstance(elem, tuple):
             if len(elem) > nDims:
                 raise HDF4Error("get", 0,
                                "indexing expression exceeds variable "
                                "number of dimensions")
         else:   # Convert single index to sequence
             elem = [elem]
-        if type(shape) == int:
+        if isinstance(shape, int):
             shape = [shape]
 
         start = []
@@ -1989,7 +1989,7 @@ class SDS(object):
             # See if the dimension is unlimited (always at index 0)
             unlim = n == 0 and unlimited
             # Simple index
-            if type(e) == int:
+            if isinstance(e, int):
                 isslice = False
                 if e < 0 :
                     e += shape[n]
@@ -2004,7 +2004,7 @@ class SDS(object):
             # Slice index. Respect Python syntax for slice upper bounds,
             # which are not included in the resulting slice. Also, if the
             # upper bound exceed the dimension size, truncate it.
-            elif type(e) == slice:
+            elif isinstance(e, slice):
                 isslice = True
                 # None or 0 means not specified
                 if e.start:
@@ -2736,7 +2736,7 @@ class SDS(object):
 
         # Get the number of dimensions and their lengths.
         nDims, dimLen = self.info()[1:3]
-        if type(dimLen) == int:    # need a sequence
+        if isinstance(dimLen, int):    # need a sequence
             dimLen = [dimLen]
         # Check if the dataset is appendable.
         unlim = self.isrecord()

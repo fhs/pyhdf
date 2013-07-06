@@ -72,7 +72,7 @@ v  = hdf.vgstart()
 
 # Scan all vgroups in the file.
 ref = -1
-while 1:
+while True:
     try:
         ref = v.getid(ref)
     except HDF4Error as msg:    # no more vgroup

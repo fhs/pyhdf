@@ -50,8 +50,7 @@ try:  # Catch pyhdf.SD errors
         printf("  name                 idx type    len value"); eol()
         printf("  -------------------- --- ------- --- -----"); eol()
         # Get list of attribute names and sort them lexically
-        attNames = list(attr.keys())
-        attNames.sort()
+        attNames = sorted(attr.keys())
         for name in attNames:
             t = attr[name]
                 # t[0] is the attribute value
@@ -69,8 +68,7 @@ try:  # Catch pyhdf.SD errors
         printf("  name                 idx type    na cv dimension(s)"); eol()
         printf("  -------------------- --- ------- -- -- ------------"); eol()
         # Get list of dataset names and sort them lexically
-        dsNames = list(dsets.keys())
-        dsNames.sort()
+        dsNames = sorted(dsets.keys())
         for name in dsNames:
             # Get dataset instance
             ds = f.select(name)
@@ -107,8 +105,7 @@ try:  # Catch pyhdf.SD errors
                 printf("  name                 idx type    len value"); eol()
                 printf("  -------------------- --- ------- --- -----"); eol()
                 # Get the list of attribute names and sort them alphabetically.
-                attNames = list(dsAttr.keys())
-                attNames.sort()
+                attNames = sorted(dsAttr.keys())
                 for nm in attNames:
                     t = dsAttr[nm]
                         # t[0] is the attribute value
@@ -125,8 +122,7 @@ try:  # Catch pyhdf.SD errors
                 printf("  name                 idx len   unl type    natt");eol()
                 printf("  -------------------- --- ----- --- ------- ----");eol()
                 # Get the list of dimension names and sort them alphabetically.
-                dimNames = list(dsDim.keys())
-                dimNames.sort()
+                dimNames = sorted(dsDim.keys())
                 for nm in dimNames:
                     t = dsDim[nm]
                         # t[0] is the dimension length

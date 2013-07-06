@@ -746,7 +746,7 @@ class V(object):
         C library equivalent : Vattach
                                                 """
 
-        if type(num_name) == bytes:
+        if isinstance(num_name, bytes):
             num = self.find(num_name)
         else:
             num = num_name
@@ -1244,7 +1244,7 @@ class VGAttr(object):
 
         self._v_inst = obj
         # Name is given. Attribute may exist or not.
-        if type(name_or_index) == type(''):
+        if isinstance(name_or_index, type('')):
             self._name = name_or_index
             self._index = _C.Vfindattr(self._v_inst._id, self._name)
             if self._index < 0:
