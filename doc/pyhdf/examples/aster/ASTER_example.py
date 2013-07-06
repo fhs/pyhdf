@@ -44,4 +44,3 @@ Temperature_object = AST08(Temperature_filename)
 
 temp_12_50 = Temperature_object.lookup(12, 50)
 print "Temperature data: ", temp_12_50
-

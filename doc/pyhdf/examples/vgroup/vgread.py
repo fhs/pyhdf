@@ -26,36 +26,36 @@ def describevg(refnum):
     # Display info about each member.
     index = -1
     for tag, ref in members:
-      index += 1
-      print "member index", index
-      # Vdata tag
-      if tag == HC.DFTAG_VH:        
-          vd = vs.attach(ref)
-          nrecs, intmode, fields, size, name = vd.inquire()
-          print "  vdata:",name, "tag,ref:",tag, ref
-          print "    fields:",fields
-          print "    nrecs:",nrecs
-          vd.detach()
+        index += 1
+        print "member index", index
+        # Vdata tag
+        if tag == HC.DFTAG_VH:
+            vd = vs.attach(ref)
+            nrecs, intmode, fields, size, name = vd.inquire()
+            print "  vdata:",name, "tag,ref:",tag, ref
+            print "    fields:",fields
+            print "    nrecs:",nrecs
+            vd.detach()
 
-      # SDS tag
-      elif tag == HC.DFTAG_NDG:
-          sds = sd.select(sd.reftoindex(ref))
-          name, rank, dims, type, nattrs = sds.info()
-          print "  dataset:",name, "tag,ref:", tag, ref
-          print "    dims:",dims
-          print "    type:",type
-          sds.endaccess()
+        # SDS tag
+        elif tag == HC.DFTAG_NDG:
+            sds = sd.select(sd.reftoindex(ref))
+            name, rank, dims, type, nattrs = sds.info()
+            print "  dataset:",name, "tag,ref:", tag, ref
+            print "    dims:",dims
+            print "    type:",type
+            sds.endaccess()
 
-      # VS tag
-      elif tag == HC.DFTAG_VG:
-          vg0 = v.attach(ref)
-	  print "  vgroup:", vg0._name, "tag,ref:", tag, ref
-	  vg0.detach()
+        # VS tag
+        elif tag == HC.DFTAG_VG:
+            vg0 = v.attach(ref)
+            print "  vgroup:", vg0._name, "tag,ref:", tag, ref
+            vg0.detach()
 
-      # Unhandled tag
-      else:
-          print "unhandled tag,ref",tag,ref
-    
+        # Unhandled tag
+        else:
+            print "unhandled tag,ref",tag,ref
+
     # Close vgroup
     vg.detach()
 

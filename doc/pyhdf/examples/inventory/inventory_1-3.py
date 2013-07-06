@@ -1,6 +1,6 @@
 from pyhdf.HDF import *
 from pyhdf.VS import *
-  
+
 f = HDF('inventory.hdf',         # Open file 'inventory.hdf' in write mode
             HC.WRITE|HC.CREATE)  # creating it if it does not exist
 vs = f.vstart()                  # init vdata interface

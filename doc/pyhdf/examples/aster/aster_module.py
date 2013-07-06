@@ -21,7 +21,7 @@ class AST05(object):
     def _open(self, mode):
         """ Open the HDF file for reading.
         """
-	self.sd = SD(self.filename, mode)
+        self.sd = SD(self.filename, mode)
         ds = self.sd.datasets()
         assert set(ds) == set(['Band10', 'Band11', 'Band12', 'Band13', 'Band14', 'GeodeticLatitude', 'Longitude', 'QA_DataPlane', 'QA_DataPlane2'])
 
@@ -90,9 +90,3 @@ class AST08(object):
         i, j = self.proj.lookup_indices(latitude, longitude)
         science = self.kt[i,j] / self.scale_factor
         return science, self.qa1[i,j], self.qa2[i,j]
-
-
-
-
-
-

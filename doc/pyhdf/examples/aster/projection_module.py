@@ -67,7 +67,7 @@ class UTMProjection(object):
         return i, j
 
     def _utm_pixels(self):
-        """Create the UTM coordinates for each pixel 
+        """Create the UTM coordinates for each pixel
         through bilinear interpolation.
         """
         i, j = np.mgrid[0:self.shape[0], 0:self.shape[1]]
@@ -87,6 +87,3 @@ class UTMProjection(object):
         y = cy[qi,qj]*fi1*fj1 + cy[qi1,qj]*fi*fj1 +\
             cy[qi,qj1]*fi1*fj + cy[qi1,qj1]*fi*fj
         return x, y
-
-
-
