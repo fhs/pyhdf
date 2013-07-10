@@ -1002,6 +1002,7 @@ except HDF4Error, msg:
 import os, sys, types
 
 from . import hdfext as _C
+from .six.moves import xrange
 from .error import _checkErr, HDF4Error
 
 # List of names we want to be imported by an "from pyhdf.SD import *"
@@ -3175,7 +3176,7 @@ def _array_to_ret(buf, nValues):
         ret = buf[0]
     else:
         ret = []
-        for i in range(nValues):
+        for i in xrange(nValues):
             ret.append(buf[i])
     return ret
 

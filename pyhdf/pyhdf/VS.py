@@ -810,6 +810,7 @@ import os, sys, types
 
 from . import hdfext as _C
 
+from .six.moves import xrange
 from .HC import HC
 from .error import HDF4Error, _checkErr
 
@@ -2500,7 +2501,7 @@ def _array_to_ret(buf, nValues):
         ret = buf[0]
     else:
         ret = []
-        for i in range(nValues):
+        for i in xrange(nValues):
             ret.append(buf[i])
     return ret
 

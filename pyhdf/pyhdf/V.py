@@ -659,6 +659,7 @@ import os, sys, types
 
 from . import hdfext as _C
 
+from .six.moves import xrange
 from .HC import HC
 from .VS import VD
 from .error import HDF4Error, _checkErr
@@ -1087,7 +1088,7 @@ class VG(object):
             refs = _C.array_int32(n)
             k = _C.Vgettagrefs(self._id, tags, refs, n)
             _checkErr('tagrefs', k, "error getting tags and refs")
-            for m in range(k):
+            for m in xrange(k):
                 ret.append((tags[m], refs[m]))
 
         return ret
@@ -1497,7 +1498,7 @@ def _array_to_ret(buf, nValues):
         ret = buf[0]
     else:
         ret = []
-        for i in range(nValues):
+        for i in xrange(nValues):
             ret.append(buf[i])
     return ret
 

@@ -72,6 +72,7 @@ The HDF module also offers the following functions.
 import os, sys, types
 
 from . import hdfext as _C
+from .six.moves import xrange
 from .HC import HC
 
 # NOTE: The vstart() and vgstart() modules need to access the
@@ -301,7 +302,7 @@ def _array_to_ret(buf, nValues):
         ret = buf[0]
     else:
         ret = []
-        for i in range(nValues):
+        for i in xrange(nValues):
             ret.append(buf[i])
     return ret
 
