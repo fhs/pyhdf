@@ -52,12 +52,14 @@ inside an HDF file. See section "Programming models" for an example
 program implementing this vdata.
 
                              INVENTORY (experimental status)
-            ------------------------------------------i-------
+
+            ======     ===========     ===   ========  ========
             partid     description     qty   wght(lb)  price($)
-            --------------------------------------------------
+            ======     ===========     ===   ========  ========
             Q1234       bolt           12     0.01      0.05
             B5432       brush          10     0.4       4.25
             S7613       scissor         2     0.2       3.75
+            ======     ===========     ===   ========  ========
 
 The vdata is composed of 5 fields. 3 records are shown (of course, a vdata
 can store much more than that). "INVENTORY" would be the vdata name, and
@@ -80,23 +82,25 @@ VS module key features
 ----------------------
 VS key features are as follows.
 
-  -pyhdf implements almost every routine of the original VS API.
-   Only a few have been ignored, most of them being of a rare use:
-    - VSgetblocksize() / VSsetblocksize()
-    - VSsetnumblocks()
-    - VSlone
+- pyhdf implements almost every routine of the original VS API.
+  Only a few have been ignored, most of them being of a rare use:
 
-  -It is quite straightforward to go from a C version to a python version
-   of a program accessing the VS API, and to learn VS usage by refering to
-   the C API documentation.
+  - VSgetblocksize() / VSsetblocksize()
+  - VSsetnumblocks()
+  - VSlone
 
-  -A few high-level python methods have been developped to ease
-   programmers task. Of greatest interest are the following:
-     - Access to attributes through the familiar "dot notation".
-     - Indexing and slicing a vdata to read and write its records,
-       similarly to a python sequence.
-     - Easy retrieval of info on a vdata and its fields.
-     - Easy creation of vdatas.
+- It is quite straightforward to go from a C version to a python version
+  of a program accessing the VS API, and to learn VS usage by refering to
+  the C API documentation.
+
+- A few high-level python methods have been developped to ease
+  programmers task. Of greatest interest are the following:
+
+  - Access to attributes through the familiar "dot notation".
+  - Indexing and slicing a vdata to read and write its records,
+    similarly to a python sequence.
+  - Easy retrieval of info on a vdata and its fields.
+  - Easy creation of vdatas.
 
 Accessing the VS module
 -----------------------
@@ -126,14 +130,19 @@ For each HDF API exists a corresponding set of modules.
 
 The following modules are related to the VS API.
 
-  _hdfext   C extension module responsible for wrapping the HDF
-            C library for all python modules
-  hdfext    python module implementing some utility functions
-            complementing the _hdfext extension module
-  error     defines the HDF4Error exception
-  HDF       python module providing support to the VS module
-  VS        python module wrapping the VS API routines inside
-            an OOP framework
+  _hdfext
+    C extension module responsible for wrapping the HDF
+    C library for all python modules
+  hdfext
+    python module implementing some utility functions
+    complementing the _hdfext extension module
+  error
+    defines the HDF4Error exception
+  HDF
+    python module providing support to the VS module
+  VS
+    python module wrapping the VS API routines inside
+    an OOP framework
 
 _hdfext and hdfext were generated using the SWIG preprocessor.
 SWIG is however *not* needed to run the package. Those two modules
@@ -183,7 +192,7 @@ VD class:
 
   >>> help(VD.read)
 
-pydoc can also be called from the command line, as in:
+pydoc can also be called from the command line, as in::
 
   % pydoc pyhdf.VS.VD         # doc for the whole VD class
   % pydoc pyhdf.VS.VD.read    # doc for the VD.read method
@@ -193,14 +202,14 @@ Summary of differences between the pyhdf and C VS API
 Most of the differences between the pyhdf and C VS API can
 be summarized as follows.
 
-   -In the C API, every function returns an integer status code, and values
-    computed by the function are returned through one or more pointers
-    passed as arguments.
-   -In pyhdf, error statuses are returned through the Python exception
-    mechanism, and values are returned as the method result. When the
-    C API specifies that multiple values are returned, pyhdf returns a
-    sequence of values, which are ordered similarly to the pointers in the
-    C function argument list.
+- In the C API, every function returns an integer status code, and values
+  computed by the function are returned through one or more pointers
+  passed as arguments.
+- In pyhdf, error statuses are returned through the Python exception
+  mechanism, and values are returned as the method result. When the
+  C API specifies that multiple values are returned, pyhdf returns a
+  sequence of values, which are ordered similarly to the pointers in the
+  C function argument list.
 
 Error handling
 --------------
@@ -216,10 +225,11 @@ VS needs support from the HDF module
 ------------------------------------
 The VS module is not self-contained (countrary to the SD module).
 It requires help from the HDF module, namely:
-  -the HDF.HDF class to open and close the HDF file, and initialize the
-   VS interface
-  -the HDF.HC class to provide different sorts of constants (opening modes,
-   data types, etc).
+
+- the HDF.HDF class to open and close the HDF file, and initialize the
+  VS interface
+- the HDF.HC class to provide different sorts of constants (opening modes,
+  data types, etc).
 
 A program wanting to access HDF vdatas will almost always need to execute
 the following minimal set of calls:
@@ -234,14 +244,14 @@ the following minimal set of calls:
 
 Classes summary
 ---------------
-pyhdf wraps the VS API using different python classes:
+pyhdf wraps the VS API using different python classes::
 
   VS      HDF VS interface
   VD      vdata
   VDField vdata field
   VDattr  attribute (either at the vdata or field level)
 
-In more detail:
+In more detail::
 
   VS     The VS class implements the VS (Vdata) interface applied to an
          HDF file. This class encapsulates the hdf instance, and all
@@ -362,15 +372,15 @@ and later when querying the definition of those fields and attributes.
 Data types are specified using the symbolic constants defined inside the
 HC class of the HDF module.
 
-  - CHAR and CHAR8 (equivalent): an 8-bit character.
-  - UCHAR, UCHAR8 and UINT8 (equivalent): unsigned 8-bit values (0 to 255)
-  - INT8:    signed 8-bit values (-128 to 127)
-  - INT16:   signed 16-bit values
-  - UINT16:  unsigned 16 bit values
-  - INT32:   signed 32 bit values
-  - UINT32:  unsigned 32 bit values
-  - FLOAT32: 32 bit floating point values (C floats)
-  - FLOAT64: 64 bit floating point values (C doubles)
+- CHAR and CHAR8 (equivalent): an 8-bit character.
+- UCHAR, UCHAR8 and UINT8 (equivalent): unsigned 8-bit values (0 to 255)
+- INT8:    signed 8-bit values (-128 to 127)
+- INT16:   signed 16-bit values
+- UINT16:  unsigned 16 bit values
+- INT32:   signed 32 bit values
+- UINT32:  unsigned 32 bit values
+- FLOAT32: 32 bit floating point values (C floats)
+- FLOAT64: 64 bit floating point values (C doubles)
 
 There is no explicit "string" type. To simulate a string, set the field or
 attribute type to CHAR, and set the field or attribute "order" to
@@ -437,9 +447,11 @@ Some latitude is however lost by manipulating attributes in that way,
 because the pyhdf package, not the programmer, is then responsible of
 setting the attribute type. The attribute type is chosen to be one of:
 
+  =========== ====================================
   HC.CHAR8    if the attribute value is a string
   HC.INT32    if all attribute values are integers
   HC.FLOAT64  otherwise
+  =========== ====================================
 
 The first way of handling attribute values must be used if one wants to
 define an attribute of any other type (for ex. 8 or 16 bit integers,
@@ -478,8 +490,9 @@ is read/write. See the HDF User s guide for details about more
 
   VD predefined attributes
 
+    =========== ==  ========================== =============================
     name        RW  description                C library routine
-    --------------------------------------------------------------
+    =========== ==  ========================== =============================
     _class      X   class name                 VSgetclass/VSsetclass
     _fields         list of field names        VSgetfields
     _interlace  X   interlace mode             VSgetinterlace/VSsetinterlace
@@ -494,11 +507,13 @@ is read/write. See the HDF User s guide for details about more
     _tag            vdata tag                  VSQuerytag
     _tnattrs        total number of vdata and  VSnattrs
                     field attributes
+    =========== ==  ========================== =============================
 
   VDField predefined attributes
 
+    =========== ==  ========================== =============================
     name        RW  description                C library routine
-    --------------------------------------------------------------
+    =========== ==  ========================== =============================
     _esize          external size (bytes)      VFfieldesize
     _index          index number               VSfindex
     _isize          internal size (bytes)      VFfieldisize
@@ -506,6 +521,7 @@ is read/write. See the HDF User s guide for details about more
     _nattrs         number of attributes       VSfnattrs
     _order          order (number of values)   VFfieldorder
     _type           field type (HC.xxx)        VFfieldtype
+    =========== ==  ========================== =============================
 
 
 Record access: low and high level
@@ -513,10 +529,10 @@ Record access: low and high level
 vdata records can be read and written in two different ways. The first one
 consists of calling the basic I/O methods of the vdata:
 
-  - seek() to set the current record position, if necessary;
-  - read() to retrieve a given number of records from that position;
-  - write() to write a given number of records starting at
-    that position
+- seek() to set the current record position, if necessary;
+- read() to retrieve a given number of records from that position;
+- write() to write a given number of records starting at
+  that position
 
 A second, higher level way, lets one see a vdata similarly to a python
 sequence, and access its contents using the familiar indexing and slicing
@@ -560,7 +576,7 @@ be specified when assigning a record to the vdata: it is an error to
 try to assign just a few of the fields.
 
 For example, given a vdata 'vd' holding 5 records, and lists 'reca',
-'recb', etc, holding record values:
+'recb', etc, holding record values::
 
         vd[0] = reca              # updates record 0
         vd[0,:] = reca            # specifying fields is OK, but useless
@@ -581,7 +597,7 @@ Creating and initializing a new vdata
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The following code can serve as a model for the creation and
 initialization of a new vdata. It implements the INVENTORY example
-described in the "Introduction" section.
+described in the "Introduction" section::
 
     from pyhdf.HDF import *
     from pyhdf.VS import *
@@ -635,7 +651,7 @@ Appending records to a vdata
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Appending records requires first seeking to the end of the vdata, to avoid
 overwriting existing records. The following code can serve as a model. The
-INVENTORY vdata created before is used.
+INVENTORY vdata created before is used::
 
     from pyhdf.HDF import *
     from pyhdf.VS import *
@@ -676,7 +692,7 @@ until a new seek is performed or the vdata is closed. Note that record
 numbering starts at 0.
 
 The following code can serve as a model. The INVENTORY vdata created
-before is used.
+before is used::
 
     from pyhdf.HDF import *
     from pyhdf.VS import *
@@ -708,7 +724,7 @@ Reading a vdata
 ^^^^^^^^^^^^^^^
 The following example shows how read the vdata attributes and sequentially
 maneuver through its records. Note how we use the exception mechanism
-to break out of the reading loop when we reach the end of the vdata.
+to break out of the reading loop when we reach the end of the vdata::
 
     from pyhdf.HDF import *
     from pyhdf.VS import *
@@ -757,7 +773,7 @@ to break out of the reading loop when we reach the end of the vdata.
     f.close()                 # close the HDF file
 
 In the previous example, the reading/displaying loop can be greatly
-simplified by rewriting it as follows:
+simplified by rewriting it as follows::
 
     from pyhdf.HDF import *
     from pyhdf.VS import *
@@ -835,9 +851,12 @@ class VS(object):
     def end(self):
         """Close the VS interface.
 
-        Args:
+        Args::
+
           No argument
-        Returns:
+
+        Returns::
+
           None
 
         C library equivalent : Vend
@@ -854,7 +873,8 @@ class VS(object):
         """Locate an existing vdata or create a new vdata in the HDF file,
         returning a VD instance.
 
-        Args:
+        Args::
+
           num_name  Name or reference number of the vdata. An existing vdata
                     can be specified either through its reference number or
                     its name. Use -1 to create a new vdata.
@@ -866,7 +886,9 @@ class VS(object):
           write     Set to 0 to open the vdata in read-only mode,
                     set to 1 to open it in write mode
 
-        Returns:
+
+        Returns::
+
           VD instance representing the vdata
 
         C library equivalent : VSattach
@@ -892,17 +914,21 @@ class VS(object):
         """Create a new vdata, setting its name and allocating
         its fields.
 
-        Args:
+        Args::
+
           name     Name to assign to the vdata
           fields   Sequence of field definitions. Each field definition
                    is a sequence with the following elements in order:
-                     -field name
-                     -field type (one of HC.xxx constants)
-                     -field order (number of values)
+
+                   - field name
+                   - field type (one of HC.xxx constants)
+                   - field order (number of values)
 
                    Fields are allocated to the vdata in the given order
 
-        Returns:
+
+        Returns::
+
           VD instance representing the created vdata
 
         Calling the create() method is equivalent to the following calls:
@@ -937,12 +963,15 @@ class VS(object):
         The vdata can then be opened (attached) by passing this
         reference number to the attach() method.
 
-        Args:
+        Args::
+
           vName    Name of the vdata for which the reference number
                    is needed. vdatas names are not guaranteed to be
                    unique. When more than one vdata bear the same name,
                    find() will return the refnum of the first one founmd.
-        Returns:
+
+        Returns::
+
           vdata reference number. 0 is returned if the vdata does not exist.
 
         C library equivalent : VSfind
@@ -956,13 +985,16 @@ class VS(object):
         """Get the reference number of the vdata following a given
         vdata.
 
-        Args:
+        Args::
+
           vRef   Reference number of the vdata preceding the one
                  we require. Set to -1 to get the first vdata in
                  the HDF file. Knowing its reference number,
                  the vdata can then be opened (attached) by passing this
                  reference number to the attach() method.
-        Returns:
+
+        Returns::
+
           Reference number of the vdata following the one given
           by argument vref
 
@@ -978,22 +1010,26 @@ class VS(object):
     def vdatainfo(self, listAttr=0):
         """Return info about all the file vdatas.
 
-        Args:
+        Args::
+
           listAttr   Set to 0 to ignore vdatas used to store attribute
                      values, 1 to list them (see the VD._isattr readonly
                      attribute)
-        Returns:
+
+        Returns::
+
           List of vdata descriptions. Each vdata is described as
           a 9-element tuple, composed of the following:
-            -vdata name
-            -vdata class
-            -vdata reference number
-            -vdata number of records
-            -vdata number of fields
-            -vdata number of attributes
-            -vdata record size in bytes
-            -vdata tag number
-            -vdata interlace mode
+
+          - vdata name
+          - vdata class
+          - vdata reference number
+          - vdata number of records
+          - vdata number of fields
+          - vdata number of attributes
+          - vdata record size in bytes
+          - vdata tag number
+          - vdata interlace mode
 
 
         C library equivalent : no equivalent
@@ -1027,7 +1063,8 @@ class VS(object):
         """Create and initialize a single field vdata, returning
         the vdata reference number.
 
-        Args:
+        Args::
+
           fieldName   Name of the single field in the vadata to create
           values      Sequence of values to store in the field;. Each value can
                       itself be a sequence, in which case the field will be
@@ -1038,7 +1075,9 @@ class VS(object):
           vName       Name of the vdata to create
           vClass      Vdata class (string)
 
-        Returns:
+
+        Returns::
+
           vdata reference number
 
         C library equivalent : VHstoredata / VHstoredatam
@@ -1361,9 +1400,12 @@ class VD(object):
     def detach(self):
         """Terminate access to the vdata.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           None
 
         C library equivalent : VSdetach
@@ -1377,11 +1419,14 @@ class VD(object):
         fields created with fdefine(), assign a tuple of field names
         to the _fields attribute or call the setfields() method.
 
-        Args:
+        Args::
+
           name     field name
           type     field data type (one of HC.xxx)
           order    field order (number of values in the field)
-        Returns:
+
+        Returns::
+
           None
 
         C library equivalent : VSfdefine
@@ -1395,10 +1440,13 @@ class VD(object):
         """Define the name and order of the fields to access
         with the read() and write() methods.
 
-        Args:
+        Args::
+
           fldNames  variable length argument specifying one or more
                     vdata field names
-        Returns:
+
+        Returns::
+
           None
 
         C library equivalent : VSsetfields
@@ -1432,9 +1480,12 @@ class VD(object):
     def field(self, name_index):
         """Get a VDField instance representing a field of the vdata.
 
-        Args:
+        Args::
+
           name_index   name or index number of the field
-        Returns:
+
+        Returns::
+
           VDfield instance representing the field
 
         C library equivalent : no equivalent
@@ -1458,13 +1509,15 @@ class VD(object):
         record index. A succeeding read will load this record in
         memory.
 
-        Args:
+        Args::
+
           recIndex  index of the record in the vdata; numbering
                     starts at 0. Legal values range from 0
                     (start of vdata) to the current number of
                     records (at end of vdata).
 
-        Returns:
+        Returns::
+
           record index
 
         An exception is raised if an attempt is made to seek beyond the
@@ -1475,7 +1528,7 @@ class VD(object):
         of the vdata. The python API removes this limitation.
 
         Seeking to the end of the vdata can also be done by calling
-        method `seekend()'.
+        method ``seekend()``.
 
         C library equivalent : VSseek
                                                 """
@@ -1494,9 +1547,12 @@ class VD(object):
         """Set the current record position past the last vdata record.
         Subsequent write() calls will append records to the vdata.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           index of the last record plus 1
 
         C library equivalent : no equivalent
@@ -1514,9 +1570,12 @@ class VD(object):
     def tell(self):
         """Return current record position in the vdata.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           current record position; 0 is at start of vdata.
 
         C library equivalent : no equivalent
@@ -1530,10 +1589,13 @@ class VD(object):
         is advanced by the number of records read. Current position
         is 0 after "opening" the vdata with the attach() method.
 
-        Args:
+        Args::
+
           nRec    number of records to read
 
-        Returns:
+
+        Returns::
+
           2-level list. First level is a sequence of records,
           second level gives the sequence of values for each record.
           The values returned for each record are those of the fields
@@ -1665,7 +1727,8 @@ class VD(object):
         record position, which is advanced by the number of records
         written.
 
-        Args:
+        Args::
+
           values: 2-level sequence. First level is a sequence of records.
                   A second level gives the sequence of record values.
                   It is mandatory to always write whole records. Thus
@@ -1675,7 +1738,9 @@ class VD(object):
                   method. The ordre of the complete vdata field set is
                   used if setfields() has not been called.
 
-        Returns:
+
+        Returns::
+
           number of records written
 
         To append to a vdata already holding 'n' records, it is necessary
@@ -1796,9 +1861,12 @@ class VD(object):
     def inquire(self):
         """Retrieve info about the vdata.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           5-element tuple with the following elements:
             -number of records in the vdata
             -interlace mode
@@ -1818,19 +1886,23 @@ class VD(object):
     def fieldinfo(self):
         """Retrieve info about all vdata fields.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           list where each element describes a field of the vdata;
           each field is described by an 7-element tuple containing
           the following elements:
-            -field name
-            -field data type (one of HC.xxx constants)
-            -field order
-            -number of attributes attached to the field
-            -field index number
-            -field external size
-            -field internal size
+
+          - field name
+          - field data type (one of HC.xxx constants)
+          - field order
+          - number of attributes attached to the field
+          - field index number
+          - field external size
+          - field internal size
 
         C library equivalent : no equivalent
                                                       """
@@ -1851,9 +1923,12 @@ class VD(object):
     def sizeof(self, fields):
         """Retrieve the size in bytes of the given fields.
 
-        Args:
+        Args::
+
           fields   sequence of field names to query
-        Returns:
+
+        Returns::
+
           total size of the fields in bytes
 
         C library equivalent : VSsizeof
@@ -1870,10 +1945,13 @@ class VD(object):
     def fexist(self, fields):
         """Check if a vdata contains a given set of fields.
 
-        Args:
+        Args::
+
           fields   sequence of field names whose presence in the
                    vdata must be checked
-        Returns:
+
+        Returns::
+
           true  (1) if the given fields are present
           false (0) otherwise
 
@@ -1893,13 +1971,15 @@ class VD(object):
     def attr(self, name_or_index):
         """Create a VDAttr instance representing a vdata attribute.
 
-        Args:
+        Args::
+
           name_or_index   attribute name or index number; if a name is
                           given, the attribute may not exist; in that
                           case, it will be created when the VSAttr
                           instance set() method is called
 
-        Returns:
+        Returns::
+
           VSAttr instance for the attribute. Call the methods of this
           class to query, read or set the attribute.
 
@@ -1912,9 +1992,12 @@ class VD(object):
     def findattr(self, name):
         """Search the vdata for a given attribute.
 
-        Args:
+        Args::
+
           name    attribute name
-        Returns:
+
+        Returns::
+
           if found, VDAttr instance describing the attribute
           None otherwise
 
@@ -1932,16 +2015,19 @@ class VD(object):
     def attrinfo(self):
         """Return info about all the vdata attributes.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           dictionnary describing each vdata attribute; for each attribute
           a (name,data) pair is added to the dictionary, where 'data' is
           a tuple holding:
-            -attribute data type (one of HC.xxx constants)
-            -attribute order
-            -attribute value
-            -attribute size in bytes
+          - attribute data type (one of HC.xxx constants)
+          - attribute order
+          - attribute value
+          - attribute size in bytes
 
         C library equivalent : no equivalent
                                                   """
@@ -2127,7 +2213,8 @@ class VDField(object):
     def attr(self, name_or_index):
         """Create a VDAttr instance representing a field attribute.
 
-        Args:
+        Args::
+
           name_or_index   attribute name or index number; if a name is
                           specified, the attribute may not exist; in that
                           case, it will be created when the VDAttr
@@ -2135,7 +2222,8 @@ class VDField(object):
                           index number is specified, the attribute
                           must exist
 
-        Returns:
+        Returns::
+
           VSAttr instance for the attribute. Call the methods of this
           class to query, read or set the attribute.
 
@@ -2148,9 +2236,12 @@ class VDField(object):
     def find(self, name):
         """Search the field for a given attribute.
 
-        Args:
+        Args::
+
           name    attribute name
-        Returns:
+
+        Returns::
+
           if found, VDAttr instance describing the attribute
           None otherwise
 
@@ -2168,16 +2259,20 @@ class VDField(object):
     def attrinfo(self):
         """Return info about all the field attributes.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           dictionnary describing each vdata attribute; for each attribute
           a (name,data) pair is added to the dictionary, where 'data' is
           a tuple holding:
-            -attribute data type (one of HC.xxx constants)
-            -attribute order
-            -attribute value
-            -attribute size in bytes
+
+          - attribute data type (one of HC.xxx constants)
+          - attribute order
+          - attribute value
+          - attribute size in bytes
 
         C library equivalent : no equivalent
                                                   """
@@ -2245,9 +2340,12 @@ class VDAttr(object):
     def get(self):
         """Retrieve the attribute value.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           attribute value(s); a list is returned if the attribute
           is made up of more than one value, except in the case of a
           string-valued attribute (data type HC.CHAR8) where the
@@ -2308,7 +2406,8 @@ class VDAttr(object):
     def set(self, data_type, values):
         """Set the attribute value.
 
-        Args:
+        Args::
+
           data_type    : attribute data type (see constants HC.xxx)
           values       : attribute value(s); specify a list to create
                          a multi-valued attribute; a string valued
@@ -2320,7 +2419,8 @@ class VDAttr(object):
                          updated. However, it is illegal to try to change
                          its data type or its order (number of values).
 
-        Returns:
+        Returns::
+
           None
 
         C library equivalent : VSsetattr
@@ -2394,9 +2494,12 @@ class VDAttr(object):
     def info(self):
         """Retrieve info about the attribute.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           4-element tuple with the following components:
             -attribute name
             -attribute data type (one of HC.xxx constants)
