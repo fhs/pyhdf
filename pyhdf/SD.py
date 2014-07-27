@@ -63,39 +63,41 @@ SD module key features
 ----------------------
 SD key features are as follows.
 
-  -Almost every routine of the original SD API has been implemented inside
-   pyhdf. Only a few have been ignored, most of them being of a rare use:
-    - SDsetnbitdataset()
-    - All chunking/tiling routines : SDgetchunkinfo(), SDreadchunk(),
-      SDsetchunk(), SDsetchunkcache(), SDwritechunk()
-    - SDsetblocksize()
-    - SDisdimval_bwcomp(), SDsetdimval_comp()
+- Almost every routine of the original SD API has been implemented inside
+  pyhdf. Only a few have been ignored, most of them being of a rare use:
 
-  -It is quite straightforward to go from a C version to a python version
-   of a program accessing the SD API, and to learn SD usage by refering to
-   the C API documentation.
+  - SDsetnbitdataset()
+  - All chunking/tiling routines : SDgetchunkinfo(), SDreadchunk(),
+    SDsetchunk(), SDsetchunkcache(), SDwritechunk()
+  - SDsetblocksize()
+  - SDisdimval_bwcomp(), SDsetdimval_comp()
 
-  -A few high-level python methods have been developped to ease
-   programmers task. Of greatest interest are those allowing access
-   to SD datasets through familiar python idioms.
-     -Attributes can be read/written like ordinary python class
-      attributes.
-     -Datasets can be read/written like ordinary python lists using
-      multidimensional indices and so-called "extended slice syntax", with
-      strides allowed.
+- It is quite straightforward to go from a C version to a python version
+  of a program accessing the SD API, and to learn SD usage by refering to
+  the C API documentation.
 
-      See "High level attribute access" and "High level variable access"
-      sections for details.
+- A few high-level python methods have been developped to ease
+  programmers task. Of greatest interest are those allowing access
+  to SD datasets through familiar python idioms.
 
-     -SD offers methods to retrieve a dictionnary of the attributes,
-      dimensions and variables defined on a dataset, and of the attributes
-      set on a variable and a dimension. Querying a dataset is thus geatly
-      simplified.
+  - Attributes can be read/written like ordinary python class
+    attributes.
+  - Datasets can be read/written like ordinary python lists using
+    multidimensional indices and so-called "extended slice syntax", with
+    strides allowed.
 
-  -SD datasets are read/written through "numpy", a sophisticated
-   python package for efficiently handling multi-dimensional arrays of
-   numbers. numpy can nicely extend the SD functionnality, eg.
-   adding/subtracting arrays with the '+/-' operators.
+    See "High level attribute access" and "High level variable access"
+    sections for details.
+
+  - SD offers methods to retrieve a dictionnary of the attributes,
+    dimensions and variables defined on a dataset, and of the attributes
+    set on a variable and a dimension. Querying a dataset is thus geatly
+    simplified.
+
+- SD datasets are read/written through "numpy", a sophisticated
+  python package for efficiently handling multi-dimensional arrays of
+  numbers. numpy can nicely extend the SD functionnality, eg.
+  adding/subtracting arrays with the '+/-' operators.
 
 Accessing the SD module
 -----------------------
@@ -123,13 +125,17 @@ For each HDF API exists a corresponding set of modules.
 
 The following modules are related to the SD API.
 
-  _hdfext   C extension module responsible for wrapping the HDF
-            C-library for all python modules
-  hdfext    python module implementing some utility functions
-            complementing the _hdfext extension module
-  error     defines the HDF4Error exception
-  SD        python module wrapping the SD API routines inside
-            an OOP framework
+  _hdfext
+    C extension module responsible for wrapping the HDF
+    C-library for all python modules
+  hdfext
+    python module implementing some utility functions
+    complementing the _hdfext extension module
+  error
+    defines the HDF4Error exception
+  SD
+    python module wrapping the SD API routines inside
+    an OOP framework
 
 _hdfext and hdfext were generated using the SWIG preprocessor.
 SWIG is however *not* needed to run the package. Those two modules
@@ -150,10 +156,12 @@ work.
 
   HDF4.2r1 in turn relies on the following packages :
 
+    ======= ============== ===========================================
     libjpeg (jpeg library) release 6b
     libz    (zlib library) release 1.1.4 or above
     libsz   (SZIP library) release 2.0; this package is optional
                            if pyhdf is installed with NOSZIP macro set
+    ======= ============== ===========================================
 
 The SD module also needs:
 
@@ -195,7 +203,7 @@ SDS class:
   >>> help(SDS.get)   # or...
   >>> help(vinst.get) # if vinst is an SDS instance
 
-pydoc can also be called from the command line, as in:
+pydoc can also be called from the command line, as in::
 
   % pydoc pyhdf.SD.SDS        # doc for the whole SDS class
   % pydoc pyhdf.SD.SDS.get    # doc for the SDS.get method
@@ -205,14 +213,14 @@ Summary of differences between the pyhdf and C SD API
 Most of the differences between the pyhdf and C SD API can
 be summarized as follows.
 
-   -In the C API, every function returns an integer status code, and values
-    computed by the function are returned through one or more pointers
-    passed as arguments.
-   -In pyhdf, error statuses are returned through the Python exception
-    mechanism, and values are returned as the method result. When the
-    C API specifies that multiple values are returned, pyhdf returns a
-    tuple of values, which are ordered similarly to the pointers in the
-    C function argument list.
+- In the C API, every function returns an integer status code, and values
+  computed by the function are returned through one or more pointers
+  passed as arguments.
+- In pyhdf, error statuses are returned through the Python exception
+  mechanism, and values are returned as the method result. When the
+  C API specifies that multiple values are returned, pyhdf returns a
+  tuple of values, which are ordered similarly to the pointers in the
+  C function argument list.
 
 Error handling
 --------------
@@ -231,10 +239,11 @@ etc) and can be single or multi-valued. Attributes can be set either at
 the dataset, the variable or the dimension level. This can can be achieved
 in two ways.
 
-  -By calling the get()/set() method of an attribute instance. In the
-   following example, HDF file 'example.hdf' is created, and string
-   attribute 'title' is attached to the file and given value
-   'example'.
+- By calling the get()/set() method of an attribute instance. In the
+  following example, HDF file 'example.hdf' is created, and string
+  attribute 'title' is attached to the file and given value
+  'example'.
+
      >>> from pyhdf.SD import *
      >>> d = SD('example.hdf',SDC.WRITE|SDC.CREATE)  # create file
      >>> att = d.attr('title')            # create attribute instance
@@ -242,8 +251,9 @@ in two ways.
      >>> print(att.get())                  # get attribute value
      >>>
 
-  -By handling the attribute like an ordinary Python class attribute.
-   The above example can then be rewritten as follows:
+- By handling the attribute like an ordinary Python class attribute.
+  The above example can then be rewritten as follows:
+
      >>> from pyhdf.SD import *
      >>> d = SD('example.hdf',SDC.WRITE|SDC.CREATE)  # create dataset
      >>> d.title = 'example'              # set attribute type and value
@@ -251,6 +261,7 @@ in two ways.
      >>>
 
 What has been said above applies as well to multi-valued attributes.
+
     >>> att = d.attr('values')            # With an attribute instance
     >>> att.set(SDC.INT32, (1,2,3,4,5))   # Assign 5 ints as attribute value
     >>> att.get()                         # Get attribute values
@@ -263,6 +274,7 @@ What has been said above applies as well to multi-valued attributes.
 When the attribute is known by its name , standard functions 'setattr()'
 and 'getattr()' can be used to replace the dot notation.
 Above example becomes:
+
     >>> setattr(d, 'values', (1,2,3,4,5))
     >>> getattr(d, 'values')
     [1, 2, 3, 4, 5]
@@ -270,13 +282,14 @@ Above example becomes:
 Handling a SD attribute like a Python class attribute is admittedly
 more natural, and also much simpler. Some control is however lost in
 doing so.
-  -Attribute type cannot be specified. pyhdf automatically selects one of
-   three types according to the value(s) assigned to the attribute:
-   SDC.CHAR if value is a string, SDC.INT32 if all values are integral,
-   SDC.DOUBLE if one value is a float.
-  -Consequently, byte values cannot be assigned.
-  -Attribute properties (length, type, index number) can only be queried
-   through methods of an attribute instance.
+
+- Attribute type cannot be specified. pyhdf automatically selects one of
+  three types according to the value(s) assigned to the attribute:
+  SDC.CHAR if value is a string, SDC.INT32 if all values are integral,
+  SDC.DOUBLE if one value is a float.
+- Consequently, byte values cannot be assigned.
+- Attribute properties (length, type, index number) can only be queried
+  through methods of an attribute instance.
 
 Variable access: low and high level
 -----------------------------------
@@ -286,6 +299,7 @@ The first way is through the get()/set() methods of a dataset instance.
 Those methods accept parameters to specify the starting indices, the count
 of values to read/write, and the strides along each dimension. For example,
 if 'v' is a 4x4 array:
+
     >>> v.get()                         # complete array
     >>> v.get(start=(0,0),count=(1,4))  # first row
     >>> v.get(start=(0,1),count=(2,2),  # second and third columns of
@@ -299,12 +313,14 @@ array, except that data is read from/written to a file instead of memory.
 Extended indexing let you access variable elements with the familiar
 [i,j,...] notation, with one index per dimension. For example, if 'm' is a
 rank 3 dataset, one could write:
+
     >>> m[0,3,5] = m[0,5,3]
 
 When indexing is used to select a dimension in a 'get' operation, this
 dimension is removed from the output array, thus reducing its rank by 1. A
 rank 0 array is converted to a scalar. Thus, for a 3x3x3 'm' dataset
 (rank 3) of integer type :
+
     >>> a = m[0]         # a is a 3x3 array (rank 2)
     >>> a = m[0,0]       # a is a 3 element array (rank 1)
     >>> a = m[0,0,0]     # a is an integer (rank 0 array becomes a scalar)
@@ -321,25 +337,30 @@ first and last element, respectively, and the end value can be negative to
 indicate that the index is measured relative to the tail instead of the
 beginning. Omitted dimensions are assumed to be sliced from beginning to
 end. Thus:
+
     >>> m[0]             # treated as 'm[0,:,:]'.
 
 Example above with get()/set() methods can thus be rewritten as follows:
+
     >>> v[:]             # complete array
     >>> v[:1]            # first row
     >>> v[::2,1:3]       # second and third columns of first and third row
 
 Indexes and slices can be freely mixed, eg:
+
     >>> m[:2,3,1:3:2]
 
 Note that, countrary to indexing, a slice never reduces the rank of the
 output array, even if its length is 1. For example, given a 3x3x3 'm'
 dataset:
+
     >>> a = m[0]         # indexing: a is a 3x3 array (rank 2)
     >>> a = m[0:1]       # slicing: a is a 1x3x3 array (rank 3)
 
 As can easily be seen, extended slice syntax is much more elegant and
 compact, and offers a few possibilities not easy to achieve with the
 get()/sett() methods. Negative indices offer a nice example:
+
     >>> v[-2:]                         # last two rows
     >>> v[-3:-1]                       # second and third row
     >>> v[:,-1]                        # last column
@@ -350,6 +371,7 @@ Multivalued HDF attributes are set using a python sequence (tuple or
 list). Reading such an attribute returns a python list. The easiest way to
 read/set an attribute is by handling it like a Python class attribute
 (see "High level attribute access"). For example:
+
     >>> d=SD('test.hdf',SDC.WRITE|SDC.CREATE)  # create file
     >>> d.integers = (1,2,3,4)         # define multivalued integer attr
     >>> d.integers                     # get the attribute value
@@ -360,6 +382,7 @@ subset of the dataset, using "[:]" to assign to the whole dataset
 (see "High level variable access"). The assigned value can be a python
 sequence, which can be multi-leveled when assigning to a multdimensional
 dataset. For example:
+
     >>> d=SD('test.hdf',SDC.WRITE|SDC.CREATE) # create file
     >>> v1=d.create('v1',SDC.INT32,3)         # 3-elem vector
     >>> v1[:]=[1,2,3]                         # assign 3-elem python list
@@ -369,6 +392,7 @@ dataset. For example:
     >>> v2[:]=[[1,2,3],[11,12,13],[21,22,23]]
 
 The assigned value can also be a numpy array. Rewriting example above:
+
     >>> v1=array([1,2,3])
     >>> v2=array([[1,2,3],[11,12,13],[21,22,23]])
 
@@ -389,33 +413,33 @@ files from scratch. The python 'pycdf' package can be used for that.
 When accessing netCDF files through pyhdf, one should be aware of the
 following differences between the netCDF and the HDF SD libraries.
 
-  -Differences in terminology can be confusing. What netCDF calls a
-   'dataset' is called a 'file' or 'SD interface' in HDF. What HDF calls
-   a dataset is called a 'variable' in netCDF parlance.
-  -In the netCDF API, dimensions are defined at the global (netCDF dataset)
-   level. Thus, two netCDF variables defined over dimensions X and Y
-   necessarily have the same rank and shape.
-  -In the HDF SD API, dimensions are defined at the HDF dataset level,
-   except when they are named. Dimensions with the same name are considered
-   to be "shared" between all the file datasets. They must be of the same
-   length, and they share all their scales and attributes. For example,
-   setting an attribute on a shared dimension affects all datasets sharing
-   that dimension.
-  -When two or more netCDF variables are based on the unlimited dimension,
-   they automatically grow in sync. If variables A and B use the unlimited
-   dimension, adding "records" to A along its unlimited dimension
-   implicitly adds records in B (which are left in an undefined state and
-   filled with the fill_value when the file is refreshed).
-  -In HDF, unlimited dimensions behave independently. If HDF datasets A and
-   B are based on an unlimited dimension, adding records to A does not
-   affect the number of records to B. This is true even if the unlimited
-   dimensions bear the same name (they do not appear to be "shared" as is
-   the case when the dimensions are fixed).
+- Differences in terminology can be confusing. What netCDF calls a
+  'dataset' is called a 'file' or 'SD interface' in HDF. What HDF calls
+  a dataset is called a 'variable' in netCDF parlance.
+- In the netCDF API, dimensions are defined at the global (netCDF dataset)
+  level. Thus, two netCDF variables defined over dimensions X and Y
+  necessarily have the same rank and shape.
+- In the HDF SD API, dimensions are defined at the HDF dataset level,
+  except when they are named. Dimensions with the same name are considered
+  to be "shared" between all the file datasets. They must be of the same
+  length, and they share all their scales and attributes. For example,
+  setting an attribute on a shared dimension affects all datasets sharing
+  that dimension.
+- When two or more netCDF variables are based on the unlimited dimension,
+  they automatically grow in sync. If variables A and B use the unlimited
+  dimension, adding "records" to A along its unlimited dimension
+  implicitly adds records in B (which are left in an undefined state and
+  filled with the fill_value when the file is refreshed).
+- In HDF, unlimited dimensions behave independently. If HDF datasets A and
+  B are based on an unlimited dimension, adding records to A does not
+  affect the number of records to B. This is true even if the unlimited
+  dimensions bear the same name (they do not appear to be "shared" as is
+  the case when the dimensions are fixed).
 
 
 Classes summary
 ---------------
-pyhdf wraps the SD API using different types of python classes:
+pyhdf wraps the SD API using different types of python classes::
 
   SD     HDF SD interface (almost synonymous with the subset of the
          HDF file holding all the SD datasets)
@@ -424,7 +448,7 @@ pyhdf wraps the SD API using different types of python classes:
   SDAttr attribute (either at the file, dataset or dimension level)
   SDC    constants (opening modes, data types, etc)
 
-In more detail:
+In more detail::
 
   SD     The SD class implements the HDF SD interface as applied to a given
          file. This class encapsulates the "SD interface" identifier
@@ -633,15 +657,15 @@ and later when querying the definition of those objects.
 Data types are specified using the symbolic constants defined inside the
 SDC class of the SD module.
 
-  - CHAR and CHAR8 (equivalent): an 8-bit character.
-  - UCHAR, UCHAR8 and UINT8 (equivalent): unsigned 8-bit values (0 to 255)
-  - INT8:    signed 8-bit values (-128 to 127)
-  - INT16:   signed 16-bit values
-  - UINT16:  unsigned 16 bit values
-  - INT32:   signed 32 bit values
-  - UINT32:  unsigned 32 bit values
-  - FLOAT32: 32 bit floating point values (C floats)
-  - FLOAT64: 64 bit floating point values (C doubles)
+- CHAR and CHAR8 (equivalent): an 8-bit character.
+- UCHAR, UCHAR8 and UINT8 (equivalent): unsigned 8-bit values (0 to 255)
+- INT8:    signed 8-bit values (-128 to 127)
+- INT16:   signed 16-bit values
+- UINT16:  unsigned 16 bit values
+- INT32:   signed 32 bit values
+- UINT32:  unsigned 32 bit values
+- FLOAT32: 32 bit floating point values (C floats)
+- FLOAT64: 64 bit floating point values (C doubles)
 
 There is no explicit "string" type. To simulate a string, set the
 type to CHAR, and set the length to a value of 'n' > 1. This creates and
@@ -657,7 +681,7 @@ Writing
 The following code can be used as a model to create an SD dataset.
 It shows how to use the most important functionnalities
 of the SD interface needed to initialize a dataset.
-A real program should of course add error handling.
+A real program should of course add error handling::
 
     # Import SD and numpy.
     from pyhdf.SD import *
@@ -693,7 +717,7 @@ A real program should of course add error handling.
 Reading
 -------
 The following code, which reads the dataset created above, can also serve as
-a model for any program which needs to access an SD dataset.
+a model for any program which needs to access an SD dataset::
 
     # Import SD and numpy.
     from pyhdf.SD import *
@@ -751,56 +775,55 @@ number of attributes, of different types, single or multi-valued. Doing
 the same in a conventional language would be a much more challenging task.
 
 Error checking is minimal, to keep example as simple as possible
-(admittedly a rather poor excuse ...).
+(admittedly a rather poor excuse ...)::
+
+    from numpy import *
+    from pyhdf.SD import *
+
+    import os
+
+    def txtToHDF(txtFile, hdfFile, varName, attr):
+
+        try:  # Catch pyhdf errors
+            # Open HDF file in update mode, creating it if non existent.
+            d = SD(hdfFile, SDC.WRITE|SDC.CREATE)
+            # Open text file and get matrix dimensions on first line.
+            txt = open(txtFile)
+            ni, nj = map(int, txt.readline().split())
+            # Define an HDF dataset of 32-bit floating type (SDC.FLOAT32)
+            # with those dimensions.
+            v = d.create(varName, SDC.FLOAT32, (ni, nj))
+            # Assign attributes passed as argument inside dict 'attr'.
+            for attrName in attr.keys():
+                setattr(v, attrName, attr[attrName])
+            # Load variable with lines of data. Compute min and max
+            # over the whole matrix.
+            i = 0
+            while i < ni:
+                elems = map(float, txt.readline().split())
+                v[i] = elems  # load row i
+                minE = min(elems)
+                maxE = max(elems)
+                if i:
+                    minVal = min(minVal, minE)
+                    maxVal = max(maxVal, maxE)
+                else:
+                    minVal = minE
+                    maxVal = maxE
+                i += 1
+            # Set variable min and max attributes.
+            v.minVal = minVal
+            v.maxVal = maxVal
+            # Close dataset and file objects (not really necessary, since
+            # closing is automatic when objects go out of scope.
+            v.endaccess()
+            d.end()
+            txt.close()
+        except HDF4Error, msg:
+            print "HDF4Error:", msg
 
 
-from numpy import *
-from pyhdf.SD import *
-
-import os
-
-def txtToHDF(txtFile, hdfFile, varName, attr):
-
-    try:  # Catch pyhdf errors
-        # Open HDF file in update mode, creating it if non existent.
-        d = SD(hdfFile, SDC.WRITE|SDC.CREATE)
-        # Open text file and get matrix dimensions on first line.
-        txt = open(txtFile)
-        ni, nj = map(int, txt.readline().split())
-        # Define an HDF dataset of 32-bit floating type (SDC.FLOAT32)
-        # with those dimensions.
-        v = d.create(varName, SDC.FLOAT32, (ni, nj))
-        # Assign attributes passed as argument inside dict 'attr'.
-        for attrName in attr.keys():
-            setattr(v, attrName, attr[attrName])
-        # Load variable with lines of data. Compute min and max
-        # over the whole matrix.
-        i = 0
-        while i < ni:
-            elems = map(float, txt.readline().split())
-            v[i] = elems  # load row i
-            minE = min(elems)
-            maxE = max(elems)
-            if i:
-                minVal = min(minVal, minE)
-                maxVal = max(maxVal, maxE)
-            else:
-                minVal = minE
-                maxVal = maxE
-            i += 1
-        # Set variable min and max attributes.
-        v.minVal = minVal
-        v.maxVal = maxVal
-        # Close dataset and file objects (not really necessary, since
-        # closing is automatic when objects go out of scope.
-        v.endaccess()
-        d.end()
-        txt.close()
-    except HDF4Error, msg:
-        print "HDF4Error:", msg
-
-
-We could now call the procedure as follows:
+We could now call the procedure as follows::
 
     hdfFile  = 'table.hdf'
     try:  # Delete if exists.
@@ -829,149 +852,149 @@ structure of the SD component of any HDF file whose name is given on
 the command line. After the HDF file is opened, high level inquiry methods
 are called to obtain dictionnaries descrybing attributes, dimensions and
 datasets. The rest of the program mostly consists in nicely formatting
-the contents of those dictionaries.
+the contents of those dictionaries::
 
-import sys
-from pyhdf.SD import *
-from numpy import *
+    import sys
+    from pyhdf.SD import *
+    from numpy import *
 
-# Dictionnary used to convert from a numeric data type to its symbolic
-# representation
-typeTab = {
-           SDC.CHAR:    'CHAR',
-           SDC.CHAR8:   'CHAR8',
-           SDC.UCHAR8:  'UCHAR8',
-           SDC.INT8:    'INT8',
-           SDC.UINT8:   'UINT8',
-           SDC.INT16:   'INT16',
-           SDC.UINT16:  'UINT16',
-           SDC.INT32:   'INT32',
-           SDC.UINT32:  'UINT32',
-           SDC.FLOAT32: 'FLOAT32',
-           SDC.FLOAT64: 'FLOAT64'
-           }
+    # Dictionnary used to convert from a numeric data type to its symbolic
+    # representation
+    typeTab = {
+               SDC.CHAR:    'CHAR',
+               SDC.CHAR8:   'CHAR8',
+               SDC.UCHAR8:  'UCHAR8',
+               SDC.INT8:    'INT8',
+               SDC.UINT8:   'UINT8',
+               SDC.INT16:   'INT16',
+               SDC.UINT16:  'UINT16',
+               SDC.INT32:   'INT32',
+               SDC.UINT32:  'UINT32',
+               SDC.FLOAT32: 'FLOAT32',
+               SDC.FLOAT64: 'FLOAT64'
+               }
 
-printf = sys.stdout.write
+    printf = sys.stdout.write
 
-def eol(n=1):
-    printf("%s" % chr(10) * n)
+    def eol(n=1):
+        printf("%s" % chr(10) * n)
 
-hdfFile = sys.argv[1]    # Get first command line argument
+    hdfFile = sys.argv[1]    # Get first command line argument
 
-try:  # Catch pyhdf.SD errors
-  # Open HDF file named on the command line
-  f = SD(hdfFile)
-  # Get global attribute dictionnary
-  attr = f.attributes(full=1)
-  # Get dataset dictionnary
-  dsets = f.datasets()
+    try:  # Catch pyhdf.SD errors
+      # Open HDF file named on the command line
+      f = SD(hdfFile)
+      # Get global attribute dictionnary
+      attr = f.attributes(full=1)
+      # Get dataset dictionnary
+      dsets = f.datasets()
 
-  # File name, number of attributes and number of variables.
-  printf("FILE INFO"); eol()
-  printf("-------------"); eol()
-  printf("%-25s%s" % ("File:", hdfFile)); eol()
-  printf("%-25s%d" % ("  file attributes:", len(attr))); eol()
-  printf("%-25s%d" % ("  datasets:", len(dsets))); eol()
-  eol();
+      # File name, number of attributes and number of variables.
+      printf("FILE INFO"); eol()
+      printf("-------------"); eol()
+      printf("%-25s%s" % ("File:", hdfFile)); eol()
+      printf("%-25s%d" % ("  file attributes:", len(attr))); eol()
+      printf("%-25s%d" % ("  datasets:", len(dsets))); eol()
+      eol();
 
-  # Global attribute table.
-  if len(attr) > 0:
-      printf("File attributes"); eol(2)
-      printf("  name                 idx type    len value"); eol()
-      printf("  -------------------- --- ------- --- -----"); eol()
-      # Get list of attribute names and sort them lexically
-      attNames = attr.keys()
-      attNames.sort()
-      for name in attNames:
-          t = attr[name]
-              # t[0] is the attribute value
-              # t[1] is the attribute index number
-              # t[2] is the attribute type
-              # t[3] is the attribute length
-          printf("  %-20s %3d %-7s %3d %s" %
-                 (name, t[1], typeTab[t[2]], t[3], t[0])); eol()
-      eol()
-
-
-  # Dataset table
-  if len(dsets) > 0:
-      printf("Datasets (idx:index num, na:n attributes, cv:coord var)"); eol(2)
-      printf("  name                 idx type    na cv dimension(s)"); eol()
-      printf("  -------------------- --- ------- -- -- ------------"); eol()
-      # Get list of dataset names and sort them lexically
-      dsNames = dsets.keys()
-      dsNames.sort()
-      for name in dsNames:
-          # Get dataset instance
-          ds = f.select(name)
-          # Retrieve the dictionary of dataset attributes so as
-          # to display their number
-          vAttr = ds.attributes()
-          t = dsets[name]
-              # t[0] is a tuple of dimension names
-              # t[1] is a tuple of dimension lengths
-              # t[2] is the dataset type
-              # t[3] is the dataset index number
-          printf("  %-20s %3d %-7s %2d %-2s " %
-                 (name, t[3], typeTab[t[2]], len(vAttr),
-                  ds.iscoordvar() and 'X' or ''))
-          # Display dimension info.
-          n = 0
-          for d in t[0]:
-              printf("%s%s(%d)" % (n > 0 and ', ' or '', d, t[1][n]))
-              n += 1
+      # Global attribute table.
+      if len(attr) > 0:
+          printf("File attributes"); eol(2)
+          printf("  name                 idx type    len value"); eol()
+          printf("  -------------------- --- ------- --- -----"); eol()
+          # Get list of attribute names and sort them lexically
+          attNames = attr.keys()
+          attNames.sort()
+          for name in attNames:
+              t = attr[name]
+                  # t[0] is the attribute value
+                  # t[1] is the attribute index number
+                  # t[2] is the attribute type
+                  # t[3] is the attribute length
+              printf("  %-20s %3d %-7s %3d %s" %
+                     (name, t[1], typeTab[t[2]], t[3], t[0])); eol()
           eol()
-      eol()
 
-  # Dataset info.
-  if len(dsNames) > 0:
-      printf("DATASET INFO"); eol()
-      printf("-------------"); eol(2)
-      for name in dsNames:
-          # Access the dataset
-          dsObj = f.select(name)
-          # Get dataset attribute dictionnary
-          dsAttr = dsObj.attributes(full=1)
-          if len(dsAttr) > 0:
-              printf("%s attributes" % name); eol(2)
-              printf("  name                 idx type    len value"); eol()
-              printf("  -------------------- --- ------- --- -----"); eol()
-              # Get the list of attribute names and sort them alphabetically.
-              attNames = dsAttr.keys()
-              attNames.sort()
-              for nm in attNames:
-                  t = dsAttr[nm]
-                      # t[0] is the attribute value
-                      # t[1] is the attribute index number
-                      # t[2] is the attribute type
-                      # t[3] is the attribute length
-                  printf("  %-20s %3d %-7s %3d %s" %
-                         (nm, t[1], typeTab[t[2]], t[3], t[0])); eol()
+
+      # Dataset table
+      if len(dsets) > 0:
+          printf("Datasets (idx:index num, na:n attributes, cv:coord var)"); eol(2)
+          printf("  name                 idx type    na cv dimension(s)"); eol()
+          printf("  -------------------- --- ------- -- -- ------------"); eol()
+          # Get list of dataset names and sort them lexically
+          dsNames = dsets.keys()
+          dsNames.sort()
+          for name in dsNames:
+              # Get dataset instance
+              ds = f.select(name)
+              # Retrieve the dictionary of dataset attributes so as
+              # to display their number
+              vAttr = ds.attributes()
+              t = dsets[name]
+                  # t[0] is a tuple of dimension names
+                  # t[1] is a tuple of dimension lengths
+                  # t[2] is the dataset type
+                  # t[3] is the dataset index number
+              printf("  %-20s %3d %-7s %2d %-2s " %
+                     (name, t[3], typeTab[t[2]], len(vAttr),
+                      ds.iscoordvar() and 'X' or ''))
+              # Display dimension info.
+              n = 0
+              for d in t[0]:
+                  printf("%s%s(%d)" % (n > 0 and ', ' or '', d, t[1][n]))
+                  n += 1
               eol()
-          # Get dataset dimension dictionnary
-          dsDim = dsObj.dimensions(full=1)
-          if len(dsDim) > 0:
-              printf ("%s dimensions" % name); eol(2)
-              printf("  name                 idx len   unl type    natt");eol()
-              printf("  -------------------- --- ----- --- ------- ----");eol()
-              # Get the list of dimension names and sort them alphabetically.
-              dimNames = dsDim.keys()
-              dimNames.sort()
-              for nm in dimNames:
-                  t = dsDim[nm]
-                      # t[0] is the dimension length
-                      # t[1] is the dimension index number
-                      # t[2] is 1 if the dimension is unlimited, 0 if not
-                      # t[3] is the the dimension scale type, 0 if no scale
-                      # t[4] is the number of attributes
-                  printf("  %-20s %3d %5d  %s  %-7s %4d" %
-                         (nm, t[1], t[0], t[2] and "X" or " ",
-                          t[3] and typeTab[t[3]] or "", t[4])); eol()
-              eol()
+          eol()
+
+      # Dataset info.
+      if len(dsNames) > 0:
+          printf("DATASET INFO"); eol()
+          printf("-------------"); eol(2)
+          for name in dsNames:
+              # Access the dataset
+              dsObj = f.select(name)
+              # Get dataset attribute dictionnary
+              dsAttr = dsObj.attributes(full=1)
+              if len(dsAttr) > 0:
+                  printf("%s attributes" % name); eol(2)
+                  printf("  name                 idx type    len value"); eol()
+                  printf("  -------------------- --- ------- --- -----"); eol()
+                  # Get the list of attribute names and sort them alphabetically.
+                  attNames = dsAttr.keys()
+                  attNames.sort()
+                  for nm in attNames:
+                      t = dsAttr[nm]
+                          # t[0] is the attribute value
+                          # t[1] is the attribute index number
+                          # t[2] is the attribute type
+                          # t[3] is the attribute length
+                      printf("  %-20s %3d %-7s %3d %s" %
+                             (nm, t[1], typeTab[t[2]], t[3], t[0])); eol()
+                  eol()
+              # Get dataset dimension dictionnary
+              dsDim = dsObj.dimensions(full=1)
+              if len(dsDim) > 0:
+                  printf ("%s dimensions" % name); eol(2)
+                  printf("  name                 idx len   unl type    natt");eol()
+                  printf("  -------------------- --- ----- --- ------- ----");eol()
+                  # Get the list of dimension names and sort them alphabetically.
+                  dimNames = dsDim.keys()
+                  dimNames.sort()
+                  for nm in dimNames:
+                      t = dsDim[nm]
+                          # t[0] is the dimension length
+                          # t[1] is the dimension index number
+                          # t[2] is 1 if the dimension is unlimited, 0 if not
+                          # t[3] is the the dimension scale type, 0 if no scale
+                          # t[4] is the number of attributes
+                      printf("  %-20s %3d %5d  %s  %-7s %4d" %
+                             (nm, t[1], t[0], t[2] and "X" or " ",
+                              t[3] and typeTab[t[3]] or "", t[4])); eol()
+                  eol()
 
 
-except HDF4Error, msg:
-    print "HDF4Error", msg
+    except HDF4Error, msg:
+        print "HDF4Error", msg
 
 
 
@@ -997,12 +1020,15 @@ class SDC(object):
     """The SDC class holds contants defining opening modes and data types.
 
            file opening modes:
+             ==========   ===    ===============================
              SDC.CREATE     4    create file if non existent
              SDC.READ       1    read-only mode
              SDC.TRUNC    256    truncate file if already exists
              SDC.WRITE      2    read-write mode
+             ==========   ===    ===============================
 
            data types:
+             ===========  ===    ===============================
              SDC.CHAR       4    8-bit character
              SDC.CHAR8      4    8-bit character
              SDC.UCHAR      3    unsigned 8-bit integer
@@ -1015,15 +1041,21 @@ class SDC(object):
              SDC.UINT32    25    unsigned 32-bit integer
              SDC.FLOAT32    5    32-bit floating point
              SDC.FLOAT64    6    64-bit floaring point
+             ===========  ===    ===============================
 
            dataset fill mode:
+             ===========  ===
              SDC.FILL       0
              SDC.NOFILL   256
+             ===========  ===
 
            dimension:
+             =============  ===  ===============================
              SDC.UNLIMITED  0    dimension can grow dynamically
+             =============  ===  ===============================
 
            data compression:
+             =================  ===
              SDC.COMP_NONE      0
              SDC.COMP_RLE       1
              SDC.COMP_NBIT      2
@@ -1034,6 +1066,7 @@ class SDC(object):
              SDC.COMP_SZIP_EC     4
              SDC.COMP_SZIP_NN    32
              SDC.COMP_SZIP_RAW  128
+             =================  ===
 
 """
 
@@ -1116,16 +1149,19 @@ class SDAttr(object):
         """Retrieve info about the attribute : name, data type and
         number of values.
 
-        Args:
+        Args::
+
           no argument
 
-        Returns:
+        Returns::
+
           3-element tuple holding:
-            -attribute name
-            -attribute data type (see constants SDC.xxx)
-            -number of values in the attribute; for a string-valued
-             attribute (data type SDC.CHAR8), the number of values
-             corresponds to the string length
+
+          - attribute name
+          - attribute data type (see constants SDC.xxx)
+          - number of values in the attribute; for a string-valued
+            attribute (data type SDC.CHAR8), the number of values
+            corresponds to the string length
 
 
         C library equivalent : SDattrinfo
@@ -1143,9 +1179,12 @@ class SDAttr(object):
     def index(self):
         """Retrieve the attribute index number.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           attribute index number (starting at 0)
 
         C library equivalent : SDfindattr
@@ -1158,9 +1197,12 @@ class SDAttr(object):
     def get(self):
         """Retrieve the attribute value.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           attribute value(s); a list is returned if the attribute
           is made up of more than one value, except in the case of a
           string-valued attribute (data type SDC.CHAR8) where the
@@ -1226,7 +1268,8 @@ class SDAttr(object):
     def set(self, data_type, values):
         """Update/Create a new attribute and set its value(s).
 
-        Args:
+        Args::
+
           data_type    : attribute data type (see constants SDC.xxx)
           values       : attribute value(s); specify a list to create
                          a multi-valued attribute; a string valued
@@ -1234,7 +1277,8 @@ class SDAttr(object):
                          to SDC.CHAR8 and 'values' to the corresponding
                          string
 
-        Returns:
+        Returns::
+
           None
 
         C library equivalent : SDsetattr
@@ -1319,7 +1363,8 @@ class SD(object):
         """SD constructor. Initialize an SD interface on an HDF file,
         creating the file if necessary.
 
-        Args:
+        Args::
+
           path    name of the HDF file on which to open the SD interface
           mode    file opening mode; this mode is a set of binary flags
                   which can be ored together
@@ -1353,7 +1398,8 @@ class SD(object):
                    file be opened in read-write mode, or created
                    if it does not exist.
 
-        Returns:
+        Returns::
+
           an SD instance
 
         C library equivalent : SDstart
@@ -1426,9 +1472,12 @@ class SD(object):
     def end(self):
         """End access to the SD interface and close the HDF file.
 
-        Args:
+        Args::
+
             no argument
-        Returns:
+
+        Returns::
+
             None
 
         The instance should not be used afterwards.
@@ -1445,9 +1494,12 @@ class SD(object):
     def info(self):
         """Retrieve information about the SD interface.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           2-element tuple holding:
             number of datasets inside the file
             number of file attributes
@@ -1462,9 +1514,12 @@ class SD(object):
     def nametoindex(self, sds_name):
         """Return the index number of a dataset given the dataset name.
 
-        Args:
+        Args::
+
           sds_name  : dataset name
-        Returns:
+
+        Returns::
+
           index number of the dataset
 
         C library equivalent : SDnametoindex
@@ -1478,9 +1533,12 @@ class SD(object):
         """Returns the index number of a dataset given the dataset
         reference number.
 
-        Args:
+        Args::
+
           sds_ref : dataset reference number
-        Returns:
+
+        Returns::
+
           dataset index number
 
         C library equivalent : SDreftoindex
@@ -1493,13 +1551,16 @@ class SD(object):
     def setfillmode(self, fill_mode):
         """Set the fill mode for all the datasets in the file.
 
-        Args:
+        Args::
+
           fill_mode : fill mode; one of :
                         SDC.FILL   write the fill value to all the datasets
                                   of the file by default
                         SDC.NOFILL do not write fill values to all datasets
                                   of the file by default
-        Returns:
+
+        Returns::
+
           previous fill mode value
 
         C library equivalent: SDsetfillmode
@@ -1514,7 +1575,8 @@ class SD(object):
     def create(self, name, data_type, dim_sizes):
         """Create a dataset.
 
-        Args:
+        Args::
+
           name           dataset name
           data_type      type of the data, set to one of the SDC.xxx
                          constants;
@@ -1533,7 +1595,8 @@ class SD(object):
                          variables. In HDF, each record variable grows
                          independently of each other.
 
-        Returns:
+        Returns::
+
           SDS instance for the dataset
 
         C library equivalent : SDcreate
@@ -1555,10 +1618,12 @@ class SD(object):
     def select(self, name_or_index):
         """Locate a dataset.
 
-        Args:
+        Args::
+
           name_or_index  dataset name or index number
 
-        Returns:
+        Returns::
+
           SDS instance for the dataset
 
         C library equivalent : SDselect
@@ -1579,13 +1644,15 @@ class SD(object):
         """Create an SDAttr instance representing a global
         attribute (defined at the level of the SD interface).
 
-        Args:
+        Args::
+
           name_or_index   attribute name or index number; if a name is
                           given, the attribute may not exist; in that
                           case, it will be created when the SDAttr
                           instance set() method is called
 
-        Returns:
+        Returns::
+
           SDAttr instance for the attribute. Call the methods of this
           class to query, read or set the attribute.
 
@@ -1600,19 +1667,23 @@ class SD(object):
         """Return a dictionnary describing every global
         attribute attached to the SD interface.
 
-        Args:
+        Args::
+
           full      true to get complete info about each attribute
                     false to report only each attribute value
-        Returns:
+
+        Returns::
+
           Empty dictionnary if no global attribute defined
           Otherwise, dictionnary where each key is the name of a
           global attribute. If parameter 'full' is false,
           key value is the attribute value. If 'full' is true,
           key value is a tuple with the following elements:
-            - attribute value
-            - attribute index number
-            - attribute type
-            - attribute length
+
+          - attribute value
+          - attribute index number
+          - attribute type
+          - attribute length
 
         C library equivalent : no equivalent
                                                     """
@@ -1635,20 +1706,24 @@ class SD(object):
     def datasets(self):
         """Return a dictionnary describing all the file datasets.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           Empty dictionnary if no dataset is defined.
           Otherwise, dictionnary whose keys are the file dataset names,
           and values are tuples describing the corresponding datasets.
           Each tuple holds the following elements in order:
-            -tuple holding the names of the dimensions defining the
-             dataset coordinate axes
-            -tuple holding the dataset shape (dimension lengths);
-             if a dimension is unlimited, the reported length corresponds
-             to the dimension current length
-            -dataset type
-            -dataset index number
+
+          - tuple holding the names of the dimensions defining the
+            dataset coordinate axes
+          - tuple holding the dataset shape (dimension lengths);
+            if a dimension is unlimited, the reported length corresponds
+            to the dimension current length
+          - dataset type
+          - dataset index number
 
         C library equivalent : no equivalent
                                                 """
@@ -1757,9 +1832,12 @@ class SDS(object):
     def endaccess(self):
         """Terminates access to the SDS.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           None.
 
         The SDS instance should not be used afterwards.
@@ -1777,7 +1855,8 @@ class SDS(object):
     def dim(self, dim_index):
         """Get an SDim instance given a dimension index number.
 
-        Args:
+        Args::
+
           dim_index index number of the dimension (numbering starts at 0)
 
         C library equivalent : SDgetdimid
@@ -1789,7 +1868,8 @@ class SDS(object):
     def get(self, start=None, count=None, stride=None):
         """Read data from the dataset.
 
-        Args:
+        Args::
+
           start   : indices where to start reading in the data array;
                     default to 0 on all dimensions
           count   : number of values to read along each dimension;
@@ -1804,7 +1884,8 @@ class SDS(object):
           Note that, to read the whole dataset contents, one should
           simply call the method with no argument.
 
-        Returns:
+        Returns::
+
           numpy array initialized with the data.
 
         C library equivalent : SDreaddata
@@ -1856,7 +1937,8 @@ class SDS(object):
     def set(self, data, start=None, count=None, stride=None):
         """Write data to the dataset.
 
-        Args:
+        Args::
+
           data    : array of data to write; can be given as a numpy
                     array, or as Python sequence (whose elements can be
                     imbricated sequences)
@@ -1875,7 +1957,8 @@ class SDS(object):
           to call the method with the dataset values in parameter
           'data', omitting all other parameters.
 
-        Returns:
+        Returns::
+
           None.
 
         C library equivalent : SDwritedata
@@ -2034,18 +2117,22 @@ class SDS(object):
     def info(self):
         """Retrieves information about the dataset.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
-          5-element tuple holding :
-            -dataset name
-            -dataset rank (number of dimensions)
-            -dataset shape, that is a list giving the length of each
-             dataset dimension; if the first dimension is unlimited, then
-             the first value of the list gives the current length of the
-             unlimited dimension
-            -data type (one of the SDC.xxx values)
-            -number of attributes defined for the dataset
+
+        Returns::
+
+          5-element tuple holding:
+
+          - dataset name
+          - dataset rank (number of dimensions)
+          - dataset shape, that is a list giving the length of each
+            dataset dimension; if the first dimension is unlimited, then
+            the first value of the list gives the current length of the
+            unlimited dimension
+          - data type (one of the SDC.xxx values)
+          - number of attributes defined for the dataset
 
         C library equivalent : SDgetinfo
                                                        """
@@ -2060,9 +2147,12 @@ class SDS(object):
     def checkempty(self):
         """Determine whether the dataset is empty.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           True(1) if dataset is empty, False(0) if not
 
         C library equivalent : SDcheckempty
@@ -2075,9 +2165,12 @@ class SDS(object):
     def ref(self):
         """Get the reference number of the dataset.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           dataset reference number
 
         C library equivalent : SDidtoref
@@ -2092,9 +2185,12 @@ class SDS(object):
         (holds a dimension scale). A coordinate variable is created
         when a dimension is assigned a set of scale values.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           True(1) if the dataset represents a coordinate variable,
           False(0) if not
 
@@ -2108,9 +2204,12 @@ class SDS(object):
         (contains an unlimited dimension). Note that if true, then
         the unlimited dimension is always dimension number 0.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           True(1) if the dataset is appendable, False(0) if not.
 
         C library equivalent : SDisrecord
@@ -2122,28 +2221,34 @@ class SDS(object):
     def getcal(self):
         """Retrieve the SDS calibration coefficients.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
-          5-element tuple holding :
-            -cal: calibration factor (attribute 'scale_factor')
-            -cal_error : calibration factor error
-                         (attribute 'scale_factor_err')
-            -offset: calibration offset (attribute 'add_offset')
-            -offset_err : offset error (attribute 'add_offset_err')
-            -data_type : type of the data resulting from applying
-                         the calibration formula to the dataset values
-                         (attribute 'calibrated_nt')
+
+        Returns::
+
+          5-element tuple holding:
+
+          - cal: calibration factor (attribute 'scale_factor')
+          - cal_error : calibration factor error
+                        (attribute 'scale_factor_err')
+          - offset: calibration offset (attribute 'add_offset')
+          - offset_err : offset error (attribute 'add_offset_err')
+          - data_type : type of the data resulting from applying
+                        the calibration formula to the dataset values
+                        (attribute 'calibrated_nt')
 
         An exception is raised if no calibration data are defined.
 
         Original dataset values 'orival' are converted to calibrated
-        values 'calval' through the formula :
+        values 'calval' through the formula::
+
            calval = cal * (orival - offset)
 
         The calibration coefficients are part of the so-called
         "standard" SDS attributes. The values inside the tuple returned
-        by 'getcal' are those of the following attributes, in order :
+        by 'getcal' are those of the following attributes, in order::
+
           scale_factor, scale_factor_err, add_offset, add_offset_err,
           calibrated_nt
 
@@ -2158,18 +2263,23 @@ class SDS(object):
     def getdatastrs(self):
         """Retrieve the dataset standard string attributes.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
-          4-element tuple holding :
-            -dataset label string (attribute 'long_name')
-            -dataset unit (attribute 'units')
-            -dataset output format (attribute 'format')
-            -dataset coordinate system (attribute 'coordsys')
+
+        Returns::
+
+          4-element tuple holding:
+
+          - dataset label string (attribute 'long_name')
+          - dataset unit (attribute 'units')
+          - dataset output format (attribute 'format')
+          - dataset coordinate system (attribute 'coordsys')
 
         The values returned by 'getdatastrs' are part of the
         so-called "standard" SDS attributes.  Those 4 values
-        correspond respectively to the following attributes:
+        correspond respectively to the following attributes::
+
           long_name, units, format, coordsys .
 
         C library equivalent: SDgetdatastrs
@@ -2183,15 +2293,19 @@ class SDS(object):
     def getfillvalue(self):
         """Retrieve the dataset fill value.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           dataset fill value (attribute '_FillValue')
 
         An exception is raised if the fill value is not set.
 
         The fill value is part of the so-called "standard" SDS
-        attributes, and corresponds to the following attribute :
+        attributes, and corresponds to the following attribute::
+
           _FillValue
 
         C library equivalent: SDgetfillvalue
@@ -2245,9 +2359,12 @@ class SDS(object):
     def getrange(self):
         """Retrieve the dataset min and max values.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           (min, max) tuple (attribute 'valid_range')
 
           Note that those are the values as stored
@@ -2258,7 +2375,8 @@ class SDS(object):
 
         The range returned by 'getrange' is part of the so-called
         "standard" SDS attributes. It corresponds to the following
-        attribute :
+        attribute::
+
           valid_range
 
         C library equivalent: SDgetrange
@@ -2325,7 +2443,8 @@ class SDS(object):
     def setcal(self, cal, cal_error, offset, offset_err, data_type):
         """Set the dataset calibration coefficients.
 
-        Args:
+        Args::
+
           cal         the calibraton factor (attribute 'scale_factor')
           cal_error   calibration factor error
                       (attribute 'scale_factor_err')
@@ -2335,7 +2454,9 @@ class SDS(object):
                       calibration formula to the dataset values
                       (one of the SDC.xxx constants)
                       (attribute 'calibrated_nt')
-        Returns:
+
+        Returns::
+
           None
 
         See method 'getcal' for the definition of the calibration
@@ -2344,7 +2465,8 @@ class SDS(object):
         Calibration coefficients are part of the so-called standard
         SDS attributes. Calling 'setcal' is equivalent to setting
         the following attributes, which correspond to the method
-        parameters, in order:
+        parameters, in order::
+
           scale_factor, scale_factor_err, add_offset, add_offset_err,
           calibrated_nt
 
@@ -2358,18 +2480,22 @@ class SDS(object):
     def setdatastrs(self, label, unit, format, coord_sys):
         """Set the dataset standard string type attributes.
 
-        Args:
+        Args::
+
           label         dataset label (attribute 'long_name')
           unit          dataset unit (attribute 'units')
           format        dataset format (attribute 'format')
           coord_sys     dataset coordinate system (attribute 'coordsys')
-        Returns:
+
+        Returns::
+
           None
 
         Those strings are part of the so-called standard
         SDS attributes. Calling 'setdatastrs' is equivalent to setting
         the following attributes, which correspond to the method
-        parameters, in order:
+        parameters, in order::
+
           long_name, units, format, coordsys
 
         C library equivalent: SDsetdatastrs
@@ -2381,14 +2507,18 @@ class SDS(object):
     def setfillvalue(self, fill_val):
         """Set the dataset fill value.
 
-        Args:
+        Args::
+
           fill_val   dataset fill value (attribute '_FillValue')
-        Returns:
+
+        Returns::
+
           None
 
         The fill value is part of the so-called "standard" SDS
         attributes. Calling 'setfillvalue' is equivalent to setting
-        the following attribute:
+        the following attribute::
+
           _FillValue
 
         C library equivalent: SDsetfillvalue
@@ -2450,17 +2580,21 @@ class SDS(object):
     def setrange(self, min, max):
         """Set the dataset min and max values.
 
-        Args:
+        Args::
+
           min        dataset minimum value (attribute 'valid_range')
           max        dataset maximum value (attribute 'valid_range')
 
-        Returns:
+
+        Returns::
+
           None
 
         The data range is part of the so-called "standard" SDS
         attributes. Calling method 'setrange' is equivalent to
         setting the following attribute with a 2-element [min,max]
-        array :
+        array::
+
           valid_range
 
 
@@ -2544,32 +2678,38 @@ class SDS(object):
     def getcompress(self):
         """Retrieves info about dataset compression type and mode.
 
-        Args:
-          no argument
-        Returns:
-          tuple holding :
-            -compression type (one of the SDC.COMP_xxx constants)
-            -optional values, depending on the compression type
-               COMP_NONE       0 value    no additional value
-               COMP_SKPHUFF    1 value  : skip size
-               COMP_DEFLATE    1 value  : gzip compression level (1 to 9)
-               COMP_SZIP       5 values : options mask,
-                                          pixels per block (2 to 32)
-                                          pixels per scanline,
-                                          bits per pixel (number of bits in the SDS datatype)
-                                          pixels (number of elements in the SDS)
+        Args::
 
-                                          Note: in the context of an SDS, the word "pixel"
-                                          should really be understood as meaning "data element",
-                                          eg a cell value inside a multidimensional grid.
-                                          Test the options mask against constants SDC.COMP_SZIP_NN
-                                          and SDC.COMP_SZIP_EC, eg :
-                                            if optionMask & SDC.COMP_SZIP_EC:
-                                                print "EC encoding scheme used"
+          no argument
+
+        Returns::
+
+          tuple holding:
+
+          - compression type (one of the SDC.COMP_xxx constants)
+          - optional values, depending on the compression type
+              COMP_NONE       0 value    no additional value
+              COMP_SKPHUFF    1 value  : skip size
+              COMP_DEFLATE    1 value  : gzip compression level (1 to 9)
+              COMP_SZIP       5 values : options mask,
+                                         pixels per block (2 to 32)
+                                         pixels per scanline,
+                                         bits per pixel (number of bits in the SDS datatype)
+                                         pixels (number of elements in the SDS)
+
+                                         Note: in the context of an SDS, the word "pixel"
+                                         should really be understood as meaning "data element",
+                                         eg a cell value inside a multidimensional grid.
+                                         Test the options mask against constants SDC.COMP_SZIP_NN
+                                         and SDC.COMP_SZIP_EC, eg :
+                                           if optionMask & SDC.COMP_SZIP_EC:
+                                               print "EC encoding scheme used"
 
         An exception is raised if dataset is not compressed.
-        NOTE. Starting with v0.8, an exception is always raised if
-              pyhdf was installed with the NOCOMPRESS macro set.
+
+        .. note::
+            Starting with v0.8, an exception is always raised if
+            pyhdf was installed with the NOCOMPRESS macro set.
 
         C library equivalent: SDgetcompress
                                                            """
@@ -2586,7 +2726,8 @@ class SDS(object):
     def setcompress(self, comp_type, value=0, v2=0):
         """Compresses the dataset using a specified compression method.
 
-        Args:
+        Args::
+
           comp_type    compression type, identified by one of the
                        SDC.COMP_xxx constants
           value,v2     auxiliary value(s) needed by some compression types
@@ -2594,9 +2735,14 @@ class SDS(object):
                          SDC.COMP_DEFLATE   Gzip compression; value=deflate level (1 to 9), v2 is ignored
                          SDC.COMP_SZIP      Szip compression; value=encoding scheme (SDC.COMP_SZIP_EC or
                                             SDC.COMP_SZIP_NN), v2=pixels per block (2 to 32)
-        Returns: None
-                 NOTE. Starting with v0.8, an exception is always raised if
-                       pyhdf was installed with the NOCOMPRESS macro set.
+
+        Returns::
+
+            None
+
+        .. note::
+             Starting with v0.8, an exception is always raised if
+             pyhdf was installed with the NOCOMPRESS macro set.
 
         SDC.COMP_DEFLATE applies the GZIP compression to the dataset,
         and the value varies from 1 to 9, according to the level of
@@ -2622,11 +2768,15 @@ class SDS(object):
     def setexternalfile(self, filename, offset=0):
         """Store the dataset data in an external file.
 
-        Args:
+        Args::
+
           filename    external file name
           offset      offset in bytes where to start writing in
                       the external file
-        Returns: None
+
+        Returns::
+
+            None
 
         C library equivalent : SDsetexternalfile
                                                   """
@@ -2638,11 +2788,13 @@ class SDS(object):
         """Create an SDAttr instance representing an SDS
         (dataset) attribute.
 
-        Args:
+        Args::
+
           name_or_index   attribute name or index number; if a name is
                           given, the attribute may not exist
 
-        Returns:
+        Returns::
+
           SDAttr instance for the attribute. Call the methods of this
           class to query, read or set the attribute.
 
@@ -2656,19 +2808,23 @@ class SDS(object):
         """Return a dictionnary describing every attribute defined
         on the dataset.
 
-        Args:
+        Args::
+
           full      true to get complete info about each attribute
                     false to report only each attribute value
-        Returns:
+
+        Returns::
+
           Empty dictionnary if no attribute defined.
           Otherwise, dictionnary where each key is the name of a
           dataset attribute. If parameter 'full' is false,
           key value is the attribute value. If 'full' is true,
           key value is a tuple with the following elements:
-            - attribute value
-            - attribute index number
-            - attribute type
-            - attribute length
+
+          - attribute value
+          - attribute index number
+          - attribute type
+          - attribute length
 
         C library equivalent : no equivalent
                                                     """
@@ -2691,23 +2847,27 @@ class SDS(object):
     def dimensions(self, full=0):
         """Return a dictionnary describing every dataset dimension.
 
-        Args:
+        Args::
+
           full      true to get complete info about each dimension
                     false to report only each dimension length
-        Returns:
+
+        Returns::
+
           Dictionnary where each key is a dimension name. If no name
           has been given to the dimension, the key is set to
           'fakeDimx' where 'x' is the dimension index number.
           If parameter 'full' is false, key value is the dimension
           length. If 'full' is true, key value is a 5-element tuple
           with the following elements:
-            - dimension length; for an unlimited dimension, the reported
-              length is the current dimension length
-            - dimension index number
-            - 1 if the dimension is unlimited, 0 otherwise
-            - dimension scale type, or 0 if no scale is defined for
-              the dimension
-            - number of attributes defined on the dimension
+
+          - dimension length; for an unlimited dimension, the reported
+            length is the current dimension length
+          - dimension index number
+          - 1 if the dimension is unlimited, 0 otherwise
+          - dimension scale type, or 0 if no scale is defined for
+            the dimension
+          - number of attributes defined on the dimension
 
         C library equivalent : no equivalent
                                                     """
@@ -2779,19 +2939,23 @@ class SDim(object):
     def info(self):
         """Return info about the dimension instance.
 
-        Args :
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           4-element tuple holding:
-            -dimension name; 'fakeDimx' is returned if the dimension
-             has not been named yet, where 'x' is the dimension
-             index number
-            -dimension length; 0 is returned if the dimension is unlimited;
-             call the SDim.length() or SDS.info() methods to obtain the
-             current dimension length
-            -scale data type (one of the SDC.xxx constants); 0 is
-             returned if no scale has been set on the dimension
-            -number of attributes attached to the dimension
+
+          - dimension name; 'fakeDimx' is returned if the dimension
+            has not been named yet, where 'x' is the dimension
+            index number
+          - dimension length; 0 is returned if the dimension is unlimited;
+            call the SDim.length() or SDS.info() methods to obtain the
+            current dimension length
+          - scale data type (one of the SDC.xxx constants); 0 is
+            returned if no scale has been set on the dimension
+          - number of attributes attached to the dimension
 
         C library equivalent : SDdiminfo
                                                     """
@@ -2805,9 +2969,12 @@ class SDim(object):
         to quickly retrieve the current length of an unlimited
         dimension.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           dimension length; if the dimension is unlimited, the
           returned value is the current dimension length
 
@@ -2819,11 +2986,14 @@ class SDim(object):
     def setname(self, dim_name):
         """Set the dimension name.
 
-        Args:
+        Args::
+
           dim_name    dimension name; setting 2 dimensions to the same
                       name make the dimensions "shared"; in order to be
                       shared, the dimesions must be deined similarly.
-        Returns:
+
+        Returns::
+
           None
 
         C library equivalent : SDsetdimname
@@ -2836,9 +3006,12 @@ class SDim(object):
     def getscale(self):
         """Obtain the scale values along a dimension.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           list with the scale values; the list length is equal to the
           dimension length; the element type is equal to the dimension
           data type, as set when the 'setdimscale()' method was called.
@@ -2894,7 +3067,8 @@ class SDim(object):
     def setscale(self, data_type, scale):
         """Initialize the scale values along the dimension.
 
-        Args:
+        Args::
+
           data_type    data type code (one of the SDC.xxx constants)
           scale        sequence holding the scale values; the number of
                        values must match the current length of the dataset
@@ -2987,9 +3161,12 @@ class SDim(object):
     def getstrs(self):
         """Retrieve the dimension standard string attributes.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           3-element tuple holding:
             -dimension label  (attribute 'long_name')
             -dimension unit   (attribute 'units')
@@ -3008,12 +3185,14 @@ class SDim(object):
     def setstrs(self, label, unit, format):
         """Set the dimension standard string attributes.
 
-        Args:
+        Args::
+
           label   dimension label  (attribute 'long_name')
           unit    dimension unit   (attribute 'units')
           format  dimension format (attribute 'format')
 
-        Returns:
+        Returns::
+
           None
 
         C library equivalent: SDsetdimstrs
@@ -3026,13 +3205,15 @@ class SDim(object):
         """Create an SDAttr instance representing an SDim
         (dimension) attribute.
 
-        Args:
+        Args::
+
           name_or_index   attribute name or index number; if a name is
                           given, the attribute may not exist; in that
                           case, the attribute is created when the
                           instance set() method is called
 
-        Returns:
+        Returns::
+
           SDAttr instance for the attribute. Call the methods of this
           class to query, read or set the attribute.
 
@@ -3046,19 +3227,23 @@ class SDim(object):
         """Return a dictionnary describing every attribute defined
         on the dimension.
 
-        Args:
+        Args::
+
           full      true to get complete info about each attribute
                     false to report only each attribute value
-        Returns:
+
+        Returns::
+
           Empty dictionnary if no attribute defined.
           Otherwise, dictionnary where each key is the name of a
           dimension attribute. If parameter 'full' is false,
           key value is the attribute value. If 'full' is true,
           key value is a tuple with the following elements:
-            - attribute value
-            - attribute index number
-            - attribute type
-            - attribute length
+
+          - attribute value
+          - attribute index number
+          - attribute type
+          - attribute length
 
         C library equivalent : no equivalent
                                                     """
