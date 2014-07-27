@@ -7,7 +7,11 @@
 # Initial revision
 #
 
-"""A module of the pyhdf package implementing the basic API of the
+"""
+Basic API (:mod:`pyhdf.HDF`)
+============================
+
+A module of the pyhdf package implementing the basic API of the
 NCSA HDF4 library.
 (see: hdf.ncsa.uiuc.edu)
 

@@ -3,7 +3,11 @@
 # Revision 1.1  2004/08/02 15:36:04  gosselin
 # Initial revision
 #
-"""A module of the pyhdf package implementing the V (Vgroup)
+"""
+V (Vgroup) API (:mod:`pyhdf.V`)
+===============================
+
+A module of the pyhdf package implementing the V (Vgroup)
 API of the NCSA HDF4 library.
 (see: hdf.ncsa.uiuc.edu)
 

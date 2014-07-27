@@ -31,7 +31,11 @@
 # Revision 1.2  2004/08/02 15:00:34  gosselin
 # pyhdf 0.5-2
 #
-"""A module of the pyhdf package implementing the SD (scientific
+"""
+SD (scientific dataset) API (:mod:`pyhdf.SD`)
+=============================================
+
+A module of the pyhdf package implementing the SD (scientific
 dataset) API of the NCSA HDF4 library.
 (see: hdf.ncsa.uiuc.edu)
 

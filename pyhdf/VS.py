@@ -7,7 +7,11 @@
 # pyhdf-0.7-1
 #
 
-"""A module of the pyhdf package implementing the VS (Vdata table)
+"""
+VS (Vdata table) API (:mod:`pyhdf.VS`)
+======================================
+
+A module of the pyhdf package implementing the VS (Vdata table)
 API of the NCSA HDF4 library.
 (see: hdf.ncsa.uiuc.edu)
 
