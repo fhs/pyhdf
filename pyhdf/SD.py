@@ -677,7 +677,7 @@ Programming models
 ------------------
 
 Writing
--------
+^^^^^^^
 The following code can be used as a model to create an SD dataset.
 It shows how to use the most important functionnalities
 of the SD interface needed to initialize a dataset.
@@ -715,7 +715,7 @@ A real program should of course add error handling::
     hdfFile.end()
 
 Reading
--------
+^^^^^^^
 The following code, which reads the dataset created above, can also serve as
 a model for any program which needs to access an SD dataset::
 
@@ -758,7 +758,7 @@ Examples
 --------
 
 Example-1
----------
+^^^^^^^^^
 The following simple example exercises some important pyhdf.SD methods. It
 shows how to create an HDF dataset, define attributes and dimensions,
 create variables, and assign their contents.
@@ -846,7 +846,7 @@ We could now call the procedure as follows::
 
 
 Example 2
----------
+^^^^^^^^^
 This example shows a usefull python program that will display the
 structure of the SD component of any HDF file whose name is given on
 the command line. After the HDF file is opened, high level inquiry methods
