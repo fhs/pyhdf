@@ -1,0 +1,5 @@
+*.pyc
+build/
+dist/
+pyhdf.egg-info/
+doc/_build/
