@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Welcome to python-hdf4’s documentation! &mdash; python-hdf4 0.9 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="python-hdf4 0.9 documentation" href="#" />
+    <link rel="next" title="Basic API (pyhdf.HDF)" href="modules/HDF.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules/HDF.html" title="Basic API (pyhdf.HDF)"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">python-hdf4 0.9 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="welcome-to-python-hdf4-s-documentation">
+<h1>Welcome to python-hdf4&#8217;s documentation!<a class="headerlink" href="#welcome-to-python-hdf4-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules/HDF.html">Basic API (<tt class="docutils literal"><span class="pre">pyhdf.HDF</span></tt>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/HDF.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/HDF.html#functions-and-classes-summary">Functions and classes summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/SD.html">SD (scientific dataset) API (<tt class="docutils literal"><span class="pre">pyhdf.SD</span></tt>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/SD.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/SD.html#sd-module-key-features">SD module key features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/SD.html#accessing-the-sd-module">Accessing the SD module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/SD.html#package-components">Package components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/SD.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/SD.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/SD.html#summary-of-differences-between-the-pyhdf-and-c-sd-api">Summary of differences between the pyhdf and C SD API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/SD.html#error-handling">Error handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/SD.html#attribute-access-low-and-high-level">Attribute access: low and high level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/SD.html#variable-access-low-and-high-level">Variable access: low and high level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/SD.html#reading-setting-multivalued-hdf-attributes-and-variables">Reading/setting multivalued HDF attributes and variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/SD.html#netcdf-files">netCDF files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/SD.html#classes-summary">Classes summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/SD.html#data-types">Data types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/SD.html#programming-models">Programming models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/SD.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/VS.html">VS (Vdata table) API (<tt class="docutils literal"><span class="pre">pyhdf.VS</span></tt>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/VS.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/VS.html#vs-module-key-features">VS module key features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/VS.html#accessing-the-vs-module">Accessing the VS module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/VS.html#package-components">Package components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/VS.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/VS.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/VS.html#summary-of-differences-between-the-pyhdf-and-c-vs-api">Summary of differences between the pyhdf and C VS API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/VS.html#error-handling">Error handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/VS.html#vs-needs-support-from-the-hdf-module">VS needs support from the HDF module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/VS.html#classes-summary">Classes summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/VS.html#data-types">Data types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/VS.html#attribute-access-low-and-high-level">Attribute access: low and high level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/VS.html#predefined-attributes">Predefined attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/VS.html#record-access-low-and-high-level">Record access: low and high level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/VS.html#programming-models">Programming models</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/V.html">V (Vgroup) API (<tt class="docutils literal"><span class="pre">pyhdf.V</span></tt>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/V.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/V.html#accessing-the-v-module">Accessing the V module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/V.html#package-components">Package components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/V.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/V.html#summary-of-differences-between-the-pyhdf-and-c-v-api">Summary of differences between the pyhdf and C V API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/V.html#error-handling">Error handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/V.html#v-needs-support-from-the-hdf-module">V needs support from the HDF module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/V.html#classes-summary">Classes summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/V.html#attribute-access-low-and-high-level">Attribute access: low and high level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/V.html#predefined-attributes">Predefined attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/V.html#programming-models">Programming models</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to python-hdf4&#8217;s documentation!</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="modules/HDF.html"
+                        title="next chapter">Basic API (<tt class="docutils literal"><span class="pre">pyhdf.HDF</span></tt>)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules/HDF.html" title="Basic API (pyhdf.HDF)"
+             >next</a> |</li>
+        <li><a href="#">python-hdf4 0.9 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, python-hdf4 authors.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

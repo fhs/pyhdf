@@ -1,0 +1,1241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>V (Vgroup) API (pyhdf.V) &mdash; python-hdf4 0.9 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="python-hdf4 0.9 documentation" href="../index.html" />
+    <link rel="prev" title="VS (Vdata table) API (pyhdf.VS)" href="VS.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="VS.html" title="VS (Vdata table) API (pyhdf.VS)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">python-hdf4 0.9 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-pyhdf.V"></span><div class="section" id="v-vgroup-api-pyhdf-v">
+<h1>V (Vgroup) API (<a class="reference internal" href="#module-pyhdf.V" title="pyhdf.V"><tt class="xref py py-mod docutils literal"><span class="pre">pyhdf.V</span></tt></a>)<a class="headerlink" href="#v-vgroup-api-pyhdf-v" title="Permalink to this headline">¶</a></h1>
+<p>A module of the pyhdf package implementing the V (Vgroup)
+API of the NCSA HDF4 library.
+(see: hdf.ncsa.uiuc.edu)</p>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>V is one of the modules composing pyhdf, a python package implementing
+the NCSA HDF library and letting one manage HDF files from within a python
+program. Two versions of the HDF library currently exist, version 4 and
+version 5. pyhdf only implements version 4 of the library. Many
+different APIs are to be found inside the HDF4 specification.
+Currently, pyhdf implements just a few of those: the SD, VS and V APIs.
+Other APIs should be added in the future (GR, AN, etc).</p>
+<p>The V API supports the definition of vgroups inside an HDF file. A vgroup
+can thought of as a collection of arbitrary &#8220;references&#8221; to other HDF
+objects defined in the same file. A vgroup may hold references to
+other vgroups. It is thus possible to organize HDF objects into some sort
+of a hierarchy, similar to files grouped into a directory tree under unix.
+This vgroup hierarchical nature partly explains the origin of the &#8220;HDF&#8221;
+name (Hierarchical Data Format). vgroups can help logically organize the
+contents of an HDF file, for example by grouping together all the datasets
+belonging to a given experiment, and subdividing those datasets according
+to the day of the experiment, etc.</p>
+<p>The V API provides functions to find and access an existing vgroup,
+create a new one, delete a vgroup, identify the members of a vgroup, add
+and remove members to and from a vgroup, and set and query attributes
+on a vgroup. The members of a vgroup are identified through their tags
+and reference numbers. Tags are constants identifying each main object type
+(dataset, vdata, vgroup). Reference numbers serve to distinguish among
+objects of the same type. To add an object to a vgroup, one must first
+initialize that object using the API proper to that object type (eg: SD for
+a dataset) so as to create a reference number for that object, and then
+pass this reference number and the type tag to the V API. When reading the
+contents of a vgroup, the V API returns the tags and reference numbers of
+the objects composing the vgroup. The user program must then call the
+proper API to process each object, based on tag of this object (eg: VS for
+a tag identifying a vdata object).</p>
+<p>Some limitations of the V API must be stressed. First, HDF imposes
+no integrity constraint whatsoever on the contents of a vgroup, nor does it
+help maintain such integrity. For example, a vgroup is not strictly
+hierarchical, because an object can belong to more than one vgroup. It would
+be easy to create vgroups showing cycles among their members. Also, a vgroup
+member is simply a reference to an HDF object. If this object is afterwards
+deleted for any reason, the vgroup membership will not be automatically
+updated. The vgroup will refer to a non-existent object and thus be left
+in an inconsistent state. Nothing prevents adding the same member more than
+once to a vgroup, and giving the same name to more than one vgroup.
+Finally, the HDF library seems to make heavy use of vgroups for its own
+internal needs, and creates vgroups &#8220;behind the scenes&#8221;. This may make it
+difficult to pick up &#8220;user defined&#8221; vgroups when browsing an HDF file.</p>
+</div>
+<div class="section" id="accessing-the-v-module">
+<h2>Accessing the V module<a class="headerlink" href="#accessing-the-v-module" title="Permalink to this headline">¶</a></h2>
+<p>To access the V module a python program can say one of:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pyhdf.V</span>           <span class="c"># must prefix names with &quot;pyhdf.V.&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf</span> <span class="kn">import</span> <span class="n">V</span>      <span class="c"># must prefix names with &quot;V.&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.V</span> <span class="kn">import</span> <span class="o">*</span>    <span class="c"># names need no prefix</span>
+</pre></div>
+</div>
+<p>This document assumes the last import style is used.</p>
+<p>V is not self-contained, and needs functionnality provided by another
+pyhdf module, namely the HDF module. This module must thus be imported
+also:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">.HDF</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="package-components">
+<h2>Package components<a class="headerlink" href="#package-components" title="Permalink to this headline">¶</a></h2>
+<p>pyhdf is a proper Python package, eg a collection of modules stored under
+a directory whose name is that of the package and which stores an
+__init__.py file. Following the normal installation procedure, this
+directory will be &lt;python-lib&gt;/site-packages/pyhdf&#8217;, where &lt;python-lib&gt;
+stands for the python installation directory.</p>
+<p>For each HDF API exists a corresponding set of modules.</p>
+<p>The following modules are related to the V API.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>_hdfext</dt>
+<dd>C extension module responsible for wrapping the HDF
+C library for all python modules</dd>
+<dt>hdfext</dt>
+<dd>python module implementing some utility functions
+complementing the _hdfext extension module</dd>
+<dt>error</dt>
+<dd>defines the HDF4Error exception</dd>
+<dt>HDF</dt>
+<dd>python module providing support to the V module</dd>
+<dt>V</dt>
+<dd>python module wrapping the V API routines inside
+an OOP framework</dd>
+</dl>
+</div></blockquote>
+<p>_hdfext and hdfext were generated using the SWIG preprocessor.
+SWIG is however <em>not</em> needed to run the package. Those two modules
+are meant to do their work in the background, and should never be called
+directly. Only HDF and V should be imported by the user program.</p>
+</div>
+<div class="section" id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>The following software must be installed in order for the V module to
+work.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>HDF (v4) library</dt>
+<dd><p class="first">pyhdf does <em>not</em> include the HDF4 library, which must
+be installed separately.</p>
+<p class="last">HDF is available at:
+&#8220;<a class="reference external" href="http://hdf.ncsa.uiuc.edu/obtain.html">http://hdf.ncsa.uiuc.edu/obtain.html</a>&#8221;.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Numeric is also needed by the SD module. See the SD module documentation.</p>
+</div>
+<div class="section" id="summary-of-differences-between-the-pyhdf-and-c-v-api">
+<h2>Summary of differences between the pyhdf and C V API<a class="headerlink" href="#summary-of-differences-between-the-pyhdf-and-c-v-api" title="Permalink to this headline">¶</a></h2>
+<p>Most of the differences between the pyhdf and C V API can
+be summarized as follows.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>-In the C API, every function returns an integer status code, and values</dt>
+<dd>computed by the function are returned through one or more pointers
+passed as arguments.</dd>
+<dt>-In pyhdf, error statuses are returned through the Python exception</dt>
+<dd>mechanism, and values are returned as the method result. When the
+C API specifies that multiple values are returned, pyhdf returns a
+sequence of values, which are ordered similarly to the pointers in the
+C function argument list.</dd>
+</dl>
+</div></blockquote>
+</div>
+<div class="section" id="error-handling">
+<h2>Error handling<a class="headerlink" href="#error-handling" title="Permalink to this headline">¶</a></h2>
+<p>All errors reported by the C V API with a SUCCESS/FAIL error code
+are reported by pyhdf using the Python exception mechanism.
+When the C library reports a FAIL status, pyhdf raises an HDF4Error
+exception (a subclass of Exception) with a descriptive message.
+Unfortunately, the C library is rarely informative about the cause of
+the error. pyhdf does its best to try to document the error, but most
+of the time cannot do more than saying &#8220;execution error&#8221;.</p>
+</div>
+<div class="section" id="v-needs-support-from-the-hdf-module">
+<h2>V needs support from the HDF module<a class="headerlink" href="#v-needs-support-from-the-hdf-module" title="Permalink to this headline">¶</a></h2>
+<p>The VS module is not self-contained (countrary to the SD module).
+It requires help from the HDF module, namely:</p>
+<ul class="simple">
+<li>the HDF.HDF class to open and close the HDF file, and initialize the
+V interface</li>
+<li>the HDF.HC class to provide different sorts of constants (opening modes,
+data types, etc).</li>
+</ul>
+<p>A program wanting to access HDF vgroups will almost always need to execute
+the following minimal set of calls:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.V</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hdfFile</span> <span class="o">=</span> <span class="n">HDF</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">HC</span><span class="o">.</span><span class="n">xxx</span><span class="p">)</span><span class="c"># open HDF file</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">hdfFile</span><span class="o">.</span><span class="n">vgstart</span><span class="p">()</span>      <span class="c"># initialize V interface on HDF file</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">...</span>                        <span class="c"># manipulate vgroups</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>                    <span class="c"># terminate V interface</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hdfFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>            <span class="c"># close HDF file</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="classes-summary">
+<h2>Classes summary<a class="headerlink" href="#classes-summary" title="Permalink to this headline">¶</a></h2>
+<p>pyhdf wraps the V API using the following python classes:</p>
+<div class="highlight-python"><div class="highlight"><pre>V      HDF V interface
+VG     vgroup
+VGAttr vgroup attribute
+</pre></div>
+</div>
+<p>In more detail:</p>
+<div class="highlight-python"><div class="highlight"><pre>V     The V class implements the V (Vgroup) interface applied to an
+      HDF file.
+
+      To instantiate a V class, call the vgstart() method of an
+      HDF instance.
+
+      methods:
+        constructors
+          attach()      open an existing vgroup given its name or its
+                        reference number, or create a new vgroup,
+                        returning a VG instance for that vgroup
+          create()      create a new vgroup, returning a VG instance
+                        for that vgroup
+
+        closing the interface
+          end()         close the V interface on the HDF file
+
+        deleting a vgroup
+          delete()      delete the vgroup identified by its name or
+                        its reference number
+
+        searching
+          find()        find a vgroup given its name, returning
+                        the vgroup reference number
+          findclass()   find a vgroup given its class name, returning
+                        the vgroup reference number
+          getid()       return the reference number of the vgroup
+                        following the one with the given reference number
+
+VG    The VG class encapsulates the functionnality of a vgroup.
+
+      To instantiate a VG class, call the attach() or create() methods
+      of a V class instance.
+
+        constructors
+
+          attr()        return a VGAttr instance representing an attribute
+                        of the vgroup
+          findattr()    search the vgroup for a given attribute,
+                        returning a VGAttr instance for that attribute
+
+        ending access to a vgroup
+
+          detach()      terminate access to the vgroup
+
+        adding a member to a vgroup
+
+          add()         add to the vgroup the HDF object identified by its
+                        tag and reference number
+          insert()      insert a vdata or a vgroup in the vgroup, given
+                        the vdata or vgroup instance
+
+        deleting a member from a vgroup
+
+          delete()      remove from the vgroup the HDF object identified
+                        by the given tag and reference number
+
+        querying vgroup
+
+          attrinfo()    return info about all the vgroup attributes
+          inqtagref()   determine if the HDF object with the given
+                        tag and reference number belongs to the vgroup
+          isvg()        determine if the member with the given reference
+                        number is a vgroup object
+          isvs()        determine if the member with the given reference
+                        number is a vdata object
+          nrefs()       return the number of vgroup members with the
+                        given tag
+          tagref()      get the tag and reference number of a vgroup
+                        member, given the index number of that member
+          tagrefs()     get the tags and reference numbers of all the
+                        vgroup members
+
+VGAttr The VGAttr class provides methods to set and query vgroup
+       attributes.
+
+       To create an instance of this class, call the attr() method
+       of a VG instance.
+
+       Remember that vgroup attributes can also be set and queried by
+       applying the standard python &quot;dot notation&quot; on a VG instance.
+
+         get attibute value(s)
+
+           get()         obtain the attribute value(s)
+
+         set attribute value(s)
+
+           set()         set the attribute to the given value(s) of the
+                         given type, first creating the attribute if
+                         necessary
+
+         query attribute info
+
+           info()        retrieve attribute name, data type, order and
+                         size
+</pre></div>
+</div>
+</div>
+<div class="section" id="attribute-access-low-and-high-level">
+<h2>Attribute access: low and high level<a class="headerlink" href="#attribute-access-low-and-high-level" title="Permalink to this headline">¶</a></h2>
+<p>The V API allows setting attributes on vgroups. Attributes can be of many
+types (int, float, char) of different bit lengths (8, 16, 32, 64 bits),
+and can be single or multi-valued. Values of a multi-valued attribute must
+all be of the same type.</p>
+<p>Attributes can be set and queried in two different ways. First, given a
+VG instance (describing a vgroup object), the attr() method of that instance
+is called to create a VGAttr instance representing the wanted attribute
+(possibly non existent). The set() method of this VGAttr instance is then
+called to define the attribute value, creating it if it does not already
+exist. The get() method returns the current attribute value. Here is an
+example.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.V</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">HDF</span><span class="p">(</span><span class="s">&#39;test.hdf&#39;</span><span class="p">,</span> <span class="n">HC</span><span class="o">.</span><span class="n">WRITE</span><span class="p">)</span> <span class="c"># Open file &#39;test.hdf&#39; in write mode</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">vgstart</span><span class="p">()</span>            <span class="c"># init vgroup interface</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vg</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="s">&#39;vtest&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c"># attach vgroup &#39;vtest&#39; in write mode</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attr</span> <span class="o">=</span> <span class="n">vg</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s">&#39;version&#39;</span><span class="p">)</span>  <span class="c"># prepare to define the &#39;version&#39; attribute</span>
+<span class="go">                               # on the vdata</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attr</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">HC</span><span class="o">.</span><span class="n">CHAR8</span><span class="p">,</span><span class="s">&#39;1.0&#39;</span><span class="p">)</span>   <span class="c"># set attribute &#39;version&#39; to string &#39;1.0&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">attr</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>           <span class="c"># get and print attribute value</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attr</span> <span class="o">=</span> <span class="n">vg</span> <span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s">&#39;range&#39;</span><span class="p">)</span>   <span class="c"># prepare to define attribute &#39;range&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attr</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">HC</span><span class="o">.</span><span class="n">INT32</span><span class="p">,(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">))</span> <span class="c"># set attribute &#39;range&#39; to a pair of ints</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">attr</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>             <span class="c"># get and print attribute value</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">vg</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>                <span class="c"># &quot;close&quot; the vgroup</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>                    <span class="c"># terminate the vgroup interface</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>                  <span class="c"># close the HDF file</span>
+</pre></div>
+</div>
+<p>The second way consists of setting/querying an attribute as if it were a
+normal python class attribute, using the usual dot notation. Above example
+then becomes:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.V</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">HDF</span><span class="p">(</span><span class="s">&#39;test.hdf&#39;</span><span class="p">,</span> <span class="n">HC</span><span class="o">.</span><span class="n">WRITE</span><span class="p">)</span> <span class="c"># Open file &#39;test.hdf&#39; in write mode</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">vgstart</span><span class="p">()</span>            <span class="c"># init vgroup interface</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vg</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="s">&#39;vtest&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c"># attach vdata &#39;vtest&#39; in write mode</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vg</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="s">&#39;1.0&#39;</span>         <span class="c"># create vdata attribute &#39;version&#39;,</span>
+<span class="go">                               # setting it to string &#39;1.0&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">vg</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>           <span class="c"># print attribute value</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vg</span><span class="o">.</span><span class="n">range</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>       <span class="c"># create attribute &#39;range&#39;, setting</span>
+<span class="go">                               # it to the pair of ints (-10, 15)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">vg</span><span class="o">.</span><span class="n">range</span><span class="p">)</span>             <span class="c"># print attribute value</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vg</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>                <span class="c"># &quot;close&quot; the vdata</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>                    <span class="c"># terminate the vdata interface</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>                  <span class="c"># close the HDF file</span>
+</pre></div>
+</div>
+<p>Note how the dot notation greatly simplifies and clarifies the code.
+Some latitude is however lost by manipulating attributes in that way,
+because the pyhdf package, not the programmer, is then responsible of
+setting the attribute type. The attribute type is chosen to be one of:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="77%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>HC.CHAR8</td>
+<td>if the attribute value is a string</td>
+</tr>
+<tr class="row-even"><td>HC.INT32</td>
+<td>if all attribute values are integers</td>
+</tr>
+<tr class="row-odd"><td>HC.FLOAT64</td>
+<td>otherwise</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>The first way of handling attribute values must be used if one wants to
+define an attribute of any other type (for ex. 8 or 16 bit integers,
+signed or unsigned). Also, only a VDAttr instance gives access to attribute
+info, through its info() method.</p>
+<p>However, accessing HDF attributes as if they were python attributes raises
+an important issue. There must exist a way to assign generic attributes
+to the python objects without requiring those attributes to be converted
+to HDF attributes. pyhdf uses the following rule: an attribute whose name
+starts with an underscore (&#8216;_&#8217;) is either a &#8220;predefined&#8221; HDF attribute
+(see below) or a standard python attribute. Otherwise, the attribute
+is handled as an HDF attribute. Also, HDF attributes are not stored inside
+the object dictionnary: the python dir() function will not list them.</p>
+<p>Attribute values can be updated, but it is illegal to try to change the
+value type, or the attribute order (number of values). This is important
+for attributes holding string values. An attribute initialized with an
+&#8216;n&#8217; character string is simply a character attribute of order &#8216;n&#8217; (eg a
+character array of length &#8216;n&#8217;). If &#8216;vg&#8217; is a vgroup and we initialize its
+&#8216;a1&#8217; attribute as &#8216;vg.a1 = &#8220;abcdef&#8221;&#8217;, then a subsequent update attempt
+like &#8216;vg.a1 = &#8220;12&#8221;&#8217; will fail, because we then try to change the order
+of the attribute (from 6 to 2). It is mandatory to keep the length of string
+attributes constant.</p>
+</div>
+<div class="section" id="predefined-attributes">
+<h2>Predefined attributes<a class="headerlink" href="#predefined-attributes" title="Permalink to this headline">¶</a></h2>
+<p>The VG class supports predefined attributes to get (and occasionnaly set)
+attribute values easily using the usual python &#8220;dot notation&#8221;, without
+having to call a class method. The names of predefined attributes all start
+with an underscore (&#8216;_&#8217;).</p>
+<p>In the following table, the RW column holds an X if the attribute
+is read/write.</p>
+<blockquote>
+<div><p>VG predefined attributes</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="5%" />
+<col width="45%" />
+<col width="32%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">RW</th>
+<th class="head">description</th>
+<th class="head">C library routine</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>_class</td>
+<td>X</td>
+<td>class name</td>
+<td>Vgetclass/Vsetclass</td>
+</tr>
+<tr class="row-odd"><td>_name</td>
+<td>X</td>
+<td>vgroup name</td>
+<td>Vgetname/Vsetname</td>
+</tr>
+<tr class="row-even"><td>_nattrs</td>
+<td>&nbsp;</td>
+<td>number of vgroup attributes</td>
+<td>Vnattrs</td>
+</tr>
+<tr class="row-odd"><td>_nmembers</td>
+<td>&nbsp;</td>
+<td>number of vgroup members</td>
+<td>Vntagrefs</td>
+</tr>
+<tr class="row-even"><td>_refnum</td>
+<td>&nbsp;</td>
+<td>vgroup reference number</td>
+<td>VQueryref</td>
+</tr>
+<tr class="row-odd"><td>_tag</td>
+<td>&nbsp;</td>
+<td>vgroup tag</td>
+<td>VQuerytag</td>
+</tr>
+<tr class="row-even"><td>_version</td>
+<td>&nbsp;</td>
+<td>vgroup version number</td>
+<td>Vgetversion</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div></blockquote>
+</div>
+<div class="section" id="programming-models">
+<h2>Programming models<a class="headerlink" href="#programming-models" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="creating-and-initializing-a-vgroup">
+<h3>Creating and initializing a vgroup<a class="headerlink" href="#creating-and-initializing-a-vgroup" title="Permalink to this headline">¶</a></h3>
+<p>The following program shows how to create and initialize a vgroup inside
+an HDF file. It can serve as a model for any program wanting to create
+a vgroup:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyhdf.V</span>   <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyhdf.VS</span>  <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyhdf.SD</span>  <span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">def</span> <span class="nf">vdatacreate</span><span class="p">(</span><span class="n">vs</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+
+    <span class="c"># Create vdata and define its structure</span>
+    <span class="n">vd</span> <span class="o">=</span> <span class="n">vs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
+               <span class="p">((</span><span class="s">&#39;partid&#39;</span><span class="p">,</span><span class="n">HC</span><span class="o">.</span><span class="n">CHAR8</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>       <span class="c"># 5 char string</span>
+                <span class="p">(</span><span class="s">&#39;description&#39;</span><span class="p">,</span><span class="n">HC</span><span class="o">.</span><span class="n">CHAR8</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="c"># 10 char string field</span>
+                <span class="p">(</span><span class="s">&#39;qty&#39;</span><span class="p">,</span><span class="n">HC</span><span class="o">.</span><span class="n">INT16</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>          <span class="c"># 1 16 bit int field</span>
+                <span class="p">(</span><span class="s">&#39;wght&#39;</span><span class="p">,</span><span class="n">HC</span><span class="o">.</span><span class="n">FLOAT32</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>       <span class="c"># 1 32 bit float</span>
+                <span class="p">(</span><span class="s">&#39;price&#39;</span><span class="p">,</span><span class="n">HC</span><span class="o">.</span><span class="n">FLOAT32</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>        <span class="c"># 1 32 bit float</span>
+               <span class="p">))</span>
+
+    <span class="c"># Store records</span>
+    <span class="n">vd</span><span class="o">.</span><span class="n">write</span><span class="p">(((</span><span class="s">&#39;Q1234&#39;</span><span class="p">,</span> <span class="s">&#39;bolt&#39;</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">),</span>   <span class="c"># record 1</span>
+              <span class="p">(</span><span class="s">&#39;B5432&#39;</span><span class="p">,</span> <span class="s">&#39;brush&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">4.25</span><span class="p">),</span>  <span class="c"># record 2</span>
+              <span class="p">(</span><span class="s">&#39;S7613&#39;</span><span class="p">,</span> <span class="s">&#39;scissor&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">3.75</span><span class="p">)</span>  <span class="c"># record 3</span>
+              <span class="p">))</span>
+    <span class="c"># &quot;close&quot; vdata</span>
+    <span class="n">vd</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">sdscreate</span><span class="p">(</span><span class="n">sd</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+
+    <span class="c"># Create a simple 3x3 float array.</span>
+    <span class="n">sds</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">SDC</span><span class="o">.</span><span class="n">FLOAT32</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+    <span class="c"># Initialize array</span>
+    <span class="n">sds</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">),(</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+    <span class="c"># &quot;close&quot; dataset.</span>
+    <span class="n">sds</span><span class="o">.</span><span class="n">endaccess</span><span class="p">()</span>
+
+<span class="c"># Create HDF file</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="s">&#39;inventory.hdf&#39;</span>
+<span class="n">hdf</span> <span class="o">=</span> <span class="n">HDF</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">HC</span><span class="o">.</span><span class="n">WRITE</span><span class="o">|</span><span class="n">HC</span><span class="o">.</span><span class="n">CREATE</span><span class="p">)</span>
+
+<span class="c"># Initialize the SD, V and VS interfaces on the file.</span>
+<span class="n">sd</span> <span class="o">=</span> <span class="n">SD</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">SDC</span><span class="o">.</span><span class="n">WRITE</span><span class="p">)</span>  <span class="c"># SD interface</span>
+<span class="n">vs</span> <span class="o">=</span> <span class="n">hdf</span><span class="o">.</span><span class="n">vstart</span><span class="p">()</span>             <span class="c"># vdata interface</span>
+<span class="n">v</span>  <span class="o">=</span> <span class="n">hdf</span><span class="o">.</span><span class="n">vgstart</span><span class="p">()</span>            <span class="c"># vgroup interface</span>
+
+<span class="c"># Create vdata named &#39;INVENTORY&#39;.</span>
+<span class="n">vdatacreate</span><span class="p">(</span><span class="n">vs</span><span class="p">,</span> <span class="s">&#39;INVENTORY&#39;</span><span class="p">)</span>
+<span class="c"># Create dataset named &quot;ARR_3x3&quot;</span>
+<span class="n">sdscreate</span><span class="p">(</span><span class="n">sd</span><span class="p">,</span> <span class="s">&#39;ARR_3x3&#39;</span><span class="p">)</span>
+
+<span class="c"># Attach the vdata and the dataset.</span>
+<span class="n">vd</span> <span class="o">=</span> <span class="n">vs</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="s">&#39;INVENTORY&#39;</span><span class="p">)</span>
+<span class="n">sds</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s">&#39;ARR_3x3&#39;</span><span class="p">)</span>
+
+<span class="c"># Create vgroup named &#39;TOTAL&#39;.</span>
+<span class="n">vg</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s">&#39;TOTAL&#39;</span><span class="p">)</span>
+
+<span class="c"># Add vdata to the vgroup</span>
+<span class="n">vg</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">vd</span><span class="p">)</span>
+<span class="c"># We could also have written this:</span>
+<span class="c"># vgroup.add(vd._tag, vd._refnum)</span>
+<span class="c"># or this:</span>
+<span class="c"># vgroup.add(HC.DFTAG_VH, vd._refnum)</span>
+
+<span class="c"># Add dataset to the vgroup</span>
+<span class="n">vg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">HC</span><span class="o">.</span><span class="n">DFTAG_NDG</span><span class="p">,</span> <span class="n">sds</span><span class="o">.</span><span class="n">ref</span><span class="p">())</span>
+
+<span class="c"># Close vgroup, vdata and dataset.</span>
+<span class="n">vg</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>       <span class="c"># vgroup</span>
+<span class="n">vd</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>       <span class="c"># vdata</span>
+<span class="n">sds</span><span class="o">.</span><span class="n">endaccess</span><span class="p">()</span>   <span class="c"># dataset</span>
+
+<span class="c"># Terminate V, VS and SD interfaces.</span>
+<span class="n">v</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>           <span class="c"># V interface</span>
+<span class="n">vs</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>          <span class="c"># VS interface</span>
+<span class="n">sd</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>          <span class="c"># SD interface</span>
+
+<span class="c"># Close HDF file.</span>
+<span class="n">hdf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The program starts by defining two functions vdatacreate() and sdscreate(),
+which will serve to create the vdata and dataset objects we need. Those
+functions are not essential to the example. They simply help to make the
+example self-contained. Refer to the VS and SD module documentation for
+additional explanations about how these functions work.</p>
+<p>After opening the HDF file in write mode, the SD, V and VS interfaces are
+initialized on the file. Next vdatacreate() is called to create a new vdata
+named &#8216;INVENTORY&#8217; on the VS instance, and sdscreate() to create a new
+dataset named &#8216;ARR_3x3&#8217; on the SD instance. This is done so that we have a
+vdata and a dataset to play with.</p>
+<p>The vdata and the dataset are then attached (&#8220;opened&#8221;). The create()
+method of the V instance is then called to create a new vgroup named
+&#8216;TOTAL&#8217;. The vgroup is then populated by calling its insert() method to add
+the vdata &#8216;INVENTORY&#8217;, and its add() method to add the &#8216;ARR_3x3&#8217; dataset.
+Note that insert() is just a commodity method that simplifies adding a
+vdata or a vgroup to a vgroup, avoiding the need to pass an object tag and
+reference number. There is no such commodity method for adding a dataset
+to a vgroup. The dataset must be added by specifying its tag and reference
+number. Note that the tags to be used are defined inside the HDF module as
+constants of the HC class: DFTAG_NDG for a dataset, DFTAG_VG for a vgroup,
+DFTAG_VH for a vdata.</p>
+<p>The program ends by detaching (&#8220;closing&#8221;) the HDF objects created above,
+terminating the three interfaces initialized, and closing the HDF file.</p>
+</div>
+<div class="section" id="reading-a-vgroup">
+<h3>Reading a vgroup<a class="headerlink" href="#reading-a-vgroup" title="Permalink to this headline">¶</a></h3>
+<p>The following program shows the contents of the vgroups contained inside
+any HDF file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyhdf.V</span>   <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyhdf.VS</span>  <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyhdf.SD</span>  <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">def</span> <span class="nf">describevg</span><span class="p">(</span><span class="n">refnum</span><span class="p">):</span>
+
+    <span class="c"># Describe the vgroup with the given refnum.</span>
+
+    <span class="c"># Open vgroup in read mode.</span>
+    <span class="n">vg</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">refnum</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot;----------------&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;name:&quot;</span><span class="p">,</span> <span class="n">vg</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="s">&quot;class:&quot;</span><span class="p">,</span><span class="n">vg</span><span class="o">.</span><span class="n">_class</span><span class="p">,</span> <span class="s">&quot;tag,ref:&quot;</span><span class="p">,</span>
+    <span class="k">print</span> <span class="n">vg</span><span class="o">.</span><span class="n">_tag</span><span class="p">,</span> <span class="n">vg</span><span class="o">.</span><span class="n">_refnum</span>
+
+    <span class="c"># Show the number of members of each main object type.</span>
+    <span class="k">print</span> <span class="s">&quot;members: &quot;</span><span class="p">,</span> <span class="n">vg</span><span class="o">.</span><span class="n">_nmembers</span><span class="p">,</span>
+    <span class="k">print</span> <span class="s">&quot;datasets:&quot;</span><span class="p">,</span> <span class="n">vg</span><span class="o">.</span><span class="n">nrefs</span><span class="p">(</span><span class="n">HC</span><span class="o">.</span><span class="n">DFTAG_NDG</span><span class="p">),</span>
+    <span class="k">print</span> <span class="s">&quot;vdatas:  &quot;</span><span class="p">,</span> <span class="n">vg</span><span class="o">.</span><span class="n">nrefs</span><span class="p">(</span><span class="n">HC</span><span class="o">.</span><span class="n">DFTAG_VH</span><span class="p">),</span>
+    <span class="k">print</span> <span class="s">&quot;vgroups: &quot;</span><span class="p">,</span> <span class="n">vg</span><span class="o">.</span><span class="n">nrefs</span><span class="p">(</span><span class="n">HC</span><span class="o">.</span><span class="n">DFTAG_VG</span><span class="p">)</span>
+
+    <span class="c"># Read the contents of the vgroup.</span>
+    <span class="n">members</span> <span class="o">=</span> <span class="n">vg</span><span class="o">.</span><span class="n">tagrefs</span><span class="p">()</span>
+
+    <span class="c"># Display info about each member.</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">tag</span><span class="p">,</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">members</span><span class="p">:</span>
+        <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">print</span> <span class="s">&quot;member index&quot;</span><span class="p">,</span> <span class="n">index</span>
+        <span class="c"># Vdata tag</span>
+        <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">HC</span><span class="o">.</span><span class="n">DFTAG_VH</span><span class="p">:</span>
+            <span class="n">vd</span> <span class="o">=</span> <span class="n">vs</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+            <span class="n">nrecs</span><span class="p">,</span> <span class="n">intmode</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">vd</span><span class="o">.</span><span class="n">inquire</span><span class="p">()</span>
+            <span class="k">print</span> <span class="s">&quot;  vdata:&quot;</span><span class="p">,</span><span class="n">name</span><span class="p">,</span> <span class="s">&quot;tag,ref:&quot;</span><span class="p">,</span><span class="n">tag</span><span class="p">,</span> <span class="n">ref</span>
+            <span class="k">print</span> <span class="s">&quot;    fields:&quot;</span><span class="p">,</span><span class="n">fields</span>
+            <span class="k">print</span> <span class="s">&quot;    nrecs:&quot;</span><span class="p">,</span><span class="n">nrecs</span>
+            <span class="n">vd</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+
+        <span class="c"># SDS tag</span>
+        <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">HC</span><span class="o">.</span><span class="n">DFTAG_NDG</span><span class="p">:</span>
+            <span class="n">sds</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">sd</span><span class="o">.</span><span class="n">reftoindex</span><span class="p">(</span><span class="n">ref</span><span class="p">))</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">dims</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">nattrs</span> <span class="o">=</span> <span class="n">sds</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+            <span class="k">print</span> <span class="s">&quot;  dataset:&quot;</span><span class="p">,</span><span class="n">name</span><span class="p">,</span> <span class="s">&quot;tag,ref:&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">ref</span>
+            <span class="k">print</span> <span class="s">&quot;    dims:&quot;</span><span class="p">,</span><span class="n">dims</span>
+            <span class="k">print</span> <span class="s">&quot;    type:&quot;</span><span class="p">,</span><span class="nb">type</span>
+            <span class="n">sds</span><span class="o">.</span><span class="n">endaccess</span><span class="p">()</span>
+
+        <span class="c"># VS tag</span>
+        <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">HC</span><span class="o">.</span><span class="n">DFTAG_VG</span><span class="p">:</span>
+            <span class="n">vg0</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+            <span class="k">print</span> <span class="s">&quot;  vgroup:&quot;</span><span class="p">,</span> <span class="n">vg0</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="s">&quot;tag,ref:&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">ref</span>
+            <span class="n">vg0</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+
+        <span class="c"># Unhandled tag</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&quot;unhandled tag,ref&quot;</span><span class="p">,</span><span class="n">tag</span><span class="p">,</span><span class="n">ref</span>
+
+    <span class="c"># Close vgroup</span>
+    <span class="n">vg</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+
+<span class="c"># Open HDF file in readonly mode.</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">hdf</span> <span class="o">=</span> <span class="n">HDF</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+<span class="c"># Initialize the SD, V and VS interfaces on the file.</span>
+<span class="n">sd</span> <span class="o">=</span> <span class="n">SD</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+<span class="n">vs</span> <span class="o">=</span> <span class="n">hdf</span><span class="o">.</span><span class="n">vstart</span><span class="p">()</span>
+<span class="n">v</span>  <span class="o">=</span> <span class="n">hdf</span><span class="o">.</span><span class="n">vgstart</span><span class="p">()</span>
+
+<span class="c"># Scan all vgroups in the file.</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ref</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">getid</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">HDF4Error</span><span class="p">,</span><span class="n">msg</span><span class="p">:</span>    <span class="c"># no more vgroup</span>
+        <span class="k">break</span>
+    <span class="n">describevg</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+
+<span class="c"># Terminate V, VS and SD interfaces.</span>
+<span class="n">v</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+<span class="n">vs</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+<span class="n">sd</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+
+<span class="c"># Close HDF file.</span>
+<span class="n">hdf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The program starts by defining function describevg(), which is passed the
+reference number of the vgroup to display. The function assumes that the
+SD, VS and V interfaces have been previously initialized.</p>
+<p>The function starts by attaching (&#8220;opening&#8221;) the vgroup, and displaying
+its name, class, tag and reference number. The number of members of the
+three most important object types is then displayed, by calling the nrefs()
+method with the predefined tags found inside the HDF.HC class.</p>
+<p>The tagrefs() method is then called to get a list of all the vgroup members,
+each member being identified by its tag and reference number. A &#8216;for&#8217;
+statement is entered to loop over each element of this list. The tag is
+tested against the known values defined in the HDF.HC class: the outcome of
+this test indicates how to process the member object.</p>
+<p>A DFTAG_VH tag indicates we deal with a vdata. The vdata is attached, its
+inquire() method called to display info about it, and the vdata is detached.
+In the case of a DFTAG_NFG, we are facing a dataset. The dataset is
+selected, info is obtained by calling the dataset info() method, and the
+dataset is released. A DFTAG_VG indicates that the member is a vgroup. We
+attach it, print its name, tag and reference number, then detach the
+member vgroup. A warning is finally displayed if we hit upon a member of
+an unknown type.</p>
+<p>The function releases the vgroup just displayed and returns.</p>
+<p>The main program starts by opening in readonly mode the HDF file passed
+as argument on the command line. The SD, VS and V interfaces are
+initialized, and the corresponding class instances are stored inside &#8216;sd&#8217;,
+&#8216;vs&#8217; and &#8216;v&#8217; global variables, respectively, for the use of the
+describevg() function.</p>
+<p>A while loop is then entered to access each vgroup in the file. A reference
+number of -1 is passed on the first call to getid() to obtain the reference
+number of the first vgroup. getid() returns a new reference number on each
+subsequent call, and raises an exception when the last vgroup has been
+retrieved. This exception is caught to break out of the loop, otherwise
+describevg() is called to display the vgroup we have on hand.</p>
+<p>Once the loop is over, the interfaces initialized before are terminated,
+and the HDF file is closed.</p>
+<p>You will notice that this program will display vgroups other than those
+you have explicitly created. Those supplementary vgroups are created
+by the HDF library for its own internal needs.</p>
+<dl class="class">
+<dt id="pyhdf.V.V">
+<em class="property">class </em><tt class="descclassname">pyhdf.V.</tt><tt class="descname">V</tt><big>(</big><em>hinst</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#V"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.V" title="Permalink to this definition">¶</a></dt>
+<dd><p>The V class implements the V (Vgroup) interface applied to an
+HDF file.
+To instantiate a V class, call the vgstart() method of an
+HDF instance.</p>
+<dl class="method">
+<dt id="pyhdf.V.V.attach">
+<tt class="descname">attach</tt><big>(</big><em>num_name</em>, <em>write=0</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#V.attach"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.V.attach" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open an existing vgroup given its name or its reference
+number, or create a new vgroup, returning a VG instance for
+that vgroup.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>num_name      reference number or name of the vgroup to open,
+              or -1 to create a new vgroup; vcreate() can also
+              be called to create and name a new vgroup
+write         set to non-zero to open the vgroup in write mode
+              and to 0 to open it in readonly mode (default)
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>VG instance for the vgroup
+</pre></div>
+</div>
+<p>An exception is raised if an attempt is made to open
+a non-existent vgroup.</p>
+<p>C library equivalent : Vattach</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.V.create">
+<tt class="descname">create</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#V.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.V.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new vgroup, and assign it a name.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>name   name to assign to the new vgroup
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>VG instance for the new vgroup
+</pre></div>
+</div>
+<p>A create(name) call is equivalent to an attach(-1, 1) call,
+followed by a call to the setname(name) method of the instance.</p>
+<p>C library equivalent : no equivalent</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.V.delete">
+<tt class="descname">delete</tt><big>(</big><em>num_name</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#V.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.V.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete from the HDF file the vgroup identified by its
+reference number or its name.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>num_name    either the reference number or the name of
+            the vgroup to delete
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">None</span>
+</pre></div>
+</div>
+<p>C library equivalent : Vdelete</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.V.end">
+<tt class="descname">end</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#V.end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.V.end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the V interface.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>No argument
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">None</span>
+</pre></div>
+</div>
+<p>C library equivalent : Vend</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.V.find">
+<tt class="descname">find</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#V.find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.V.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find a vgroup given its name, returning its reference
+number if found.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>name     name of the vgroup to find
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>vgroup reference number
+</pre></div>
+</div>
+<p>An exception is raised if the vgroup is not found.</p>
+<p>C library equivalent: Vfind</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.V.findclass">
+<tt class="descname">findclass</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#V.findclass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.V.findclass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find a vgroup given its class name, returning its reference
+number if found.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>name     class name of the vgroup to find
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>vgroup reference number
+</pre></div>
+</div>
+<p>An exception is raised if the vgroup is not found.</p>
+<p>C library equivalent: Vfind</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.V.getid">
+<tt class="descname">getid</tt><big>(</big><em>ref</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#V.getid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.V.getid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain the reference number of the vgroup following the
+vgroup with the given reference number .</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>ref    reference number of the vgroup after which to search;
+       set to -1 to start the search at the start of
+       the HDF file
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>reference number of the vgroup past the one identified by &#39;ref&#39;
+</pre></div>
+</div>
+<p>An exception is raised if the end of the vgroup is reached.</p>
+<p>C library equivalent : Vgetid</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyhdf.V.VG">
+<em class="property">class </em><tt class="descclassname">pyhdf.V.</tt><tt class="descname">VG</tt><big>(</big><em>vinst</em>, <em>id</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#VG"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.VG" title="Permalink to this definition">¶</a></dt>
+<dd><p>The VG class encapsulates the functionnality of a vgroup.
+To instantiate a VG class, call the attach() or create() methods
+of a V class instance.</p>
+<dl class="method">
+<dt id="pyhdf.V.VG.add">
+<tt class="descname">add</tt><big>(</big><em>tag</em>, <em>ref</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#VG.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.VG.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add to the vgroup an object identified by its tag and
+reference number.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>tag       tag of the object to add
+ref       reference number of the object to add
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>total number of objects in the vgroup after the addition
+</pre></div>
+</div>
+<p>C library equivalent : Vaddtagref</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.VG.attr">
+<tt class="descname">attr</tt><big>(</big><em>name_index</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#VG.attr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.VG.attr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a VGAttr instance representing a vgroup attribute.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>name_index  attribute name or attribute index number; if a
+            name is given the attribute may not exist; in that
+            case, it will be created when the VGAttr
+            instance set() method is called
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>VGAttr instance for the attribute. Call the methods of this
+class to query, read or set the attribute.
+</pre></div>
+</div>
+<p>C library equivalent : no equivalent</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.VG.attrinfo">
+<tt class="descname">attrinfo</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#VG.attrinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.VG.attrinfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return info about all the vgroup attributes.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>no argument
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>dictionnary describing each vgroup attribute; for each attribute,
+a (name,data) pair is added to the dictionary, where &#39;data&#39; is
+a tuple holding:
+
+- attribute data type (one of HC.xxx constants)
+- attribute order
+- attribute value
+- attribute size in bytes
+</pre></div>
+</div>
+<p>C library equivalent : no equivalent</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.VG.delete">
+<tt class="descname">delete</tt><big>(</big><em>tag</em>, <em>ref</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#VG.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.VG.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete from the vgroup the member identified by its tag
+and reference number.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>tag    tag of the member to delete
+ref    reference number of the member to delete
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">None</span>
+</pre></div>
+</div>
+<p>Only the link of the member with the vgroup is deleted.
+The member object is not deleted.</p>
+<p>C library equivalent : Vdeletatagref</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.VG.detach">
+<tt class="descname">detach</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#VG.detach"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.VG.detach" title="Permalink to this definition">¶</a></dt>
+<dd><p>Terminate access to the vgroup.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>no argument
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">None</span>
+</pre></div>
+</div>
+<p>C library equivalent : Vdetach</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.VG.findattr">
+<tt class="descname">findattr</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#VG.findattr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.VG.findattr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search the vgroup for a given attribute.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>name    attribute name
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre> if found, VGAttr instance describing the attribute
+ None otherwise
+
+C library equivalent : Vfindattr
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.VG.inqtagref">
+<tt class="descname">inqtagref</tt><big>(</big><em>tag</em>, <em>ref</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#VG.inqtagref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.VG.inqtagref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if an object identified by its tag and reference
+number belongs to the vgroup.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>tag      tag of the object to check
+ref      reference number of the object to check
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>False (0) if the object does not belong to the vgroup,
+True  (1) otherwise
+</pre></div>
+</div>
+<p>C library equivalent : Vinqtagref</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.VG.insert">
+<tt class="descname">insert</tt><big>(</big><em>inst</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#VG.insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.VG.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert a vdata or a vgroup in the vgroup.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>inst  vdata or vgroup instance to add
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>index of the inserted vdata or vgroup (0 based)
+</pre></div>
+</div>
+<p>C library equivalent : Vinsert</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.VG.isvg">
+<tt class="descname">isvg</tt><big>(</big><em>ref</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#VG.isvg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.VG.isvg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if the member of a vgoup is a vgroup.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>ref      reference number of the member to check
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>False (0) if the member is not a vgroup
+True  (1) otherwise
+</pre></div>
+</div>
+<p>C library equivalent : Visvg</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.VG.isvs">
+<tt class="descname">isvs</tt><big>(</big><em>ref</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#VG.isvs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.VG.isvs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if the member of a vgoup is a vdata.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>ref      reference number of the member to check
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>False (0) if the member is not a vdata,
+True  (1) otherwise
+</pre></div>
+</div>
+<p>C library equivalent : Visvs</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.VG.nrefs">
+<tt class="descname">nrefs</tt><big>(</big><em>tag</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#VG.nrefs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.VG.nrefs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the number of tags of a given type in a vgroup.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>tag    tag type to look for in the vgroup
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>number of members identified by this tag type
+</pre></div>
+</div>
+<p>C library equivalent : Vnrefs</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.VG.tagref">
+<tt class="descname">tagref</tt><big>(</big><em>index</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#VG.tagref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.VG.tagref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the tag and reference number of a vgroup member,
+given the index number of that member.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>index   member index (0 based)
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>2-element tuple:
+  - member tag
+  - member reference number
+</pre></div>
+</div>
+<p>C library equivalent : Vgettagref</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.VG.tagrefs">
+<tt class="descname">tagrefs</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#VG.tagrefs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.VG.tagrefs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the tags and reference numbers of all the vgroup
+members.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>no argument
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>list of (tag,ref) tuples, one for each vgroup member
+</pre></div>
+</div>
+<p>C library equivalent : Vgettagrefs</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyhdf.V.VGAttr">
+<em class="property">class </em><tt class="descclassname">pyhdf.V.</tt><tt class="descname">VGAttr</tt><big>(</big><em>obj</em>, <em>name_or_index</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#VGAttr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.VGAttr" title="Permalink to this definition">¶</a></dt>
+<dd><p>The VGAttr class encapsulates methods used to set and query
+attributes defined on a vgroup. To create an instance of this class,
+call the attr() method of a VG class.</p>
+<dl class="method">
+<dt id="pyhdf.V.VGAttr.get">
+<tt class="descname">get</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#VGAttr.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.VGAttr.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the attribute value.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>no argument
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>attribute value(s); a list is returned if the attribute
+is made up of more than one value, except in the case of a
+string-valued attribute (data type HC.CHAR8) where the
+values are returned as a string
+</pre></div>
+</div>
+<p>Note that a vgroup attribute can also be queried like a standard
+python class attribute by applying the usual &#8220;dot notation&#8221; to a
+VG instance.</p>
+<p>C library equivalent : Vgetattr</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.VGAttr.info">
+<tt class="descname">info</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#VGAttr.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.VGAttr.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve info about the attribute.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>no argument
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>4-element tuple with the following components:
+  -attribute name
+  -attribute data type (one of HC.xxx constants)
+  -attribute order (number of values)
+  -attribute size in bytes
+</pre></div>
+</div>
+<p>C library equivalent : Vattrinfo</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhdf.V.VGAttr.set">
+<tt class="descname">set</tt><big>(</big><em>data_type</em>, <em>values</em><big>)</big><a class="reference internal" href="../_modules/pyhdf/V.html#VGAttr.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.V.VGAttr.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the attribute value.</p>
+<p>Args:</p>
+<div class="highlight-python"><div class="highlight"><pre>data_type    : attribute data type (see constants HC.xxx)
+values       : attribute value(s); specify a list to create
+               a multi-valued attribute; a string valued
+               attribute can be created by setting &#39;data_type&#39;
+               to HC.CHAR8 and &#39;values&#39; to the corresponding
+               string
+
+               If the attribute already exists, it will be
+               updated. However, it is illegal to try to change
+               its data type or its order (number of values).
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">None</span>
+</pre></div>
+</div>
+<p>Note that a vgroup attribute can also be set like a standard
+python class attribute by applying the usual &#8220;dot notation&#8221; to a
+VG instance.</p>
+<p>C library equivalent : Vsetattr</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">V (Vgroup) API (<tt class="docutils literal"><span class="pre">pyhdf.V</span></tt>)</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#accessing-the-v-module">Accessing the V module</a></li>
+<li><a class="reference internal" href="#package-components">Package components</a></li>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#summary-of-differences-between-the-pyhdf-and-c-v-api">Summary of differences between the pyhdf and C V API</a></li>
+<li><a class="reference internal" href="#error-handling">Error handling</a></li>
+<li><a class="reference internal" href="#v-needs-support-from-the-hdf-module">V needs support from the HDF module</a></li>
+<li><a class="reference internal" href="#classes-summary">Classes summary</a></li>
+<li><a class="reference internal" href="#attribute-access-low-and-high-level">Attribute access: low and high level</a></li>
+<li><a class="reference internal" href="#predefined-attributes">Predefined attributes</a></li>
+<li><a class="reference internal" href="#programming-models">Programming models</a><ul>
+<li><a class="reference internal" href="#creating-and-initializing-a-vgroup">Creating and initializing a vgroup</a></li>
+<li><a class="reference internal" href="#reading-a-vgroup">Reading a vgroup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="VS.html"
+                        title="previous chapter">VS (Vdata table) API (<tt class="docutils literal"><span class="pre">pyhdf.VS</span></tt>)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/V.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="VS.html" title="VS (Vdata table) API (pyhdf.VS)"
+             >previous</a> |</li>
+        <li><a href="../index.html">python-hdf4 0.9 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, python-hdf4 authors.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
