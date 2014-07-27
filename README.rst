@@ -1,7 +1,7 @@
-OVERVIEW:
+OVERVIEW
+========
 
-python-hdf4 is a fork of pyhdf (http://pysclint.sourceforge.net/pyhdf/) with
-some improvements:
+python-hdf4 is a fork of pyhdf_ with some improvements:
   * Removes use of deprecated numpy API
   * Adds support for Python 3, while keeping compatibility with Python 2.
   * Planned: unit tests
@@ -12,11 +12,15 @@ The SD (Scientific Dataset), VS (Vdata) and V (Vgroup) API's
 are currently implemented. netCDF files can also be 
 read and modified.
 
-INSTALLATION:
+.. _pyhdf: http://pysclint.sourceforge.net/pyhdf/
+
+INSTALLATION
+============
 
   To install, see file INSTALL.
 
-DOCUMENTATION:
+DOCUMENTATION
+=============
 
   For documentation, see the doc/ subdirectory:
     * pyhdf.HDF.txt  text format
@@ -32,7 +36,8 @@ DOCUMENTATION:
   found in the User Guide:
     http://hdf.ncsa.uiuc.edu/training/HDFtraining/UsersGuide/
 
-EXAMPLES:
+EXAMPLES
+========
 
   Example python programs using the pyhdf package
   can be found inside the examples/ subdirectory.
