@@ -3,6 +3,10 @@
 # Revision 1.1  2004/08/02 15:36:04  gosselin
 # Initial revision
 #
+# Author: Andre Gosselin
+#         Maurice-Lamontagne Institute
+#         gosselina@dfo-mpo.gc.ca
+
 """
 V (Vgroup) API (:mod:`pyhdf.V`)
 ===============================
@@ -10,30 +14,6 @@ V (Vgroup) API (:mod:`pyhdf.V`)
 A module of the pyhdf package implementing the V (Vgroup)
 API of the NCSA HDF4 library.
 (see: hdf.ncsa.uiuc.edu)
-
-Author: Andre Gosselin
-        Maurice-Lamontagne Institute
-        gosselina@dfo-mpo.gc.ca
-
-Version: 0.7-3
-Date:    july 13 2005
-
-Table of contents
------------------
-  Introduction
-  Accessing the V module
-  Package components
-  Prerequisites
-  Summary of differences between the pyhdf and C V API
-  Error handling
-  V needs support from the HDF module
-  Classes summary
-  Attribute access: low and high level
-  Predefined attributes
-  Programming models
-
-  Module documentation
-
 
 Introduction
 ------------

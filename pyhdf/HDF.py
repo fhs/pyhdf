@@ -6,6 +6,9 @@
 # Revision 1.1  2004/08/02 15:22:59  gosselin
 # Initial revision
 #
+# Author: Andre Gosselin
+#         Maurice-Lamontagne Institute
+#         gosselina@dfo-mpo.gc.ca
 
 """
 Basic API (:mod:`pyhdf.HDF`)
@@ -14,13 +17,6 @@ Basic API (:mod:`pyhdf.HDF`)
 A module of the pyhdf package implementing the basic API of the
 NCSA HDF4 library.
 (see: hdf.ncsa.uiuc.edu)
-
-Author: Andre Gosselin
-        Maurice-Lamontagne Institute
-        gosselina@dfo-mpo.gc.ca
-
-Version: 0.7-3
-Date:    July 13 2005
 
 Introduction
 ------------

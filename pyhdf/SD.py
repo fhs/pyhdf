@@ -31,6 +31,10 @@
 # Revision 1.2  2004/08/02 15:00:34  gosselin
 # pyhdf 0.5-2
 #
+# Author: Andre Gosselin
+#         Maurice Lamontagne Institute
+#         Andre.Gosselin@dfo-mpo.gc.ca
+
 """
 SD (scientific dataset) API (:mod:`pyhdf.SD`)
 =============================================
@@ -38,37 +42,6 @@ SD (scientific dataset) API (:mod:`pyhdf.SD`)
 A module of the pyhdf package implementing the SD (scientific
 dataset) API of the NCSA HDF4 library.
 (see: hdf.ncsa.uiuc.edu)
-
-Author: Andre Gosselin
-        Maurice Lamontagne Institute
-        Andre.Gosselin@dfo-mpo.gc.ca
-
-Maintainer:     Enthough, Inc.
-                Austin, TX
-                enthought-dev@mail.enthought.com
-
-Version: 0.8-1
-Date:    August 4 2008
-
-Table of contents
------------------
-  Introduction
-  SD module key features
-  Accessing the SD module
-  Package components
-  Prerequisites
-  Documentation
-  Summary of differences between the pyhdf and C SD API
-  Error handling
-  Attribute access: low and high level
-  Variable access: low and high level
-  Reading/setting multivalued HDF attributes and variables
-  netCDF files
-  Classes summary
-  Data types
-  Programming models
-  Examples
-  Module documentation
 
 Introduction
 ------------

@@ -6,6 +6,9 @@
 # Revision 1.2  2004/08/02 15:36:04  gosselin
 # pyhdf-0.7-1
 #
+# Author: Andre Gosselin
+#         Maurice-Lamontagne Institute
+#         gosselina@dfo-mpo.gc.ca
 
 """
 VS (Vdata table) API (:mod:`pyhdf.VS`)
@@ -14,37 +17,6 @@ VS (Vdata table) API (:mod:`pyhdf.VS`)
 A module of the pyhdf package implementing the VS (Vdata table)
 API of the NCSA HDF4 library.
 (see: hdf.ncsa.uiuc.edu)
-
-Author: Andre Gosselin
-        Maurice-Lamontagne Institute
-        gosselina@dfo-mpo.gc.ca
-
-Version: 0.7-3
-Date:    July 13 2005
-
-Table of contents
------------------
-  Introduction
-  VS module key features
-  Accessing the VS module
-  Package components
-  Prerequisites
-  Documentation
-  Summary of differences between the pyhdf and C VS API
-  Error handling
-  VS needs support from the HDF module
-  Classes summary
-  Data types
-  Attribute access: low and high level
-  Predefined attributes
-  Record access: low and high level
-  Programming models
-    Creating and initializing a new vdata
-    Appending records to a vdata
-    Updating records in a vdata
-    Reading a vdata
-  Module documentation
-
 
 Introduction
 ------------
@@ -606,7 +578,7 @@ Programming models
 ------------------
 
 Creating and initializing a new vdata
--------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The following code can serve as a model for the creation and
 initialization of a new vdata. It implements the INVENTORY example
 described in the "Introduction" section.
@@ -660,7 +632,7 @@ long enough to accomodate the longest possible string we migh want to
 assign to the attribute.
 
 Appending records to a vdata
-----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Appending records requires first seeking to the end of the vdata, to avoid
 overwriting existing records. The following code can serve as a model. The
 INVENTORY vdata created before is used.
@@ -697,7 +669,7 @@ expression, like a python sequence. By specifying the number of records
 as the start of the slice, the records are appended to the vdata.
 
 Updating records in a vdata
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Updating requires seeking to the record to update before writing the new
 records. New data will overwrite this record and all records that follow,
 until a new seek is performed or the vdata is closed. Note that record
@@ -733,7 +705,7 @@ before is used.
     f.close()                 # close the HDF file
 
 Reading a vdata
----------------
+^^^^^^^^^^^^^^^
 The following example shows how read the vdata attributes and sequentially
 maneuver through its records. Note how we use the exception mechanism
 to break out of the reading loop when we reach the end of the vdata.
