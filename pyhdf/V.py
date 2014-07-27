@@ -94,14 +94,19 @@ For each HDF API exists a corresponding set of modules.
 
 The following modules are related to the V API.
 
-  _hdfext   C extension module responsible for wrapping the HDF
-            C library for all python modules
-  hdfext    python module implementing some utility functions
-            complementing the _hdfext extension module
-  error     defines the HDF4Error exception
-  HDF       python module providing support to the V module
-  V         python module wrapping the V API routines inside
-            an OOP framework
+  _hdfext
+    C extension module responsible for wrapping the HDF
+    C library for all python modules
+  hdfext
+    python module implementing some utility functions
+    complementing the _hdfext extension module
+  error
+    defines the HDF4Error exception
+  HDF
+    python module providing support to the V module
+  V
+    python module wrapping the V API routines inside
+    an OOP framework
 
 _hdfext and hdfext were generated using the SWIG preprocessor.
 SWIG is however *not* needed to run the package. Those two modules
@@ -152,10 +157,11 @@ V needs support from the HDF module
 ------------------------------------
 The VS module is not self-contained (countrary to the SD module).
 It requires help from the HDF module, namely:
-  -the HDF.HDF class to open and close the HDF file, and initialize the
-   V interface
-  -the HDF.HC class to provide different sorts of constants (opening modes,
-   data types, etc).
+
+- the HDF.HDF class to open and close the HDF file, and initialize the
+  V interface
+- the HDF.HC class to provide different sorts of constants (opening modes,
+  data types, etc).
 
 A program wanting to access HDF vgroups will almost always need to execute
 the following minimal set of calls:
@@ -172,13 +178,13 @@ the following minimal set of calls:
 Classes summary
 ---------------
 
-pyhdf wraps the V API using the following python classes:
+pyhdf wraps the V API using the following python classes::
 
   V      HDF V interface
   VG     vgroup
   VGAttr vgroup attribute
 
-In more detail:
+In more detail::
 
   V     The V class implements the V (Vgroup) interface applied to an
         HDF file.
@@ -333,9 +339,11 @@ Some latitude is however lost by manipulating attributes in that way,
 because the pyhdf package, not the programmer, is then responsible of
 setting the attribute type. The attribute type is chosen to be one of:
 
+  =========== ====================================
   HC.CHAR8    if the attribute value is a string
   HC.INT32    if all attribute values are integers
   HC.FLOAT64  otherwise
+  =========== ====================================
 
 The first way of handling attribute values must be used if one wants to
 define an attribute of any other type (for ex. 8 or 16 bit integers,
@@ -373,8 +381,9 @@ is read/write.
 
   VG predefined attributes
 
+    =========== === =========================== ===================
     name        RW  description                 C library routine
-    --------------------------------------------------------------
+    =========== === =========================== ===================
     _class      X   class name                  Vgetclass/Vsetclass
     _name       X   vgroup name                 Vgetname/Vsetname
     _nattrs         number of vgroup attributes Vnattrs
@@ -382,16 +391,17 @@ is read/write.
     _refnum         vgroup reference number     VQueryref
     _tag            vgroup tag                  VQuerytag
     _version        vgroup version number       Vgetversion
+    =========== === =========================== ===================
 
 
 Programming models
 ------------------
 
 Creating and initializing a vgroup
-----------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The following program shows how to create and initialize a vgroup inside
 an HDF file. It can serve as a model for any program wanting to create
-a vgroup.
+a vgroup::
 
     from pyhdf.HDF import *
     from pyhdf.V   import *
@@ -499,9 +509,9 @@ terminating the three interfaces initialized, and closing the HDF file.
 
 
 Reading a vgroup
-----------------
+^^^^^^^^^^^^^^^^
 The following program shows the contents of the vgroups contained inside
-any HDF file.
+any HDF file::
 
     from pyhdf.HDF import *
     from pyhdf.V   import *
@@ -695,9 +705,12 @@ class V(object):
     def end(self):
         """Close the V interface.
 
-        Args:
+        Args::
+
           No argument
-        Returns:
+
+        Returns::
+
           None
 
         C library equivalent : Vend
@@ -715,14 +728,16 @@ class V(object):
         number, or create a new vgroup, returning a VG instance for
         that vgroup.
 
-        Args:
+        Args::
+
           num_name      reference number or name of the vgroup to open,
                         or -1 to create a new vgroup; vcreate() can also
                         be called to create and name a new vgroup
           write         set to non-zero to open the vgroup in write mode
                         and to 0 to open it in readonly mode (default)
 
-        Returns:
+        Returns::
+
           VG instance for the vgroup
 
         An exception is raised if an attempt is made to open
@@ -743,9 +758,12 @@ class V(object):
     def create(self, name):
         """Create a new vgroup, and assign it a name.
 
-        Args:
+        Args::
+
           name   name to assign to the new vgroup
-        Returns:
+
+        Returns::
+
           VG instance for the new vgroup
 
         A create(name) call is equivalent to an attach(-1, 1) call,
@@ -762,9 +780,12 @@ class V(object):
         """Find a vgroup given its name, returning its reference
         number if found.
 
-        Args:
+        Args::
+
           name     name of the vgroup to find
-        Returns:
+
+        Returns::
+
           vgroup reference number
 
         An exception is raised if the vgroup is not found.
@@ -781,9 +802,12 @@ class V(object):
         """Find a vgroup given its class name, returning its reference
         number if found.
 
-        Args:
+        Args::
+
           name     class name of the vgroup to find
-        Returns:
+
+        Returns::
+
           vgroup reference number
 
         An exception is raised if the vgroup is not found.
@@ -800,10 +824,13 @@ class V(object):
         """Delete from the HDF file the vgroup identified by its
         reference number or its name.
 
-        Args:
+        Args::
+
           num_name    either the reference number or the name of
                       the vgroup to delete
-        Return
+
+        Returns::
+
           None
 
         C library equivalent : Vdelete
@@ -826,11 +853,14 @@ class V(object):
         """Obtain the reference number of the vgroup following the
         vgroup with the given reference number .
 
-        Args:
+        Args::
+
           ref    reference number of the vgroup after which to search;
                  set to -1 to start the search at the start of
                  the HDF file
-        Return:
+
+        Returns::
+
           reference number of the vgroup past the one identified by 'ref'
 
         An exception is raised if the end of the vgroup is reached.
@@ -965,9 +995,12 @@ class VG(object):
     def insert(self, inst):
         """Insert a vdata or a vgroup in the vgroup.
 
-        Args:
+        Args::
+
           inst  vdata or vgroup instance to add
-        Return:
+
+        Returns::
+
           index of the inserted vdata or vgroup (0 based)
 
         C library equivalent : Vinsert
@@ -988,10 +1021,13 @@ class VG(object):
         """Add to the vgroup an object identified by its tag and
         reference number.
 
-        Args:
+        Args::
+
           tag       tag of the object to add
           ref       reference number of the object to add
-        Return:
+
+        Returns::
+
           total number of objects in the vgroup after the addition
 
         C library equivalent : Vaddtagref
@@ -1005,11 +1041,13 @@ class VG(object):
         """Delete from the vgroup the member identified by its tag
         and reference number.
 
-        Args:
+        Args::
+
           tag    tag of the member to delete
           ref    reference number of the member to delete
 
-        Return:
+        Returns::
+
           None
 
         Only the link of the member with the vgroup is deleted.
@@ -1024,9 +1062,12 @@ class VG(object):
     def detach(self):
         """Terminate access to the vgroup.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           None
 
         C library equivalent : Vdetach
@@ -1040,9 +1081,12 @@ class VG(object):
         """Get the tag and reference number of a vgroup member,
         given the index number of that member.
 
-        Args:
+        Args::
+
           index   member index (0 based)
-        Return:
+
+        Returns::
+
           2-element tuple:
             - member tag
             - member reference number
@@ -1058,9 +1102,12 @@ class VG(object):
         """Get the tags and reference numbers of all the vgroup
         members.
 
-        Args:
+        Args::
+
           no argument
-        Return:
+
+        Returns::
+
           list of (tag,ref) tuples, one for each vgroup member
 
         C library equivalent : Vgettagrefs
@@ -1081,11 +1128,13 @@ class VG(object):
         """Determines if an object identified by its tag and reference
         number belongs to the vgroup.
 
-        Args:
+        Args::
+
           tag      tag of the object to check
           ref      reference number of the object to check
 
-        Return:
+        Returns::
+
           False (0) if the object does not belong to the vgroup,
           True  (1) otherwise
 
@@ -1097,9 +1146,12 @@ class VG(object):
     def nrefs(self, tag):
         """Determine the number of tags of a given type in a vgroup.
 
-        Args:
+        Args::
+
           tag    tag type to look for in the vgroup
-        Return:
+
+        Returns::
+
           number of members identified by this tag type
 
         C library equivalent : Vnrefs
@@ -1112,10 +1164,12 @@ class VG(object):
     def isvg(self, ref):
         """Determines if the member of a vgoup is a vgroup.
 
-        Args:
+        Args::
+
           ref      reference number of the member to check
 
-        Return:
+        Returns::
+
           False (0) if the member is not a vgroup
           True  (1) otherwise
 
@@ -1127,10 +1181,12 @@ class VG(object):
     def isvs(self, ref):
         """Determines if the member of a vgoup is a vdata.
 
-        Args:
+        Args::
+
           ref      reference number of the member to check
 
-        Return:
+        Returns::
+
           False (0) if the member is not a vdata,
           True  (1) otherwise
 
@@ -1142,13 +1198,15 @@ class VG(object):
     def attr(self, name_index):
         """Create a VGAttr instance representing a vgroup attribute.
 
-        Args:
+        Args::
+
           name_index  attribute name or attribute index number; if a
                       name is given the attribute may not exist; in that
                       case, it will be created when the VGAttr
                       instance set() method is called
 
-        Return:
+        Returns::
+
           VGAttr instance for the attribute. Call the methods of this
           class to query, read or set the attribute.
 
@@ -1161,16 +1219,20 @@ class VG(object):
     def attrinfo(self):
         """Return info about all the vgroup attributes.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           dictionnary describing each vgroup attribute; for each attribute,
           a (name,data) pair is added to the dictionary, where 'data' is
           a tuple holding:
-            -attribute data type (one of HC.xxx constants)
-            -attribute order
-            -attribute value
-            -attribute size in bytes
+
+          - attribute data type (one of HC.xxx constants)
+          - attribute order
+          - attribute value
+          - attribute size in bytes
 
         C library equivalent : no equivalent
                                                   """
@@ -1187,9 +1249,12 @@ class VG(object):
     def findattr(self, name):
         """Search the vgroup for a given attribute.
 
-        Args:
+        Args::
+
           name    attribute name
-        Returns:
+
+        Returns::
+
           if found, VGAttr instance describing the attribute
           None otherwise
 
@@ -1244,9 +1309,12 @@ class VGAttr(object):
     def get(self):
         """Retrieve the attribute value.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           attribute value(s); a list is returned if the attribute
           is made up of more than one value, except in the case of a
           string-valued attribute (data type HC.CHAR8) where the
@@ -1309,7 +1377,8 @@ class VGAttr(object):
     def set(self, data_type, values):
         """Set the attribute value.
 
-        Args:
+        Args::
+
           data_type    : attribute data type (see constants HC.xxx)
           values       : attribute value(s); specify a list to create
                          a multi-valued attribute; a string valued
@@ -1321,7 +1390,8 @@ class VGAttr(object):
                          updated. However, it is illegal to try to change
                          its data type or its order (number of values).
 
-        Returns:
+        Returns::
+
           None
 
         Note that a vgroup attribute can also be set like a standard
@@ -1398,9 +1468,12 @@ class VGAttr(object):
     def info(self):
         """Retrieve info about the attribute.
 
-        Args:
+        Args::
+
           no argument
-        Returns:
+
+        Returns::
+
           4-element tuple with the following components:
             -attribute name
             -attribute data type (one of HC.xxx constants)
