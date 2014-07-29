@@ -18,7 +18,7 @@ read and modified.
 Installation
 ============
 
-To install, see file INSTALL.
+To install, see file `INSTALL.rst <INSTALL.rst>`_.
 
 Documentation
 =============
