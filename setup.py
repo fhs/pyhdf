@@ -13,6 +13,7 @@ from numpy.distutils.core import setup, Extension
 import sys
 import os
 import os.path as path
+
 def _find_args(pat, env):
     val = os.environ.get(env, [])
     if val:
@@ -28,7 +29,7 @@ def _find_args(pat, env):
 
 include_dirs = _find_args('-i', 'INCLUDE_DIRS')
 library_dirs = _find_args('-l', 'LIBRARY_DIRS')
-szip_installed = 'NOSZIP' not in os.environ
+szip_installed = 'SZIP' in os.environ
 compress = 'NO_COMPRESS' not in os.environ
 extra_link_args = os.environ.get('LINK_ARGS', '')
 
@@ -36,6 +37,13 @@ extra_link_args = os.environ.get('LINK_ARGS', '')
 msg = 'Cannot proceed without the HDF4 library.  Please ' \
       'export INCLUDE_DIRS and LIBRARY_DIRS as explained' \
       'in the INSTALL file.'
+
+if sys.platform.startswith('linux'):
+    # libhdf4 header files on most linux distributations
+    # (e.g. Debian/Ubuntu, CentOS) are stored in /usr/include/hdf
+    d = "/usr/include/hdf/"
+    if not include_dirs and os.path.exists(d):
+        include_dirs.append(d)
 
 if sys.platform == 'win32':
     try:
@@ -119,11 +127,10 @@ if sys.platform == 'win32':
 else:
     data_files = []
 
-setup(name         = 'pyhdf',
-      author       = 'Andre Gosselin',
-      author_email = 'Andre.Gosselin@dfo-mpo.gc.ca',
+setup(name         = 'python-hdf4',
+      author       = 'python-hdf4 authors',
       description  = 'Python interface to the NCSA HDF4 library',
-      keywords     = ['hdf', 'netcdf', 'numpy', 'python', 'pyhdf'],
+      keywords     = ['hdf4', 'netcdf', 'numpy', 'python', 'pyhdf'],
       license      = 'public',
       long_description = 'The pyhdf package wraps the functionality\n '
                          'of the NCSA HDF version 4 library inside a Python OOP\n '

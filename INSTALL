@@ -17,8 +17,8 @@ several platforms, including
 
 * MacOSX 10.5.
 
-Please inform the maintainer (Andre.Gosselin@dfo-mpo.gc.ca) of any
-problems encountered during installation.
+Please open an issue here if you encounter any problems during installation:
+https://github.com/fhs/python-hdf4/issues
 
 There are several available options for installing pyhdf:
 
@@ -154,13 +154,13 @@ Step-by-step instructions for installing pyhdf
    if your HDF binary is statically linked.
    
    If you are using the binary HDF4 library available from the HDF4 site, you
-   must also have szlib installed. If you do not wish to use szlib, you will
-   need to compile HDF4 from source. If this is the case, you will also need
-   to set ``NOSZIP``::
+   must also have szlib installed. Then, you will also need to set ``SZIP``::
 
-        export NOSZIP=1
+        export SZIP=1
 
-	(or on Windows:  set NOSZIP=1)
+	(or on Windows:  set SZIP=1)
+
+   If you do not wish to use szlib, you will need to compile HDF4 from source.
 
    If anything goes wrong, read the detailed notes below.
    Warning messages about implicit declarations of some functions
@@ -210,8 +210,8 @@ you *must* install SZIP in a separate step. For more details, see the
 Source code and binaries are `available for download
 <ftp://ftp.hdfgroup.org/lib-external/szip/>`_.
 
-In case your HDF library was compiled without SZIP support, or you cannot
-abide by the szip licensing terms, set ``NOSZIP`` the environment variable to ``1``.
+In case your HDF library was compiled with SZIP support and you abide by the
+szip licensing terms, set the environment variable ``SZIP`` to ``1``.
 
 If you get error messages related to the ``SDgetcompress()`` /
 ``SDsetcompress()`` functions, e.g. ``"undefined symbol:
