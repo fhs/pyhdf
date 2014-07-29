@@ -1,5 +1,5 @@
 *.pyc
 build/
 dist/
-pyhdf.egg-info/
+python_hdf4.egg-info/
 doc/_build/
