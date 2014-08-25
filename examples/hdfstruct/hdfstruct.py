@@ -91,8 +91,7 @@ try:  # Catch pyhdf.SD errors
             eol()
         eol()
 
-    # Dataset info.
-    if len(dsNames) > 0:
+        # Dataset info.
         printf("DATASET INFO"); eol()
         printf("-------------"); eol(2)
         for name in dsNames:
