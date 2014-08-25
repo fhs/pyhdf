@@ -3,7 +3,7 @@ Overview
 
 python-hdf4 is a fork of pyhdf_ with some improvements:
 
-- Removes use of deprecated numpy API
+- Various bug fixes: removes use of deprecated numpy API, python 2.7 compatibility, etc.
 - Adds support for Python 3, while keeping compatibility with Python 2.
 - Sphinx documentation
 - Planned: unit tests
