@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/fhs/python-hdf4.png)](https://travis-ci.org/fhs/python-hdf4)
+.. image:: https://travis-ci.org/fhs/python-hdf4.svg?branch=master
+    :target: https://travis-ci.org/fhs/python-hdf4
 
 Overview
 ========
