@@ -140,8 +140,9 @@ setup(name         = 'python-hdf4',
                          'through numpy arrays. netCDF files can also\n '
                          'be read and modified with pyhdf.',
       url          = 'http://www.sourceforge.net/projects/pysclint',
-      version      = '0.8.3',
+      version      = '0.9',
       packages     = ['pyhdf'],
       ext_modules  = [_hdfext],
-      data_files   = data_files
+      data_files   = data_files,
+      provides     = ['pyhdf'],
       )
