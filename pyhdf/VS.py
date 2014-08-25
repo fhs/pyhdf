@@ -802,6 +802,7 @@ import os, sys, types
 
 from . import hdfext as _C
 
+from . import six
 from .six.moves import xrange
 from .HC import HC
 from .error import HDF4Error, _checkErr
@@ -2437,7 +2438,8 @@ class VDAttr(object):
             # Noop if a list is passed.
             values = list(values)
             for n in range(n_values):
-                values[n] = ord(values[n])
+                if not isinstance(values[n], int):
+                    values[n] = ord(values[n])
 
         elif data_type in [HC.UCHAR8, HC.UINT8]:
             buf = _C.array_byte(n_values)
@@ -2530,6 +2532,9 @@ def _setattr(obj, name, value):
     #  obj   instance on which the attribute is set
     #  name  attribute name
     #  value attribute value
+
+    if isinstance(value, six.string_types):
+        value = value.encode('utf8')
 
     # Treat a name starting with and underscore as that of a
     # standard python instance attribute.
