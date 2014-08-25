@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/fhs/python-hdf4.png)](https://travis-ci.org/fhs/python-hdf4)
+
 Overview
 ========
 
