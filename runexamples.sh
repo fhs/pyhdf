@@ -7,6 +7,8 @@ if [ -z "$PYTHON" ]; then
 fi
 
 $PYTHON setup.py build_ext --inplace
+export PYTHONPATH=$(pwd)
+echo PYTHONPATH is $PYTHONPATH
 
 cd examples/compress/
 $PYTHON ./test-compress.py >/dev/null
