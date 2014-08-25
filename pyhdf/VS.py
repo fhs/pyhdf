@@ -2071,7 +2071,7 @@ class VD(object):
             n += 1
             # Simple index
             if isinstance(e, int):
-                slice = 0
+                is_slice = False
                 if e < 0:
                     e += shape[n]
                 if e < 0 or e >= shape[n]:
@@ -2083,7 +2083,7 @@ class VD(object):
                 end = e + 1
             # Slice index
             elif isinstance(e, slice):
-                slice = 1
+                is_slice = True
                 # None or 0 means not specified
                 if e.start:
                     beg = e.start
@@ -2107,7 +2107,7 @@ class VD(object):
                 end = shape[n]
             if beg > end:
                 beg = end
-            if slice:
+            if is_slice:
                 cnt = end - beg
             else:
                 cnt = -1
