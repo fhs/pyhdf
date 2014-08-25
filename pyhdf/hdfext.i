@@ -66,6 +66,9 @@
 #define SD_FILL          0
 #define SD_NOFILL      256
 
+#define CHAR_BUFFER_SIZE 4096
+#define ATTRIB_BUFFER_SIZE 128
+
 /* ********************************************************************* */
 /* internal file access codes */
 
@@ -142,7 +145,7 @@ extern intn  Hclose(int32      file_id);
  * Library version.
  */
 
-%cstring_bounded_output(char *string, 256);
+%cstring_bounded_output(char *string, CHAR_BUFFER_SIZE);
 extern intn Hgetlibversion(uint32 *OUTPUT,     /* major_v */
                            uint32 *OUTPUT,     /* minor_v */
                            uint32 *OUTPUT,     /* release */
@@ -512,7 +515,7 @@ extern int32 SDreftoindex(int32 sd_id, int32 sds_ref);
  * Dimensions
  */
 
-%cstring_bounded_output(char *dim_name, 256);
+%cstring_bounded_output(char *dim_name, CHAR_BUFFER_SIZE);
 extern int32 SDdiminfo(int32 dim_id, char *dim_name, 
                        int32 *OUTPUT, int32 *OUTPUT, int32 *OUTPUT);
 %clear char *dim_name;
@@ -534,7 +537,7 @@ extern int32 SDsetdimscale(int32 dim_id, int32 n_values, int32 data_type,
  * User-defined attributes
  */
 
-%cstring_bounded_output(char *attr_name, 256);
+%cstring_bounded_output(char *attr_name, CHAR_BUFFER_SIZE);
 extern int32 SDattrinfo(int32 obj_id, int32 attr_index, 
                         char *attr_name, int32 *OUTPUT, int32 *OUTPUT);
 %clear char *attr_name;
@@ -554,10 +557,10 @@ extern int32 SDsetattr(int32 obj_id, const char *attr_name, int32 data_type,
 extern int32 SDgetcal(int32 sds_id, double *OUTPUT, double *OUTPUT,
                      double *OUTPUT, double *OUTPUT, int32 *OUTPUT);
 
-%cstring_bounded_output(char *label, 128);
-%cstring_bounded_output(char *unit, 128);
-%cstring_bounded_output(char *format, 128);
-%cstring_bounded_output(char *coord_system, 128);
+%cstring_bounded_output(char *label, ATTRIB_BUFFER_SIZE);
+%cstring_bounded_output(char *unit, ATTRIB_BUFFER_SIZE);
+%cstring_bounded_output(char *format, ATTRIB_BUFFER_SIZE);
+%cstring_bounded_output(char *coord_system, ATTRIB_BUFFER_SIZE);
 extern int32 SDgetdatastrs(int32 sds_id, char *label, char *unit, char *format, 
                            char *coord_system, int32 len);
 %clear char *label;
@@ -565,9 +568,9 @@ extern int32 SDgetdatastrs(int32 sds_id, char *label, char *unit, char *format,
 %clear char *format;
 %clear char *coord_system;
 
-%cstring_bounded_output(char *label, 128);
-%cstring_bounded_output(char *unit, 128);
-%cstring_bounded_output(char *format, 128);
+%cstring_bounded_output(char *label, ATTRIB_BUFFER_SIZE);
+%cstring_bounded_output(char *unit, ATTRIB_BUFFER_SIZE);
+%cstring_bounded_output(char *format, ATTRIB_BUFFER_SIZE);
 extern int32 SDgetdimstrs(int32 sds_id, char *label, char *unit, char *format, 
                           int32 len);
 %clear char *label;
@@ -768,19 +771,19 @@ intn  VSfpack(int32 vdata_id,
 
 extern int32 VSelts(int32 vdata_id);
 
-%cstring_bounded_output(char *vdata_class, 256);
+%cstring_bounded_output(char *vdata_class, CHAR_BUFFER_SIZE);
 extern intn  VSgetclass(int32 vdata_id,
                         char *vdata_class);
 %clear char *vdata_class;
 
-%cstring_bounded_output(char *fieldname_list, 256);
+%cstring_bounded_output(char *fieldname_list, CHAR_BUFFER_SIZE);
 extern int32 VSgetfields(int32 vdata_id,
                          char *fieldname_list);
 %clear char *fieldname_list;
 
 extern intn  VSgetinterlace(int32 vdata_id);
 
-%cstring_bounded_output(char *vdata_name, 256);
+%cstring_bounded_output(char *vdata_name, CHAR_BUFFER_SIZE);
 extern intn  VSgetname(int32 vdata_id,
                        char *vdata_name);
 %clear char *vdata_name;
@@ -788,8 +791,8 @@ extern intn  VSgetname(int32 vdata_id,
 extern intn  VSsizeof(int32 vdata_id,
                       const char *fieldname_list);
 
-%cstring_bounded_output(char *fieldname_list, 256);
-%cstring_bounded_output(char *vdata_name, 256);
+%cstring_bounded_output(char *fieldname_list, CHAR_BUFFER_SIZE);
+%cstring_bounded_output(char *vdata_name, CHAR_BUFFER_SIZE);
 extern intn  VSinquire(int32 vdata_id,
                        int32 *OUTPUT,         /* n_records */
                        int32 *OUTPUT,         /* interlace_mode */
@@ -870,7 +873,7 @@ extern int32 VSfnattrs(int32 vdata_id,
 
 extern int32 VSnattrs(int32 vdata_id);
 
-%cstring_bounded_output(char *attr_name, 256);
+%cstring_bounded_output(char *attr_name, CHAR_BUFFER_SIZE);
 extern intn  VSattrinfo(int32 vdata_id,
                         int32 field_index,
                         intn  attr_index, 
@@ -898,7 +901,7 @@ extern int32  Vattach(int32 file_id,
 
 extern int32 Vdetach(int32 vgroup_id);
 
-%cstring_bounded_output(char *name, 256);
+%cstring_bounded_output(char *name, CHAR_BUFFER_SIZE);
 extern int32 Vgetname(int32 vgroup_id,
                       char *name);
 %clear char *name;
@@ -906,7 +909,7 @@ extern int32 Vgetname(int32 vgroup_id,
 extern int32 Vsetname(int32 vgroup_id,
                       const char *vgroup_name);
 
-%cstring_bounded_output(char *name, 256);
+%cstring_bounded_output(char *name, CHAR_BUFFER_SIZE);
 extern int32 Vgetclass(int32 vgroup_id,
                        char *name);
 %clear char *name;
@@ -985,7 +988,7 @@ extern intn  Vsetattr(int32 vgroup_id,
                       int32 n_values, 
                       const void *values);
 
-%cstring_bounded_output(char *attr_name, 256);
+%cstring_bounded_output(char *attr_name, CHAR_BUFFER_SIZE);
 extern intn  Vattrinfo(int32 vgroup_id,
 		       intn  attr_index, 
 		       char  *attr_name,
