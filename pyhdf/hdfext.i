@@ -494,7 +494,7 @@ extern int32 SDend(int32 sd_id);
 
 extern int32 SDfileinfo(int32 sd_id, int32 *OUTPUT, int32 *OUTPUT);
 
-%cstring_bounded_output(char *sds_name, 64);
+%cstring_bounded_output(char *sds_name, 256);
 extern int32 SDgetinfo(int32 sds_id, char *sds_name, int32 *OUTPUT, void *buf,
                  int32 *OUTPUT, int32 *OUTPUT);
 %clear char *sds_name;
