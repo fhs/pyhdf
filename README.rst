@@ -30,7 +30,7 @@ For documentation, see http://fhs.github.io/python-hdf4/
 
 Additional documentation on the HDF4 format can be
 found in the User Guide:
-http://hdf.ncsa.uiuc.edu/training/HDFtraining/UsersGuide/
+http://www.hdfgroup.org/release4/doc/UsrGuide_html/UG_Top.html
 
 Examples
 ========
