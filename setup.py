@@ -14,6 +14,22 @@ import sys
 import os
 import os.path as path
 
+CLASSIFIERS = """\
+Development Status :: 5 - Production/Stable
+Intended Audience :: Science/Research
+Intended Audience :: Developers
+License :: OSI Approved
+Programming Language :: C
+Programming Language :: Python
+Programming Language :: Python :: 3
+Topic :: Software Development
+Topic :: Scientific/Engineering
+Operating System :: Microsoft :: Windows
+Operating System :: POSIX
+Operating System :: Unix
+Operating System :: MacOS
+"""
+
 def _find_args(pat, env):
     val = os.environ.get(env, [])
     if val:
@@ -128,10 +144,12 @@ else:
     data_files = []
 
 setup(name         = 'python-hdf4',
-      author       = 'python-hdf4 authors',
+      maintainer       = 'python-hdf4 authors',
+      maintainer_email = 'fshahriar@gmail.com',
+      author       = 'Andre Gosselin et al.',
       description  = 'Python interface to the NCSA HDF4 library',
       keywords     = ['hdf4', 'netcdf', 'numpy', 'python', 'pyhdf'],
-      license      = 'public',
+      license      = 'MIT',
       long_description = 'The pyhdf package wraps the functionality\n '
                          'of the NCSA HDF version 4 library inside a Python OOP\n '
                          'framework. The SD (scientific dataset), VS\n '
@@ -139,10 +157,12 @@ setup(name         = 'python-hdf4',
                          'SD datasets are read/written\n '
                          'through numpy arrays. netCDF files can also\n '
                          'be read and modified with pyhdf.',
-      url          = 'http://www.sourceforge.net/projects/pysclint',
+      url          = 'https://github.com/fhs/python-hdf4',
       version      = '0.9',
       packages     = ['pyhdf'],
       ext_modules  = [_hdfext],
       data_files   = data_files,
       provides     = ['pyhdf'],
+      classifiers  = [_f for _f in CLASSIFIERS.split('\n') if _f],
+      platforms    = ["Windows", "Linux", "Solaris", "Mac OS-X", "Unix"],
       )
