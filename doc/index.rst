@@ -11,6 +11,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   install.rst
    modules/HDF.rst
    modules/SD.rst
    modules/VS.rst

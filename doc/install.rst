@@ -183,12 +183,11 @@ script should display the file structure. This is a handy tool to have
 around when you want to explore the contents of any HDF4 file.
 
 
-=============
 Further notes
-=============
+-------------
 
 External libraries
-------------------
+~~~~~~~~~~~~~~~~~~
 
 HDF4.2 no longer provides its own copies of the jpeg and z libraries.
 Those must be installed separately (on Linux, they should be part of
@@ -222,7 +221,7 @@ resolved against the HDF library symbols. This may make it possible to
 work with an HDF library earlier than v4.2.
 
 Swig-generated interface files
-------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Interface files ``hdfext.py`` and ``hdfext_wrap.c`` (located under the
 ``pyhdf`` subdirectory) have been generated using the SWIG tool.
 Those two files should be usable as is on most environments.  It could
@@ -238,7 +237,7 @@ SWIG should silently regenerate the two interface files, after which
 installation should proceed correctly.
 
 TRU64 note
-----------
+~~~~~~~~~~
 The HDF installation creates its libraries as archive (.a) files,
 not shareable (.so) ones. On TRU64, the linker by default first looks
 for shareable libraries in every directory, then in a second round
