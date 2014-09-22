@@ -1,4 +1,18 @@
+#!/usr/bin/env python
+"""Python-HDF4: Python interface to the NCSA HDF4 library.
+
+The Python-HDF4 package wraps the functionality of the NCSA HDF version
+4 library inside a Python OOP framework. The SD (scientific dataset),
+VS (Vdata) and V (Vgroup) APIs are currently implemented.  SD datasets
+are read/written through numpy arrays. NetCDF files can also be read
+and modified with Python-HDF4.
+
+This package is a fork of pyhdf (http://pysclint.sourceforge.net/pyhdf/).
+"""
+
 from __future__ import print_function
+
+DOCLINES = __doc__.split("\n")
 
 # Allows bdist_egg to work if you have setuptools installed.
 # This import must be before the numpy.distutils import of setup.
@@ -147,16 +161,10 @@ setup(name         = 'python-hdf4',
       maintainer       = 'python-hdf4 authors',
       maintainer_email = 'fshahriar@gmail.com',
       author       = 'Andre Gosselin et al.',
-      description  = 'Python interface to the NCSA HDF4 library',
+      description  = DOCLINES[0],
       keywords     = ['hdf4', 'netcdf', 'numpy', 'python', 'pyhdf'],
       license      = 'MIT',
-      long_description = 'The pyhdf package wraps the functionality\n '
-                         'of the NCSA HDF version 4 library inside a Python OOP\n '
-                         'framework. The SD (scientific dataset), VS\n '
-                         '(Vdata) and V (Vgroup) APIs are currently implemented.\n '
-                         'SD datasets are read/written\n '
-                         'through numpy arrays. netCDF files can also\n '
-                         'be read and modified with pyhdf.',
+      long_description = "\n".join(DOCLINES[2:]),
       url          = 'https://github.com/fhs/python-hdf4',
       version      = '0.9',
       packages     = ['pyhdf'],
