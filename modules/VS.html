@@ -902,70 +902,70 @@ before is used:</p>
 <p>The following example shows how read the vdata attributes and sequentially
 maneuver through its records. Note how we use the exception mechanism
 to break out of the reading loop when we reach the end of the vdata:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><div class="highlight"><pre>from pyhdf.HDF import *
+from pyhdf.VS import *
 
-<span class="n">f</span> <span class="o">=</span> <span class="n">HDF</span><span class="p">(</span><span class="s">&#39;inventory.hdf&#39;</span><span class="p">)</span>         <span class="c"># open &#39;inventory.hdf&#39; in read mode</span>
-<span class="n">vs</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">vstart</span><span class="p">()</span>                  <span class="c"># init vdata interface</span>
-<span class="n">vd</span> <span class="o">=</span> <span class="n">vs</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="s">&#39;INVENTORY&#39;</span><span class="p">)</span>      <span class="c"># attach &#39;INVENTORY&#39; in read mode</span>
+f = HDF(&#39;inventory.hdf&#39;)         # open &#39;inventory.hdf&#39; in read mode
+vs = f.vstart()                  # init vdata interface
+vd = vs.attach(&#39;INVENTORY&#39;)      # attach &#39;INVENTORY&#39; in read mode
 
-<span class="c"># Display some vdata attributes</span>
-<span class="k">print</span> <span class="s">&quot;status:&quot;</span><span class="p">,</span> <span class="n">vd</span><span class="o">.</span><span class="n">status</span>
-<span class="k">print</span> <span class="s">&quot;vdata: &quot;</span><span class="p">,</span> <span class="n">vd</span><span class="o">.</span><span class="n">_name</span>        <span class="c"># predefined attribute: vdata name</span>
-<span class="k">print</span> <span class="s">&quot;nrecs: &quot;</span><span class="p">,</span> <span class="n">vd</span><span class="o">.</span><span class="n">_nrecs</span>       <span class="c"># predefined attribute:  num records</span>
+# Display some vdata attributes
+print &quot;status:&quot;, vd.status
+print &quot;vdata: &quot;, vd._name        # predefined attribute: vdata name
+print &quot;nrecs: &quot;, vd._nrecs       # predefined attribute:  num records
 
-<span class="c"># Display value of attribute &#39;unit&#39; for all fields on which</span>
-<span class="c"># this attribute is set</span>
-<span class="k">print</span> <span class="s">&quot;units: &quot;</span><span class="p">,</span>
-<span class="k">for</span> <span class="n">fieldName</span> <span class="ow">in</span> <span class="n">vd</span><span class="o">.</span><span class="n">_fields</span><span class="p">:</span>     <span class="c"># loop over all field names</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="c"># instantiate field and obtain value of attribute &#39;unit&#39;</span>
-        <span class="n">v</span> <span class="o">=</span> <span class="n">vd</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">fieldName</span><span class="p">)</span><span class="o">.</span><span class="n">unit</span>
-        <span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fieldName</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span>
-    <span class="k">except</span><span class="p">:</span>                      <span class="c"># no &#39;unit&#39; attribute: ignore</span>
-        <span class="k">pass</span>
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
+# Display value of attribute &#39;unit&#39; for all fields on which
+# this attribute is set
+print &quot;units: &quot;,
+for fieldName in vd._fields:     # loop over all field names
+    try:
+        # instantiate field and obtain value of attribute &#39;unit&#39;
+        v = vd.field(fieldName).unit
+        print &quot;%s: %s&quot; % (fieldName, v),
+    except:                      # no &#39;unit&#39; attribute: ignore
+        pass
+print &quot;&quot;
+print &quot;&quot;
 
-<span class="c"># Display table header.</span>
-<span class="n">header</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%-7s</span><span class="s"> </span><span class="si">%-12s</span><span class="s"> </span><span class="si">%3s</span><span class="s"> </span><span class="si">%4s</span><span class="s"> </span><span class="si">%8s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">vd</span><span class="o">.</span><span class="n">_fields</span><span class="p">)</span>
-<span class="k">print</span> <span class="s">&quot;-&quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
-<span class="k">print</span> <span class="n">header</span>
-<span class="k">print</span> <span class="s">&quot;-&quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+# Display table header.
+header = &quot;%-7s %-12s %3s %4s %8s&quot; % tuple(vd._fields)
+print &quot;-&quot; * len(header)
+print header
+print &quot;-&quot; * len(header)
 
-<span class="c"># Loop over the vdata records, displaying each record as a table row.</span>
-<span class="c"># Current record position is 0 after attaching the vdata.</span>
-<span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">rec</span> <span class="o">=</span> <span class="n">vd</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>       <span class="c"># read next record</span>
-        <span class="c"># equivalent to:</span>
-      <span class="c"># rec = vd[vd.tell()]</span>
-        <span class="k">print</span> <span class="s">&quot;</span><span class="si">%-7s</span><span class="s"> </span><span class="si">%-12s</span><span class="s"> </span><span class="si">%3d</span><span class="s"> </span><span class="si">%4.1f</span><span class="s"> </span><span class="si">%8.2f</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">rec</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="k">except</span> <span class="n">HDF4Error</span><span class="p">:</span>             <span class="c"># end of vdata reached</span>
-        <span class="k">break</span>
+# Loop over the vdata records, displaying each record as a table row.
+# Current record position is 0 after attaching the vdata.
+while 1:
+    try:
+        rec = vd.read()       # read next record
+        # equivalent to:
+      # rec = vd[vd.tell()]
+        print &quot;%-7s %-12s %3d %4.1f %8.2f&quot; % tuple(rec[0])
+    except HDF4Error:             # end of vdata reached
+        break
 
-<span class="n">vd</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>               <span class="c"># &quot;close&quot; the vdata</span>
-<span class="n">vs</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>                  <span class="c"># terminate the vdata interface</span>
-<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>                 <span class="c"># close the HDF file</span>
+vd.detach()               # &quot;close&quot; the vdata
+vs.end()                  # terminate the vdata interface
+f.close()                 # close the HDF file
 </pre></div>
 </div>
 <p>In the previous example, the reading/displaying loop can be greatly
 simplified by rewriting it as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><div class="highlight"><pre>from pyhdf.HDF import *
+from pyhdf.VS import *
 
-<span class="n">f</span> <span class="o">=</span> <span class="n">HDF</span><span class="p">(</span><span class="s">&#39;inventory.hdf&#39;</span><span class="p">)</span>         <span class="c"># open &#39;inventory.hdf&#39; in read mode</span>
-<span class="n">vs</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">vstart</span><span class="p">()</span>                  <span class="c"># init vdata interface</span>
-<span class="n">vd</span> <span class="o">=</span> <span class="n">vs</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="s">&#39;INVENTORY&#39;</span><span class="p">)</span>      <span class="c"># attach &#39;INVENTORY&#39; in read mode</span>
+f = HDF(&#39;inventory.hdf&#39;)         # open &#39;inventory.hdf&#39; in read mode
+vs = f.vstart()                  # init vdata interface
+vd = vs.attach(&#39;INVENTORY&#39;)      # attach &#39;INVENTORY&#39; in read mode
 
-<span class="o">....</span>
+....
 
-<span class="c"># Read all records at once, and loop over the sequence.</span>
-<span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">vd</span><span class="p">[:]:</span>
-    <span class="k">print</span> <span class="s">&quot;</span><span class="si">%-7s</span><span class="s"> </span><span class="si">%-12s</span><span class="s"> </span><span class="si">%3d</span><span class="s"> </span><span class="si">%4.1f</span><span class="s"> </span><span class="si">%8.2f</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span>
+# Read all records at once, and loop over the sequence.
+for rec in vd[:]:
+    print &quot;%-7s %-12s %3d %4.1f %8.2f&quot; % tuple(rec)
 
-<span class="n">vd</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>               <span class="c"># &quot;close&quot; the vdata</span>
-<span class="o">...</span>
+vd.detach()               # &quot;close&quot; the vdata
+...
 </pre></div>
 </div>
 <p>The indexing expression &#8216;vd[:]&#8217; returns the complete set of records,
@@ -1747,7 +1747,7 @@ values       : attribute value(s); specify a list to create
     </div>
     <div class="footer">
         &copy; Copyright 2014, python-hdf4 authors.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

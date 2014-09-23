@@ -595,93 +595,93 @@ terminating the three interfaces initialized, and closing the HDF file.</p>
 <h3>Reading a vgroup<a class="headerlink" href="#reading-a-vgroup" title="Permalink to this headline">¶</a></h3>
 <p>The following program shows the contents of the vgroups contained inside
 any HDF file:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pyhdf.V</span>   <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pyhdf.VS</span>  <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pyhdf.SD</span>  <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><div class="highlight"><pre>from pyhdf.HDF import *
+from pyhdf.V   import *
+from pyhdf.VS  import *
+from pyhdf.SD  import *
 
-<span class="kn">import</span> <span class="nn">sys</span>
+import sys
 
-<span class="k">def</span> <span class="nf">describevg</span><span class="p">(</span><span class="n">refnum</span><span class="p">):</span>
+def describevg(refnum):
 
-    <span class="c"># Describe the vgroup with the given refnum.</span>
+    # Describe the vgroup with the given refnum.
 
-    <span class="c"># Open vgroup in read mode.</span>
-    <span class="n">vg</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">refnum</span><span class="p">)</span>
-    <span class="k">print</span> <span class="s">&quot;----------------&quot;</span>
-    <span class="k">print</span> <span class="s">&quot;name:&quot;</span><span class="p">,</span> <span class="n">vg</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="s">&quot;class:&quot;</span><span class="p">,</span><span class="n">vg</span><span class="o">.</span><span class="n">_class</span><span class="p">,</span> <span class="s">&quot;tag,ref:&quot;</span><span class="p">,</span>
-    <span class="k">print</span> <span class="n">vg</span><span class="o">.</span><span class="n">_tag</span><span class="p">,</span> <span class="n">vg</span><span class="o">.</span><span class="n">_refnum</span>
+    # Open vgroup in read mode.
+    vg = v.attach(refnum)
+    print &quot;----------------&quot;
+    print &quot;name:&quot;, vg._name, &quot;class:&quot;,vg._class, &quot;tag,ref:&quot;,
+    print vg._tag, vg._refnum
 
-    <span class="c"># Show the number of members of each main object type.</span>
-    <span class="k">print</span> <span class="s">&quot;members: &quot;</span><span class="p">,</span> <span class="n">vg</span><span class="o">.</span><span class="n">_nmembers</span><span class="p">,</span>
-    <span class="k">print</span> <span class="s">&quot;datasets:&quot;</span><span class="p">,</span> <span class="n">vg</span><span class="o">.</span><span class="n">nrefs</span><span class="p">(</span><span class="n">HC</span><span class="o">.</span><span class="n">DFTAG_NDG</span><span class="p">),</span>
-    <span class="k">print</span> <span class="s">&quot;vdatas:  &quot;</span><span class="p">,</span> <span class="n">vg</span><span class="o">.</span><span class="n">nrefs</span><span class="p">(</span><span class="n">HC</span><span class="o">.</span><span class="n">DFTAG_VH</span><span class="p">),</span>
-    <span class="k">print</span> <span class="s">&quot;vgroups: &quot;</span><span class="p">,</span> <span class="n">vg</span><span class="o">.</span><span class="n">nrefs</span><span class="p">(</span><span class="n">HC</span><span class="o">.</span><span class="n">DFTAG_VG</span><span class="p">)</span>
+    # Show the number of members of each main object type.
+    print &quot;members: &quot;, vg._nmembers,
+    print &quot;datasets:&quot;, vg.nrefs(HC.DFTAG_NDG),
+    print &quot;vdatas:  &quot;, vg.nrefs(HC.DFTAG_VH),
+    print &quot;vgroups: &quot;, vg.nrefs(HC.DFTAG_VG)
 
-    <span class="c"># Read the contents of the vgroup.</span>
-    <span class="n">members</span> <span class="o">=</span> <span class="n">vg</span><span class="o">.</span><span class="n">tagrefs</span><span class="p">()</span>
+    # Read the contents of the vgroup.
+    members = vg.tagrefs()
 
-    <span class="c"># Display info about each member.</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="k">for</span> <span class="n">tag</span><span class="p">,</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">members</span><span class="p">:</span>
-        <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">print</span> <span class="s">&quot;member index&quot;</span><span class="p">,</span> <span class="n">index</span>
-        <span class="c"># Vdata tag</span>
-        <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">HC</span><span class="o">.</span><span class="n">DFTAG_VH</span><span class="p">:</span>
-            <span class="n">vd</span> <span class="o">=</span> <span class="n">vs</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
-            <span class="n">nrecs</span><span class="p">,</span> <span class="n">intmode</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">vd</span><span class="o">.</span><span class="n">inquire</span><span class="p">()</span>
-            <span class="k">print</span> <span class="s">&quot;  vdata:&quot;</span><span class="p">,</span><span class="n">name</span><span class="p">,</span> <span class="s">&quot;tag,ref:&quot;</span><span class="p">,</span><span class="n">tag</span><span class="p">,</span> <span class="n">ref</span>
-            <span class="k">print</span> <span class="s">&quot;    fields:&quot;</span><span class="p">,</span><span class="n">fields</span>
-            <span class="k">print</span> <span class="s">&quot;    nrecs:&quot;</span><span class="p">,</span><span class="n">nrecs</span>
-            <span class="n">vd</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+    # Display info about each member.
+    index = -1
+    for tag, ref in members:
+        index += 1
+        print &quot;member index&quot;, index
+        # Vdata tag
+        if tag == HC.DFTAG_VH:
+            vd = vs.attach(ref)
+            nrecs, intmode, fields, size, name = vd.inquire()
+            print &quot;  vdata:&quot;,name, &quot;tag,ref:&quot;,tag, ref
+            print &quot;    fields:&quot;,fields
+            print &quot;    nrecs:&quot;,nrecs
+            vd.detach()
 
-        <span class="c"># SDS tag</span>
-        <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">HC</span><span class="o">.</span><span class="n">DFTAG_NDG</span><span class="p">:</span>
-            <span class="n">sds</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">sd</span><span class="o">.</span><span class="n">reftoindex</span><span class="p">(</span><span class="n">ref</span><span class="p">))</span>
-            <span class="n">name</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">dims</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">nattrs</span> <span class="o">=</span> <span class="n">sds</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
-            <span class="k">print</span> <span class="s">&quot;  dataset:&quot;</span><span class="p">,</span><span class="n">name</span><span class="p">,</span> <span class="s">&quot;tag,ref:&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">ref</span>
-            <span class="k">print</span> <span class="s">&quot;    dims:&quot;</span><span class="p">,</span><span class="n">dims</span>
-            <span class="k">print</span> <span class="s">&quot;    type:&quot;</span><span class="p">,</span><span class="nb">type</span>
-            <span class="n">sds</span><span class="o">.</span><span class="n">endaccess</span><span class="p">()</span>
+        # SDS tag
+        elif tag == HC.DFTAG_NDG:
+            sds = sd.select(sd.reftoindex(ref))
+            name, rank, dims, type, nattrs = sds.info()
+            print &quot;  dataset:&quot;,name, &quot;tag,ref:&quot;, tag, ref
+            print &quot;    dims:&quot;,dims
+            print &quot;    type:&quot;,type
+            sds.endaccess()
 
-        <span class="c"># VS tag</span>
-        <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">HC</span><span class="o">.</span><span class="n">DFTAG_VG</span><span class="p">:</span>
-            <span class="n">vg0</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
-            <span class="k">print</span> <span class="s">&quot;  vgroup:&quot;</span><span class="p">,</span> <span class="n">vg0</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="s">&quot;tag,ref:&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">ref</span>
-            <span class="n">vg0</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+        # VS tag
+        elif tag == HC.DFTAG_VG:
+            vg0 = v.attach(ref)
+            print &quot;  vgroup:&quot;, vg0._name, &quot;tag,ref:&quot;, tag, ref
+            vg0.detach()
 
-        <span class="c"># Unhandled tag</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">print</span> <span class="s">&quot;unhandled tag,ref&quot;</span><span class="p">,</span><span class="n">tag</span><span class="p">,</span><span class="n">ref</span>
+        # Unhandled tag
+        else:
+            print &quot;unhandled tag,ref&quot;,tag,ref
 
-    <span class="c"># Close vgroup</span>
-    <span class="n">vg</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+    # Close vgroup
+    vg.detach()
 
-<span class="c"># Open HDF file in readonly mode.</span>
-<span class="n">filename</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">hdf</span> <span class="o">=</span> <span class="n">HDF</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+# Open HDF file in readonly mode.
+filename = sys.argv[1]
+hdf = HDF(filename)
 
-<span class="c"># Initialize the SD, V and VS interfaces on the file.</span>
-<span class="n">sd</span> <span class="o">=</span> <span class="n">SD</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-<span class="n">vs</span> <span class="o">=</span> <span class="n">hdf</span><span class="o">.</span><span class="n">vstart</span><span class="p">()</span>
-<span class="n">v</span>  <span class="o">=</span> <span class="n">hdf</span><span class="o">.</span><span class="n">vgstart</span><span class="p">()</span>
+# Initialize the SD, V and VS interfaces on the file.
+sd = SD(filename)
+vs = hdf.vstart()
+v  = hdf.vgstart()
 
-<span class="c"># Scan all vgroups in the file.</span>
-<span class="n">ref</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-<span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">ref</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">getid</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">HDF4Error</span><span class="p">,</span><span class="n">msg</span><span class="p">:</span>    <span class="c"># no more vgroup</span>
-        <span class="k">break</span>
-    <span class="n">describevg</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+# Scan all vgroups in the file.
+ref = -1
+while 1:
+    try:
+        ref = v.getid(ref)
+    except HDF4Error,msg:    # no more vgroup
+        break
+    describevg(ref)
 
-<span class="c"># Terminate V, VS and SD interfaces.</span>
-<span class="n">v</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
-<span class="n">vs</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
-<span class="n">sd</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+# Terminate V, VS and SD interfaces.
+v.end()
+vs.end()
+sd.end()
 
-<span class="c"># Close HDF file.</span>
-<span class="n">hdf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+# Close HDF file.
+hdf.close()
 </pre></div>
 </div>
 <p>The program starts by defining function describevg(), which is passed the
@@ -1235,7 +1235,7 @@ VG instance.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2014, python-hdf4 authors.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

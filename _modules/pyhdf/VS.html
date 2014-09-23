@@ -851,6 +851,7 @@
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">hdfext</span> <span class="k">as</span> <span class="n">_C</span>
 
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">six</span>
 <span class="kn">from</span> <span class="nn">.six.moves</span> <span class="kn">import</span> <span class="nb">xrange</span>
 <span class="kn">from</span> <span class="nn">.HC</span> <span class="kn">import</span> <span class="n">HC</span>
 <span class="kn">from</span> <span class="nn">.error</span> <span class="kn">import</span> <span class="n">HDF4Error</span><span class="p">,</span> <span class="n">_checkErr</span>
@@ -2120,7 +2121,7 @@
             <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="c"># Simple index</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-                <span class="nb">slice</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">is_slice</span> <span class="o">=</span> <span class="bp">False</span>
                 <span class="k">if</span> <span class="n">e</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">e</span> <span class="o">+=</span> <span class="n">shape</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">e</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">e</span> <span class="o">&gt;=</span> <span class="n">shape</span><span class="p">[</span><span class="n">n</span><span class="p">]:</span>
@@ -2132,7 +2133,7 @@
                 <span class="n">end</span> <span class="o">=</span> <span class="n">e</span> <span class="o">+</span> <span class="mi">1</span>
             <span class="c"># Slice index</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
-                <span class="nb">slice</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">is_slice</span> <span class="o">=</span> <span class="bp">True</span>
                 <span class="c"># None or 0 means not specified</span>
                 <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">start</span><span class="p">:</span>
                     <span class="n">beg</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">start</span>
@@ -2156,7 +2157,7 @@
                 <span class="n">end</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">beg</span> <span class="o">&gt;</span> <span class="n">end</span><span class="p">:</span>
                 <span class="n">beg</span> <span class="o">=</span> <span class="n">end</span>
-            <span class="k">if</span> <span class="nb">slice</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">is_slice</span><span class="p">:</span>
                 <span class="n">cnt</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">beg</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">cnt</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -2486,7 +2487,8 @@
             <span class="c"># Noop if a list is passed.</span>
             <span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_values</span><span class="p">):</span>
-                <span class="n">values</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">n</span><span class="p">])</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="nb">int</span><span class="p">):</span>
+                    <span class="n">values</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">n</span><span class="p">])</span>
 
         <span class="k">elif</span> <span class="n">data_type</span> <span class="ow">in</span> <span class="p">[</span><span class="n">HC</span><span class="o">.</span><span class="n">UCHAR8</span><span class="p">,</span> <span class="n">HC</span><span class="o">.</span><span class="n">UINT8</span><span class="p">]:</span>
             <span class="n">buf</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">array_byte</span><span class="p">(</span><span class="n">n_values</span><span class="p">)</span>
@@ -2579,6 +2581,9 @@
     <span class="c">#  obj   instance on which the attribute is set</span>
     <span class="c">#  name  attribute name</span>
     <span class="c">#  value attribute value</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf8&#39;</span><span class="p">)</span>
 
     <span class="c"># Treat a name starting with and underscore as that of a</span>
     <span class="c"># standard python instance attribute.</span>
@@ -2689,7 +2694,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2014, python-hdf4 authors.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

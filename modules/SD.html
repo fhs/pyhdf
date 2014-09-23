@@ -759,39 +759,39 @@ A real program should of course add error handling:</p>
 <h3>Reading<a class="headerlink" href="#reading" title="Permalink to this headline">¶</a></h3>
 <p>The following code, which reads the dataset created above, can also serve as
 a model for any program which needs to access an SD dataset:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># Import SD and numpy.</span>
-<span class="kn">from</span> <span class="nn">pyhdf.SD</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><div class="highlight"><pre># Import SD and numpy.
+from pyhdf.SD import *
+from numpy import *
 
-<span class="n">fileName</span> <span class="o">=</span> <span class="s">&#39;template.hdf&#39;</span>
-<span class="c"># Open file in read-only mode (default)</span>
-<span class="n">hdfFile</span> <span class="o">=</span> <span class="n">SD</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
-<span class="c"># Display attributes.</span>
-<span class="k">print</span> <span class="s">&quot;file:&quot;</span><span class="p">,</span> <span class="n">fileName</span>
-<span class="k">print</span> <span class="s">&quot;author:&quot;</span><span class="p">,</span> <span class="n">hdfFile</span><span class="o">.</span><span class="n">author</span>
-<span class="k">print</span> <span class="s">&quot;priority:&quot;</span><span class="p">,</span> <span class="n">hdfFile</span><span class="o">.</span><span class="n">priority</span>
-<span class="c"># Open dataset &#39;d1&#39;</span>
-<span class="n">d1</span> <span class="o">=</span> <span class="n">hdfFile</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s">&#39;d1&#39;</span><span class="p">)</span>
-<span class="c"># Display dataset attributes.</span>
-<span class="k">print</span> <span class="s">&quot;dataset:&quot;</span><span class="p">,</span> <span class="s">&#39;d1&#39;</span>
-<span class="k">print</span> <span class="s">&quot;description:&quot;</span><span class="p">,</span><span class="n">d1</span><span class="o">.</span><span class="n">description</span>
-<span class="k">print</span> <span class="s">&quot;units:&quot;</span><span class="p">,</span> <span class="n">d1</span><span class="o">.</span><span class="n">units</span>
-<span class="c"># Display dimensions info.</span>
-<span class="n">dim1</span> <span class="o">=</span> <span class="n">d1</span><span class="o">.</span><span class="n">dim</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">dim2</span> <span class="o">=</span> <span class="n">d1</span><span class="o">.</span><span class="n">dim</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="k">print</span> <span class="s">&quot;dimensions:&quot;</span>
-<span class="k">print</span> <span class="s">&quot;dim1: name=&quot;</span><span class="p">,</span> <span class="n">dim1</span><span class="o">.</span><span class="n">info</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
-<span class="k">print</span> <span class="s">&quot;length=&quot;</span><span class="p">,</span> <span class="n">dim1</span><span class="o">.</span><span class="n">length</span><span class="p">(),</span>
-<span class="k">print</span> <span class="s">&quot;units=&quot;</span><span class="p">,</span> <span class="n">dim1</span><span class="o">.</span><span class="n">units</span>
-<span class="k">print</span> <span class="s">&quot;dim2: name=&quot;</span><span class="p">,</span> <span class="n">dim2</span><span class="o">.</span><span class="n">info</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
-<span class="k">print</span> <span class="s">&quot;length=&quot;</span><span class="p">,</span> <span class="n">dim2</span><span class="o">.</span><span class="n">length</span><span class="p">(),</span>
-<span class="k">print</span> <span class="s">&quot;units=&quot;</span><span class="p">,</span> <span class="n">dim2</span><span class="o">.</span><span class="n">units</span>
-<span class="c"># Show dataset values</span>
-<span class="k">print</span> <span class="n">d1</span><span class="p">[:]</span>
-<span class="c"># Close dataset</span>
-<span class="n">d1</span><span class="o">.</span><span class="n">endaccess</span><span class="p">()</span>
-<span class="c"># Close file</span>
-<span class="n">hdfFile</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+fileName = &#39;template.hdf&#39;
+# Open file in read-only mode (default)
+hdfFile = SD(fileName)
+# Display attributes.
+print &quot;file:&quot;, fileName
+print &quot;author:&quot;, hdfFile.author
+print &quot;priority:&quot;, hdfFile.priority
+# Open dataset &#39;d1&#39;
+d1 = hdfFile.select(&#39;d1&#39;)
+# Display dataset attributes.
+print &quot;dataset:&quot;, &#39;d1&#39;
+print &quot;description:&quot;,d1.description
+print &quot;units:&quot;, d1.units
+# Display dimensions info.
+dim1 = d1.dim(0)
+dim2 = d1.dim(1)
+print &quot;dimensions:&quot;
+print &quot;dim1: name=&quot;, dim1.info()[0],
+print &quot;length=&quot;, dim1.length(),
+print &quot;units=&quot;, dim1.units
+print &quot;dim2: name=&quot;, dim2.info()[0],
+print &quot;length=&quot;, dim2.length(),
+print &quot;units=&quot;, dim2.units
+# Show dataset values
+print d1[:]
+# Close dataset
+d1.endaccess()
+# Close file
+hdfFile.end()
 </pre></div>
 </div>
 </div>
@@ -815,50 +815,50 @@ number of attributes, of different types, single or multi-valued. Doing
 the same in a conventional language would be a much more challenging task.</p>
 <p>Error checking is minimal, to keep example as simple as possible
 (admittedly a rather poor excuse ...):</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pyhdf.SD</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><div class="highlight"><pre>from numpy import *
+from pyhdf.SD import *
 
-<span class="kn">import</span> <span class="nn">os</span>
+import os
 
-<span class="k">def</span> <span class="nf">txtToHDF</span><span class="p">(</span><span class="n">txtFile</span><span class="p">,</span> <span class="n">hdfFile</span><span class="p">,</span> <span class="n">varName</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+def txtToHDF(txtFile, hdfFile, varName, attr):
 
-    <span class="k">try</span><span class="p">:</span>  <span class="c"># Catch pyhdf errors</span>
-        <span class="c"># Open HDF file in update mode, creating it if non existent.</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="n">SD</span><span class="p">(</span><span class="n">hdfFile</span><span class="p">,</span> <span class="n">SDC</span><span class="o">.</span><span class="n">WRITE</span><span class="o">|</span><span class="n">SDC</span><span class="o">.</span><span class="n">CREATE</span><span class="p">)</span>
-        <span class="c"># Open text file and get matrix dimensions on first line.</span>
-        <span class="n">txt</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">txtFile</span><span class="p">)</span>
-        <span class="n">ni</span><span class="p">,</span> <span class="n">nj</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">txt</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
-        <span class="c"># Define an HDF dataset of 32-bit floating type (SDC.FLOAT32)</span>
-        <span class="c"># with those dimensions.</span>
-        <span class="n">v</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">varName</span><span class="p">,</span> <span class="n">SDC</span><span class="o">.</span><span class="n">FLOAT32</span><span class="p">,</span> <span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">nj</span><span class="p">))</span>
-        <span class="c"># Assign attributes passed as argument inside dict &#39;attr&#39;.</span>
-        <span class="k">for</span> <span class="n">attrName</span> <span class="ow">in</span> <span class="n">attr</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="nb">setattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">attrName</span><span class="p">,</span> <span class="n">attr</span><span class="p">[</span><span class="n">attrName</span><span class="p">])</span>
-        <span class="c"># Load variable with lines of data. Compute min and max</span>
-        <span class="c"># over the whole matrix.</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ni</span><span class="p">:</span>
-            <span class="n">elems</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">txt</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
-            <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">elems</span>  <span class="c"># load row i</span>
-            <span class="n">minE</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">elems</span><span class="p">)</span>
-            <span class="n">maxE</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">elems</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">i</span><span class="p">:</span>
-                <span class="n">minVal</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">minVal</span><span class="p">,</span> <span class="n">minE</span><span class="p">)</span>
-                <span class="n">maxVal</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxVal</span><span class="p">,</span> <span class="n">maxE</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">minVal</span> <span class="o">=</span> <span class="n">minE</span>
-                <span class="n">maxVal</span> <span class="o">=</span> <span class="n">maxE</span>
-            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="c"># Set variable min and max attributes.</span>
-        <span class="n">v</span><span class="o">.</span><span class="n">minVal</span> <span class="o">=</span> <span class="n">minVal</span>
-        <span class="n">v</span><span class="o">.</span><span class="n">maxVal</span> <span class="o">=</span> <span class="n">maxVal</span>
-        <span class="c"># Close dataset and file objects (not really necessary, since</span>
-        <span class="c"># closing is automatic when objects go out of scope.</span>
-        <span class="n">v</span><span class="o">.</span><span class="n">endaccess</span><span class="p">()</span>
-        <span class="n">d</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
-        <span class="n">txt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">except</span> <span class="n">HDF4Error</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span>
-        <span class="k">print</span> <span class="s">&quot;HDF4Error:&quot;</span><span class="p">,</span> <span class="n">msg</span>
+    try:  # Catch pyhdf errors
+        # Open HDF file in update mode, creating it if non existent.
+        d = SD(hdfFile, SDC.WRITE|SDC.CREATE)
+        # Open text file and get matrix dimensions on first line.
+        txt = open(txtFile)
+        ni, nj = map(int, txt.readline().split())
+        # Define an HDF dataset of 32-bit floating type (SDC.FLOAT32)
+        # with those dimensions.
+        v = d.create(varName, SDC.FLOAT32, (ni, nj))
+        # Assign attributes passed as argument inside dict &#39;attr&#39;.
+        for attrName in attr.keys():
+            setattr(v, attrName, attr[attrName])
+        # Load variable with lines of data. Compute min and max
+        # over the whole matrix.
+        i = 0
+        while i &lt; ni:
+            elems = map(float, txt.readline().split())
+            v[i] = elems  # load row i
+            minE = min(elems)
+            maxE = max(elems)
+            if i:
+                minVal = min(minVal, minE)
+                maxVal = max(maxVal, maxE)
+            else:
+                minVal = minE
+                maxVal = maxE
+            i += 1
+        # Set variable min and max attributes.
+        v.minVal = minVal
+        v.maxVal = maxVal
+        # Close dataset and file objects (not really necessary, since
+        # closing is automatic when objects go out of scope.
+        v.endaccess()
+        d.end()
+        txt.close()
+    except HDF4Error, msg:
+        print &quot;HDF4Error:&quot;, msg
 </pre></div>
 </div>
 <p>We could now call the procedure as follows:</p>
@@ -891,147 +891,147 @@ the command line. After the HDF file is opened, high level inquiry methods
 are called to obtain dictionnaries descrybing attributes, dimensions and
 datasets. The rest of the program mostly consists in nicely formatting
 the contents of those dictionaries:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">pyhdf.SD</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><div class="highlight"><pre>import sys
+from pyhdf.SD import *
+from numpy import *
 
-<span class="c"># Dictionnary used to convert from a numeric data type to its symbolic</span>
-<span class="c"># representation</span>
-<span class="n">typeTab</span> <span class="o">=</span> <span class="p">{</span>
-           <span class="n">SDC</span><span class="o">.</span><span class="n">CHAR</span><span class="p">:</span>    <span class="s">&#39;CHAR&#39;</span><span class="p">,</span>
-           <span class="n">SDC</span><span class="o">.</span><span class="n">CHAR8</span><span class="p">:</span>   <span class="s">&#39;CHAR8&#39;</span><span class="p">,</span>
-           <span class="n">SDC</span><span class="o">.</span><span class="n">UCHAR8</span><span class="p">:</span>  <span class="s">&#39;UCHAR8&#39;</span><span class="p">,</span>
-           <span class="n">SDC</span><span class="o">.</span><span class="n">INT8</span><span class="p">:</span>    <span class="s">&#39;INT8&#39;</span><span class="p">,</span>
-           <span class="n">SDC</span><span class="o">.</span><span class="n">UINT8</span><span class="p">:</span>   <span class="s">&#39;UINT8&#39;</span><span class="p">,</span>
-           <span class="n">SDC</span><span class="o">.</span><span class="n">INT16</span><span class="p">:</span>   <span class="s">&#39;INT16&#39;</span><span class="p">,</span>
-           <span class="n">SDC</span><span class="o">.</span><span class="n">UINT16</span><span class="p">:</span>  <span class="s">&#39;UINT16&#39;</span><span class="p">,</span>
-           <span class="n">SDC</span><span class="o">.</span><span class="n">INT32</span><span class="p">:</span>   <span class="s">&#39;INT32&#39;</span><span class="p">,</span>
-           <span class="n">SDC</span><span class="o">.</span><span class="n">UINT32</span><span class="p">:</span>  <span class="s">&#39;UINT32&#39;</span><span class="p">,</span>
-           <span class="n">SDC</span><span class="o">.</span><span class="n">FLOAT32</span><span class="p">:</span> <span class="s">&#39;FLOAT32&#39;</span><span class="p">,</span>
-           <span class="n">SDC</span><span class="o">.</span><span class="n">FLOAT64</span><span class="p">:</span> <span class="s">&#39;FLOAT64&#39;</span>
-           <span class="p">}</span>
+# Dictionnary used to convert from a numeric data type to its symbolic
+# representation
+typeTab = {
+           SDC.CHAR:    &#39;CHAR&#39;,
+           SDC.CHAR8:   &#39;CHAR8&#39;,
+           SDC.UCHAR8:  &#39;UCHAR8&#39;,
+           SDC.INT8:    &#39;INT8&#39;,
+           SDC.UINT8:   &#39;UINT8&#39;,
+           SDC.INT16:   &#39;INT16&#39;,
+           SDC.UINT16:  &#39;UINT16&#39;,
+           SDC.INT32:   &#39;INT32&#39;,
+           SDC.UINT32:  &#39;UINT32&#39;,
+           SDC.FLOAT32: &#39;FLOAT32&#39;,
+           SDC.FLOAT64: &#39;FLOAT64&#39;
+           }
 
-<span class="n">printf</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span>
+printf = sys.stdout.write
 
-<span class="k">def</span> <span class="nf">eol</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">chr</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
+def eol(n=1):
+    printf(&quot;%s&quot; % chr(10) * n)
 
-<span class="n">hdfFile</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>    <span class="c"># Get first command line argument</span>
+hdfFile = sys.argv[1]    # Get first command line argument
 
-<span class="k">try</span><span class="p">:</span>  <span class="c"># Catch pyhdf.SD errors</span>
-  <span class="c"># Open HDF file named on the command line</span>
-  <span class="n">f</span> <span class="o">=</span> <span class="n">SD</span><span class="p">(</span><span class="n">hdfFile</span><span class="p">)</span>
-  <span class="c"># Get global attribute dictionnary</span>
-  <span class="n">attr</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">attributes</span><span class="p">(</span><span class="n">full</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-  <span class="c"># Get dataset dictionnary</span>
-  <span class="n">dsets</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">datasets</span><span class="p">()</span>
+try:  # Catch pyhdf.SD errors
+  # Open HDF file named on the command line
+  f = SD(hdfFile)
+  # Get global attribute dictionnary
+  attr = f.attributes(full=1)
+  # Get dataset dictionnary
+  dsets = f.datasets()
 
-  <span class="c"># File name, number of attributes and number of variables.</span>
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;FILE INFO&quot;</span><span class="p">);</span> <span class="n">eol</span><span class="p">()</span>
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;-------------&quot;</span><span class="p">);</span> <span class="n">eol</span><span class="p">()</span>
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%-25s%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s">&quot;File:&quot;</span><span class="p">,</span> <span class="n">hdfFile</span><span class="p">));</span> <span class="n">eol</span><span class="p">()</span>
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%-25s%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s">&quot;  file attributes:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">attr</span><span class="p">)));</span> <span class="n">eol</span><span class="p">()</span>
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%-25s%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s">&quot;  datasets:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">dsets</span><span class="p">)));</span> <span class="n">eol</span><span class="p">()</span>
-  <span class="n">eol</span><span class="p">();</span>
+  # File name, number of attributes and number of variables.
+  printf(&quot;FILE INFO&quot;); eol()
+  printf(&quot;-------------&quot;); eol()
+  printf(&quot;%-25s%s&quot; % (&quot;File:&quot;, hdfFile)); eol()
+  printf(&quot;%-25s%d&quot; % (&quot;  file attributes:&quot;, len(attr))); eol()
+  printf(&quot;%-25s%d&quot; % (&quot;  datasets:&quot;, len(dsets))); eol()
+  eol();
 
-  <span class="c"># Global attribute table.</span>
-  <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;File attributes&quot;</span><span class="p">);</span> <span class="n">eol</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;  name                 idx type    len value&quot;</span><span class="p">);</span> <span class="n">eol</span><span class="p">()</span>
-      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;  -------------------- --- ------- --- -----&quot;</span><span class="p">);</span> <span class="n">eol</span><span class="p">()</span>
-      <span class="c"># Get list of attribute names and sort them lexically</span>
-      <span class="n">attNames</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-      <span class="n">attNames</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-      <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">attNames</span><span class="p">:</span>
-          <span class="n">t</span> <span class="o">=</span> <span class="n">attr</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-              <span class="c"># t[0] is the attribute value</span>
-              <span class="c"># t[1] is the attribute index number</span>
-              <span class="c"># t[2] is the attribute type</span>
-              <span class="c"># t[3] is the attribute length</span>
-          <span class="n">printf</span><span class="p">(</span><span class="s">&quot;  </span><span class="si">%-20s</span><span class="s"> </span><span class="si">%3d</span><span class="s"> </span><span class="si">%-7s</span><span class="s"> </span><span class="si">%3d</span><span class="s"> </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span>
-                 <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">typeTab</span><span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span> <span class="n">t</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]));</span> <span class="n">eol</span><span class="p">()</span>
-      <span class="n">eol</span><span class="p">()</span>
-
-
-  <span class="c"># Dataset table</span>
-  <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dsets</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Datasets (idx:index num, na:n attributes, cv:coord var)&quot;</span><span class="p">);</span> <span class="n">eol</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;  name                 idx type    na cv dimension(s)&quot;</span><span class="p">);</span> <span class="n">eol</span><span class="p">()</span>
-      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;  -------------------- --- ------- -- -- ------------&quot;</span><span class="p">);</span> <span class="n">eol</span><span class="p">()</span>
-      <span class="c"># Get list of dataset names and sort them lexically</span>
-      <span class="n">dsNames</span> <span class="o">=</span> <span class="n">dsets</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-      <span class="n">dsNames</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-      <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">dsNames</span><span class="p">:</span>
-          <span class="c"># Get dataset instance</span>
-          <span class="n">ds</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-          <span class="c"># Retrieve the dictionary of dataset attributes so as</span>
-          <span class="c"># to display their number</span>
-          <span class="n">vAttr</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attributes</span><span class="p">()</span>
-          <span class="n">t</span> <span class="o">=</span> <span class="n">dsets</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-              <span class="c"># t[0] is a tuple of dimension names</span>
-              <span class="c"># t[1] is a tuple of dimension lengths</span>
-              <span class="c"># t[2] is the dataset type</span>
-              <span class="c"># t[3] is the dataset index number</span>
-          <span class="n">printf</span><span class="p">(</span><span class="s">&quot;  </span><span class="si">%-20s</span><span class="s"> </span><span class="si">%3d</span><span class="s"> </span><span class="si">%-7s</span><span class="s"> </span><span class="si">%2d</span><span class="s"> </span><span class="si">%-2s</span><span class="s"> &quot;</span> <span class="o">%</span>
-                 <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">typeTab</span><span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span> <span class="nb">len</span><span class="p">(</span><span class="n">vAttr</span><span class="p">),</span>
-                  <span class="n">ds</span><span class="o">.</span><span class="n">iscoordvar</span><span class="p">()</span> <span class="ow">and</span> <span class="s">&#39;X&#39;</span> <span class="ow">or</span> <span class="s">&#39;&#39;</span><span class="p">))</span>
-          <span class="c"># Display dimension info.</span>
-          <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
-          <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-              <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s%s</span><span class="s">(</span><span class="si">%d</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="s">&#39;, &#39;</span> <span class="ow">or</span> <span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">n</span><span class="p">]))</span>
-              <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
-          <span class="n">eol</span><span class="p">()</span>
-      <span class="n">eol</span><span class="p">()</span>
-
-  <span class="c"># Dataset info.</span>
-  <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dsNames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;DATASET INFO&quot;</span><span class="p">);</span> <span class="n">eol</span><span class="p">()</span>
-      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;-------------&quot;</span><span class="p">);</span> <span class="n">eol</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-      <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">dsNames</span><span class="p">:</span>
-          <span class="c"># Access the dataset</span>
-          <span class="n">dsObj</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-          <span class="c"># Get dataset attribute dictionnary</span>
-          <span class="n">dsAttr</span> <span class="o">=</span> <span class="n">dsObj</span><span class="o">.</span><span class="n">attributes</span><span class="p">(</span><span class="n">full</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-          <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dsAttr</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-              <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> attributes&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">);</span> <span class="n">eol</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-              <span class="n">printf</span><span class="p">(</span><span class="s">&quot;  name                 idx type    len value&quot;</span><span class="p">);</span> <span class="n">eol</span><span class="p">()</span>
-              <span class="n">printf</span><span class="p">(</span><span class="s">&quot;  -------------------- --- ------- --- -----&quot;</span><span class="p">);</span> <span class="n">eol</span><span class="p">()</span>
-              <span class="c"># Get the list of attribute names and sort them alphabetically.</span>
-              <span class="n">attNames</span> <span class="o">=</span> <span class="n">dsAttr</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-              <span class="n">attNames</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-              <span class="k">for</span> <span class="n">nm</span> <span class="ow">in</span> <span class="n">attNames</span><span class="p">:</span>
-                  <span class="n">t</span> <span class="o">=</span> <span class="n">dsAttr</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span>
-                      <span class="c"># t[0] is the attribute value</span>
-                      <span class="c"># t[1] is the attribute index number</span>
-                      <span class="c"># t[2] is the attribute type</span>
-                      <span class="c"># t[3] is the attribute length</span>
-                  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;  </span><span class="si">%-20s</span><span class="s"> </span><span class="si">%3d</span><span class="s"> </span><span class="si">%-7s</span><span class="s"> </span><span class="si">%3d</span><span class="s"> </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span>
-                         <span class="p">(</span><span class="n">nm</span><span class="p">,</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">typeTab</span><span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span> <span class="n">t</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]));</span> <span class="n">eol</span><span class="p">()</span>
-              <span class="n">eol</span><span class="p">()</span>
-          <span class="c"># Get dataset dimension dictionnary</span>
-          <span class="n">dsDim</span> <span class="o">=</span> <span class="n">dsObj</span><span class="o">.</span><span class="n">dimensions</span><span class="p">(</span><span class="n">full</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-          <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dsDim</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-              <span class="n">printf</span> <span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> dimensions&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">);</span> <span class="n">eol</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-              <span class="n">printf</span><span class="p">(</span><span class="s">&quot;  name                 idx len   unl type    natt&quot;</span><span class="p">);</span><span class="n">eol</span><span class="p">()</span>
-              <span class="n">printf</span><span class="p">(</span><span class="s">&quot;  -------------------- --- ----- --- ------- ----&quot;</span><span class="p">);</span><span class="n">eol</span><span class="p">()</span>
-              <span class="c"># Get the list of dimension names and sort them alphabetically.</span>
-              <span class="n">dimNames</span> <span class="o">=</span> <span class="n">dsDim</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-              <span class="n">dimNames</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-              <span class="k">for</span> <span class="n">nm</span> <span class="ow">in</span> <span class="n">dimNames</span><span class="p">:</span>
-                  <span class="n">t</span> <span class="o">=</span> <span class="n">dsDim</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span>
-                      <span class="c"># t[0] is the dimension length</span>
-                      <span class="c"># t[1] is the dimension index number</span>
-                      <span class="c"># t[2] is 1 if the dimension is unlimited, 0 if not</span>
-                      <span class="c"># t[3] is the the dimension scale type, 0 if no scale</span>
-                      <span class="c"># t[4] is the number of attributes</span>
-                  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;  </span><span class="si">%-20s</span><span class="s"> </span><span class="si">%3d</span><span class="s"> </span><span class="si">%5d</span><span class="s">  </span><span class="si">%s</span><span class="s">  </span><span class="si">%-7s</span><span class="s"> </span><span class="si">%4d</span><span class="s">&quot;</span> <span class="o">%</span>
-                         <span class="p">(</span><span class="n">nm</span><span class="p">,</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">and</span> <span class="s">&quot;X&quot;</span> <span class="ow">or</span> <span class="s">&quot; &quot;</span><span class="p">,</span>
-                          <span class="n">t</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="ow">and</span> <span class="n">typeTab</span><span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span> <span class="ow">or</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">[</span><span class="mi">4</span><span class="p">]));</span> <span class="n">eol</span><span class="p">()</span>
-              <span class="n">eol</span><span class="p">()</span>
+  # Global attribute table.
+  if len(attr) &gt; 0:
+      printf(&quot;File attributes&quot;); eol(2)
+      printf(&quot;  name                 idx type    len value&quot;); eol()
+      printf(&quot;  -------------------- --- ------- --- -----&quot;); eol()
+      # Get list of attribute names and sort them lexically
+      attNames = attr.keys()
+      attNames.sort()
+      for name in attNames:
+          t = attr[name]
+              # t[0] is the attribute value
+              # t[1] is the attribute index number
+              # t[2] is the attribute type
+              # t[3] is the attribute length
+          printf(&quot;  %-20s %3d %-7s %3d %s&quot; %
+                 (name, t[1], typeTab[t[2]], t[3], t[0])); eol()
+      eol()
 
 
-<span class="k">except</span> <span class="n">HDF4Error</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span>
-    <span class="k">print</span> <span class="s">&quot;HDF4Error&quot;</span><span class="p">,</span> <span class="n">msg</span>
+  # Dataset table
+  if len(dsets) &gt; 0:
+      printf(&quot;Datasets (idx:index num, na:n attributes, cv:coord var)&quot;); eol(2)
+      printf(&quot;  name                 idx type    na cv dimension(s)&quot;); eol()
+      printf(&quot;  -------------------- --- ------- -- -- ------------&quot;); eol()
+      # Get list of dataset names and sort them lexically
+      dsNames = dsets.keys()
+      dsNames.sort()
+      for name in dsNames:
+          # Get dataset instance
+          ds = f.select(name)
+          # Retrieve the dictionary of dataset attributes so as
+          # to display their number
+          vAttr = ds.attributes()
+          t = dsets[name]
+              # t[0] is a tuple of dimension names
+              # t[1] is a tuple of dimension lengths
+              # t[2] is the dataset type
+              # t[3] is the dataset index number
+          printf(&quot;  %-20s %3d %-7s %2d %-2s &quot; %
+                 (name, t[3], typeTab[t[2]], len(vAttr),
+                  ds.iscoordvar() and &#39;X&#39; or &#39;&#39;))
+          # Display dimension info.
+          n = 0
+          for d in t[0]:
+              printf(&quot;%s%s(%d)&quot; % (n &gt; 0 and &#39;, &#39; or &#39;&#39;, d, t[1][n]))
+              n += 1
+          eol()
+      eol()
+
+  # Dataset info.
+  if len(dsNames) &gt; 0:
+      printf(&quot;DATASET INFO&quot;); eol()
+      printf(&quot;-------------&quot;); eol(2)
+      for name in dsNames:
+          # Access the dataset
+          dsObj = f.select(name)
+          # Get dataset attribute dictionnary
+          dsAttr = dsObj.attributes(full=1)
+          if len(dsAttr) &gt; 0:
+              printf(&quot;%s attributes&quot; % name); eol(2)
+              printf(&quot;  name                 idx type    len value&quot;); eol()
+              printf(&quot;  -------------------- --- ------- --- -----&quot;); eol()
+              # Get the list of attribute names and sort them alphabetically.
+              attNames = dsAttr.keys()
+              attNames.sort()
+              for nm in attNames:
+                  t = dsAttr[nm]
+                      # t[0] is the attribute value
+                      # t[1] is the attribute index number
+                      # t[2] is the attribute type
+                      # t[3] is the attribute length
+                  printf(&quot;  %-20s %3d %-7s %3d %s&quot; %
+                         (nm, t[1], typeTab[t[2]], t[3], t[0])); eol()
+              eol()
+          # Get dataset dimension dictionnary
+          dsDim = dsObj.dimensions(full=1)
+          if len(dsDim) &gt; 0:
+              printf (&quot;%s dimensions&quot; % name); eol(2)
+              printf(&quot;  name                 idx len   unl type    natt&quot;);eol()
+              printf(&quot;  -------------------- --- ----- --- ------- ----&quot;);eol()
+              # Get the list of dimension names and sort them alphabetically.
+              dimNames = dsDim.keys()
+              dimNames.sort()
+              for nm in dimNames:
+                  t = dsDim[nm]
+                      # t[0] is the dimension length
+                      # t[1] is the dimension index number
+                      # t[2] is 1 if the dimension is unlimited, 0 if not
+                      # t[3] is the the dimension scale type, 0 if no scale
+                      # t[4] is the number of attributes
+                  printf(&quot;  %-20s %3d %5d  %s  %-7s %4d&quot; %
+                         (nm, t[1], t[0], t[2] and &quot;X&quot; or &quot; &quot;,
+                          t[3] and typeTab[t[3]] or &quot;&quot;, t[4])); eol()
+              eol()
+
+
+except HDF4Error, msg:
+    print &quot;HDF4Error&quot;, msg
 </pre></div>
 </div>
 <dl class="class">
@@ -2499,7 +2499,7 @@ format  dimension format (attribute &#39;format&#39;)
     </div>
     <div class="footer">
         &copy; Copyright 2014, python-hdf4 authors.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

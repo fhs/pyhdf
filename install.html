@@ -1,0 +1,343 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installation &mdash; python-hdf4 0.9 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="python-hdf4 0.9 documentation" href="index.html" />
+    <link rel="next" title="Basic API (pyhdf.HDF)" href="modules/HDF.html" />
+    <link rel="prev" title="Welcome to python-hdf4’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules/HDF.html" title="Basic API (pyhdf.HDF)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to python-hdf4’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">python-hdf4 0.9 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>Python-HDF4 supports installation on Python 2 and Python 3. Please open an
+issue here if you encounter any problems during installation:
+<a class="reference external" href="https://github.com/fhs/python-hdf4/issues">https://github.com/fhs/python-hdf4/issues</a></p>
+<p>The source code of the latest release of Python-HDF4 can be obtained from
+either of these two location:</p>
+<ul class="simple">
+<li>PyPi / the cheeseshop: <a class="reference external" href="https://pypi.python.org/pypi/python-hdf4">https://pypi.python.org/pypi/python-hdf4</a></li>
+<li>Github: <a class="reference external" href="https://github.com/fhs/python-hdf4/releases">https://github.com/fhs/python-hdf4/releases</a></li>
+</ul>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>The following packages are required to build and install Python-HDF4:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://www.python.org">Python</a>:
+Python 2.6 or newer for Python 2, or Python 3.2 or newer for Python 3.</li>
+<li><a class="reference external" href="http://www.scipy.org">NumPy</a></li>
+<li><a class="reference external" href="http://www.hdfgroup.org/release4/obtain.html">HDF4 libraries</a> (to use
+their HDF4 binaries, you will also need szip, available from the same page)</li>
+<li>Compiler suite e.g. <a class="reference external" href="http://gcc.gnu.org">GCC</a>.
+On Windows, you can use <a class="reference external" href="http://www.mingw.org">Mingw32 compiler</a> or Visual
+Studio .NET 2003.</li>
+<li><a class="reference external" href="http://www.zlib.net/">zlib</a></li>
+<li><a class="reference external" href="http://www.ijg.org/">libjpeg</a></li>
+</ul>
+<p>On Debian and Debian-based Linux distributions (e.g. Ubuntu), you can install
+all the requirements using this command:</p>
+<div class="highlight-python"><div class="highlight"><pre>apt-get install python-dev python-numpy libhdf4-dev -y
+</pre></div>
+</div>
+<p>OS X users can obtain jpeg libraries <a class="reference external" href="http://ethan.tira-thompson.com/Mac%20OS%20X%20Ports.html">here</a>.</p>
+</div>
+<div class="section" id="installing-from-the-cheeseshop">
+<h2>Installing from the Cheeseshop<a class="headerlink" href="#installing-from-the-cheeseshop" title="Permalink to this headline">¶</a></h2>
+<p>To install Python-HDF4 from The Python Package Index (Cheeseshop), open a
+command prompt and type:</p>
+<div class="highlight-python"><div class="highlight"><pre>pip install python-hdf4
+</pre></div>
+</div>
+<p>On Debian based systems, you can obtain the <tt class="docutils literal"><span class="pre">pip</span></tt> command by running:</p>
+<div class="highlight-python"><div class="highlight"><pre>apt-get install python-pip -y
+</pre></div>
+</div>
+</div>
+<div class="section" id="installing-from-the-source-archive">
+<h2>Installing from the source archive<a class="headerlink" href="#installing-from-the-source-archive" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Go to the Python-HDF4 source directory.</p>
+</li>
+<li><p class="first">If your HDF4 libraries or include files reside in directories
+that are not searched by default on your system, the installation script
+will complain about missing files.</p>
+<p>Add to the search path by exporting <tt class="docutils literal"><span class="pre">INCLUDE_DIRS</span></tt> and
+<tt class="docutils literal"><span class="pre">LIBRARY_DIRS</span></tt>, e.g.:</p>
+<div class="highlight-python"><div class="highlight"><pre>export INCLUDE_DIRS=/usr/local/hdf-4.2r3/include
+export LIBRARY_DIRS=/usr/local/hdf-4.2r3/lib
+</pre></div>
+</div>
+<p>or on Windows something like (replace with actual location):</p>
+<div class="highlight-python"><div class="highlight"><pre>set INCLUDE_DIRS=C:\hdf4\include
+set LIBRARY_DIRS=C:\hdf4\lib;C:\hdf4\dll;C:\hdf4\jpeg6\lib;C:\hdf4\szip21\lib;C:\hdf4\zlib123\lib
+</pre></div>
+</div>
+<p>Note that jpeg, zlib, and (optionally) szip libraries must be found
+as well. If they are not in a standard place for the compiler,
+their location must be specified. On Mac OS X, <tt class="docutils literal"><span class="pre">/usr/local/lib</span></tt>
+and <tt class="docutils literal"><span class="pre">/usr/local/include</span></tt> may need to be specified if the
+libraries were installed there.  You may need to install the devel
+versions of these packages to get the statically-linked libraries
+if your HDF binary is statically linked.</p>
+<p>If you are using the binary HDF4 library available from the HDF4 site, you
+must also have szlib installed. Then, you will also need to set <tt class="docutils literal"><span class="pre">SZIP</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre>export SZIP=1
+
+(or on Windows:  set SZIP=1)
+</pre></div>
+</div>
+<p>If you do not wish to use szlib, you will need to compile HDF4 from source.</p>
+<p>If anything goes wrong, read the detailed notes below.
+Warning messages about implicit declarations of some functions
+may be produced.  Those are due to SWIG, and may be safely
+ignored.</p>
+</li>
+<li><p class="first">Install system-wide or locally:</p>
+<div class="highlight-python"><div class="highlight"><pre># sudo python setup.py install
+$ python setup.py install --prefix=/usr/local (or prefix of choice)
+</pre></div>
+</div>
+<p>Or, you might prefer to make a package (msi, rpm, egg, etc.) and install the
+package:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ python setup.py bdist_&lt;package&gt;
+</pre></div>
+</div>
+</li>
+</ol>
+<p>To make sure everything works as expected, run the <tt class="docutils literal"><span class="pre">hdfstruct.py</span></tt>
+script (under <tt class="docutils literal"><span class="pre">examples/hdfstruct</span></tt>) on one of your HDF4 files. The
+script should display the file structure. This is a handy tool to have
+around when you want to explore the contents of any HDF4 file.</p>
+<div class="section" id="quick-install-for-windows-users">
+<h3>Quick install for Windows Users<a class="headerlink" href="#quick-install-for-windows-users" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">Download the complete HDF4 binary package from the link given
+below.  These packages include all libraries needed to compile
+Python-HDF4. There are two binary packages to choose from depending on
+whether or not you want to compile Python-HDF4 with SZIP encoding enabled
+or disabled.  There are different licensing implications for each
+choice (see <a class="reference external" href="http://hdfgroup.com/doc_resource/SZIP/">the HDF page</a> for more details on the
+licensing of SZIP).</p>
+<ul class="simple">
+<li><a class="reference external" href="http://pysclint.sourceforge.net/pyhdf/hdf4-all-enc.zip">HDF4 with encoding enabled</a></li>
+<li><a class="reference external" href="http://pysclint.sourceforge.net/pyhdf/hdf4-all-noenc.zip">HDF4 with encoding disabled</a></li>
+</ul>
+</li>
+<li><p class="first">Unzip the selected package into a directory of your choice (e.g. <tt class="docutils literal"><span class="pre">C:\HDF4</span></tt>).</p>
+</li>
+<li><p class="first">Go to the Python-HDF4 source directory.</p>
+</li>
+<li><p class="first">Build the package in one of the two following ways:</p>
+<ul>
+<li><p class="first">Set the HDF4 environment variable to the directory where you unpacked the
+binary and (e.g. <tt class="docutils literal"><span class="pre">C:\HDF4</span></tt>). Then run the following:</p>
+<div class="highlight-python"><div class="highlight"><pre>python setup.py build
+</pre></div>
+</div>
+</li>
+<li><p class="first">Run <tt class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">build</span> <span class="pre">--hdf4</span> <span class="pre">&lt;directory</span> <span class="pre">of</span> <span class="pre">unzipped</span> <span class="pre">package&gt;</span></tt> where
+<tt class="docutils literal"><span class="pre">&lt;directory</span> <span class="pre">of</span> <span class="pre">unzipped</span> <span class="pre">package&gt;</span></tt> is the location where you unzipped the
+downloaded HDF4 binary (e.g. <tt class="docutils literal"><span class="pre">C:\HDF4</span></tt>).</p>
+</li>
+</ul>
+<p><em>NOTE</em>: If you are using the mingw32 compiler and are using the
+standard Python binary distribution, then you need to specify -c
+mingw32 on the command line as well.</p>
+</li>
+<li><p class="first">To install Python-HDF4 or build a binary distribution (bdist_msi,
+bdist_wininst, bdist_egg, etc.), run one of the following commands:</p>
+<div class="highlight-python"><div class="highlight"><pre>python setup.py install
+python setup.py bdist_msi
+python setup.py bdist_wininst
+python setup.py bdist_egg
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="further-notes">
+<h2>Further notes<a class="headerlink" href="#further-notes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="external-libraries">
+<h3>External libraries<a class="headerlink" href="#external-libraries" title="Permalink to this headline">¶</a></h3>
+<p>HDF4.2 no longer provides its own copies of the jpeg and z libraries.
+Those must be installed separately (on Linux, they should be part of
+any standard distribution).</p>
+<p>The sz library (versions 2.0 or higher) must be installed if the SZIP
+compression method is to be used with SDsetcompress(). HDF v4.2 must
+also then be compiled with SZIP support.  The binaries available from
+NCSA are (at the time of this writing) compiled with SZIP support
+(including encoding).  To use these binaries, you <em>must have SZIP installed</em>.
+The binaries Enthought has produced and which are available in EPD and for
+download from Sourceforge are compiled with SZIP support without encoding
+capability.</p>
+<p>Getting an SZIP enabled HDF library may require compiling the library
+from source with the &#8220;&#8211;with-szlib&#8221; configuration option.  Note that
+you <em>must</em> install SZIP in a separate step. For more details, see the
+<a class="reference external" href="http://hdf.ncsa.uiuc.edu/doc_resource/SZIP/">NCSA hdf site</a>.
+Source code and binaries are <a class="reference external" href="ftp://ftp.hdfgroup.org/lib-external/szip/">available for download</a>.</p>
+<p>In case your HDF library was compiled with SZIP support and you abide by the
+szip licensing terms, set the environment variable <tt class="docutils literal"><span class="pre">SZIP</span></tt> to <tt class="docutils literal"><span class="pre">1</span></tt>.</p>
+<p>If you get error messages related to the <tt class="docutils literal"><span class="pre">SDgetcompress()</span></tt> /
+<tt class="docutils literal"><span class="pre">SDsetcompress()</span></tt> functions, e.g. <tt class="docutils literal"><span class="pre">&quot;undefined</span> <span class="pre">symbol:</span>
+<span class="pre">SDgetcompress&quot;</span></tt>, set the environment variable <tt class="docutils literal"><span class="pre">NO_COMPRESS</span></tt> to &#8220;1&#8221;.
+This will transform <tt class="docutils literal"><span class="pre">SDgetcompress()</span></tt> and <tt class="docutils literal"><span class="pre">SDsetcompress()</span></tt> into
+no-ops, which will immediately raise an exception, and will not be
+resolved against the HDF library symbols. This may make it possible to
+work with an HDF library earlier than v4.2.</p>
+</div>
+<div class="section" id="swig-generated-interface-files">
+<h3>Swig-generated interface files<a class="headerlink" href="#swig-generated-interface-files" title="Permalink to this headline">¶</a></h3>
+<p>Interface files <tt class="docutils literal"><span class="pre">hdfext.py</span></tt> and <tt class="docutils literal"><span class="pre">hdfext_wrap.c</span></tt> (located under the
+<tt class="docutils literal"><span class="pre">pyhdf</span></tt> subdirectory) have been generated using the SWIG tool.
+Those two files should be usable as is on most environments.  It could
+happen however that, for reasons related to your environment, your C
+compiler does not accept the &#8216;.c&#8217; file and raises a compilation
+error. If so, the interface needs to be regenerated.  To do so,
+install <a class="reference external" href="http://www.swig.org">SWIG</a>, then run:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ cd pyhdf
+$ swig -python hdfext.i
+</pre></div>
+</div>
+<p>SWIG should silently regenerate the two interface files, after which
+installation should proceed correctly.</p>
+</div>
+<div class="section" id="tru64-note">
+<h3>TRU64 note<a class="headerlink" href="#tru64-note" title="Permalink to this headline">¶</a></h3>
+<p>The HDF installation creates its libraries as archive (.a) files,
+not shareable (.so) ones. On TRU64, the linker by default first looks
+for shareable libraries in every directory, then in a second round
+for archive files. This means that if there is a libjpeg.so somewhere
+on the standard linker search paths, it will be found first, even if
+the HDF libjpeg.a file exists in the directory pointed by &#8220;library_dirs&#8221;.
+To solve the problem, set the environment variable <tt class="docutils literal"><span class="pre">LINK_ARGS</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre>export LINK_ARGS=&quot;-oldstyle_liblookup&quot;
+</pre></div>
+</div>
+<p>This will tell the linker to look for .so then for .a files in each visited
+directory.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installation</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#installing-from-the-cheeseshop">Installing from the Cheeseshop</a></li>
+<li><a class="reference internal" href="#installing-from-the-source-archive">Installing from the source archive</a><ul>
+<li><a class="reference internal" href="#quick-install-for-windows-users">Quick install for Windows Users</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#further-notes">Further notes</a><ul>
+<li><a class="reference internal" href="#external-libraries">External libraries</a></li>
+<li><a class="reference internal" href="#swig-generated-interface-files">Swig-generated interface files</a></li>
+<li><a class="reference internal" href="#tru64-note">TRU64 note</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to python-hdf4&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="modules/HDF.html"
+                        title="next chapter">Basic API (<tt class="docutils literal"><span class="pre">pyhdf.HDF</span></tt>)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/install.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules/HDF.html" title="Basic API (pyhdf.HDF)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to python-hdf4’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">python-hdf4 0.9 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, python-hdf4 authors.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>
