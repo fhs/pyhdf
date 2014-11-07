@@ -4,16 +4,15 @@
 Overview
 ========
 
-python-hdf4 is a fork of pyhdf_ with some improvements:
+Python-HDF4 is a fork of pyhdf_ with some improvements:
 
 - Various bug fixes: removes use of deprecated numpy API, python 2.7 compatibility, etc.
 - Adds support for Python 3, while keeping compatibility with Python 2.
 - Sphinx documentation
-- Planned: unit tests
 
-python-hdf4 is a python wrapper around the NCSA HDF version 4 library.
+Python-HDF4 is a python wrapper around the NCSA HDF version 4 library.
 The SD (Scientific Dataset), VS (Vdata) and V (Vgroup) API's 
-are currently implemented. netCDF files can also be 
+are currently implemented. NetCDF files can also be
 read and modified.
 
 .. _pyhdf: http://pysclint.sourceforge.net/pyhdf/
@@ -21,7 +20,8 @@ read and modified.
 Installation
 ============
 
-To install, see file `doc/install.rst <doc/install.rst>`_.
+To install, see http://fhs.github.io/python-hdf4/install.html
+or file `doc/install.rst <doc/install.rst>`_.
 
 Documentation
 =============
