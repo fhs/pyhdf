@@ -5983,7 +5983,7 @@ SWIGINTERN PyObject *_wrap_SDgetinfo(PyObject *SWIGUNUSEDPARM(self), PyObject *a
   int32 *arg6 = (int32 *) 0 ;
   int val1 ;
   int ecode1 = 0 ;
-  char temp2[64+1] ;
+  char temp2[H4_MAX_NC_NAME+1] ;
   int32 temp3 ;
   int res3 = SWIG_TMPOBJ ;
   int res4 ;
@@ -6011,7 +6011,7 @@ SWIGINTERN PyObject *_wrap_SDgetinfo(PyObject *SWIGUNUSEDPARM(self), PyObject *a
   }
   result = (int32)SDgetinfo(arg1,arg2,arg3,arg4,arg5,arg6);
   resultobj = SWIG_From_int((int)(result));
-  arg2[64] = 0;  
+  arg2[H4_MAX_NC_NAME] = 0;  
   resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_FromCharPtr(arg2));
   if (SWIG_IsTmpObj(res3)) {
     resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg3)));
@@ -10846,6 +10846,7 @@ SWIG_init(void) {
   SWIG_Python_SetConstant(d, "DFTAG_NDG",SWIG_From_int((int)(720)));
   SWIG_Python_SetConstant(d, "DFTAG_VH",SWIG_From_int((int)(1962)));
   SWIG_Python_SetConstant(d, "DFTAG_VG",SWIG_From_int((int)(1965)));
+  SWIG_Python_SetConstant(d, "H4_MAX_VAR_DIMS",SWIG_From_int((int)(H4_MAX_VAR_DIMS)));
   
   /* Init numpy. Mandatory, otherwise the extension will bomb. */
   import_array();

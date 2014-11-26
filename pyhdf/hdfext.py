@@ -118,6 +118,7 @@ COMP_CODE_SZIP = _hdfext.COMP_CODE_SZIP
 DFTAG_NDG = _hdfext.DFTAG_NDG
 DFTAG_VH = _hdfext.DFTAG_VH
 DFTAG_VG = _hdfext.DFTAG_VG
+H4_MAX_VAR_DIMS = _hdfext.H4_MAX_VAR_DIMS
 class array_byte(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, array_byte, name, value)

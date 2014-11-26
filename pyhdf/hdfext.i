@@ -105,6 +105,9 @@
 #define  DFTAG_VH  1962 
 #define  DFTAG_VG  1965
 
+/* limits */
+%constant int H4_MAX_VAR_DIMS = H4_MAX_VAR_DIMS;
+
 %array_class(unsigned char, array_byte);
 %array_class(signed char, array_int8);
 %array_class(short, array_int16);
@@ -494,7 +497,7 @@ extern int32 SDend(int32 sd_id);
 
 extern int32 SDfileinfo(int32 sd_id, int32 *OUTPUT, int32 *OUTPUT);
 
-%cstring_bounded_output(char *sds_name, 256);
+%cstring_bounded_output(char *sds_name, H4_MAX_NC_NAME);
 extern int32 SDgetinfo(int32 sds_id, char *sds_name, int32 *OUTPUT, void *buf,
                  int32 *OUTPUT, int32 *OUTPUT);
 %clear char *sds_name;
