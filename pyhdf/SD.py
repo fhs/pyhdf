@@ -1304,21 +1304,7 @@ class SDAttr(object):
             buf = _C.array_byte(n_values)
 
         elif data_type == SDC.INT8:
-            # SWIG refuses negative values here. We found that if we
-            # pass them as byte values, it will work.
             buf = _C.array_int8(n_values)
-            values = list(values)
-            for n in range(n_values):
-                v = values[n]
-                if v >= 0:
-                    v &= 0x7f
-                else:
-                    v = abs(v) & 0x7f
-                    if v:
-                        v = 256 - v
-                    else:
-                        v = 128         # -128 in 2s complement
-                values[n] = v
 
         elif data_type == SDC.INT16:
             buf = _C.array_int16(n_values)
@@ -2538,17 +2524,7 @@ class SDS(object):
             buf = _C.array_byte(n_values)
 
         elif data_type == SDC.INT8:
-            # SWIG refuses negative values here. We found that if we
-            # pass them as byte values, it will work.
             buf = _C.array_int8(n_values)
-            if fill_val >= 0:
-                fill_val &= 0x7f
-            else:
-                fill_val = abs(fill_val) & 0x7f
-                if fill_val:
-                    fill_val = 256 - fill_val
-                else:
-                    fill_val = 128    # -128 in 2's complement
 
         elif data_type == SDC.INT16:
             buf = _C.array_int16(n_values)
@@ -2617,30 +2593,8 @@ class SDS(object):
             buf2 = _C.array_byte(n_values)
 
         elif data_type == SDC.INT8:
-            # SWIG refuses negative values here. We found that if we
-            # pass them as byte values, it will work.
             buf1 = _C.array_int8(n_values)
             buf2 = _C.array_int8(n_values)
-            v = min
-            if v >= 0:
-                v &= 0x7f
-            else:
-                v = abs(v) & 0x7f
-                if v:
-                    v = 256 - v
-                else:
-                    v = 128    # -128 in 2's complement
-            min = v
-            v = max
-            if v >= 0:
-                v &= 0x7f
-            else:
-                v = abs(v) & 0x7f
-                if v:
-                    v = 256 - v
-                else:
-                    v = 128    # -128 in 2's complement
-            max = v
 
         elif data_type == SDC.INT16:
             buf1 = _C.array_int16(n_values)
@@ -3113,21 +3067,7 @@ class SDim(object):
             buf = _C.array_byte(n_values)
 
         elif data_type == SDC.INT8:
-            # SWIG refuses negative values here. We found that if we
-            # pass them as byte values, it will work.
             buf = _C.array_int8(n_values)
-            scale = list(scale)
-            for n in range(n_values):
-                v = scale[n]
-                if v >= 0:
-                    v &= 0x7f
-                else:
-                    v = abs(v) & 0x7f
-                    if v:
-                        v = 256 - v
-                    else:
-                        v = 128         # -128 in 2's complement
-                scale[n] = v
 
         elif data_type == SDC.INT16:
             buf = _C.array_int16(n_values)
