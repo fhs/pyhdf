@@ -27,6 +27,7 @@ from numpy.distutils.core import setup, Extension
 import sys
 import os
 import os.path as path
+import shlex
 
 CLASSIFIERS = """\
 Development Status :: 5 - Production/Stable
@@ -61,7 +62,9 @@ include_dirs = _find_args('-i', 'INCLUDE_DIRS')
 library_dirs = _find_args('-l', 'LIBRARY_DIRS')
 szip_installed = 'SZIP' in os.environ
 compress = 'NO_COMPRESS' not in os.environ
-extra_link_args = os.environ.get('LINK_ARGS', '')
+extra_link_args = None
+if "LINK_ARGS" in os.environ:
+    extra_link_args = shlex.split(os.environ["LINK_ARGS"])
 
 
 msg = 'Cannot proceed without the HDF4 library.  Please ' \
@@ -148,7 +151,7 @@ _hdfext = Extension('pyhdf._hdfext',
                     include_dirs = include_dirs,
                     extra_compile_args = extra_compile_args,
                     library_dirs = library_dirs,
-                    extra_link_args=[extra_link_args],
+                    extra_link_args=extra_link_args,
                     libraries = libraries,
                     )
 
