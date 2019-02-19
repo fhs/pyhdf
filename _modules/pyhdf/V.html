@@ -1,33 +1,25 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>pyhdf.V &mdash; python-hdf4 0.9 documentation</title>
-    
-    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <title>pyhdf.V &#8212; python-hdf4 0.9 documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '0.9',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="python-hdf4 0.9 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
-  </head>
-  <body>
-    <div class="related">
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,25 +28,25 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">python-hdf4 0.9 documentation</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">python-hdf4 0.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for pyhdf.V</h1><div class="highlight"><pre>
-<span class="c"># $Id: V.py,v 1.2 2005-07-14 01:36:41 gosselin_a Exp $</span>
-<span class="c"># $Log: not supported by cvs2svn $</span>
-<span class="c"># Revision 1.1  2004/08/02 15:36:04  gosselin</span>
-<span class="c"># Initial revision</span>
-<span class="c">#</span>
-<span class="c"># Author: Andre Gosselin</span>
-<span class="c">#         Maurice-Lamontagne Institute</span>
-<span class="c">#         gosselina@dfo-mpo.gc.ca</span>
+<span></span><span class="c1"># $Id: V.py,v 1.2 2005-07-14 01:36:41 gosselin_a Exp $</span>
+<span class="c1"># $Log: not supported by cvs2svn $</span>
+<span class="c1"># Revision 1.1  2004/08/02 15:36:04  gosselin</span>
+<span class="c1"># Initial revision</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Andre Gosselin</span>
+<span class="c1">#         Maurice-Lamontagne Institute</span>
+<span class="c1">#         gosselina@dfo-mpo.gc.ca</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">V (Vgroup) API (:mod:`pyhdf.V`)</span>
@@ -700,17 +692,17 @@
 
 <span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">types</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">hdfext</span> <span class="k">as</span> <span class="n">_C</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">hdfext</span> <span class="k">as</span> <span class="n">_C</span>
 
-<span class="kn">from</span> <span class="nn">.six.moves</span> <span class="kn">import</span> <span class="nb">xrange</span>
-<span class="kn">from</span> <span class="nn">.HC</span> <span class="kn">import</span> <span class="n">HC</span>
-<span class="kn">from</span> <span class="nn">.VS</span> <span class="kn">import</span> <span class="n">VD</span>
-<span class="kn">from</span> <span class="nn">.error</span> <span class="kn">import</span> <span class="n">HDF4Error</span><span class="p">,</span> <span class="n">_checkErr</span>
+<span class="kn">from</span> <span class="nn">.six.moves</span> <span class="k">import</span> <span class="n">xrange</span>
+<span class="kn">from</span> <span class="nn">.HC</span> <span class="k">import</span> <span class="n">HC</span>
+<span class="kn">from</span> <span class="nn">.VS</span> <span class="k">import</span> <span class="n">VD</span>
+<span class="kn">from</span> <span class="nn">.error</span> <span class="k">import</span> <span class="n">HDF4Error</span><span class="p">,</span> <span class="n">_checkErr</span>
 
-<span class="c"># List of names we want to be imported by an &quot;from pyhdf.V import *&quot;</span>
-<span class="c"># statement</span>
+<span class="c1"># List of names we want to be imported by an &quot;from pyhdf.V import *&quot;</span>
+<span class="c1"># statement</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;V&#39;</span><span class="p">,</span> <span class="s">&#39;VG&#39;</span><span class="p">,</span> <span class="s">&#39;VGAttr&#39;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;VG&#39;</span><span class="p">,</span> <span class="s1">&#39;VGAttr&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="V"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.V">[docs]</a><span class="k">class</span> <span class="nc">V</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The V class implements the V (Vgroup) interface applied to an</span>
@@ -719,25 +711,25 @@
 <span class="sd">    HDF instance. &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hinst</span><span class="p">):</span>
-        <span class="c"># Not to be called directly by the user.</span>
-        <span class="c"># A V object is instantiated using the vgstart()</span>
-        <span class="c"># method of an HDF instance.</span>
+        <span class="c1"># Not to be called directly by the user.</span>
+        <span class="c1"># A V object is instantiated using the vgstart()</span>
+        <span class="c1"># method of an HDF instance.</span>
 
-        <span class="c"># Args:</span>
-        <span class="c">#    hinst    HDF instance</span>
-        <span class="c"># Returns:</span>
-        <span class="c">#    A V instance</span>
-        <span class="c">#</span>
-        <span class="c"># C library equivalent : Vstart (rather: Vinitialize)</span>
+        <span class="c1"># Args:</span>
+        <span class="c1">#    hinst    HDF instance</span>
+        <span class="c1"># Returns:</span>
+        <span class="c1">#    A V instance</span>
+        <span class="c1">#</span>
+        <span class="c1"># C library equivalent : Vstart (rather: Vinitialize)</span>
 
-        <span class="c"># Private attributes:</span>
-        <span class="c">#  _hdf_inst:       HDF instance</span>
+        <span class="c1"># Private attributes:</span>
+        <span class="c1">#  _hdf_inst:       HDF instance</span>
 
-        <span class="c"># Note: Vstart is just a macro; use &#39;Vinitialize&#39; instead</span>
-        <span class="c"># Note also thet the same C function is used to initialize the</span>
-        <span class="c"># VS interface.</span>
+        <span class="c1"># Note: Vstart is just a macro; use &#39;Vinitialize&#39; instead</span>
+        <span class="c1"># Note also thet the same C function is used to initialize the</span>
+        <span class="c1"># VS interface.</span>
         <span class="n">status</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vinitialize</span><span class="p">(</span><span class="n">hinst</span><span class="o">.</span><span class="n">_id</span><span class="p">)</span>
-        <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;V&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s">&quot;cannot initialize V interface&quot;</span><span class="p">)</span>
+        <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s2">&quot;cannot initialize V interface&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hdf_inst</span> <span class="o">=</span> <span class="n">hinst</span>
 
 
@@ -765,13 +757,13 @@
 <span class="sd">        C library equivalent : Vend</span>
 <span class="sd">                                                &quot;&quot;&quot;</span>
 
-        <span class="c"># Note: Vend is just a macro; use &#39;Vfinish&#39; instead</span>
-        <span class="c"># Note also the the same C function is used to end</span>
-        <span class="c"># the VS interface</span>
-        <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;vend&#39;</span><span class="p">,</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vfinish</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hdf_inst</span><span class="o">.</span><span class="n">_id</span><span class="p">),</span>
-                  <span class="s">&quot;cannot terminate V interface&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_hdf_inst</span> <span class="o">=</span> <span class="bp">None</span>
-</div>
+        <span class="c1"># Note: Vend is just a macro; use &#39;Vfinish&#39; instead</span>
+        <span class="c1"># Note also the the same C function is used to end</span>
+        <span class="c1"># the VS interface</span>
+        <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;vend&#39;</span><span class="p">,</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vfinish</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hdf_inst</span><span class="o">.</span><span class="n">_id</span><span class="p">),</span>
+                  <span class="s2">&quot;cannot terminate V interface&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hdf_inst</span> <span class="o">=</span> <span class="kc">None</span></div>
+
 <div class="viewcode-block" id="V.attach"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.V.attach">[docs]</a>    <span class="k">def</span> <span class="nf">attach</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_name</span><span class="p">,</span> <span class="n">write</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Open an existing vgroup given its name or its reference</span>
 <span class="sd">        number, or create a new vgroup, returning a VG instance for</span>
@@ -800,10 +792,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">num</span> <span class="o">=</span> <span class="n">num_name</span>
         <span class="n">vg_id</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vattach</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hdf_inst</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span>
-                           <span class="n">write</span> <span class="ow">and</span> <span class="s">&#39;w&#39;</span> <span class="ow">or</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
-        <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;vattach&#39;</span><span class="p">,</span> <span class="n">vg_id</span><span class="p">,</span> <span class="s">&quot;cannot attach Vgroup&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">VG</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vg_id</span><span class="p">)</span>
-</div>
+                           <span class="n">write</span> <span class="ow">and</span> <span class="s1">&#39;w&#39;</span> <span class="ow">or</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;vattach&#39;</span><span class="p">,</span> <span class="n">vg_id</span><span class="p">,</span> <span class="s2">&quot;cannot attach Vgroup&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">VG</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vg_id</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="V.create"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.V.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a new vgroup, and assign it a name.</span>
 
@@ -823,8 +815,8 @@
 
         <span class="n">vg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">vg</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="k">return</span> <span class="n">vg</span>
-</div>
+        <span class="k">return</span> <span class="n">vg</span></div>
+
 <div class="viewcode-block" id="V.find"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.V.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Find a vgroup given its name, returning its reference</span>
 <span class="sd">        number if found.</span>
@@ -844,9 +836,9 @@
 
         <span class="n">refnum</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vfind</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hdf_inst</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">refnum</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s">&quot;vgroup not found&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">refnum</span>
-</div>
+            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s2">&quot;vgroup not found&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">refnum</span></div>
+
 <div class="viewcode-block" id="V.findclass"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.V.findclass">[docs]</a>    <span class="k">def</span> <span class="nf">findclass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Find a vgroup given its class name, returning its reference</span>
 <span class="sd">        number if found.</span>
@@ -866,9 +858,9 @@
 
         <span class="n">refnum</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vfindclass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hdf_inst</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">refnum</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s">&quot;vgroup not found&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">refnum</span>
-</div>
+            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s2">&quot;vgroup not found&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">refnum</span></div>
+
 <div class="viewcode-block" id="V.delete"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.V.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete from the HDF file the vgroup identified by its</span>
 <span class="sd">        reference number or its name.</span>
@@ -888,16 +880,16 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">vg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">num_name</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">HDF4Error</span> <span class="k">as</span> <span class="n">msg</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s">&quot;delete: no such vgroup&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s2">&quot;delete: no such vgroup&quot;</span><span class="p">)</span>
 
-        <span class="c"># ATTENTION: The HDF documentation says that the vgroup_id</span>
-        <span class="c">#            is passed to Vdelete(). This is wrong.</span>
-        <span class="c">#            The vgroup reference number must instead be passed.</span>
+        <span class="c1"># ATTENTION: The HDF documentation says that the vgroup_id</span>
+        <span class="c1">#            is passed to Vdelete(). This is wrong.</span>
+        <span class="c1">#            The vgroup reference number must instead be passed.</span>
         <span class="n">refnum</span> <span class="o">=</span> <span class="n">vg</span><span class="o">.</span><span class="n">_refnum</span>
         <span class="n">vg</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
-        <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;delete&#39;</span><span class="p">,</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vdelete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hdf_inst</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">refnum</span><span class="p">),</span>
-                  <span class="s">&quot;error deleting vgroup&quot;</span><span class="p">)</span>
-</div>
+        <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">,</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vdelete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hdf_inst</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">refnum</span><span class="p">),</span>
+                  <span class="s2">&quot;error deleting vgroup&quot;</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="V.getid"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.V.getid">[docs]</a>    <span class="k">def</span> <span class="nf">getid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Obtain the reference number of the vgroup following the</span>
 <span class="sd">        vgroup with the given reference number .</span>
@@ -918,27 +910,27 @@
 <span class="sd">                                                    &quot;&quot;&quot;</span>
 
         <span class="n">num</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vgetid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hdf_inst</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
-        <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;getid&#39;</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="s">&quot;bad arguments or last vgroup reached&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">num</span>
+        <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;getid&#39;</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="s2">&quot;bad arguments or last vgroup reached&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">num</span></div></div>
 
-</div></div>
+
 <div class="viewcode-block" id="VG"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.VG">[docs]</a><span class="k">class</span> <span class="nc">VG</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The VG class encapsulates the functionnality of a vgroup.</span>
 <span class="sd">    To instantiate a VG class, call the attach() or create() methods</span>
 <span class="sd">    of a V class instance.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vinst</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
-        <span class="c"># This construtor is not intended to be called directly</span>
-        <span class="c"># by the user program. The attach() method of an</span>
-        <span class="c"># V class instance should be called instead.</span>
+        <span class="c1"># This construtor is not intended to be called directly</span>
+        <span class="c1"># by the user program. The attach() method of an</span>
+        <span class="c1"># V class instance should be called instead.</span>
 
-        <span class="c"># Arg:</span>
-        <span class="c">#  vinst       V instance from which the call is made</span>
-        <span class="c">#  id          vgroup identifier</span>
+        <span class="c1"># Arg:</span>
+        <span class="c1">#  vinst       V instance from which the call is made</span>
+        <span class="c1">#  id          vgroup identifier</span>
 
-        <span class="c"># Private attributes:</span>
-        <span class="c">#  _v_inst    V instance to which the vdata belongs</span>
-        <span class="c">#  _id        vgroup identifier</span>
+        <span class="c1"># Private attributes:</span>
+        <span class="c1">#  _v_inst    V instance to which the vdata belongs</span>
+        <span class="c1">#  _id        vgroup identifier</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_v_inst</span> <span class="o">=</span> <span class="n">vinst</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="nb">id</span>
@@ -971,48 +963,48 @@
 
 <span class="sd">                                                         &quot;&quot;&quot;</span>
 
-        <span class="c"># NOTE: python will call this method only if the attribute</span>
-        <span class="c">#       is not found in the object dictionnary.</span>
+        <span class="c1"># NOTE: python will call this method only if the attribute</span>
+        <span class="c1">#       is not found in the object dictionnary.</span>
 
-        <span class="c"># Check for a user defined attribute first.</span>
+        <span class="c1"># Check for a user defined attribute first.</span>
         <span class="n">att</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">att</span><span class="o">.</span><span class="n">_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>   <span class="c"># Then the attribute exists</span>
+        <span class="k">if</span> <span class="n">att</span><span class="o">.</span><span class="n">_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>   <span class="c1"># Then the attribute exists</span>
             <span class="k">return</span> <span class="n">att</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 
-        <span class="c"># Check for a predefined attribute</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s">&quot;_class&quot;</span><span class="p">:</span>
+        <span class="c1"># Check for a predefined attribute</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;_class&quot;</span><span class="p">:</span>
             <span class="n">status</span><span class="p">,</span> <span class="n">nm</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vgetclass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">)</span>
-            <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;_class&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s">&#39;cannot get vgroup class&#39;</span><span class="p">)</span>
+            <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;_class&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s1">&#39;cannot get vgroup class&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">nm</span>
 
-        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s">&quot;_name&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;_name&quot;</span><span class="p">:</span>
             <span class="n">status</span><span class="p">,</span> <span class="n">nm</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vgetname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">)</span>
-            <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;_name&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s">&#39;cannot get vgroup name&#39;</span><span class="p">)</span>
+            <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;_name&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s1">&#39;cannot get vgroup name&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">nm</span>
 
-        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s">&quot;_nattrs&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;_nattrs&quot;</span><span class="p">:</span>
             <span class="n">n</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vnattrs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">)</span>
-            <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;_nattrs&#39;</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s">&#39;cannot get number of attributes&#39;</span><span class="p">)</span>
+            <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;_nattrs&#39;</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s1">&#39;cannot get number of attributes&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">n</span>
 
-        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s">&quot;_nmembers&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;_nmembers&quot;</span><span class="p">:</span>
             <span class="n">n</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vntagrefs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">)</span>
-            <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;refnum&#39;</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s">&#39;cannot get vgroup number of members&#39;</span><span class="p">)</span>
+            <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;refnum&#39;</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s1">&#39;cannot get vgroup number of members&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">n</span>
 
-        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s">&quot;_refnum&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;_refnum&quot;</span><span class="p">:</span>
             <span class="n">n</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">VQueryref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">)</span>
-            <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;refnum&#39;</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s">&#39;cannot get vgroup reference number&#39;</span><span class="p">)</span>
+            <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;refnum&#39;</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s1">&#39;cannot get vgroup reference number&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">n</span>
 
-        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s">&quot;_tag&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;_tag&quot;</span><span class="p">:</span>
             <span class="n">n</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">VQuerytag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">)</span>
-            <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;_tag&#39;</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s">&#39;cannot get vgroup tag&#39;</span><span class="p">)</span>
+            <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;_tag&#39;</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s1">&#39;cannot get vgroup tag&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">n</span>
 
-        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s">&quot;_version&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;_version&quot;</span><span class="p">:</span>
             <span class="n">n</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vgetversion</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">)</span>
-            <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;_tag&#39;</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s">&#39;cannot get vgroup version&#39;</span><span class="p">)</span>
+            <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;_tag&#39;</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s1">&#39;cannot get vgroup version&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">n</span>
 
         <span class="k">else</span><span class="p">:</span>
@@ -1020,24 +1012,24 @@
 
     <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 
-        <span class="c"># A name starting with an underscore will be treated as</span>
-        <span class="c"># a standard python attribute, and as an HDF attribute</span>
-        <span class="c"># otherwise.</span>
+        <span class="c1"># A name starting with an underscore will be treated as</span>
+        <span class="c1"># a standard python attribute, and as an HDF attribute</span>
+        <span class="c1"># otherwise.</span>
 
-        <span class="c"># Forbid assigning to readonly attributes</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;_nattrs&quot;</span><span class="p">,</span> <span class="s">&quot;_nmembers&quot;</span><span class="p">,</span> <span class="s">&quot;_refnum&quot;</span><span class="p">,</span> <span class="s">&quot;_tag&quot;</span><span class="p">,</span> <span class="s">&quot;_version&quot;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s">: read-only attribute&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+        <span class="c1"># Forbid assigning to readonly attributes</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;_nattrs&quot;</span><span class="p">,</span> <span class="s2">&quot;_nmembers&quot;</span><span class="p">,</span> <span class="s2">&quot;_refnum&quot;</span><span class="p">,</span> <span class="s2">&quot;_tag&quot;</span><span class="p">,</span> <span class="s2">&quot;_version&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: read-only attribute&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
 
-        <span class="c"># Read-write predefined attributes</span>
-        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s">&quot;_class&quot;</span><span class="p">:</span>
+        <span class="c1"># Read-write predefined attributes</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;_class&quot;</span><span class="p">:</span>
             <span class="n">_checkErr</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vsetclass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span>
-                      <span class="s">&#39;cannot set _class property&#39;</span><span class="p">)</span>
+                      <span class="s1">&#39;cannot set _class property&#39;</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s">&quot;_name&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;_name&quot;</span><span class="p">:</span>
             <span class="n">_checkErr</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vsetname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span>
-                      <span class="s">&#39;cannot set _name property&#39;</span><span class="p">)</span>
+                      <span class="s1">&#39;cannot set _name property&#39;</span><span class="p">)</span>
 
-        <span class="c"># Try to set a user-defined attribute.</span>
+        <span class="c1"># Try to set a user-defined attribute.</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">_setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
@@ -1060,12 +1052,12 @@
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">VG</span><span class="p">):</span>
             <span class="nb">id</span> <span class="o">=</span> <span class="n">inst</span><span class="o">.</span><span class="n">_id</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s">&quot;insrt: bad argument&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s2">&quot;insrt: bad argument&quot;</span><span class="p">)</span>
 
         <span class="n">index</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vinsert</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
-        <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;insert&#39;</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="s">&quot;cannot insert in vgroup&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">index</span>
-</div>
+        <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;insert&#39;</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="s2">&quot;cannot insert in vgroup&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">index</span></div>
+
 <div class="viewcode-block" id="VG.add"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.VG.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add to the vgroup an object identified by its tag and</span>
 <span class="sd">        reference number.</span>
@@ -1083,9 +1075,9 @@
 <span class="sd">                                              &quot;&quot;&quot;</span>
 
         <span class="n">n</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vaddtagref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
-        <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;addtagref&#39;</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s">&#39;invalid arguments&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">n</span>
-</div>
+        <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;addtagref&#39;</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s1">&#39;invalid arguments&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">n</span></div>
+
 <div class="viewcode-block" id="VG.delete"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.VG.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete from the vgroup the member identified by its tag</span>
 <span class="sd">        and reference number.</span>
@@ -1105,9 +1097,9 @@
 <span class="sd">        C library equivalent : Vdeletatagref</span>
 <span class="sd">                                                  &quot;&quot;&quot;</span>
 
-        <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;delete&#39;</span><span class="p">,</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vdeletetagref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">ref</span><span class="p">),</span>
-                  <span class="s">&quot;error deleting member&quot;</span><span class="p">)</span>
-</div>
+        <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">,</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vdeletetagref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">ref</span><span class="p">),</span>
+                  <span class="s2">&quot;error deleting member&quot;</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="VG.detach"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.VG.detach">[docs]</a>    <span class="k">def</span> <span class="nf">detach</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Terminate access to the vgroup.</span>
 
@@ -1122,10 +1114,10 @@
 <span class="sd">        C library equivalent : Vdetach</span>
 <span class="sd">                                              &quot;&quot;&quot;</span>
 
-        <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;detach&#39;</span><span class="p">,</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vdetach</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">),</span>
-                  <span class="s">&quot;cannot detach vgroup&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="bp">None</span>
-</div>
+        <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;detach&#39;</span><span class="p">,</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vdetach</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">),</span>
+                  <span class="s2">&quot;cannot detach vgroup&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="kc">None</span></div>
+
 <div class="viewcode-block" id="VG.tagref"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.VG.tagref">[docs]</a>    <span class="k">def</span> <span class="nf">tagref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the tag and reference number of a vgroup member,</span>
 <span class="sd">        given the index number of that member.</span>
@@ -1144,9 +1136,9 @@
 <span class="sd">                                                  &quot;&quot;&quot;</span>
 
         <span class="n">status</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">ref</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vgettagref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
-        <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;tagref&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s">&quot;illegal arguments&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">tag</span><span class="p">,</span> <span class="n">ref</span>
-</div>
+        <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;tagref&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s2">&quot;illegal arguments&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tag</span><span class="p">,</span> <span class="n">ref</span></div>
+
 <div class="viewcode-block" id="VG.tagrefs"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.VG.tagrefs">[docs]</a>    <span class="k">def</span> <span class="nf">tagrefs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the tags and reference numbers of all the vgroup</span>
 <span class="sd">        members.</span>
@@ -1167,12 +1159,12 @@
             <span class="n">tags</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">array_int32</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
             <span class="n">refs</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">array_int32</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
             <span class="n">k</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vgettagrefs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">refs</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-            <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;tagrefs&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="s">&quot;error getting tags and refs&quot;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+            <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;tagrefs&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="s2">&quot;error getting tags and refs&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
                 <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">tags</span><span class="p">[</span><span class="n">m</span><span class="p">],</span> <span class="n">refs</span><span class="p">[</span><span class="n">m</span><span class="p">]))</span>
 
-        <span class="k">return</span> <span class="n">ret</span>
-</div>
+        <span class="k">return</span> <span class="n">ret</span></div>
+
 <div class="viewcode-block" id="VG.inqtagref"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.VG.inqtagref">[docs]</a>    <span class="k">def</span> <span class="nf">inqtagref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Determines if an object identified by its tag and reference</span>
 <span class="sd">        number belongs to the vgroup.</span>
@@ -1190,8 +1182,8 @@
 <span class="sd">        C library equivalent : Vinqtagref</span>
 <span class="sd">                                             &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vinqtagref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
-</div>
+        <span class="k">return</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vinqtagref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="VG.nrefs"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.VG.nrefs">[docs]</a>    <span class="k">def</span> <span class="nf">nrefs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Determine the number of tags of a given type in a vgroup.</span>
 
@@ -1207,9 +1199,9 @@
 <span class="sd">                                              &quot;&quot;&quot;</span>
 
         <span class="n">n</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vnrefs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
-        <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;nrefs&#39;</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s">&quot;bad arguments&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">n</span>
-</div>
+        <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;nrefs&#39;</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s2">&quot;bad arguments&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">n</span></div>
+
 <div class="viewcode-block" id="VG.isvg"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.VG.isvg">[docs]</a>    <span class="k">def</span> <span class="nf">isvg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Determines if the member of a vgoup is a vgroup.</span>
 
@@ -1225,8 +1217,8 @@
 <span class="sd">        C library equivalent : Visvg</span>
 <span class="sd">                                             &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="n">_C</span><span class="o">.</span><span class="n">Visvg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
-</div>
+        <span class="k">return</span> <span class="n">_C</span><span class="o">.</span><span class="n">Visvg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="VG.isvs"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.VG.isvs">[docs]</a>    <span class="k">def</span> <span class="nf">isvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Determines if the member of a vgoup is a vdata.</span>
 
@@ -1242,8 +1234,8 @@
 <span class="sd">        C library equivalent : Visvs</span>
 <span class="sd">                                             &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="n">_C</span><span class="o">.</span><span class="n">Visvs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
-</div>
+        <span class="k">return</span> <span class="n">_C</span><span class="o">.</span><span class="n">Visvs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="VG.attr"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.VG.attr">[docs]</a>    <span class="k">def</span> <span class="nf">attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name_index</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a VGAttr instance representing a vgroup attribute.</span>
 
@@ -1263,8 +1255,8 @@
 
 <span class="sd">                                &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="n">VGAttr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name_index</span><span class="p">)</span>
-</div>
+        <span class="k">return</span> <span class="n">VGAttr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name_index</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="VG.attrinfo"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.VG.attrinfo">[docs]</a>    <span class="k">def</span> <span class="nf">attrinfo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return info about all the vgroup attributes.</span>
 
@@ -1292,9 +1284,9 @@
             <span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">att</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
             <span class="n">dic</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">att</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">size</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">dic</span>
+        <span class="k">return</span> <span class="n">dic</span></div>
 
-</div>
+
 <div class="viewcode-block" id="VG.findattr"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.VG.findattr">[docs]</a>    <span class="k">def</span> <span class="nf">findattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search the vgroup for a given attribute.</span>
 
@@ -1312,48 +1304,48 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">att</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">att</span><span class="o">.</span><span class="n">_index</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="n">att</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">if</span> <span class="n">att</span><span class="o">.</span><span class="n">_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">att</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">except</span> <span class="n">HDF4Error</span><span class="p">:</span>
-            <span class="n">att</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="k">return</span> <span class="n">att</span>
+            <span class="n">att</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">att</span></div></div>
 
-</div></div>
+
 <div class="viewcode-block" id="VGAttr"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.VGAttr">[docs]</a><span class="k">class</span> <span class="nc">VGAttr</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The VGAttr class encapsulates methods used to set and query</span>
 <span class="sd">    attributes defined on a vgroup. To create an instance of this class,</span>
 <span class="sd">    call the attr() method of a VG class.    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name_or_index</span><span class="p">):</span>
-        <span class="c"># This constructor should not be called directly by the user</span>
-        <span class="c"># program. The attr() method of a VG class must be called to</span>
-        <span class="c"># instantiate this class.</span>
+        <span class="c1"># This constructor should not be called directly by the user</span>
+        <span class="c1"># program. The attr() method of a VG class must be called to</span>
+        <span class="c1"># instantiate this class.</span>
 
-        <span class="c"># Args:</span>
-        <span class="c">#  obj            VG instance to which the attribute belongs</span>
-        <span class="c">#  name_or_index  name or index of the attribute; if a name is</span>
-        <span class="c">#                 given, an attribute with that name will be</span>
-        <span class="c">#                 searched, if not found, a new index number will</span>
-        <span class="c">#                 be generated</span>
+        <span class="c1"># Args:</span>
+        <span class="c1">#  obj            VG instance to which the attribute belongs</span>
+        <span class="c1">#  name_or_index  name or index of the attribute; if a name is</span>
+        <span class="c1">#                 given, an attribute with that name will be</span>
+        <span class="c1">#                 searched, if not found, a new index number will</span>
+        <span class="c1">#                 be generated</span>
 
-        <span class="c"># Private attributes:</span>
-        <span class="c">#  _v_inst        V instance</span>
-        <span class="c">#  _index         attribute index or None</span>
-        <span class="c">#  _name          attribute name or None</span>
+        <span class="c1"># Private attributes:</span>
+        <span class="c1">#  _v_inst        V instance</span>
+        <span class="c1">#  _index         attribute index or None</span>
+        <span class="c1">#  _name          attribute name or None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_v_inst</span> <span class="o">=</span> <span class="n">obj</span>
-        <span class="c"># Name is given. Attribute may exist or not.</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name_or_index</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)):</span>
+        <span class="c1"># Name is given. Attribute may exist or not.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name_or_index</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name_or_index</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vfindattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_v_inst</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c"># Index is given. Attribute must exist.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Index is given. Attribute must exist.</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">=</span> <span class="n">name_or_index</span>
             <span class="n">status</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="n">data_type</span><span class="p">,</span> <span class="n">n_values</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> \
                     <span class="n">_C</span><span class="o">.</span><span class="n">Vattrinfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_v_inst</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">)</span>
-            <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;attr&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s">&#39;non-existent attribute&#39;</span><span class="p">)</span>
+            <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;attr&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s1">&#39;non-existent attribute&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="VGAttr.get"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.VGAttr.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve the attribute value.</span>
@@ -1376,15 +1368,15 @@
 <span class="sd">        C library equivalent : Vgetattr</span>
 
 <span class="sd">                                                &quot;&quot;&quot;</span>
-        <span class="c"># Make sure the attribute exists.</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s">&quot;non existent attribute&quot;</span><span class="p">)</span>
-        <span class="c"># Obtain attribute type and the number of values.</span>
+        <span class="c1"># Make sure the attribute exists.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s2">&quot;non existent attribute&quot;</span><span class="p">)</span>
+        <span class="c1"># Obtain attribute type and the number of values.</span>
         <span class="n">status</span><span class="p">,</span> <span class="n">aName</span><span class="p">,</span> <span class="n">data_type</span><span class="p">,</span> <span class="n">n_values</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> \
                     <span class="n">_C</span><span class="o">.</span><span class="n">Vattrinfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_v_inst</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">)</span>
-        <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;get&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s">&#39;illegal parameters&#39;</span><span class="p">)</span>
+        <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s1">&#39;illegal parameters&#39;</span><span class="p">)</span>
 
-        <span class="c"># Get attribute value.</span>
+        <span class="c1"># Get attribute value.</span>
         <span class="n">convert</span> <span class="o">=</span> <span class="n">_array_to_ret</span>
         <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="n">HC</span><span class="o">.</span><span class="n">CHAR8</span><span class="p">:</span>
             <span class="n">buf</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">array_byte</span><span class="p">(</span><span class="n">n_values</span><span class="p">)</span>
@@ -1415,14 +1407,14 @@
             <span class="n">buf</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">array_float64</span><span class="p">(</span><span class="n">n_values</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s">&quot;get: attribute index </span><span class="si">%d</span><span class="s"> has an &quot;</span>\
-                             <span class="s">&quot;illegal or unupported type </span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> \
+            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s2">&quot;get: attribute index </span><span class="si">%d</span><span class="s2"> has an &quot;</span>\
+                             <span class="s2">&quot;illegal or unupported type </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> \
                              <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">,</span> <span class="n">data_type</span><span class="p">))</span>
 
         <span class="n">status</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vgetattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_v_inst</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">,</span> <span class="n">buf</span><span class="p">)</span>
-        <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;get&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s">&#39;illegal attribute &#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">convert</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">n_values</span><span class="p">)</span>
-</div>
+        <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s1">&#39;illegal attribute &#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">convert</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">n_values</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="VGAttr.set"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.VGAttr.set">[docs]</a>    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_type</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set the attribute value.</span>
 
@@ -1457,8 +1449,8 @@
             <span class="n">n_values</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="n">HC</span><span class="o">.</span><span class="n">CHAR8</span><span class="p">:</span>
             <span class="n">buf</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">array_byte</span><span class="p">(</span><span class="n">n_values</span><span class="p">)</span>
-            <span class="c"># Allow values to be passed as a string.</span>
-            <span class="c"># Noop if a list is passed.</span>
+            <span class="c1"># Allow values to be passed as a string.</span>
+            <span class="c1"># Noop if a list is passed.</span>
             <span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_values</span><span class="p">):</span>
                 <span class="n">values</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">n</span><span class="p">])</span>
@@ -1467,8 +1459,8 @@
             <span class="n">buf</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">array_byte</span><span class="p">(</span><span class="n">n_values</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">data_type</span> <span class="o">==</span> <span class="n">HC</span><span class="o">.</span><span class="n">INT8</span><span class="p">:</span>
-            <span class="c"># SWIG refuses negative values here. We found that if we</span>
-            <span class="c"># pass them as byte values, it will work.</span>
+            <span class="c1"># SWIG refuses negative values here. We found that if we</span>
+            <span class="c1"># pass them as byte values, it will work.</span>
             <span class="n">buf</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">array_int8</span><span class="p">(</span><span class="n">n_values</span><span class="p">)</span>
             <span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_values</span><span class="p">):</span>
@@ -1480,7 +1472,7 @@
                     <span class="k">if</span> <span class="n">v</span><span class="p">:</span>
                         <span class="n">v</span> <span class="o">=</span> <span class="mi">256</span> <span class="o">-</span> <span class="n">v</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">v</span> <span class="o">=</span> <span class="mi">128</span>         <span class="c"># -128 in 2s complement</span>
+                        <span class="n">v</span> <span class="o">=</span> <span class="mi">128</span>         <span class="c1"># -128 in 2s complement</span>
                 <span class="n">values</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
 
         <span class="k">elif</span> <span class="n">data_type</span> <span class="o">==</span> <span class="n">HC</span><span class="o">.</span><span class="n">INT16</span><span class="p">:</span>
@@ -1502,18 +1494,18 @@
             <span class="n">buf</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">array_float64</span><span class="p">(</span><span class="n">n_values</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s">&quot;set: illegal or unimplemented data_type&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s2">&quot;set: illegal or unimplemented data_type&quot;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_values</span><span class="p">):</span>
             <span class="n">buf</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
         <span class="n">status</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vsetattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_v_inst</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="n">data_type</span><span class="p">,</span>
                              <span class="n">n_values</span><span class="p">,</span> <span class="n">buf</span><span class="p">)</span>
-        <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;set&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s">&#39;cannot execute&#39;</span><span class="p">)</span>
-        <span class="c"># Update the attribute index</span>
+        <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s1">&#39;cannot execute&#39;</span><span class="p">)</span>
+        <span class="c1"># Update the attribute index</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Vfindattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_v_inst</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s">&quot;set: error retrieving attribute index&quot;</span><span class="p">)</span>
-</div>
+            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s2">&quot;set: error retrieving attribute index&quot;</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="VGAttr.info"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.VGAttr.info">[docs]</a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve info about the attribute.</span>
 
@@ -1532,45 +1524,45 @@
 <span class="sd">        C library equivalent : Vattrinfo</span>
 <span class="sd">                                                           &quot;&quot;&quot;</span>
 
-        <span class="c"># Make sure the attribute exists.</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s">&quot;non existent attribute&quot;</span><span class="p">)</span>
+        <span class="c1"># Make sure the attribute exists.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s2">&quot;non existent attribute&quot;</span><span class="p">)</span>
 
         <span class="n">status</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> \
                 <span class="n">_C</span><span class="o">.</span><span class="n">Vattrinfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_v_inst</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">)</span>
-        <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;info&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s">&quot;execution error&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">size</span>
+        <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;info&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s2">&quot;execution error&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">size</span></div></div>
 
 
-<span class="c">###########################</span>
-<span class="c"># Support functions</span>
-<span class="c">###########################</span>
-</div></div>
+<span class="c1">###########################</span>
+<span class="c1"># Support functions</span>
+<span class="c1">###########################</span>
+
 <span class="k">def</span> <span class="nf">_setattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-    <span class="c"># Called by the __setattr__ method of the VG object.</span>
-    <span class="c">#</span>
-    <span class="c">#  obj   instance on which the attribute is set</span>
-    <span class="c">#  name  attribute name</span>
-    <span class="c">#  value attribute value</span>
+    <span class="c1"># Called by the __setattr__ method of the VG object.</span>
+    <span class="c1">#</span>
+    <span class="c1">#  obj   instance on which the attribute is set</span>
+    <span class="c1">#  name  attribute name</span>
+    <span class="c1">#  value attribute value</span>
 
-    <span class="c"># Treat a name starting with and underscore as that of a</span>
-    <span class="c"># standard python instance attribute.</span>
-    <span class="k">if</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;_&#39;</span><span class="p">:</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="c1"># Treat a name starting with and underscore as that of a</span>
+    <span class="c1"># standard python instance attribute.</span>
+    <span class="k">if</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;_&#39;</span><span class="p">:</span>
+        <span class="n">obj</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">return</span>
 
-    <span class="c"># Treat everything else as an HDF attribute.</span>
+    <span class="c1"># Treat everything else as an HDF attribute.</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">]:</span>
         <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span>
     <span class="n">typeList</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
         <span class="n">t</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-        <span class="c"># Prohibit mixing numeric types and strings.</span>
+        <span class="c1"># Prohibit mixing numeric types and strings.</span>
         <span class="k">if</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="ow">and</span> \
                <span class="ow">not</span> <span class="nb">bytes</span> <span class="ow">in</span> <span class="n">typeList</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">t</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">typeList</span><span class="p">:</span>
                 <span class="n">typeList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-        <span class="c"># Prohibit sequence of strings or a mix of numbers and string.</span>
+        <span class="c1"># Prohibit sequence of strings or a mix of numbers and string.</span>
         <span class="k">elif</span> <span class="n">t</span> <span class="o">==</span> <span class="nb">bytes</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">typeList</span><span class="p">:</span>
             <span class="n">typeList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1579,77 +1571,76 @@
     <span class="k">if</span> <span class="nb">bytes</span> <span class="ow">in</span> <span class="n">typeList</span><span class="p">:</span>
         <span class="n">xtype</span> <span class="o">=</span> <span class="n">HC</span><span class="o">.</span><span class="n">CHAR8</span>
         <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="c"># double is &quot;stronger&quot; than int</span>
+    <span class="c1"># double is &quot;stronger&quot; than int</span>
     <span class="k">elif</span> <span class="nb">float</span> <span class="ow">in</span> <span class="n">typeList</span><span class="p">:</span>
         <span class="n">xtype</span> <span class="o">=</span> <span class="n">HC</span><span class="o">.</span><span class="n">FLOAT64</span>
     <span class="k">elif</span> <span class="nb">int</span> <span class="ow">in</span> <span class="n">typeList</span><span class="p">:</span>
         <span class="n">xtype</span> <span class="o">=</span> <span class="n">HC</span><span class="o">.</span><span class="n">INT32</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s">&quot;Illegal attribute value&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s2">&quot;Illegal attribute value&quot;</span><span class="p">)</span>
 
-    <span class="c"># Assign value</span>
+    <span class="c1"># Assign value</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="n">a</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xtype</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">HDF4Error</span> <span class="k">as</span> <span class="n">msg</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s">&quot;cannot set attribute: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">msg</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s2">&quot;cannot set attribute: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">msg</span><span class="p">)</span>
 
 
 
 <span class="k">def</span> <span class="nf">_array_to_ret</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">nValues</span><span class="p">):</span>
 
-    <span class="c"># Convert array &#39;buf&#39; to a scalar or a list.</span>
+    <span class="c1"># Convert array &#39;buf&#39; to a scalar or a list.</span>
 
     <span class="k">if</span> <span class="n">nValues</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">nValues</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">nValues</span><span class="p">):</span>
             <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">ret</span>
 
 <span class="k">def</span> <span class="nf">_array_to_str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">nValues</span><span class="p">):</span>
 
-    <span class="c"># Convert array of bytes &#39;buf&#39; to a string.</span>
+    <span class="c1"># Convert array of bytes &#39;buf&#39; to a string.</span>
 
-    <span class="c"># Return empty string if there is no value.</span>
+    <span class="c1"># Return empty string if there is no value.</span>
     <span class="k">if</span> <span class="n">nValues</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s">&quot;&quot;</span>
-    <span class="c"># When there is just one value, _array_to_ret returns a scalar</span>
-    <span class="c"># over which we cannot iterate.</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1"># When there is just one value, _array_to_ret returns a scalar</span>
+    <span class="c1"># over which we cannot iterate.</span>
     <span class="k">if</span> <span class="n">nValues</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">chrs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">chr</span><span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">chrs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">chr</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">_array_to_ret</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">nValues</span><span class="p">)]</span>
-    <span class="c"># Strip NULL at end</span>
-    <span class="k">if</span> <span class="n">chrs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;</span><span class="se">\0</span><span class="s">&#39;</span><span class="p">:</span>
+    <span class="c1"># Strip NULL at end</span>
+    <span class="k">if</span> <span class="n">chrs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\0</span><span class="s1">&#39;</span><span class="p">:</span>
         <span class="k">del</span> <span class="n">chrs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">return</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chrs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chrs</span><span class="p">)</span>
 </pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -1658,13 +1649,13 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">python-hdf4 0.9 documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">python-hdf4 0.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014, python-hdf4 authors.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, python-hdf4 authors.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4.
     </div>
   </body>
 </html>

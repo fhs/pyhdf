@@ -1,33 +1,25 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>pyhdf.HDF &mdash; python-hdf4 0.9 documentation</title>
-    
-    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <title>pyhdf.HDF &#8212; python-hdf4 0.9 documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '0.9',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="python-hdf4 0.9 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
-  </head>
-  <body>
-    <div class="related">
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,28 +28,28 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">python-hdf4 0.9 documentation</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">python-hdf4 0.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for pyhdf.HDF</h1><div class="highlight"><pre>
-<span class="c"># $Id: HDF.py,v 1.3 2005-07-14 01:36:41 gosselin_a Exp $</span>
-<span class="c"># $Log: not supported by cvs2svn $</span>
-<span class="c"># Revision 1.2  2004/08/02 15:36:04  gosselin</span>
-<span class="c"># pyhdf-0.7-1</span>
-<span class="c">#</span>
-<span class="c"># Revision 1.1  2004/08/02 15:22:59  gosselin</span>
-<span class="c"># Initial revision</span>
-<span class="c">#</span>
-<span class="c"># Author: Andre Gosselin</span>
-<span class="c">#         Maurice-Lamontagne Institute</span>
-<span class="c">#         gosselina@dfo-mpo.gc.ca</span>
+<span></span><span class="c1"># $Id: HDF.py,v 1.3 2005-07-14 01:36:41 gosselin_a Exp $</span>
+<span class="c1"># $Log: not supported by cvs2svn $</span>
+<span class="c1"># Revision 1.2  2004/08/02 15:36:04  gosselin</span>
+<span class="c1"># pyhdf-0.7-1</span>
+<span class="c1">#</span>
+<span class="c1"># Revision 1.1  2004/08/02 15:22:59  gosselin</span>
+<span class="c1"># Initial revision</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Andre Gosselin</span>
+<span class="c1">#         Maurice-Lamontagne Institute</span>
+<span class="c1">#         gosselina@dfo-mpo.gc.ca</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Basic API (:mod:`pyhdf.HDF`)</span>
@@ -120,31 +112,31 @@
 
 <span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">types</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">hdfext</span> <span class="k">as</span> <span class="n">_C</span>
-<span class="kn">from</span> <span class="nn">.six.moves</span> <span class="kn">import</span> <span class="nb">xrange</span>
-<span class="kn">from</span> <span class="nn">.HC</span> <span class="kn">import</span> <span class="n">HC</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">hdfext</span> <span class="k">as</span> <span class="n">_C</span>
+<span class="kn">from</span> <span class="nn">.six.moves</span> <span class="k">import</span> <span class="n">xrange</span>
+<span class="kn">from</span> <span class="nn">.HC</span> <span class="k">import</span> <span class="n">HC</span>
 
-<span class="c"># NOTE: The vstart() and vgstart() modules need to access the</span>
-<span class="c">#       VS and V modules, resp. We could simply import those</span>
-<span class="c">#       two modules, but then they would always be loaded and this</span>
-<span class="c">#       may not be what the user wants. Instead of forcing the</span>
-<span class="c">#       systematic import, we import the package `pyhdf&#39;,</span>
-<span class="c">#       and access the needed constructors by writing</span>
-<span class="c">#       &#39;pyhdf.VS.VS()&#39; and &#39;pyhdf.V.V()&#39;. Until the VS or</span>
-<span class="c">#       V modules are imported, those statements will give an</span>
-<span class="c">#       error (undefined attribute). Once the user has imported</span>
-<span class="c">#       the modules, the error will disappear.</span>
+<span class="c1"># NOTE: The vstart() and vgstart() modules need to access the</span>
+<span class="c1">#       VS and V modules, resp. We could simply import those</span>
+<span class="c1">#       two modules, but then they would always be loaded and this</span>
+<span class="c1">#       may not be what the user wants. Instead of forcing the</span>
+<span class="c1">#       systematic import, we import the package `pyhdf&#39;,</span>
+<span class="c1">#       and access the needed constructors by writing</span>
+<span class="c1">#       &#39;pyhdf.VS.VS()&#39; and &#39;pyhdf.V.V()&#39;. Until the VS or</span>
+<span class="c1">#       V modules are imported, those statements will give an</span>
+<span class="c1">#       error (undefined attribute). Once the user has imported</span>
+<span class="c1">#       the modules, the error will disappear.</span>
 
 <span class="kn">import</span> <span class="nn">pyhdf</span>
 
-<span class="kn">from</span> <span class="nn">.error</span> <span class="kn">import</span> <span class="n">HDF4Error</span><span class="p">,</span> <span class="n">_checkErr</span>
+<span class="kn">from</span> <span class="nn">.error</span> <span class="k">import</span> <span class="n">HDF4Error</span><span class="p">,</span> <span class="n">_checkErr</span>
 
-<span class="c"># List of names we want to be imported by an &quot;from pyhdf.HDF import *&quot;</span>
-<span class="c"># statement</span>
+<span class="c1"># List of names we want to be imported by an &quot;from pyhdf.HDF import *&quot;</span>
+<span class="c1"># statement</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;HDF&#39;</span><span class="p">,</span> <span class="s">&#39;HDF4Error&#39;</span><span class="p">,</span>
-           <span class="s">&#39;HC&#39;</span><span class="p">,</span>
-           <span class="s">&#39;getlibversion&#39;</span><span class="p">,</span> <span class="s">&#39;ishdf&#39;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;HDF&#39;</span><span class="p">,</span> <span class="s1">&#39;HDF4Error&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;HC&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;getlibversion&#39;</span><span class="p">,</span> <span class="s1">&#39;ishdf&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="getlibversion"><a class="viewcode-back" href="../../modules/HDF.html#pyhdf.HDF.getlibversion">[docs]</a><span class="k">def</span> <span class="nf">getlibversion</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Get the library version info.</span>
@@ -162,9 +154,9 @@
 <span class="sd">                                                   &quot;&quot;&quot;</span>
 
     <span class="n">status</span><span class="p">,</span> <span class="n">major_v</span><span class="p">,</span> <span class="n">minor_v</span><span class="p">,</span> <span class="n">release</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Hgetlibversion</span><span class="p">()</span>
-    <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;getlibversion&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s">&quot;cannot get lib version&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">major_v</span><span class="p">,</span> <span class="n">minor_v</span><span class="p">,</span> <span class="n">release</span><span class="p">,</span> <span class="n">info</span>
-</div>
+    <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;getlibversion&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s2">&quot;cannot get lib version&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">major_v</span><span class="p">,</span> <span class="n">minor_v</span><span class="p">,</span> <span class="n">release</span><span class="p">,</span> <span class="n">info</span></div>
+
 <div class="viewcode-block" id="ishdf"><a class="viewcode-back" href="../../modules/HDF.html#pyhdf.HDF.ishdf">[docs]</a><span class="k">def</span> <span class="nf">ishdf</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Determine whether a file is an HDF file.</span>
 
@@ -176,9 +168,9 @@
 <span class="sd">    C library equivalent : Hishdf</span>
 <span class="sd">                                            &quot;&quot;&quot;</span>
 
-    <span class="k">return</span> <span class="n">_C</span><span class="o">.</span><span class="n">Hishdf</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_C</span><span class="o">.</span><span class="n">Hishdf</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
 
-</div>
+
 <div class="viewcode-block" id="HDF"><a class="viewcode-back" href="../../modules/HDF.html#pyhdf.HDF.HDF">[docs]</a><span class="k">class</span> <span class="nc">HDF</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The HDF class encapsulates the basic HDF functions.</span>
 <span class="sd">    Its main use is to open and close an HDF file, and return</span>
@@ -232,10 +224,10 @@
 
 <span class="sd">        C library equivalent : Hopen</span>
 <span class="sd">                                                     &quot;&quot;&quot;</span>
-        <span class="c"># Private attributes:</span>
-        <span class="c">#  _id:       file id (NOTE: not compatile with the SD file id)</span>
+        <span class="c1"># Private attributes:</span>
+        <span class="c1">#  _id:       file id (NOTE: not compatile with the SD file id)</span>
 
-        <span class="c"># See if file exists.</span>
+        <span class="c1"># See if file exists.</span>
         <span class="n">exists</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">HC</span><span class="o">.</span><span class="n">WRITE</span> <span class="o">&amp;</span> <span class="n">mode</span><span class="p">:</span>
@@ -252,18 +244,18 @@
                 <span class="k">if</span> <span class="n">HC</span><span class="o">.</span><span class="n">CREATE</span> <span class="o">&amp;</span> <span class="n">mode</span><span class="p">:</span>
                     <span class="n">mode</span> <span class="o">=</span> <span class="n">HC</span><span class="o">.</span><span class="n">CREATE</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s">&quot;HDF: no such file&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s2">&quot;HDF: no such file&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">exists</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">mode</span> <span class="o">&amp;</span> <span class="n">HC</span><span class="o">.</span><span class="n">READ</span><span class="p">:</span>
-                    <span class="n">mode</span> <span class="o">=</span> <span class="n">HC</span><span class="o">.</span><span class="n">READ</span>     <span class="c"># clean mode</span>
+                    <span class="n">mode</span> <span class="o">=</span> <span class="n">HC</span><span class="o">.</span><span class="n">READ</span>     <span class="c1"># clean mode</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s">&quot;HDF: invalid mode&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s2">&quot;HDF: invalid mode&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s">&quot;HDF: no such file&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s2">&quot;HDF: no such file&quot;</span><span class="p">)</span>
 
         <span class="nb">id</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Hopen</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">nblocks</span><span class="p">)</span>
-        <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;HDF&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="s">&quot;cannot open </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+        <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;HDF&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="s2">&quot;cannot open </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="nb">id</span>
 
 
@@ -288,9 +280,9 @@
 <span class="sd">        C library equivalent : Hclose</span>
 <span class="sd">                                                &quot;&quot;&quot;</span>
 
-        <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;close&#39;</span><span class="p">,</span> <span class="n">_C</span><span class="o">.</span><span class="n">Hclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">),</span> <span class="s">&quot;cannot close file&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="bp">None</span>
-</div>
+        <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">,</span> <span class="n">_C</span><span class="o">.</span><span class="n">Hclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">),</span> <span class="s2">&quot;cannot close file&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="kc">None</span></div>
+
 <div class="viewcode-block" id="HDF.getfileversion"><a class="viewcode-back" href="../../modules/HDF.html#pyhdf.HDF.HDF.getfileversion">[docs]</a>    <span class="k">def</span> <span class="nf">getfileversion</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get file version info.</span>
 
@@ -307,9 +299,9 @@
 <span class="sd">                                                   &quot;&quot;&quot;</span>
 
         <span class="n">status</span><span class="p">,</span> <span class="n">major_v</span><span class="p">,</span> <span class="n">minor_v</span><span class="p">,</span> <span class="n">release</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">Hgetfileversion</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">)</span>
-        <span class="n">_checkErr</span><span class="p">(</span><span class="s">&#39;getfileversion&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s">&quot;cannot get file version&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">major_v</span><span class="p">,</span> <span class="n">minor_v</span><span class="p">,</span> <span class="n">release</span><span class="p">,</span> <span class="n">info</span>
-</div>
+        <span class="n">_checkErr</span><span class="p">(</span><span class="s1">&#39;getfileversion&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="s2">&quot;cannot get file version&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">major_v</span><span class="p">,</span> <span class="n">minor_v</span><span class="p">,</span> <span class="n">release</span><span class="p">,</span> <span class="n">info</span></div>
+
 <div class="viewcode-block" id="HDF.vstart"><a class="viewcode-back" href="../../modules/HDF.html#pyhdf.HDF.HDF.vstart">[docs]</a>    <span class="k">def</span> <span class="nf">vstart</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize the VS API over the file and return a VS instance.</span>
 
@@ -320,9 +312,9 @@
 
 <span class="sd">        C library equivalent : Vstart (in fact: Vinitialize)</span>
 <span class="sd">                                                              &quot;&quot;&quot;</span>
-        <span class="c"># See note at top of file.</span>
-        <span class="k">return</span> <span class="n">pyhdf</span><span class="o">.</span><span class="n">VS</span><span class="o">.</span><span class="n">VS</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</div>
+        <span class="c1"># See note at top of file.</span>
+        <span class="k">return</span> <span class="n">pyhdf</span><span class="o">.</span><span class="n">VS</span><span class="o">.</span><span class="n">VS</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="HDF.vgstart"><a class="viewcode-back" href="../../modules/HDF.html#pyhdf.HDF.HDF.vgstart">[docs]</a>    <span class="k">def</span> <span class="nf">vgstart</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize the V API over the file and return a V instance.</span>
 
@@ -333,70 +325,69 @@
 
 <span class="sd">        C library equivalent : Vstart (in fact: Vinitialize)</span>
 <span class="sd">                                                              &quot;&quot;&quot;</span>
-        <span class="c"># See note at top of file.</span>
-        <span class="k">return</span> <span class="n">pyhdf</span><span class="o">.</span><span class="n">V</span><span class="o">.</span><span class="n">V</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c1"># See note at top of file.</span>
+        <span class="k">return</span> <span class="n">pyhdf</span><span class="o">.</span><span class="n">V</span><span class="o">.</span><span class="n">V</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
 
 
 
-<span class="c">###########################</span>
-<span class="c"># Support functions</span>
-<span class="c">###########################</span>
+<span class="c1">###########################</span>
+<span class="c1"># Support functions</span>
+<span class="c1">###########################</span>
 
-</div></div>
+
 <span class="k">def</span> <span class="nf">_array_to_ret</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">nValues</span><span class="p">):</span>
 
-    <span class="c"># Convert array &#39;buf&#39; to a scalar or a list.</span>
+    <span class="c1"># Convert array &#39;buf&#39; to a scalar or a list.</span>
 
     <span class="k">if</span> <span class="n">nValues</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">nValues</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">nValues</span><span class="p">):</span>
             <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">ret</span>
 
 <span class="k">def</span> <span class="nf">_array_to_str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">nValues</span><span class="p">):</span>
 
-    <span class="c"># Convert array of bytes &#39;buf&#39; to a string.</span>
+    <span class="c1"># Convert array of bytes &#39;buf&#39; to a string.</span>
 
-    <span class="c"># Return empty string if there is no value.</span>
+    <span class="c1"># Return empty string if there is no value.</span>
     <span class="k">if</span> <span class="n">nValues</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s">&quot;&quot;</span>
-    <span class="c"># When there is just one value, _array_to_ret returns a scalar</span>
-    <span class="c"># over which we cannot iterate.</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1"># When there is just one value, _array_to_ret returns a scalar</span>
+    <span class="c1"># over which we cannot iterate.</span>
     <span class="k">if</span> <span class="n">nValues</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">chrs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">chr</span><span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">chrs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">chr</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">_array_to_ret</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">nValues</span><span class="p">)]</span>
-    <span class="c"># Strip NULL at end</span>
-    <span class="k">if</span> <span class="n">chrs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;</span><span class="se">\0</span><span class="s">&#39;</span><span class="p">:</span>
+    <span class="c1"># Strip NULL at end</span>
+    <span class="k">if</span> <span class="n">chrs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\0</span><span class="s1">&#39;</span><span class="p">:</span>
         <span class="k">del</span> <span class="n">chrs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">return</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chrs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chrs</span><span class="p">)</span>
 </pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -405,13 +396,13 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">python-hdf4 0.9 documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">python-hdf4 0.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014, python-hdf4 authors.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, python-hdf4 authors.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4.
     </div>
   </body>
 </html>

@@ -1,0 +1,154 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pyhdf.HC &#8212; python-hdf4 0.9 documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">python-hdf4 0.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pyhdf.HC</h1><div class="highlight"><pre>
+<span></span><span class="c1"># $Id: HC.py,v 1.2 2005-07-14 01:36:41 gosselin_a Exp $</span>
+<span class="c1"># $Log: not supported by cvs2svn $</span>
+<span class="c1"># Revision 1.1  2004/08/02 15:36:04  gosselin</span>
+<span class="c1"># Initial revision</span>
+<span class="c1">#</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">hdfext</span> <span class="k">as</span> <span class="n">_C</span>
+
+<div class="viewcode-block" id="HC"><a class="viewcode-back" href="../../modules/HDF.html#pyhdf.HDF.HC">[docs]</a><span class="k">class</span> <span class="nc">HC</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The HC class holds contants defining opening modes and data types.</span>
+
+<span class="sd">File opening modes (flags ORed together)</span>
+
+<span class="sd">    CREATE       4    create file if it does not exist</span>
+<span class="sd">    READ         1    read-only mode</span>
+<span class="sd">    TRUNC      256    truncate if it exists</span>
+<span class="sd">    WRITE        2    read-write mode</span>
+
+<span class="sd">Data types</span>
+
+<span class="sd">    CHAR         4    8-bit char</span>
+<span class="sd">    CHAR8        4    8-bit char</span>
+<span class="sd">    UCHAR        3    unsigned 8-bit integer (0 to 255)</span>
+<span class="sd">    UCHAR8       3    unsigned 8-bit integer (0 to 255)</span>
+<span class="sd">    INT8        20    signed 8-bit integer (-128 to 127)</span>
+<span class="sd">    UINT8       21    unsigned 8-bit integer (0 to 255)</span>
+<span class="sd">    INT16       23    signed 16-bit integer</span>
+<span class="sd">    UINT16      23    unsigned 16-bit integer</span>
+<span class="sd">    INT32       24    signed 32-bit integer</span>
+<span class="sd">    UINT32      25    unsigned 32-bit integer</span>
+<span class="sd">    FLOAT32      5    32-bit floating point</span>
+<span class="sd">    FLOAT64      6    64-bit floating point</span>
+
+<span class="sd">Tags</span>
+
+<span class="sd">    DFTAG_NDG  720    dataset</span>
+<span class="sd">    DFTAG_VH  1962    vdata</span>
+<span class="sd">    DFTAG_VG  1965    vgroup</span>
+
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">CREATE</span>       <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">DFACC_CREATE</span>
+    <span class="n">READ</span>         <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">DFACC_READ</span>
+    <span class="n">TRUNC</span>        <span class="o">=</span> <span class="mh">0x100</span>          <span class="c1"># specific to pyhdf</span>
+    <span class="n">WRITE</span>        <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">DFACC_WRITE</span>
+
+    <span class="n">CHAR</span>         <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">DFNT_CHAR8</span>
+    <span class="n">CHAR8</span>        <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">DFNT_CHAR8</span>
+    <span class="n">UCHAR</span>        <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">DFNT_UCHAR8</span>
+    <span class="n">UCHAR8</span>       <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">DFNT_UCHAR8</span>
+    <span class="n">INT8</span>         <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">DFNT_INT8</span>
+    <span class="n">UINT8</span>        <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">DFNT_UINT8</span>
+    <span class="n">INT16</span>        <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">DFNT_INT16</span>
+    <span class="n">UINT16</span>       <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">DFNT_UINT16</span>
+    <span class="n">INT32</span>        <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">DFNT_INT32</span>
+    <span class="n">UINT32</span>       <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">DFNT_UINT32</span>
+    <span class="n">FLOAT32</span>      <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">DFNT_FLOAT32</span>
+    <span class="n">FLOAT64</span>      <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">DFNT_FLOAT64</span>
+
+    <span class="n">FULL_INTERLACE</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">NO_INTERLACE</span>   <span class="o">=</span><span class="mi">1</span>
+
+
+<span class="c1"># NOTE:</span>
+<span class="c1">#  INT64 and UINT64 are not yet supported py pyhdf</span>
+
+    <span class="n">DFTAG_NDG</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">DFTAG_NDG</span>
+    <span class="n">DFTAG_VH</span>  <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">DFTAG_VH</span>
+    <span class="n">DFTAG_VG</span>  <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">DFTAG_VG</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">python-hdf4 0.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, python-hdf4 authors.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4.
+    </div>
+  </body>
+</html>
