@@ -30,9 +30,9 @@ The following packages are required to build and install Python-HDF4:
 - `libjpeg <http://www.ijg.org/>`_ 
 
 On Debian and Debian-based Linux distributions (e.g. Ubuntu), you can install
-all the requirements using this command::
+all the requirements for Python 3 using this command::
 
-    apt-get install python-dev python-numpy libhdf4-dev -y
+    apt-get install build-essential python3-dev python3-numpy libhdf4-dev -y
 
 OS X users can obtain jpeg libraries `here
 <http://ethan.tira-thompson.com/Mac%20OS%20X%20Ports.html>`_. 

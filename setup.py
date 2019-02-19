@@ -58,6 +58,22 @@ def _find_args(pat, env):
         pass
     return val
 
+# A Debian based linux distribution might be using libhdf4 (contains netcdf
+# routines) or libhdf4-alt (does not contain netcdf routines). This function
+# tries to detect if the alt version should be used.
+def _use_hdf4alt(libdirs):
+    if not sys.platform.startswith("linux"):
+        return False
+    libdirs.extend(os.environ.get("LD_LIBRARY_PATH", "").split(os.pathsep))
+    libdirs.append("/usr/lib")
+    libdirs.append("/usr/local/lib")
+    libdirs.append("/lib")
+    for d in libdirs:
+        if os.path.exists(os.path.join(d, "libdfalt.so")) and \
+           os.path.exists(os.path.join(d, "libmfhdfalt.so")):
+            return True
+    return False
+
 include_dirs = _find_args('-i', 'INCLUDE_DIRS')
 library_dirs = _find_args('-l', 'LIBRARY_DIRS')
 szip_installed = 'SZIP' in os.environ
@@ -127,6 +143,8 @@ if sys.platform == 'win32':
 
 if sys.platform == 'win32':
     libraries = ["hm423m", "hd423m", "xdr_for_dll" ]
+elif _use_hdf4alt(library_dirs):
+    libraries = ["mfhdfalt", "dfalt"]
 else:
     libraries = ["mfhdf", "df"]
 
