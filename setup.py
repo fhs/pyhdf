@@ -178,8 +178,8 @@ if sys.platform == 'win32':
 else:
     data_files = []
 
-setup(name         = 'python-hdf4',
-      maintainer       = 'python-hdf4 authors',
+setup(name         = 'pyhdf',
+      maintainer       = 'pyhdf authors',
       maintainer_email = 'fshahriar@gmail.com',
       author       = 'Andre Gosselin et al.',
       description  = DOCLINES[0],

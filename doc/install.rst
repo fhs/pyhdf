@@ -9,7 +9,7 @@ https://github.com/fhs/python-hdf4/issues
 The source code of the latest release of Python-HDF4 can be obtained from
 either of these two location:
 
-*  PyPi / the cheeseshop: https://pypi.python.org/pypi/python-hdf4
+*  PyPi / the cheeseshop: https://pypi.python.org/pypi/pyhdf
 *  Github: https://github.com/fhs/python-hdf4/releases
 
 
@@ -40,10 +40,10 @@ OS X users can obtain jpeg libraries `here
 Installing from the Cheeseshop
 ------------------------------
 
-To install Python-HDF4 from The Python Package Index (Cheeseshop), open a
+To install pyhdf from The Python Package Index (Cheeseshop), open a
 command prompt and type::
 
-    pip install python-hdf4
+    pip install pyhdf
 
 On Debian based systems, you can obtain the ``pip`` command by running::
 
