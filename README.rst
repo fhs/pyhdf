@@ -20,13 +20,13 @@ read and modified.
 Installation
 ============
 
-To install, see http://fhs.github.io/python-hdf4/install.html
+To install, see http://fhs.github.io/pyhdf/install.html
 or file `doc/install.rst <doc/install.rst>`_.
 
 Documentation
 =============
 
-For documentation, see http://fhs.github.io/python-hdf4/
+For documentation, see http://fhs.github.io/pyhdf/
 
 Additional documentation on the HDF4 format can be
 found in the User Guide:
