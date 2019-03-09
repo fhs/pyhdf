@@ -1,10 +1,8 @@
-.. image:: https://travis-ci.org/fhs/pyhdf.svg?branch=master
-    :target: https://travis-ci.org/fhs/pyhdf
+[![Build Status](https://travis-ci.org/fhs/pyhdf.svg?branch=master)](https://travis-ci.org/fhs/pyhdf)
 
-Overview
-========
+# pyhdf
 
-Pyhdf is a python wrapper around the NCSA HDF version 4 library.
+pyhdf is a python wrapper around the NCSA HDF version 4 library.
 The SD (Scientific Dataset), VS (Vdata) and V (Vgroup) API's 
 are currently implemented. NetCDF files can also be
 read and modified. It supports both Python 2 and Python 3.
@@ -22,14 +20,12 @@ in PyPI because at that time we didn't have
 [pyhdf package](https://pypi.org/project/pyhdf/) in PyPI.  For version
 0.10.0 and onwards, please install `pyhdf` instead of `python-hdf4`.
 
-Installation
-============
+## Installation
 
 To install, see http://fhs.github.io/pyhdf/install.html
-or file `doc/install.rst <doc/install.rst>`_.
+or file [doc/install.rst](doc/install.rst).
 
-Documentation
-=============
+## Documentation
 
 For documentation, see http://fhs.github.io/pyhdf/
 
@@ -37,8 +33,7 @@ Additional documentation on the HDF4 format can be
 found in the User Guide:
 http://www.hdfgroup.org/release4/doc/UsrGuide_html/UG_Top.html
 
-Examples
-========
+## Examples
 
 Example python programs using the pyhdf package
 can be found inside the examples/ subdirectory.
