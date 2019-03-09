@@ -1,13 +1,11 @@
 #!/usr/bin/env python
-"""Python-HDF4: Python interface to the NCSA HDF4 library.
+"""pyhdf: Python interface to the NCSA HDF4 library.
 
-The Python-HDF4 package wraps the functionality of the NCSA HDF version
+The pyhdf package wraps the functionality of the NCSA HDF version
 4 library inside a Python OOP framework. The SD (scientific dataset),
 VS (Vdata) and V (Vgroup) APIs are currently implemented.  SD datasets
 are read/written through numpy arrays. NetCDF files can also be read
-and modified with Python-HDF4.
-
-This package is a fork of pyhdf (http://pysclint.sourceforge.net/pyhdf/).
+and modified with pyhdf.
 """
 
 from __future__ import print_function
@@ -178,15 +176,15 @@ if sys.platform == 'win32':
 else:
     data_files = []
 
-setup(name         = 'python-hdf4',
-      maintainer       = 'python-hdf4 authors',
+setup(name         = 'pyhdf',
+      maintainer       = 'pyhdf authors',
       maintainer_email = 'fshahriar@gmail.com',
       author       = 'Andre Gosselin et al.',
       description  = DOCLINES[0],
       keywords     = ['hdf4', 'netcdf', 'numpy', 'python', 'pyhdf'],
       license      = 'MIT',
       long_description = "\n".join(DOCLINES[2:]),
-      url          = 'https://github.com/fhs/python-hdf4',
+      url          = 'https://github.com/fhs/pyhdf',
       version      = '0.9.2',
       packages     = ['pyhdf'],
       ext_modules  = [_hdfext],
