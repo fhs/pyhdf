@@ -1,21 +1,26 @@
-.. image:: https://travis-ci.org/fhs/python-hdf4.svg?branch=master
-    :target: https://travis-ci.org/fhs/python-hdf4
+.. image:: https://travis-ci.org/fhs/pyhdf.svg?branch=master
+    :target: https://travis-ci.org/fhs/pyhdf
 
 Overview
 ========
 
-Python-HDF4 is a fork of pyhdf_ with some improvements:
-
-- Various bug fixes: removes use of deprecated numpy API, python 2.7 compatibility, etc.
-- Adds support for Python 3, while keeping compatibility with Python 2.
-- Sphinx documentation
-
-Python-HDF4 is a python wrapper around the NCSA HDF version 4 library.
+Pyhdf is a python wrapper around the NCSA HDF version 4 library.
 The SD (Scientific Dataset), VS (Vdata) and V (Vgroup) API's 
 are currently implemented. NetCDF files can also be
-read and modified.
+read and modified. It supports both Python 2 and Python 3.
 
-.. _pyhdf: http://pysclint.sourceforge.net/pyhdf/
+*Note:* The sourceforge pyhdf
+[website](http://pysclint.sourceforge.net/pyhdf/) and
+[project](https://sourceforge.net/projects/pysclint/) are out-of-date.
+The original author of pyhdf have abandoned the project and it is
+currently maintained in [github](https://github.com/fhs/pyhdf).
+
+Version 0.9.x was called
+[python-hdf4](https://pypi.org/project/python-hdf4/)
+in PyPI because at that time we didn't have
+[access](https://github.com/pypa/warehouse/issues/5157) to the
+[pyhdf package](https://pypi.org/project/pyhdf/) in PyPI.  For version
+0.10.0 and onwards, please install `pyhdf` instead of `python-hdf4`.
 
 Installation
 ============
