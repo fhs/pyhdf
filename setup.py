@@ -178,7 +178,6 @@ else:
 
 setup(name         = 'pyhdf',
       maintainer       = 'pyhdf authors',
-      maintainer_email = 'fshahriar@gmail.com',
       author       = 'Andre Gosselin et al.',
       description  = DOCLINES[0],
       keywords     = ['hdf4', 'netcdf', 'numpy', 'python', 'pyhdf'],
