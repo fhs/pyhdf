@@ -3,9 +3,12 @@
 
 environment:
   matrix:
-    # For Python versions available on Appveyor, see
-    # https://www.appveyor.com/docs/windows-images-software/#python
+    # For Miniconda versions available on Appveyor, see
+    # https://www.appveyor.com/docs/windows-images-software/#miniconda
+    - MINICONDA: C:\Miniconda
+    - MINICONDA: C:\Miniconda-x64
     - MINICONDA: C:\Miniconda3
+    - MINICONDA: C:\Miniconda3-x64
 
 install:
   # conda 4.5.11 seems to expect that this directory exists already
