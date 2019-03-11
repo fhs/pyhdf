@@ -2,13 +2,10 @@
 # and https://github.com/Anaconda-Platform/anaconda-project/blob/master/appveyor.yml
 
 environment:
-
   matrix:
-
     # For Python versions available on Appveyor, see
     # https://www.appveyor.com/docs/windows-images-software/#python
-
-    - MINICONDA: "C:\\Miniconda3"
+    - MINICONDA: C:\Miniconda3
 
 install:
   # conda 4.5.11 seems to expect that this directory exists already
@@ -18,8 +15,8 @@ install:
   # and the user has the necessary permissions to make environment changes. In a CI
   # environment these are not necessary and slow things down noticeably on Windows.
   - conda config --set always_yes yes --set changeps1 no --set auto_update_conda no --set safety_checks disabled
-  - conda info -a
   - conda install -q conda numpy hdf4 nose
+  - conda info -a
   # We need wheel installed to build wheels
   - pip install wheel
 
@@ -27,15 +24,13 @@ build: off
 
 test_script:
   # Put your test command here.
-  - "set LIBRARY_DIRS=%MINICONDA%\\Library\\bin;%MINICONDA%\\Library\\lib"
-  - "set INCLUDE_DIRS=%MINICONDA%\\Library\\include"
-  - "python setup.py nosetests"
+  - set LIBRARY_DIRS=%MINICONDA%\Library\bin;%MINICONDA%\Library\lib
+  - set INCLUDE_DIRS=%MINICONDA%\Library\include
+  - python setup.py nosetests
 
 after_test:
   # This step builds your wheels.
-  - "set LIBRARY_DIRS=%MINICONDA%\\Library\\bin;%MINICONDA%\\Library\\lib"
-  - "set INCLUDE_DIRS=%MINICONDA%\\Library\\include"
-  - "python setup.py bdist_wheel"
+  - python setup.py bdist_wheel
 
 artifacts:
   # bdist_wheel puts your built wheel in the dist directory
