@@ -3,6 +3,7 @@
 import numpy as np
 import os
 import pyhdf.SD
+import shutil
 import tempfile
 from nose.tools import eq_
 from numpy.testing import assert_array_equal
@@ -11,8 +12,10 @@ from pyhdf.SD import SDC
 def test_long_varname():
     sds_name = 'a'*255
 
-    _, path = tempfile.mkstemp(suffix='.hdf', prefix='pyhdf_')
+    temp = tempfile.mkdtemp(prefix='pyhdf_')
     try:
+        path = os.path.join(temp, "test.hdf")
+
         # create a file with a long variable name
         sd = pyhdf.SD.SD(path, SDC.WRITE|SDC.CREATE|SDC.TRUNC)
         sds = sd.create(sds_name, SDC.FLOAT32, (3,))
@@ -28,11 +31,13 @@ def test_long_varname():
         sd.end()
         eq_(sds_name, name)
     finally:
-        os.unlink(path)
+        shutil.rmtree(temp)
 
 def test_negative_int8():
-    _, path = tempfile.mkstemp(suffix='.hdf', prefix='pyhdf_')
+    temp = tempfile.mkdtemp(prefix='pyhdf_')
     try:
+        path = os.path.join(temp, "test.hdf")
+
         sd = pyhdf.SD.SD(path, SDC.WRITE|SDC.CREATE|SDC.TRUNC)
         data = np.zeros(shape=(20,20), dtype=np.int8)
         sds = sd.create("testsds", SDC.INT8, data.shape)
@@ -56,4 +61,4 @@ def test_negative_int8():
         sds[:,:] = -40
         sd.end()
     finally:
-        os.unlink(path)
+        shutil.rmtree(temp)
