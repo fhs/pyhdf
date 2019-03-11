@@ -27,11 +27,13 @@ build: off
 
 test_script:
   # Put your test command here.
-  - "python setup.py -l %MINICONDA%\\Library\\bin nosetests"
+  - "set LIBRARY_DIRS=%MINICONDA%\\Library\\bin"
+  - "python setup.py nosetests"
 
 after_test:
   # This step builds your wheels.
-  - "python setup.py -l %MINICONDA%\\Library\\bin bdist_wheel"
+  - "set LIBRARY_DIRS=%MINICONDA%\\Library\\bin"
+  - "python setup.py bdist_wheel"
 
 artifacts:
   # bdist_wheel puts your built wheel in the dist directory
