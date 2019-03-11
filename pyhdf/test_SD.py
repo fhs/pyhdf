@@ -11,7 +11,7 @@ from pyhdf.SD import SDC
 def test_long_varname():
     sds_name = 'a'*255
 
-    _, path = tempfile.mkstemp(suffix='.hdf', prefix='pyhdf_')
+    fd, path = tempfile.mkstemp(suffix='.hdf', prefix='pyhdf_')
     try:
         # create a file with a long variable name
         sd = pyhdf.SD.SD(path, SDC.WRITE|SDC.CREATE|SDC.TRUNC)
@@ -28,10 +28,11 @@ def test_long_varname():
         sd.end()
         eq_(sds_name, name)
     finally:
+        os.close(fd)
         os.unlink(path)
 
 def test_negative_int8():
-    _, path = tempfile.mkstemp(suffix='.hdf', prefix='pyhdf_')
+    fd, path = tempfile.mkstemp(suffix='.hdf', prefix='pyhdf_')
     try:
         sd = pyhdf.SD.SD(path, SDC.WRITE|SDC.CREATE|SDC.TRUNC)
         data = np.zeros(shape=(20,20), dtype=np.int8)
@@ -56,4 +57,5 @@ def test_negative_int8():
         sds[:,:] = -40
         sd.end()
     finally:
+        os.close(fd)
         os.unlink(path)
