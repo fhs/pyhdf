@@ -1,0 +1,43 @@
+# Based on https://packaging.python.org/guides/supporting-windows-using-appveyor/
+# and https://github.com/Anaconda-Platform/anaconda-project/blob/master/appveyor.yml
+
+environment:
+
+  matrix:
+
+    # For Python versions available on Appveyor, see
+    # https://www.appveyor.com/docs/windows-images-software/#python
+
+    - MINICONDA: "C:\\Miniconda3"
+
+install:
+  # conda 4.5.11 seems to expect that this directory exists already
+  - mkdir C:\Users\appveyor\.conda
+  - call %MINICONDA%\Scripts\activate.bat
+  # The safety checks are simply intended to ensure that there is enough disk space
+  # and the user has the necessary permissions to make environment changes. In a CI
+  # environment these are not necessary and slow things down noticeably on Windows.
+  - conda config --set always_yes yes --set changeps1 no --set auto_update_conda no --set safety_checks disabled
+  - conda info -a
+  - conda install --yes numpy hdf4"
+  # We need wheel installed to build wheels
+  - pip install wheel
+
+build: off
+
+test_script:
+  # Put your test command here.
+  - "python setup.py nosetests"
+
+after_test:
+  # This step builds your wheels.
+  - "python setup.py bdist_wheel"
+
+artifacts:
+  # bdist_wheel puts your built wheel in the dist directory
+  - path: dist\*
+
+#on_success:
+#  You can use this step to upload your artifacts to a public website.
+#  See Appveyor's documentation for more details. Or you can simply
+#  access your wheels from the Appveyor "artifacts" tab for your build.
