@@ -19,7 +19,7 @@ install:
   # environment these are not necessary and slow things down noticeably on Windows.
   - conda config --set always_yes yes --set changeps1 no --set auto_update_conda no --set safety_checks disabled
   - conda info -a
-  - conda install -q conda numpy hdf4
+  - conda install -q conda numpy hdf4 nose
   # We need wheel installed to build wheels
   - pip install wheel
 
