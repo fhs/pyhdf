@@ -133,14 +133,15 @@ if sys.platform == 'win32':
     # Find DLL path
     dll_path = ''
     for p in library_dirs:
-        if path.exists(p + os.path.sep + "HM423M.DLL"):
+        if path.exists(p + os.path.sep + "mfhdf.dll"):
             dll_path = p + os.path.sep
             break
     if dll_path == '':
+        print("library_dirs =", library_dirs)
         raise RuntimeError("Cannot find required HDF4 DLLs -- check LIBRARY_DIRS")
 
 if sys.platform == 'win32':
-    libraries = ["hm423m", "hd423m", "xdr_for_dll" ]
+    libraries = ["mfhdf", "hdf", "xdr" ]
 elif _use_hdf4alt(library_dirs):
     libraries = ["mfhdfalt", "dfalt"]
 else:
@@ -172,7 +173,7 @@ _hdfext = Extension('pyhdf._hdfext',
                     )
 
 if sys.platform == 'win32':
-    data_files = [("pyhdf", [dll_path + x for x in ["HM423M.DLL", "HD423M.DLL"]])]
+    data_files = [("pyhdf", [dll_path + x for x in ["mfhdf.dll", "hdf.dll"]])]
 else:
     data_files = []
 
