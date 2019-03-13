@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/fhs/pyhdf.svg?branch=master)](https://travis-ci.org/fhs/pyhdf)
+[![Build status](https://ci.appveyor.com/api/projects/status/4a8pf8vo8nrjgxol/branch/master?svg=true)](https://ci.appveyor.com/project/fhs/pyhdf/branch/master)
 
 # pyhdf
 
