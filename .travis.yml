@@ -4,10 +4,18 @@ os:
   - linux
   - osx
 
-python:
-  - "2.7"
-  - "3.6"
-  - "3.7"
+matrix:
+  include:
+    - os: linux
+      python: "2.7"
+    - os: linux
+      python: "3.6"
+    - os: osx
+      language: generic
+      env: PYHDF_PYTHON_VERSION="2.7"
+    - os: osx
+      language: generic
+      env: PYHDF_PYTHON_VERSION="3.7"
 
 addons:
   apt:
