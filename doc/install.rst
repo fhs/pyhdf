@@ -6,12 +6,27 @@ pyhdf supports installation on Python 2 and Python 3. Please open an
 issue here if you encounter any problems during installation:
 https://github.com/fhs/pyhdf/issues
 
+The recommended method of installing
+pyhdf is to use conda.  See the `Conda user guide
+<https://conda.io/projects/conda/en/latest/user-guide/getting-started.html>`_
+on how to install conda and activate your conda environment.
+Once you're in the conda environment, install `pyhdf from conda-forge
+<https://anaconda.org/conda-forge/pyhdf>`_::
+
+    conda install -c conda-forge pyhdf
+
+If you don't want to use conda, the instructions below describes how you
+can compile pyhdf from source.
+
+
+Download the source
+-------------------
+
 The source code of the latest release of pyhdf can be obtained from
 either of these two location:
 
 *  PyPi / the cheeseshop: https://pypi.python.org/pypi/pyhdf
 *  Github: https://github.com/fhs/pyhdf/releases
-
 
 Requirements
 ------------
@@ -20,12 +35,12 @@ The following packages are required to build and install pyhdf:
 
 - `Python <http://www.python.org>`_:
   Python 2.6 or newer for Python 2, or Python 3.2 or newer for Python 3.
-- `NumPy <http://www.scipy.org>`_
-- `HDF4 libraries <http://www.hdfgroup.org/release4/obtain.html>`_ (to use
+- `NumPy <http://www.numpy.org/>`_
+- `HDF4 libraries <https://support.hdfgroup.org/products/hdf4/>`_ (to use
   their HDF4 binaries, you will also need szip, available from the same page)
 - Compiler suite e.g. `GCC <http://gcc.gnu.org>`_.
-  On Windows, you can use `Mingw32 compiler <http://www.mingw.org>`_ or Visual
-  Studio .NET 2003.
+  On Windows, you need to use a `compatible Visual C++ compiler
+  <https://wiki.python.org/moin/WindowsCompilers>`_.
 - `zlib <http://www.zlib.net/>`_
 - `libjpeg <http://www.ijg.org/>`_ 
 
@@ -33,22 +48,6 @@ On Debian and Debian-based Linux distributions (e.g. Ubuntu), you can install
 all the requirements for Python 3 using this command::
 
     apt-get install build-essential python3-dev python3-numpy libhdf4-dev -y
-
-OS X users can obtain jpeg libraries `here
-<http://ethan.tira-thompson.com/Mac%20OS%20X%20Ports.html>`_. 
-
-Installing from the Cheeseshop
-------------------------------
-
-To install pyhdf from The Python Package Index (Cheeseshop), open a
-command prompt and type::
-
-    pip install pyhdf
-
-On Debian based systems, you can obtain the ``pip`` command by running::
-
-    apt-get install python-pip -y
-
 
 Installing from the source archive
 ----------------------------------
@@ -130,9 +129,7 @@ capability.
 Getting an SZIP enabled HDF library may require compiling the library
 from source with the "--with-szlib" configuration option.  Note that
 you *must* install SZIP in a separate step. For more details, see the
-`NCSA hdf site <http://hdf.ncsa.uiuc.edu/doc_resource/SZIP/>`_.
-Source code and binaries are `available for download
-<ftp://ftp.hdfgroup.org/lib-external/szip/>`_.
+`HDF Group site <https://support.hdfgroup.org/doc_resource/SZIP/>`_.
 
 In case your HDF library was compiled with SZIP support and you abide by the
 szip licensing terms, set the environment variable ``SZIP`` to ``1``.
