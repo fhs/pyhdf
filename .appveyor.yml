@@ -14,7 +14,10 @@ environment:
       USE_MINGW: yes
 
 install:
-  - if [%USE_MINGW%]==[yes] set PATH=C:\%MINGW%\bin;%PATH%
+  - if [%USE_MINGW%]==[yes] set PATH=%MINGW%\bin;%PYTHON%;%PYTHON%\Scripts;%PATH%
+  - if [%USE_MINGW%]==[yes] gcc --version
+  - if [%USE_MINGW%]==[yes] python --version
+  - if [%USE_MINGW%]==[yes] pip --version
   - if [%USE_MINGW%]==[yes] appveyor DownloadFile https://support.hdfgroup.org/ftp/HDF/releases/HDF4.2.14/bin/windows/hdf-4.2.14-win7_64-vs14.zip -FileName hdf.zip
   - if [%USE_MINGW%]==[yes] 7z x hdf.zip
   - if [%USE_MINGW%]==[yes] msiexec /i hdf\HDF-4.2.14-win64.msi /quiet /qn /norestart /log install.log
