@@ -108,49 +108,6 @@ script should display the file structure. This is a handy tool to have
 around when you want to explore the contents of any HDF4 file.
 
 
-Quick install for Windows Users
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-1. Download the complete HDF4 binary package from the link given
-   below.  These packages include all libraries needed to compile
-   pyhdf. There are two binary packages to choose from depending on
-   whether or not you want to compile pyhdf with SZIP encoding enabled
-   or disabled.  There are different licensing implications for each
-   choice (see `the HDF page
-   <http://hdfgroup.com/doc_resource/SZIP/>`_ for more details on the
-   licensing of SZIP).
-
-   - `HDF4 with encoding enabled <http://pysclint.sourceforge.net/pyhdf/hdf4-all-enc.zip>`_
-   - `HDF4 with encoding disabled <http://pysclint.sourceforge.net/pyhdf/hdf4-all-noenc.zip>`_
-
-2. Unzip the selected package into a directory of your choice (e.g. ``C:\HDF4``).  
-
-3. Go to the pyhdf source directory.
-
-4. Build the package in one of the two following ways:
-
-   * Set the HDF4 environment variable to the directory where you unpacked the
-     binary and (e.g. ``C:\HDF4``). Then run the following::
-
-	   python setup.py build
-
-   * Run ``python setup.py build --hdf4 <directory of unzipped package>`` where
-     ``<directory of unzipped package>`` is the location where you unzipped the
-     downloaded HDF4 binary (e.g. ``C:\HDF4``).
-
-   *NOTE*: If you are using the mingw32 compiler and are using the
-   standard Python binary distribution, then you need to specify -c
-   mingw32 on the command line as well.
-
-5. To install pyhdf or build a binary distribution (bdist_msi,
-   bdist_wininst, bdist_egg, etc.), run one of the following commands::
-
-	python setup.py install
-	python setup.py bdist_msi
-	python setup.py bdist_wininst
-	python setup.py bdist_egg
-
-
 Further notes
 -------------
 

@@ -92,38 +92,6 @@ if sys.platform.startswith('linux'):
     if not include_dirs and os.path.exists(d):
         include_dirs.append(d)
 
-if sys.platform == 'win32':
-    try:
-        k = sys.argv.index('--hdf4')
-        baseloc = sys.argv[k+1]
-        del sys.argv[k]
-        del sys.argv[k]
-    except (ValueError, IndexError):
-        baseloc = None
-    if not baseloc:
-        baseloc = os.environ.get('HDF4', None)
-    if baseloc:
-        # fix include_dirs and library_dirs
-        #  based on fixed set of paths
-        if not path.exists(baseloc):
-            print("\n******\n%s not found\n******\n\n" % baseloc)
-            raise RuntimeError(msg)
-        if not path.isdir(baseloc):
-            print("\n******\n%s not a directory \n******\n\n" % baseloc)
-            raise RuntimeError(msg)
-        alldirs = os.listdir(baseloc)
-        include_dirs = []
-        library_dirs = []
-        for adir in alldirs:
-            if not path.isdir(path.sep.join([baseloc, adir])):
-                continue
-            if adir.startswith('42'):
-                include_dirs.append(path.sep.join([baseloc, adir, 'include']))
-                library_dirs.append(path.sep.join([baseloc, adir, 'dll']))
-            library_dirs.append(path.sep.join([baseloc, adir, 'lib']))
-        print("Using include_dirs = ", include_dirs)
-        print("Using library_dirs = ", library_dirs)
-
 for p in include_dirs + library_dirs:
     if not path.exists(p):
         print("\n******\n%s not found\n******\n\n" % p)
