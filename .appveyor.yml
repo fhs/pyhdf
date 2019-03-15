@@ -10,17 +10,18 @@ environment:
     #- MINICONDA: C:\Miniconda3
     #- MINICONDA: C:\Miniconda3-x64
     - PYTHON: C:\Python36-x64
+      MINGW: C:\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64
       USE_MINGW: yes
 
 install:
-  - if [%USE_MINGW%]==[yes] set PATH=C:\MinGW64\bin;%PATH%
-  - if [%USE_MINGW%]==[yes] appveyor DownloadFile https://support.hdfgroup.org/ftp/HDF/releases/HDF4.2.14/bin/windows/hdf-4.2.14-win7_64-vs14.zip -FileName hdf4.zip
-  - if [%USE_MINGW%]==[yes] 7z x hdf4.zip
-  - if [%USE_MINGW%]==[yes] msiexec /i hdf-4.2.14-win7_64-vs14/hdf/HDF-4.2.14-win32.msi /quiet /qn /norestart /log install.log
+  - if [%USE_MINGW%]==[yes] set PATH=C:\%MINGW%\bin;%PATH%
+  - if [%USE_MINGW%]==[yes] appveyor DownloadFile https://support.hdfgroup.org/ftp/HDF/releases/HDF4.2.14/bin/windows/hdf-4.2.14-win7_64-vs14.zip -FileName hdf.zip
+  - if [%USE_MINGW%]==[yes] 7z x hdf.zip
+  - if [%USE_MINGW%]==[yes] msiexec /i hdf\HDF-4.2.14-win64.msi /quiet /qn /norestart /log install.log
   - if [%USE_MINGW%]==[yes] pip install numpy nose
   - set LIBRARY_DIRS=C:\Program Files\HDF_Group\HDF\4.2.14\bin;C:\Program Files\HDF_Group\HDF\4.2.14\lib
   - set INCLUDE_DIRS=C:\Program Files\HDF_Group\HDF\4.2.14\include
-  - if [%USE_MINGW%]==[yes] python setup.py -c mingw64 install
+  - if [%USE_MINGW%]==[yes] python setup.py -c mingw32 install
 
   # conda 4.5.11 seems to expect that this directory exists already
   - if not [%USE_MINGW%]==[yes] mkdir C:\Users\appveyor\.conda
