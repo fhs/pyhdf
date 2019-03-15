@@ -31,8 +31,8 @@ before_install:
 
 # command to run tests
 script:
-  - ./runexamples.sh
-  - nosetests -v
+  - python setup.py nosetests -v
+  - python runexamples.py
 
 notifications:
   email:

@@ -29,7 +29,8 @@ test_script:
   # Put your test command here.
   - set LIBRARY_DIRS=%MINICONDA%\Library\bin;%MINICONDA%\Library\lib
   - set INCLUDE_DIRS=%MINICONDA%\Library\include
-  - python setup.py nosetests
+  - python setup.py nosetests -v
+  - python runexamples.py
 
 after_test:
   # This step builds your wheels.
