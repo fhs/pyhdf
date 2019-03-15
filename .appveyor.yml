@@ -33,7 +33,7 @@ install:
   - if [%USE_MINGW%]==[yes] pip install numpy nose
   - set LIBRARY_DIRS=%PROGRAM_FILES%\HDF_Group\HDF\4.2.14\bin;%PROGRAM_FILES%\HDF_Group\HDF\4.2.14\lib
   - set INCLUDE_DIRS=%PROGRAM_FILES%\HDF_Group\HDF\4.2.14\include
-  - if [%USE_MINGW%]==[yes] python setup.py build -c mingw32
+  - if [%USE_MINGW%]==[yes] python setup.py build_ext -c mingw32 --inplace
 
   # conda 4.5.11 seems to expect that this directory exists already
   - if not [%USE_MINGW%]==[yes] mkdir C:\Users\appveyor\.conda
@@ -48,12 +48,13 @@ install:
   - if not [%USE_MINGW%]==[yes] pip install wheel
   - if not [%USE_MINGW%]==[yes] set LIBRARY_DIRS=%MINICONDA%\Library\bin;%MINICONDA%\Library\lib
   - if not [%USE_MINGW%]==[yes] set INCLUDE_DIRS=%MINICONDA%\Library\include
+  - if not [%USE_MINGW%]==[yes] python setup.py build_ext --inplace
 
 build: off
 
 test_script:
   # Put your test command here.
-  - python setup.py nosetests
+  - nosetests -v
 
 after_test:
   # This step builds your wheels.
@@ -68,5 +69,5 @@ artifacts:
 #  See Appveyor's documentation for more details. Or you can simply
 #  access your wheels from the Appveyor "artifacts" tab for your build.
 
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
