@@ -9,26 +9,37 @@ environment:
     - MINICONDA: C:\Miniconda-x64
     - MINICONDA: C:\Miniconda3
     - MINICONDA: C:\Miniconda3-x64
+    - PYTHON: C:\Python36-x64
+      USE_MINGW: yes
 
 install:
+  - if [%USE_MINGW%]==[yes] set PATH=C:\MinGW64\bin;%PATH%
+  - if [%USE_MINGW%]==[yes] appveyor DownloadFile https://support.hdfgroup.org/ftp/HDF/releases/HDF4.2.14/bin/windows/hdf-4.2.14-win7_64-vs14.zip -FileName hdf4.zip
+  - if [%USE_MINGW%]==[yes] 7z x hdf4.zip
+  - if [%USE_MINGW%]==[yes] msiexec /i hdf-4.2.14-win7_64-vs14/hdf/HDF-4.2.14-win32.msi /quiet /qn /norestart /log install.log
+  - if [%USE_MINGW%]==[yes] pip install numpy nose
+  - set LIBRARY_DIRS=C:\Program Files\HDF_Group\HDF\4.2.14\bin;C:\Program Files\HDF_Group\HDF\4.2.14\lib
+  - set INCLUDE_DIRS=C:\Program Files\HDF_Group\HDF\4.2.14\include
+  - if [%USE_MINGW%]==[yes] python setup.py -c mingw64 install
+
   # conda 4.5.11 seems to expect that this directory exists already
-  - mkdir C:\Users\appveyor\.conda
-  - call %MINICONDA%\Scripts\activate.bat
+  - if not [%USE_MINGW%]==[yes] mkdir C:\Users\appveyor\.conda
+  - if not [%USE_MINGW%]==[yes] call %MINICONDA%\Scripts\activate.bat
   # The safety checks are simply intended to ensure that there is enough disk space
   # and the user has the necessary permissions to make environment changes. In a CI
   # environment these are not necessary and slow things down noticeably on Windows.
-  - conda config --set always_yes yes --set changeps1 no --set auto_update_conda no --set safety_checks disabled
-  - conda install -q conda numpy hdf4 nose
-  - conda info -a
+  - if not [%USE_MINGW%]==[yes] conda config --set always_yes yes --set changeps1 no --set auto_update_conda no --set safety_checks disabled
+  - if not [%USE_MINGW%]==[yes] conda install -q conda numpy hdf4 nose
+  - if not [%USE_MINGW%]==[yes] conda info -a
   # We need wheel installed to build wheels
-  - pip install wheel
+  - if not [%USE_MINGW%]==[yes] pip install wheel
+  - if not [%USE_MINGW%]==[yes] set LIBRARY_DIRS=%MINICONDA%\Library\bin;%MINICONDA%\Library\lib
+  - if not [%USE_MINGW%]==[yes] set INCLUDE_DIRS=%MINICONDA%\Library\include
 
 build: off
 
 test_script:
   # Put your test command here.
-  - set LIBRARY_DIRS=%MINICONDA%\Library\bin;%MINICONDA%\Library\lib
-  - set INCLUDE_DIRS=%MINICONDA%\Library\include
   - python setup.py nosetests
 
 after_test:
