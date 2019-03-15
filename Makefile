@@ -24,7 +24,7 @@ builddoc:
 
 .PHONY: clean
 clean:
-	rm -rf build/ dist/ pyhdf.egg-info
+	rm -rf build/ dist/ pyhdf.egg-info examples/*/*.hdf
 	make -C pyhdf clean
 	make -C doc clean
 
