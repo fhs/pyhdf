@@ -5,10 +5,10 @@ environment:
   matrix:
     # For Miniconda versions available on Appveyor, see
     # https://www.appveyor.com/docs/windows-images-software/#miniconda
-    - MINICONDA: C:\Miniconda
-    - MINICONDA: C:\Miniconda-x64
-    - MINICONDA: C:\Miniconda3
-    - MINICONDA: C:\Miniconda3-x64
+    #- MINICONDA: C:\Miniconda
+    #- MINICONDA: C:\Miniconda-x64
+    #- MINICONDA: C:\Miniconda3
+    #- MINICONDA: C:\Miniconda3-x64
     - PYTHON: C:\Python36-x64
       USE_MINGW: yes
 
@@ -54,3 +54,6 @@ artifacts:
 #  You can use this step to upload your artifacts to a public website.
 #  See Appveyor's documentation for more details. Or you can simply
 #  access your wheels from the Appveyor "artifacts" tab for your build.
+
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
