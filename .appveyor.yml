@@ -14,11 +14,13 @@ environment:
     #  USE_MINGW: yes
     #  HDF4_BIN_ZIP: https://support.hdfgroup.org/ftp/HDF/releases/HDF4.2.14/bin/windows/hdf-4.2.14-win7_64-vs14.zip
     #  HDF4_MSI: hdf\HDF-4.2.14-win64.msi
+    #  PROGRAM_FILES: C:\Program Files
     - PYTHON: C:\Python36
       MINGW: C:\mingw
       USE_MINGW: yes
       HDF4_BIN_ZIP: https://support.hdfgroup.org/ftp/HDF/releases/HDF4.2.14/bin/windows/hdf-4.2.14-win7_32-vs14.zip
       HDF4_MSI: hdf\HDF-4.2.14-win32.msi
+      PROGRAM_FILES: C:\Program Files (x86)
 
 install:
   - if [%USE_MINGW%]==[yes] set PATH=%MINGW%\bin;%PYTHON%;%PYTHON%\Scripts;%PATH%
@@ -29,8 +31,8 @@ install:
   - if [%USE_MINGW%]==[yes] 7z x hdf.zip
   - if [%USE_MINGW%]==[yes] msiexec /i %HDF4_MSI% /quiet /qn /norestart /log install.log
   - if [%USE_MINGW%]==[yes] pip install numpy nose
-  - set LIBRARY_DIRS=C:\Program Files\HDF_Group\HDF\4.2.14\bin;C:\Program Files\HDF_Group\HDF\4.2.14\lib
-  - set INCLUDE_DIRS=C:\Program Files\HDF_Group\HDF\4.2.14\include
+  - set LIBRARY_DIRS=%PROGRAM_FILES%\HDF_Group\HDF\4.2.14\bin;%PROGRAM_FILES%\HDF_Group\HDF\4.2.14\lib
+  - set INCLUDE_DIRS=%PROGRAM_FILES%\HDF_Group\HDF\4.2.14\include
   - if [%USE_MINGW%]==[yes] python setup.py build -c mingw32
 
   # conda 4.5.11 seems to expect that this directory exists already
