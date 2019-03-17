@@ -36,7 +36,7 @@ The following packages are required to build and install pyhdf:
 - `Python <http://www.python.org>`_:
   Python 2.6 or newer for Python 2, or Python 3.2 or newer for Python 3.
 - `NumPy <http://www.numpy.org/>`_
-- `HDF4 libraries <https://support.hdfgroup.org/products/hdf4/>`_ (to use
+- `HDF4 libraries <https://portal.hdfgroup.org/display/support/Download+HDF4>`_ (to use
   their HDF4 binaries, you will also need szip, available from the same page)
 - Compiler suite e.g. `GCC <http://gcc.gnu.org>`_.
   On Windows, you need to use a `compatible Visual C++ compiler
@@ -129,7 +129,8 @@ capability.
 Getting an SZIP enabled HDF library may require compiling the library
 from source with the "--with-szlib" configuration option.  Note that
 you *must* install SZIP in a separate step. For more details, see the
-`HDF Group site <https://support.hdfgroup.org/doc_resource/SZIP/>`_.
+`HDF Group site
+<https://portal.hdfgroup.org/display/HDF5/Szip+Compression+in+HDF+Products>`_.
 
 In case your HDF library was compiled with SZIP support and you abide by the
 szip licensing terms, set the environment variable ``SZIP`` to ``1``.

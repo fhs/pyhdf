@@ -5,7 +5,7 @@ from __future__ import print_function
 # Generate test HDF files using different compression configurations,
 # and validate each resulting file to make sure its contents is OK.
 # Adapted from example:
-# "hdf.ncsa.uiuc.edu/doc_resource/SZIP/h4_examples/szip32.c".
+# "https://support.hdfgroup.org/doc_resource/SZIP/h4_examples/szip32.c".
 # A bigger dataset is defined to better show the size reduction achieved
 # by the SZIP compression.
 # Note that when applied to HDF4 SDS, the word "pixels" as used inside
