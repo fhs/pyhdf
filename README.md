@@ -20,16 +20,16 @@ Version 0.9.x was called
 in PyPI because at that time we didn't have
 [access](https://github.com/pypa/warehouse/issues/5157) to the
 [pyhdf package](https://pypi.org/project/pyhdf/) in PyPI.  For version
-0.10.0 and onwards, please install `pyhdf` instead of `python-hdf4`.
+0.10.0 and onward, please install `pyhdf` instead of `python-hdf4`.
 
 ## Installation
 
-To install, see http://fhs.github.io/pyhdf/install.html
-or file [doc/install.rst](doc/install.rst).
+See [pyhdf installation instructions](http://fhs.github.io/pyhdf/install.html)
+or [doc/install.rst](doc/install.rst).
 
 ## Documentation
 
-For documentation, see http://fhs.github.io/pyhdf/
+See [pyhdf documentation](http://fhs.github.io/pyhdf/).
 
 Additional documentation on the HDF4 format can be found in the
 [HDF4 Support Page](https://portal.hdfgroup.org/display/HDF4/HDF4).
@@ -37,4 +37,4 @@ Additional documentation on the HDF4 format can be found in the
 ## Examples
 
 Example python programs using the pyhdf package
-can be found inside the examples/ subdirectory.
+can be found inside the [examples/](examples/) subdirectory.
