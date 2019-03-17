@@ -6,12 +6,27 @@ pyhdf supports installation on Python 2 and Python 3. Please open an
 issue here if you encounter any problems during installation:
 https://github.com/fhs/pyhdf/issues
 
+The recommended method of installing
+pyhdf is to use conda.  See the `Conda user guide
+<https://conda.io/projects/conda/en/latest/user-guide/getting-started.html>`_
+on how to install conda and activate your conda environment.
+Once you're in the conda environment, install `pyhdf from conda-forge
+<https://anaconda.org/conda-forge/pyhdf>`_::
+
+    conda install -c conda-forge pyhdf
+
+If you don't want to use conda, the instructions below describes how you
+can compile pyhdf from source.
+
+
+Download the source
+-------------------
+
 The source code of the latest release of pyhdf can be obtained from
 either of these two location:
 
 *  PyPi / the cheeseshop: https://pypi.python.org/pypi/pyhdf
 *  Github: https://github.com/fhs/pyhdf/releases
-
 
 Requirements
 ------------
@@ -20,12 +35,12 @@ The following packages are required to build and install pyhdf:
 
 - `Python <http://www.python.org>`_:
   Python 2.6 or newer for Python 2, or Python 3.2 or newer for Python 3.
-- `NumPy <http://www.scipy.org>`_
-- `HDF4 libraries <http://www.hdfgroup.org/release4/obtain.html>`_ (to use
+- `NumPy <http://www.numpy.org/>`_
+- `HDF4 libraries <https://portal.hdfgroup.org/display/support/Download+HDF4>`_ (to use
   their HDF4 binaries, you will also need szip, available from the same page)
 - Compiler suite e.g. `GCC <http://gcc.gnu.org>`_.
-  On Windows, you can use `Mingw32 compiler <http://www.mingw.org>`_ or Visual
-  Studio .NET 2003.
+  On Windows, you need to use a `compatible Visual C++ compiler
+  <https://wiki.python.org/moin/WindowsCompilers>`_.
 - `zlib <http://www.zlib.net/>`_
 - `libjpeg <http://www.ijg.org/>`_ 
 
@@ -33,22 +48,6 @@ On Debian and Debian-based Linux distributions (e.g. Ubuntu), you can install
 all the requirements for Python 3 using this command::
 
     apt-get install build-essential python3-dev python3-numpy libhdf4-dev -y
-
-OS X users can obtain jpeg libraries `here
-<http://ethan.tira-thompson.com/Mac%20OS%20X%20Ports.html>`_. 
-
-Installing from the Cheeseshop
-------------------------------
-
-To install pyhdf from The Python Package Index (Cheeseshop), open a
-command prompt and type::
-
-    pip install pyhdf
-
-On Debian based systems, you can obtain the ``pip`` command by running::
-
-    apt-get install python-pip -y
-
 
 Installing from the source archive
 ----------------------------------
@@ -108,49 +107,6 @@ script should display the file structure. This is a handy tool to have
 around when you want to explore the contents of any HDF4 file.
 
 
-Quick install for Windows Users
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-1. Download the complete HDF4 binary package from the link given
-   below.  These packages include all libraries needed to compile
-   pyhdf. There are two binary packages to choose from depending on
-   whether or not you want to compile pyhdf with SZIP encoding enabled
-   or disabled.  There are different licensing implications for each
-   choice (see `the HDF page
-   <http://hdfgroup.com/doc_resource/SZIP/>`_ for more details on the
-   licensing of SZIP).
-
-   - `HDF4 with encoding enabled <http://pysclint.sourceforge.net/pyhdf/hdf4-all-enc.zip>`_
-   - `HDF4 with encoding disabled <http://pysclint.sourceforge.net/pyhdf/hdf4-all-noenc.zip>`_
-
-2. Unzip the selected package into a directory of your choice (e.g. ``C:\HDF4``).  
-
-3. Go to the pyhdf source directory.
-
-4. Build the package in one of the two following ways:
-
-   * Set the HDF4 environment variable to the directory where you unpacked the
-     binary and (e.g. ``C:\HDF4``). Then run the following::
-
-	   python setup.py build
-
-   * Run ``python setup.py build --hdf4 <directory of unzipped package>`` where
-     ``<directory of unzipped package>`` is the location where you unzipped the
-     downloaded HDF4 binary (e.g. ``C:\HDF4``).
-
-   *NOTE*: If you are using the mingw32 compiler and are using the
-   standard Python binary distribution, then you need to specify -c
-   mingw32 on the command line as well.
-
-5. To install pyhdf or build a binary distribution (bdist_msi,
-   bdist_wininst, bdist_egg, etc.), run one of the following commands::
-
-	python setup.py install
-	python setup.py bdist_msi
-	python setup.py bdist_wininst
-	python setup.py bdist_egg
-
-
 Further notes
 -------------
 
@@ -173,9 +129,8 @@ capability.
 Getting an SZIP enabled HDF library may require compiling the library
 from source with the "--with-szlib" configuration option.  Note that
 you *must* install SZIP in a separate step. For more details, see the
-`NCSA hdf site <http://hdf.ncsa.uiuc.edu/doc_resource/SZIP/>`_.
-Source code and binaries are `available for download
-<ftp://ftp.hdfgroup.org/lib-external/szip/>`_.
+`HDF Group site
+<https://portal.hdfgroup.org/display/HDF5/Szip+Compression+in+HDF+Products>`_.
 
 In case your HDF library was compiled with SZIP support and you abide by the
 szip licensing terms, set the environment variable ``SZIP`` to ``1``.
