@@ -41,7 +41,6 @@ SD (scientific dataset) API (:mod:`pyhdf.SD`)
 
 A module of the pyhdf package implementing the SD (scientific
 dataset) API of the NCSA HDF4 library.
-(see: hdf.ncsa.uiuc.edu)
 
 Introduction
 ------------
@@ -152,7 +151,7 @@ work.
     be installed separately.
 
     HDF is available at:
-    "http://hdf.ncsa.uiuc.edu/obtain.html".
+    "https://portal.hdfgroup.org/display/support/Download+HDF4".
 
   HDF4.2r1 in turn relies on the following packages :
 

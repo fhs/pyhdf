@@ -13,7 +13,6 @@ V (Vgroup) API (:mod:`pyhdf.V`)
 
 A module of the pyhdf package implementing the V (Vgroup)
 API of the NCSA HDF4 library.
-(see: hdf.ncsa.uiuc.edu)
 
 Introduction
 ------------
@@ -124,7 +123,7 @@ work.
     be installed separately.
 
     HDF is available at:
-    "http://hdf.ncsa.uiuc.edu/obtain.html".
+    "https://portal.hdfgroup.org/display/support/Download+HDF4".
 
 Numeric is also needed by the SD module. See the SD module documentation.
 

@@ -31,9 +31,8 @@ or file [doc/install.rst](doc/install.rst).
 
 For documentation, see http://fhs.github.io/pyhdf/
 
-Additional documentation on the HDF4 format can be
-found in the User Guide:
-http://www.hdfgroup.org/release4/doc/UsrGuide_html/UG_Top.html
+Additional documentation on the HDF4 format can be found in the
+[HDF4 Support Page](https://portal.hdfgroup.org/display/HDF4/HDF4).
 
 ## Examples
 
