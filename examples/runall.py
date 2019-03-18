@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """
 This script runs all the examples in examples directory.
+It should be run from the top-level directory (containing setup.py).
 """
 
 import glob

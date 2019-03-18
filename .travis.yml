@@ -32,7 +32,7 @@ before_install:
 # command to run tests
 script:
   - python setup.py nosetests -v
-  - python runexamples.py
+  - python examples/runall.py
 
 notifications:
   email:
