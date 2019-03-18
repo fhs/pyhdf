@@ -42,6 +42,8 @@ class ExampleTester:
             print("failed examples:")
             for ex in self.failed:
                 print("  %s in %s failed with exit code %s" % (ex[1], ex[0], ex[2]))
+            sys.exit(2)
+        sys.exit(0)
 
 def main():
     t = ExampleTester()
