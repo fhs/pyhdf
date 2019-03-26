@@ -1010,8 +1010,7 @@ from .error import _checkErr, HDF4Error
 __all__ = ['SD', 'SDAttr', 'SDC', 'SDS', 'SDim', 'HDF4Error']
 
 try:
-    import numpy as _toto
-    del _toto
+    import numpy as np
 except ImportError:
     raise HDF4Error("numpy package required but not installed")
 
@@ -1114,6 +1113,13 @@ class SDC(object):
                          INT16, UINT16,
                          INT32, UINT32,
                          CHAR8, UCHAR8]
+
+    equivNumpyTypes = dict(zip(equivNumericTypes, [np.float32, np.float64,
+                                                   np.int8, np.uint8,
+                                                   np.int16, np.uint16,
+                                                   np.int32, np.uint32,
+                                                   np.int8, np.uint8]))
+
 
 class SDAttr(object):
 
@@ -2847,6 +2853,28 @@ class SDS(object):
                 res[name] = length
 
         return res
+
+    @property
+    def shape(self):
+        return self.info()[2]
+
+    @property
+    def dtype(self):
+        return SDC.equivNumpyTypes[self.info()[3]]
+
+    @property
+    def __array_interface__(self):
+        return dict(shape=self.shape,
+                    typestr=self.__array_typestr__,
+                    version=3)
+
+    @property
+    def __array_shape__(self):
+        return self._shape
+
+    @property
+    def __array_typestr__(self):
+        return np.dtype(self._dtype).str
 
 
 class SDim(object):
