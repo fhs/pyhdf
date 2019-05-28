@@ -1,0 +1,34 @@
+<!--
+If this issue is related to conda, please submit it to:
+https://github.com/conda-forge/pyhdf-feedstock/issues.
+
+Please answer these questions before submitting your issue. Thanks!
+-->
+
+### What version of pyhdf, HDF4, and Python are you using?
+
+pyhdf version:
+HDF4 C library version:
+Python version:
+
+### What operating system are you using?
+
+<!--
+Choose between Linux, Windows, and OS X.
+Also indicate the processor architecture if it's relevant.
+-->
+
+
+### What did you do?
+
+<!--
+If possible, provide a recipe for reproducing the error.
+A complete runnable program with the input HDF4 file is best.
+-->
+
+
+### What did you expect to see?
+
+
+
+### What did you see instead?
