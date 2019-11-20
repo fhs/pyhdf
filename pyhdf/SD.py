@@ -72,10 +72,10 @@ SD key features are as follows.
   - SDisdimval_bwcomp(), SDsetdimval_comp()
 
 - It is quite straightforward to go from a C version to a python version
-  of a program accessing the SD API, and to learn SD usage by refering to
+  of a program accessing the SD API, and to learn SD usage by referring to
   the C API documentation.
 
-- A few high-level python methods have been developped to ease
+- A few high-level python methods have been developed to ease
   programmers task. Of greatest interest are those allowing access
   to SD datasets through familiar python idioms.
 
@@ -88,14 +88,14 @@ SD key features are as follows.
     See "High level attribute access" and "High level variable access"
     sections for details.
 
-  - SD offers methods to retrieve a dictionnary of the attributes,
+  - SD offers methods to retrieve a dictionary of the attributes,
     dimensions and variables defined on a dataset, and of the attributes
     set on a variable and a dimension. Querying a dataset is thus geatly
     simplified.
 
 - SD datasets are read/written through "numpy", a sophisticated
   python package for efficiently handling multi-dimensional arrays of
-  numbers. numpy can nicely extend the SD functionnality, eg.
+  numbers. numpy can nicely extend the SD functionality, eg.
   adding/subtracting arrays with the '+/-' operators.
 
 Accessing the SD module
@@ -180,7 +180,7 @@ the naming conventions and calling sequences documented inside the
 to the C API, the manual can be easily used as a documentary source
 for pyhdf, once the class to which a function belongs has been
 identified, and of course once requirements imposed by the Python
-langage have been taken into account. Consequently, this documentation
+language have been taken into account. Consequently, this documentation
 will not attempt to provide an exhaustive coverage of the HDF SD
 API. For this, the user is referred to the above manual.
 The documentation of each pyhdf method will indicate the name
@@ -473,9 +473,9 @@ In more detail::
                            HDF file
 
            inquiry
-             attributes()  return a dictionnary describing every global
+             attributes()  return a dictionary describing every global
                            attribute attached to the HDF file
-             datasets()    return a dictionnary describing every dataset
+             datasets()    return a dictionary describing every dataset
                            stored inside the file
              info()        get the number of datasets stored in the file
                            and the number of attributes attached to it
@@ -514,7 +514,7 @@ In more detail::
                            values
 
 
-  SDC    The SDC class holds contants defining file opening modes and
+  SDC    The SDC class holds constants defining file opening modes and
          data types. Constants are named after their C API counterparts.
 
            file opening modes:
@@ -575,10 +575,10 @@ In more detail::
              endaccess()   terminate access to the dataset
 
            inquiry
-             attributes()  return a dictionnary describing every
+             attributes()  return a dictionary describing every
                            attribute defined on the dataset
              checkempty()  determine whether the dataset is empty
-             dimensions()  return a dictionnary describing all the
+             dimensions()  return a dictionary describing all the
                            dataset dimensions
              info()        get the dataset name, rank, dimension lengths,
                            data type and number of attributes
@@ -633,7 +633,7 @@ In more detail::
                             get and set an attribute
 
            inquiry
-             attributes()   return a dictionnary describing every
+             attributes()   return a dictionary describing every
                             attribute defined on the dimension
              info()         get the dimension name, length, scale data type
                             and number of attributes
@@ -678,7 +678,7 @@ Programming models
 Writing
 ^^^^^^^
 The following code can be used as a model to create an SD dataset.
-It shows how to use the most important functionnalities
+It shows how to use the most important functionalities
 of the SD interface needed to initialize a dataset.
 A real program should of course add error handling::
 
@@ -694,7 +694,7 @@ A real program should of course add error handling::
     hdfFile.priority = 2
     # Create a dataset named 'd1' to hold a 3x3 float array.
     d1 = hdfFile.create('d1', SDC.FLOAT32, (3,3))
-    # Set some attributs on 'd1'
+    # Set some attributes on 'd1'
     d1.description = 'Sample 3x3 float array'
     d1.units = 'celsius'
     # Name 'd1' dimensions and assign them attributes.
@@ -768,8 +768,8 @@ hold matrix values, one row per line. The following procedure will load
 into an HDF dataset the contents of any one of those text files. The
 procedure computes the matrix min and max values, storing them as
 dataset attributes. It also assigns to the variable the group of
-attributes passed as a dictionnary by the calling program. Note how simple
-such an assignment becomes with pyhdf: the dictionnary can contain any
+attributes passed as a dictionary by the calling program. Note how simple
+such an assignment becomes with pyhdf: the dictionary can contain any
 number of attributes, of different types, single or multi-valued. Doing
 the same in a conventional language would be a much more challenging task.
 
@@ -846,10 +846,10 @@ We could now call the procedure as follows::
 
 Example 2
 ^^^^^^^^^
-This example shows a usefull python program that will display the
+This example shows a useful python program that will display the
 structure of the SD component of any HDF file whose name is given on
 the command line. After the HDF file is opened, high level inquiry methods
-are called to obtain dictionnaries descrybing attributes, dimensions and
+are called to obtain dictionaries describing attributes, dimensions and
 datasets. The rest of the program mostly consists in nicely formatting
 the contents of those dictionaries::
 
@@ -857,7 +857,7 @@ the contents of those dictionaries::
     from pyhdf.SD import *
     from numpy import *
 
-    # Dictionnary used to convert from a numeric data type to its symbolic
+    # Dictionary used to convert from a numeric data type to its symbolic
     # representation
     typeTab = {
                SDC.CHAR:    'CHAR',
@@ -883,9 +883,9 @@ the contents of those dictionaries::
     try:  # Catch pyhdf.SD errors
       # Open HDF file named on the command line
       f = SD(hdfFile)
-      # Get global attribute dictionnary
+      # Get global attribute dictionary
       attr = f.attributes(full=1)
-      # Get dataset dictionnary
+      # Get dataset dictionary
       dsets = f.datasets()
 
       # File name, number of attributes and number of variables.
@@ -952,7 +952,7 @@ the contents of those dictionaries::
           for name in dsNames:
               # Access the dataset
               dsObj = f.select(name)
-              # Get dataset attribute dictionnary
+              # Get dataset attribute dictionary
               dsAttr = dsObj.attributes(full=1)
               if len(dsAttr) > 0:
                   printf("%s attributes" % name); eol(2)
@@ -970,7 +970,7 @@ the contents of those dictionaries::
                       printf("  %-20s %3d %-7s %3d %s" %
                              (nm, t[1], typeTab[t[2]], t[3], t[0])); eol()
                   eol()
-              # Get dataset dimension dictionnary
+              # Get dataset dimension dictionary
               dsDim = dsObj.dimensions(full=1)
               if len(dsDim) > 0:
                   printf ("%s dimensions" % name); eol(2)
@@ -1016,7 +1016,7 @@ except ImportError:
     raise HDF4Error("numpy package required but not installed")
 
 class SDC(object):
-    """The SDC class holds contants defining opening modes and data types.
+    """The SDC class holds constants defining opening modes and data types.
 
            file opening modes:
              ==========   ===    ===============================
@@ -1649,7 +1649,7 @@ class SD(object):
 
 
     def attributes(self, full=0):
-        """Return a dictionnary describing every global
+        """Return a dictionary describing every global
         attribute attached to the SD interface.
 
         Args::
@@ -1659,8 +1659,8 @@ class SD(object):
 
         Returns::
 
-          Empty dictionnary if no global attribute defined
-          Otherwise, dictionnary where each key is the name of a
+          Empty dictionary if no global attribute defined
+          Otherwise, dictionary where each key is the name of a
           global attribute. If parameter 'full' is false,
           key value is the attribute value. If 'full' is true,
           key value is a tuple with the following elements:
@@ -1689,7 +1689,7 @@ class SD(object):
         return res
 
     def datasets(self):
-        """Return a dictionnary describing all the file datasets.
+        """Return a dictionary describing all the file datasets.
 
         Args::
 
@@ -1697,8 +1697,8 @@ class SD(object):
 
         Returns::
 
-          Empty dictionnary if no dataset is defined.
-          Otherwise, dictionnary whose keys are the file dataset names,
+          Empty dictionary if no dataset is defined.
+          Otherwise, dictionary whose keys are the file dataset names,
           and values are tuples describing the corresponding datasets.
           Each tuple holds the following elements in order:
 
@@ -1755,7 +1755,7 @@ class SDS(object):
 
 
         # Private attributes
-        #  _sd  SD intance
+        #  _sd  SD instance
         #  _id  SDS identifier
         self._sd = sd
         self._id = id
@@ -1914,7 +1914,7 @@ class SDS(object):
                                  'the size (%d) of dimension %d' \
                                  % (dim_sizes[n], n))
         if not data_type in SDC.equivNumericTypes:
-            raise HDF4Error('get cannot currrently deal with '\
+            raise HDF4Error('get cannot currently deal with '\
                              'the SDS data type')
 
         return _C._SDreaddata_0(self._id, data_type, start, count, stride)
@@ -1995,7 +1995,7 @@ class SDS(object):
                                  % (dim_sizes[n], n))
         # ??? Check support for UINT16
         if not data_type in SDC.equivNumericTypes:
-            raise HDF4Error('set cannot currrently deal '\
+            raise HDF4Error('set cannot currently deal '\
                              'with the SDS data type')
 
         _C._SDwritedata_0(self._id, data_type, start, count, data, stride)
@@ -2758,7 +2758,7 @@ class SDS(object):
         return SDAttr(self, name_or_index)
 
     def attributes(self, full=0):
-        """Return a dictionnary describing every attribute defined
+        """Return a dictionary describing every attribute defined
         on the dataset.
 
         Args::
@@ -2768,8 +2768,8 @@ class SDS(object):
 
         Returns::
 
-          Empty dictionnary if no attribute defined.
-          Otherwise, dictionnary where each key is the name of a
+          Empty dictionary if no attribute defined.
+          Otherwise, dictionary where each key is the name of a
           dataset attribute. If parameter 'full' is false,
           key value is the attribute value. If 'full' is true,
           key value is a tuple with the following elements:
@@ -2798,7 +2798,7 @@ class SDS(object):
         return res
 
     def dimensions(self, full=0):
-        """Return a dictionnary describing every dataset dimension.
+        """Return a dictionary describing every dataset dimension.
 
         Args::
 
@@ -2807,7 +2807,7 @@ class SDS(object):
 
         Returns::
 
-          Dictionnary where each key is a dimension name. If no name
+          Dictionary where each key is a dimension name. If no name
           has been given to the dimension, the key is set to
           'fakeDimx' where 'x' is the dimension index number.
           If parameter 'full' is false, key value is the dimension
@@ -2918,7 +2918,7 @@ class SDim(object):
         return dim_name, dim_size, data_type, n_attrs
 
     def length(self):
-        """Return the dimension length. This method is usefull
+        """Return the dimension length. This method is useful
         to quickly retrieve the current length of an unlimited
         dimension.
 
@@ -2943,7 +2943,7 @@ class SDim(object):
 
           dim_name    dimension name; setting 2 dimensions to the same
                       name make the dimensions "shared"; in order to be
-                      shared, the dimesions must be deined similarly.
+                      shared, the dimensions must be defined similarly.
 
         Returns::
 
@@ -3163,7 +3163,7 @@ class SDim(object):
         return SDAttr(self, name_or_index)
 
     def attributes(self, full=0):
-        """Return a dictionnary describing every attribute defined
+        """Return a dictionary describing every attribute defined
         on the dimension.
 
         Args::
@@ -3173,8 +3173,8 @@ class SDim(object):
 
         Returns::
 
-          Empty dictionnary if no attribute defined.
-          Otherwise, dictionnary where each key is the name of a
+          Empty dictionary if no attribute defined.
+          Otherwise, dictionary where each key is the name of a
           dimension attribute. If parameter 'full' is false,
           key value is the attribute value. If 'full' is true,
           key value is a tuple with the following elements:

@@ -7,7 +7,7 @@
 from . import hdfext as _C
 
 class HC(object):
-    """The HC class holds contants defining opening modes and data types.
+    """The HC class holds constants defining opening modes and data types.
 
 File opening modes (flags ORed together)
 

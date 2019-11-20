@@ -3875,9 +3875,9 @@ void _HEprint(void)   {
 #define DFNT_UINT64     27
 
 #define DFNT_UCHAR8      3  /* 3 chosen for backward compatibility */
-#define DFNT_UCHAR       3  /* uchar=uchar8 for backward combatibility */
+#define DFNT_UCHAR       3  /* uchar=uchar8 for backward compatibility */
 #define DFNT_CHAR8       4  /* 4 chosen for backward compatibility */
-#define DFNT_CHAR        4  /* uchar=uchar8 for backward combatibility */
+#define DFNT_CHAR        4  /* uchar=uchar8 for backward compatibility */
 
 static int HDFtoNumericType(int hdf)    {
 
