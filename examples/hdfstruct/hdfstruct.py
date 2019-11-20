@@ -31,9 +31,9 @@ hdfFile = sys.argv[1]    # Get first command line argument
 try:  # Catch pyhdf.SD errors
     # Open HDF file named on the command line
     f = SD(hdfFile)
-    # Get global attribute dictionnary
+    # Get global attribute dictionary
     attr = f.attributes(full=1)
-    # Get dataset dictionnary
+    # Get dataset dictionary
     dsets = f.datasets()
 
     # File name, number of attributes and number of variables.
@@ -97,7 +97,7 @@ try:  # Catch pyhdf.SD errors
         for name in dsNames:
             # Access the dataset
             dsObj = f.select(name)
-            # Get dataset attribute dictionnary
+            # Get dataset attribute dictionary
             dsAttr = dsObj.attributes(full=1)
             if len(dsAttr) > 0:
                 printf("%s attributes" % name); eol(2)
@@ -114,7 +114,7 @@ try:  # Catch pyhdf.SD errors
                     printf("  %-20s %3d %-7s %3d %s" %
                            (nm, t[1], typeTab[t[2]], t[3], t[0])); eol()
                 eol()
-            # Get dataset dimension dictionnary
+            # Get dataset dimension dictionary
             dsDim = dsObj.dimensions(full=1)
             if len(dsDim) > 0:
                 printf ("%s dimensions" % name); eol(2)

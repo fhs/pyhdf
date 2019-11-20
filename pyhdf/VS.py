@@ -89,10 +89,10 @@ VS key features are as follows.
   - VSlone
 
 - It is quite straightforward to go from a C version to a python version
-  of a program accessing the VS API, and to learn VS usage by refering to
+  of a program accessing the VS API, and to learn VS usage by referring to
   the C API documentation.
 
-- A few high-level python methods have been developped to ease
+- A few high-level python methods have been developed to ease
   programmers task. Of greatest interest are the following:
 
   - Access to attributes through the familiar "dot notation".
@@ -111,7 +111,7 @@ To access the VS module a python program can say one of:
 
 This document assumes the last import style is used.
 
-VS is not self-contained, and needs functionnality provided by another
+VS is not self-contained, and needs functionality provided by another
 pyhdf module, namely the HDF module. This module must thus be imported
 also:
 
@@ -170,7 +170,7 @@ the naming conventions and calling sequences documented inside the
 to the C API, the manual can be easily used as a documentary source
 for pyhdf, once the class to which a function belongs has been
 identified, and of course once requirements imposed by the Python
-langage have been taken into account. Consequently, this documentation
+language have been taken into account. Consequently, this documentation
 will not attempt to provide an exhaustive coverage of the HDF VS
 API. For this, the user is referred to the above manual.
 The documentation of each pyhdf method will indicate the name
@@ -464,7 +464,7 @@ to HDF attributes. pyhdf uses the following rule: an attribute whose name
 starts with an underscore ('_') is either a "predefined" attribute
 (see below) or a standard python attribute. Otherwise, the attribute
 is handled as an HDF attribute. Also, HDF attributes are not stored inside
-the object dictionnary: the python dir() function will not list them.
+the object dictionary: the python dir() function will not list them.
 
 Attribute values can be updated, but it is illegal to try to change the
 value type, or the attribute order (number of values). This is important
@@ -643,7 +643,7 @@ vdata attribute. We want to be able update this attribute (see
 following examples). However, the VS API  prohibits changing an attribute
 type when updating its value. Since the length (order) of an attribute
 is part of its type, we make sure of setting the attribute to a length
-long enough to accomodate the longest possible string we migh want to
+long enough to accommodate the longest possible string we migh want to
 assign to the attribute.
 
 Appending records to a vdata
@@ -1160,12 +1160,12 @@ class VS(object):
 
 
 class VD(object):
-    """The VD class encapsulates the functionnality of a vdata.
+    """The VD class encapsulates the functionality of a vdata.
     To instantiate a VD class, call the attach() or the create()
     method of a VS class instance."""
 
     def __init__(self, vsinst, id):
-        # This construtor is not intended to be called directly
+        # This constructor is not intended to be called directly
         # by the user program. The attach() method of an
         # VS class instance should be called instead.
 
@@ -1338,7 +1338,7 @@ class VD(object):
         # like a Python sequence.
         #
         # When indexing the vdata, 'data' must specify exactly
-        # one record, which must be specifed as a sequence. If the index is
+        # one record, which must be specified as a sequence. If the index is
         # equal to the current number of records, the record
         # is appended to the vdata.
         #
@@ -2021,7 +2021,7 @@ class VD(object):
 
         Returns::
 
-          dictionnary describing each vdata attribute; for each attribute
+          dictionary describing each vdata attribute; for each attribute
           a (name,data) pair is added to the dictionary, where 'data' is
           a tuple holding:
           - attribute data type (one of HC.xxx constants)
@@ -2265,7 +2265,7 @@ class VDField(object):
 
         Returns::
 
-          dictionnary describing each vdata attribute; for each attribute
+          dictionary describing each vdata attribute; for each attribute
           a (name,data) pair is added to the dictionary, where 'data' is
           a tuple holding:
 

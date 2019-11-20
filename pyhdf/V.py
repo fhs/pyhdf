@@ -74,7 +74,7 @@ To access the V module a python program can say one of:
 
 This document assumes the last import style is used.
 
-V is not self-contained, and needs functionnality provided by another
+V is not self-contained, and needs functionality provided by another
 pyhdf module, namely the HDF module. This module must thus be imported
 also:
 
@@ -214,7 +214,7 @@ In more detail::
             getid()       return the reference number of the vgroup
                           following the one with the given reference number
 
-  VG    The VG class encapsulates the functionnality of a vgroup.
+  VG    The VG class encapsulates the functionality of a vgroup.
 
         To instantiate a VG class, call the attach() or create() methods
         of a V class instance.
@@ -267,7 +267,7 @@ In more detail::
          Remember that vgroup attributes can also be set and queried by
          applying the standard python "dot notation" on a VG instance.
 
-           get attibute value(s)
+           get attribute value(s)
 
              get()         obtain the attribute value(s)
 
@@ -356,7 +356,7 @@ to HDF attributes. pyhdf uses the following rule: an attribute whose name
 starts with an underscore ('_') is either a "predefined" HDF attribute
 (see below) or a standard python attribute. Otherwise, the attribute
 is handled as an HDF attribute. Also, HDF attributes are not stored inside
-the object dictionnary: the python dir() function will not list them.
+the object dictionary: the python dir() function will not list them.
 
 Attribute values can be updated, but it is illegal to try to change the
 value type, or the attribute order (number of values). This is important
@@ -873,12 +873,12 @@ class V(object):
 
 
 class VG(object):
-    """The VG class encapsulates the functionnality of a vgroup.
+    """The VG class encapsulates the functionality of a vgroup.
     To instantiate a VG class, call the attach() or create() methods
     of a V class instance."""
 
     def __init__(self, vinst, id):
-        # This construtor is not intended to be called directly
+        # This constructor is not intended to be called directly
         # by the user program. The attach() method of an
         # V class instance should be called instead.
 
@@ -922,7 +922,7 @@ class VG(object):
                                                          """
 
         # NOTE: python will call this method only if the attribute
-        #       is not found in the object dictionnary.
+        #       is not found in the object dictionary.
 
         # Check for a user defined attribute first.
         att = self.attr(name)
@@ -1224,7 +1224,7 @@ class VG(object):
 
         Returns::
 
-          dictionnary describing each vgroup attribute; for each attribute,
+          dictionary describing each vgroup attribute; for each attribute,
           a (name,data) pair is added to the dictionary, where 'data' is
           a tuple holding:
 

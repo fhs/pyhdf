@@ -56,7 +56,7 @@ HDF_DATATYPE   = SDC.INT32
 
 def doCompress(compType, value=0, v2=0):
     """Create and validate an HDF file using a compression scheme
-    sepcified by the parameters"""
+    specified by the parameters"""
 
     # Build a significant file name
     if compType == SDC.COMP_NONE:

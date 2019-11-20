@@ -173,7 +173,7 @@ class HDF(object):
                    file be opened in read-write mode, or created
                    if it does not exist.
 
-          nblocks  number of data descriptor blocks in a block wit which
+          nblocks  number of data descriptor blocks in a block with which
                    to create the file; the parameter is ignored if the file
                    is not created; 0 asks to use the default
 
