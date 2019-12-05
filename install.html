@@ -1,12 +1,10 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Installation &#8212; pyhdf 0.10.1 documentation</title>
+    <meta charset="utf-8" />
+    <title>Installation &#8212; pyhdf 0.10.2 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
@@ -36,7 +34,7 @@
         <li class="right" >
           <a href="index.html" title="Welcome to pyhdf’s documentation!"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">pyhdf 0.10.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">pyhdf 0.10.2 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -64,23 +62,23 @@ can compile pyhdf from source.</p>
 <p>The source code of the latest release of pyhdf can be obtained from
 either of these two location:</p>
 <ul class="simple">
-<li>PyPi / the cheeseshop: <a class="reference external" href="https://pypi.python.org/pypi/pyhdf">https://pypi.python.org/pypi/pyhdf</a></li>
-<li>Github: <a class="reference external" href="https://github.com/fhs/pyhdf/releases">https://github.com/fhs/pyhdf/releases</a></li>
+<li><p>PyPi / the cheeseshop: <a class="reference external" href="https://pypi.python.org/pypi/pyhdf">https://pypi.python.org/pypi/pyhdf</a></p></li>
+<li><p>Github: <a class="reference external" href="https://github.com/fhs/pyhdf/releases">https://github.com/fhs/pyhdf/releases</a></p></li>
 </ul>
 </div>
 <div class="section" id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
 <p>The following packages are required to build and install pyhdf:</p>
 <ul class="simple">
-<li><a class="reference external" href="http://www.python.org">Python</a>:
-Python 2.6 or newer for Python 2, or Python 3.2 or newer for Python 3.</li>
-<li><a class="reference external" href="http://www.numpy.org/">NumPy</a></li>
-<li><a class="reference external" href="https://portal.hdfgroup.org/display/support/Download+HDF4">HDF4 libraries</a> (to use
-their HDF4 binaries, you will also need szip, available from the same page)</li>
-<li>Compiler suite e.g. <a class="reference external" href="http://gcc.gnu.org">GCC</a>.
-On Windows, you need to use a <a class="reference external" href="https://wiki.python.org/moin/WindowsCompilers">compatible Visual C++ compiler</a>.</li>
-<li><a class="reference external" href="http://www.zlib.net/">zlib</a></li>
-<li><a class="reference external" href="http://www.ijg.org/">libjpeg</a></li>
+<li><p><a class="reference external" href="http://www.python.org">Python</a>:
+Python 2.6 or newer for Python 2, or Python 3.2 or newer for Python 3.</p></li>
+<li><p><a class="reference external" href="http://www.numpy.org/">NumPy</a></p></li>
+<li><p><a class="reference external" href="https://portal.hdfgroup.org/display/support/Download+HDF4">HDF4 libraries</a> (to use
+their HDF4 binaries, you will also need szip, available from the same page)</p></li>
+<li><p>Compiler suite e.g. <a class="reference external" href="http://gcc.gnu.org">GCC</a>.
+On Windows, you need to use a <a class="reference external" href="https://wiki.python.org/moin/WindowsCompilers">compatible Visual C++ compiler</a>.</p></li>
+<li><p><a class="reference external" href="http://www.zlib.net/">zlib</a></p></li>
+<li><p><a class="reference external" href="http://www.ijg.org/">libjpeg</a></p></li>
 </ul>
 <p>On Debian and Debian-based Linux distributions (e.g. Ubuntu), you can install
 all the requirements for Python 3 using this command:</p>
@@ -91,9 +89,8 @@ all the requirements for Python 3 using this command:</p>
 <div class="section" id="installing-from-the-source-archive">
 <h2>Installing from the source archive<a class="headerlink" href="#installing-from-the-source-archive" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
-<li><p class="first">Go to the pyhdf source directory.</p>
-</li>
-<li><p class="first">If your HDF4 libraries or include files reside in directories
+<li><p>Go to the pyhdf source directory.</p></li>
+<li><p>If your HDF4 libraries or include files reside in directories
 that are not searched by default on your system, the installation script
 will complain about missing files.</p>
 <p>Add to the search path by exporting <code class="docutils literal notranslate"><span class="pre">INCLUDE_DIRS</span></code> and
@@ -127,7 +124,7 @@ Warning messages about implicit declarations of some functions
 may be produced.  Those are due to SWIG, and may be safely
 ignored.</p>
 </li>
-<li><p class="first">Install system-wide or locally:</p>
+<li><p>Install system-wide or locally:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span># sudo python setup.py install
 $ python setup.py install --prefix=/usr/local (or prefix of choice)
 </pre></div>
@@ -234,7 +231,7 @@ directory.</p>
                         title="previous chapter">Welcome to pyhdf’s documentation!</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="modules/HDF.html"
-                        title="next chapter">Basic API (<code class="docutils literal notranslate"><span class="pre">pyhdf.HDF</span></code>)</a></p>
+                        title="next chapter">Basic API (<code class="xref py py-mod docutils literal notranslate"><span class="pre">pyhdf.HDF</span></code>)</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -243,13 +240,11 @@ directory.</p>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -273,12 +268,12 @@ directory.</p>
         <li class="right" >
           <a href="index.html" title="Welcome to pyhdf’s documentation!"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">pyhdf 0.10.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">pyhdf 0.10.2 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, pyhdf authors.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
     </div>
   </body>
 </html>

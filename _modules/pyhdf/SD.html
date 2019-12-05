@@ -1,12 +1,10 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>pyhdf.SD &#8212; pyhdf 0.10.1 documentation</title>
+    <meta charset="utf-8" />
+    <title>pyhdf.SD &#8212; pyhdf 0.10.2 documentation</title>
     <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     
@@ -28,7 +26,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">pyhdf 0.10.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">pyhdf 0.10.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -113,10 +111,10 @@
 <span class="sd">  - SDisdimval_bwcomp(), SDsetdimval_comp()</span>
 
 <span class="sd">- It is quite straightforward to go from a C version to a python version</span>
-<span class="sd">  of a program accessing the SD API, and to learn SD usage by refering to</span>
+<span class="sd">  of a program accessing the SD API, and to learn SD usage by referring to</span>
 <span class="sd">  the C API documentation.</span>
 
-<span class="sd">- A few high-level python methods have been developped to ease</span>
+<span class="sd">- A few high-level python methods have been developed to ease</span>
 <span class="sd">  programmers task. Of greatest interest are those allowing access</span>
 <span class="sd">  to SD datasets through familiar python idioms.</span>
 
@@ -129,14 +127,14 @@
 <span class="sd">    See &quot;High level attribute access&quot; and &quot;High level variable access&quot;</span>
 <span class="sd">    sections for details.</span>
 
-<span class="sd">  - SD offers methods to retrieve a dictionnary of the attributes,</span>
+<span class="sd">  - SD offers methods to retrieve a dictionary of the attributes,</span>
 <span class="sd">    dimensions and variables defined on a dataset, and of the attributes</span>
 <span class="sd">    set on a variable and a dimension. Querying a dataset is thus geatly</span>
 <span class="sd">    simplified.</span>
 
 <span class="sd">- SD datasets are read/written through &quot;numpy&quot;, a sophisticated</span>
 <span class="sd">  python package for efficiently handling multi-dimensional arrays of</span>
-<span class="sd">  numbers. numpy can nicely extend the SD functionnality, eg.</span>
+<span class="sd">  numbers. numpy can nicely extend the SD functionality, eg.</span>
 <span class="sd">  adding/subtracting arrays with the &#39;+/-&#39; operators.</span>
 
 <span class="sd">Accessing the SD module</span>
@@ -221,7 +219,7 @@
 <span class="sd">to the C API, the manual can be easily used as a documentary source</span>
 <span class="sd">for pyhdf, once the class to which a function belongs has been</span>
 <span class="sd">identified, and of course once requirements imposed by the Python</span>
-<span class="sd">langage have been taken into account. Consequently, this documentation</span>
+<span class="sd">language have been taken into account. Consequently, this documentation</span>
 <span class="sd">will not attempt to provide an exhaustive coverage of the HDF SD</span>
 <span class="sd">API. For this, the user is referred to the above manual.</span>
 <span class="sd">The documentation of each pyhdf method will indicate the name</span>
@@ -514,9 +512,9 @@
 <span class="sd">                           HDF file</span>
 
 <span class="sd">           inquiry</span>
-<span class="sd">             attributes()  return a dictionnary describing every global</span>
+<span class="sd">             attributes()  return a dictionary describing every global</span>
 <span class="sd">                           attribute attached to the HDF file</span>
-<span class="sd">             datasets()    return a dictionnary describing every dataset</span>
+<span class="sd">             datasets()    return a dictionary describing every dataset</span>
 <span class="sd">                           stored inside the file</span>
 <span class="sd">             info()        get the number of datasets stored in the file</span>
 <span class="sd">                           and the number of attributes attached to it</span>
@@ -555,7 +553,7 @@
 <span class="sd">                           values</span>
 
 
-<span class="sd">  SDC    The SDC class holds contants defining file opening modes and</span>
+<span class="sd">  SDC    The SDC class holds constants defining file opening modes and</span>
 <span class="sd">         data types. Constants are named after their C API counterparts.</span>
 
 <span class="sd">           file opening modes:</span>
@@ -616,10 +614,10 @@
 <span class="sd">             endaccess()   terminate access to the dataset</span>
 
 <span class="sd">           inquiry</span>
-<span class="sd">             attributes()  return a dictionnary describing every</span>
+<span class="sd">             attributes()  return a dictionary describing every</span>
 <span class="sd">                           attribute defined on the dataset</span>
 <span class="sd">             checkempty()  determine whether the dataset is empty</span>
-<span class="sd">             dimensions()  return a dictionnary describing all the</span>
+<span class="sd">             dimensions()  return a dictionary describing all the</span>
 <span class="sd">                           dataset dimensions</span>
 <span class="sd">             info()        get the dataset name, rank, dimension lengths,</span>
 <span class="sd">                           data type and number of attributes</span>
@@ -674,7 +672,7 @@
 <span class="sd">                            get and set an attribute</span>
 
 <span class="sd">           inquiry</span>
-<span class="sd">             attributes()   return a dictionnary describing every</span>
+<span class="sd">             attributes()   return a dictionary describing every</span>
 <span class="sd">                            attribute defined on the dimension</span>
 <span class="sd">             info()         get the dimension name, length, scale data type</span>
 <span class="sd">                            and number of attributes</span>
@@ -719,7 +717,7 @@
 <span class="sd">Writing</span>
 <span class="sd">^^^^^^^</span>
 <span class="sd">The following code can be used as a model to create an SD dataset.</span>
-<span class="sd">It shows how to use the most important functionnalities</span>
+<span class="sd">It shows how to use the most important functionalities</span>
 <span class="sd">of the SD interface needed to initialize a dataset.</span>
 <span class="sd">A real program should of course add error handling::</span>
 
@@ -735,7 +733,7 @@
 <span class="sd">    hdfFile.priority = 2</span>
 <span class="sd">    # Create a dataset named &#39;d1&#39; to hold a 3x3 float array.</span>
 <span class="sd">    d1 = hdfFile.create(&#39;d1&#39;, SDC.FLOAT32, (3,3))</span>
-<span class="sd">    # Set some attributs on &#39;d1&#39;</span>
+<span class="sd">    # Set some attributes on &#39;d1&#39;</span>
 <span class="sd">    d1.description = &#39;Sample 3x3 float array&#39;</span>
 <span class="sd">    d1.units = &#39;celsius&#39;</span>
 <span class="sd">    # Name &#39;d1&#39; dimensions and assign them attributes.</span>
@@ -809,8 +807,8 @@
 <span class="sd">into an HDF dataset the contents of any one of those text files. The</span>
 <span class="sd">procedure computes the matrix min and max values, storing them as</span>
 <span class="sd">dataset attributes. It also assigns to the variable the group of</span>
-<span class="sd">attributes passed as a dictionnary by the calling program. Note how simple</span>
-<span class="sd">such an assignment becomes with pyhdf: the dictionnary can contain any</span>
+<span class="sd">attributes passed as a dictionary by the calling program. Note how simple</span>
+<span class="sd">such an assignment becomes with pyhdf: the dictionary can contain any</span>
 <span class="sd">number of attributes, of different types, single or multi-valued. Doing</span>
 <span class="sd">the same in a conventional language would be a much more challenging task.</span>
 
@@ -887,10 +885,10 @@
 
 <span class="sd">Example 2</span>
 <span class="sd">^^^^^^^^^</span>
-<span class="sd">This example shows a usefull python program that will display the</span>
+<span class="sd">This example shows a useful python program that will display the</span>
 <span class="sd">structure of the SD component of any HDF file whose name is given on</span>
 <span class="sd">the command line. After the HDF file is opened, high level inquiry methods</span>
-<span class="sd">are called to obtain dictionnaries descrybing attributes, dimensions and</span>
+<span class="sd">are called to obtain dictionaries describing attributes, dimensions and</span>
 <span class="sd">datasets. The rest of the program mostly consists in nicely formatting</span>
 <span class="sd">the contents of those dictionaries::</span>
 
@@ -898,7 +896,7 @@
 <span class="sd">    from pyhdf.SD import *</span>
 <span class="sd">    from numpy import *</span>
 
-<span class="sd">    # Dictionnary used to convert from a numeric data type to its symbolic</span>
+<span class="sd">    # Dictionary used to convert from a numeric data type to its symbolic</span>
 <span class="sd">    # representation</span>
 <span class="sd">    typeTab = {</span>
 <span class="sd">               SDC.CHAR:    &#39;CHAR&#39;,</span>
@@ -924,9 +922,9 @@
 <span class="sd">    try:  # Catch pyhdf.SD errors</span>
 <span class="sd">      # Open HDF file named on the command line</span>
 <span class="sd">      f = SD(hdfFile)</span>
-<span class="sd">      # Get global attribute dictionnary</span>
+<span class="sd">      # Get global attribute dictionary</span>
 <span class="sd">      attr = f.attributes(full=1)</span>
-<span class="sd">      # Get dataset dictionnary</span>
+<span class="sd">      # Get dataset dictionary</span>
 <span class="sd">      dsets = f.datasets()</span>
 
 <span class="sd">      # File name, number of attributes and number of variables.</span>
@@ -993,7 +991,7 @@
 <span class="sd">          for name in dsNames:</span>
 <span class="sd">              # Access the dataset</span>
 <span class="sd">              dsObj = f.select(name)</span>
-<span class="sd">              # Get dataset attribute dictionnary</span>
+<span class="sd">              # Get dataset attribute dictionary</span>
 <span class="sd">              dsAttr = dsObj.attributes(full=1)</span>
 <span class="sd">              if len(dsAttr) &gt; 0:</span>
 <span class="sd">                  printf(&quot;%s attributes&quot; % name); eol(2)</span>
@@ -1011,7 +1009,7 @@
 <span class="sd">                      printf(&quot;  %-20s %3d %-7s %3d %s&quot; %</span>
 <span class="sd">                             (nm, t[1], typeTab[t[2]], t[3], t[0])); eol()</span>
 <span class="sd">                  eol()</span>
-<span class="sd">              # Get dataset dimension dictionnary</span>
+<span class="sd">              # Get dataset dimension dictionary</span>
 <span class="sd">              dsDim = dsObj.dimensions(full=1)</span>
 <span class="sd">              if len(dsDim) &gt; 0:</span>
 <span class="sd">                  printf (&quot;%s dimensions&quot; % name); eol(2)</span>
@@ -1041,9 +1039,9 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">types</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">hdfext</span> <span class="k">as</span> <span class="n">_C</span>
-<span class="kn">from</span> <span class="nn">.six.moves</span> <span class="k">import</span> <span class="n">xrange</span>
-<span class="kn">from</span> <span class="nn">.error</span> <span class="k">import</span> <span class="n">_checkErr</span><span class="p">,</span> <span class="n">HDF4Error</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">hdfext</span> <span class="k">as</span> <span class="n">_C</span>
+<span class="kn">from</span> <span class="nn">.six.moves</span> <span class="kn">import</span> <span class="n">xrange</span>
+<span class="kn">from</span> <span class="nn">.error</span> <span class="kn">import</span> <span class="n">_checkErr</span><span class="p">,</span> <span class="n">HDF4Error</span>
 
 <span class="c1"># List of names we want to be imported by an &quot;from pyhdf.SD import *&quot;</span>
 <span class="c1"># statement</span>
@@ -1057,7 +1055,7 @@
     <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s2">&quot;numpy package required but not installed&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SDC"><a class="viewcode-back" href="../../modules/SD.html#pyhdf.SD.SDC">[docs]</a><span class="k">class</span> <span class="nc">SDC</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The SDC class holds contants defining opening modes and data types.</span>
+    <span class="sd">&quot;&quot;&quot;The SDC class holds constants defining opening modes and data types.</span>
 
 <span class="sd">           file opening modes:</span>
 <span class="sd">             ==========   ===    ===============================</span>
@@ -1158,7 +1156,7 @@
 
 <div class="viewcode-block" id="SDAttr"><a class="viewcode-back" href="../../modules/SD.html#pyhdf.SD.SDAttr">[docs]</a><span class="k">class</span> <span class="nc">SDAttr</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">index_or_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">index_or_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Init an SDAttr instance. Should not be called directly by</span>
 <span class="sd">        the user program. An SDAttr instance must be created through</span>
 <span class="sd">        the attr() methods of the SD, SDS or SDim classes.</span>
@@ -1385,7 +1383,7 @@
 <span class="sd">    of this instance. &quot;&quot;&quot;</span>
 
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">SDC</span><span class="o">.</span><span class="n">READ</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">SDC</span><span class="o">.</span><span class="n">READ</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;SD constructor. Initialize an SD interface on an HDF file,</span>
 <span class="sd">        creating the file if necessary.</span>
 
@@ -1471,7 +1469,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="nb">id</span>
 
 
-    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete the instance, first calling the end() method</span>
 <span class="sd">        if not already done.          &quot;&quot;&quot;</span>
 
@@ -1481,12 +1479,12 @@
         <span class="k">except</span><span class="p">:</span>
             <span class="k">pass</span>
 
-    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="c1"># Get value(s) of SD attribute &#39;name&#39;.</span>
 
         <span class="k">return</span> <span class="n">_getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="c1"># Set value(s) of SD attribute &#39;name&#39;.</span>
 
         <span class="c1"># A name starting with an underscore will be treated as</span>
@@ -1690,7 +1688,7 @@
 
 
 <div class="viewcode-block" id="SD.attributes"><a class="viewcode-back" href="../../modules/SD.html#pyhdf.SD.SD.attributes">[docs]</a>    <span class="k">def</span> <span class="nf">attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a dictionnary describing every global</span>
+        <span class="sd">&quot;&quot;&quot;Return a dictionary describing every global</span>
 <span class="sd">        attribute attached to the SD interface.</span>
 
 <span class="sd">        Args::</span>
@@ -1700,8 +1698,8 @@
 
 <span class="sd">        Returns::</span>
 
-<span class="sd">          Empty dictionnary if no global attribute defined</span>
-<span class="sd">          Otherwise, dictionnary where each key is the name of a</span>
+<span class="sd">          Empty dictionary if no global attribute defined</span>
+<span class="sd">          Otherwise, dictionary where each key is the name of a</span>
 <span class="sd">          global attribute. If parameter &#39;full&#39; is false,</span>
 <span class="sd">          key value is the attribute value. If &#39;full&#39; is true,</span>
 <span class="sd">          key value is a tuple with the following elements:</span>
@@ -1730,7 +1728,7 @@
         <span class="k">return</span> <span class="n">res</span></div>
 
 <div class="viewcode-block" id="SD.datasets"><a class="viewcode-back" href="../../modules/SD.html#pyhdf.SD.SD.datasets">[docs]</a>    <span class="k">def</span> <span class="nf">datasets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a dictionnary describing all the file datasets.</span>
+        <span class="sd">&quot;&quot;&quot;Return a dictionary describing all the file datasets.</span>
 
 <span class="sd">        Args::</span>
 
@@ -1738,8 +1736,8 @@
 
 <span class="sd">        Returns::</span>
 
-<span class="sd">          Empty dictionnary if no dataset is defined.</span>
-<span class="sd">          Otherwise, dictionnary whose keys are the file dataset names,</span>
+<span class="sd">          Empty dictionary if no dataset is defined.</span>
+<span class="sd">          Otherwise, dictionary whose keys are the file dataset names,</span>
 <span class="sd">          and values are tuples describing the corresponding datasets.</span>
 <span class="sd">          Each tuple holds the following elements in order:</span>
 
@@ -1785,7 +1783,7 @@
 <span class="sd">    then call the methods of this instance. Attributes can also be</span>
 <span class="sd">    set using the &quot;dot notation&quot;. &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sd</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sd</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;This constructor should not be called by the user program.</span>
 <span class="sd">        Call the SD.create() and SD.select() methods instead.</span>
 <span class="sd">                                                  &quot;&quot;&quot;</span>
@@ -1796,12 +1794,12 @@
 
 
         <span class="c1"># Private attributes</span>
-        <span class="c1">#  _sd  SD intance</span>
+        <span class="c1">#  _sd  SD instance</span>
         <span class="c1">#  _id  SDS identifier</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sd</span> <span class="o">=</span> <span class="n">sd</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="nb">id</span>
 
-    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="c1"># Delete the instance, first calling the endaccess() method</span>
         <span class="c1"># if not already done.</span>
@@ -1812,21 +1810,21 @@
         <span class="k">except</span><span class="p">:</span>
             <span class="k">pass</span>
 
-    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="c1"># Get value(s) of SDS attribute &#39;name&#39;.</span>
 
         <span class="k">return</span> <span class="n">_getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="c1"># Set value(s) of SDS attribute &#39;name&#39;.</span>
 
         <span class="n">_setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;_sd&#39;</span><span class="p">,</span> <span class="s1">&#39;_id&#39;</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>    <span class="c1"># Needed for slices like &quot;-2:&quot; but why ?</span>
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>    <span class="c1"># Needed for slices like &quot;-2:&quot; but why ?</span>
 
         <span class="k">return</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elem</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elem</span><span class="p">):</span>
 
         <span class="c1"># This special method is used to index the SDS dataset</span>
         <span class="c1"># using the &quot;extended slice syntax&quot;. The extended slice syntax</span>
@@ -1839,7 +1837,7 @@
         <span class="c1"># Get elements.</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">stride</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elem</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elem</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
 
         <span class="c1"># This special method is used to assign to the SDS dataset</span>
         <span class="c1"># using &quot;extended slice syntax&quot;. The extended slice syntax</span>
@@ -1955,7 +1953,7 @@
                                  <span class="s1">&#39;the size (</span><span class="si">%d</span><span class="s1">) of dimension </span><span class="si">%d</span><span class="s1">&#39;</span> \
                                  <span class="o">%</span> <span class="p">(</span><span class="n">dim_sizes</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">n</span><span class="p">))</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">data_type</span> <span class="ow">in</span> <span class="n">SDC</span><span class="o">.</span><span class="n">equivNumericTypes</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s1">&#39;get cannot currrently deal with &#39;</span>\
+            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s1">&#39;get cannot currently deal with &#39;</span>\
                              <span class="s1">&#39;the SDS data type&#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">_C</span><span class="o">.</span><span class="n">_SDreaddata_0</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">data_type</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">stride</span><span class="p">)</span></div>
@@ -2036,7 +2034,7 @@
                                  <span class="o">%</span> <span class="p">(</span><span class="n">dim_sizes</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">n</span><span class="p">))</span>
         <span class="c1"># ??? Check support for UINT16</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">data_type</span> <span class="ow">in</span> <span class="n">SDC</span><span class="o">.</span><span class="n">equivNumericTypes</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s1">&#39;set cannot currrently deal &#39;</span>\
+            <span class="k">raise</span> <span class="n">HDF4Error</span><span class="p">(</span><span class="s1">&#39;set cannot currently deal &#39;</span>\
                              <span class="s1">&#39;with the SDS data type&#39;</span><span class="p">)</span>
 
         <span class="n">_C</span><span class="o">.</span><span class="n">_SDwritedata_0</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">data_type</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">stride</span><span class="p">)</span></div>
@@ -2799,7 +2797,7 @@
         <span class="k">return</span> <span class="n">SDAttr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name_or_index</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SDS.attributes"><a class="viewcode-back" href="../../modules/SD.html#pyhdf.SD.SDS.attributes">[docs]</a>    <span class="k">def</span> <span class="nf">attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a dictionnary describing every attribute defined</span>
+        <span class="sd">&quot;&quot;&quot;Return a dictionary describing every attribute defined</span>
 <span class="sd">        on the dataset.</span>
 
 <span class="sd">        Args::</span>
@@ -2809,8 +2807,8 @@
 
 <span class="sd">        Returns::</span>
 
-<span class="sd">          Empty dictionnary if no attribute defined.</span>
-<span class="sd">          Otherwise, dictionnary where each key is the name of a</span>
+<span class="sd">          Empty dictionary if no attribute defined.</span>
+<span class="sd">          Otherwise, dictionary where each key is the name of a</span>
 <span class="sd">          dataset attribute. If parameter &#39;full&#39; is false,</span>
 <span class="sd">          key value is the attribute value. If &#39;full&#39; is true,</span>
 <span class="sd">          key value is a tuple with the following elements:</span>
@@ -2839,7 +2837,7 @@
         <span class="k">return</span> <span class="n">res</span></div>
 
 <div class="viewcode-block" id="SDS.dimensions"><a class="viewcode-back" href="../../modules/SD.html#pyhdf.SD.SDS.dimensions">[docs]</a>    <span class="k">def</span> <span class="nf">dimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a dictionnary describing every dataset dimension.</span>
+        <span class="sd">&quot;&quot;&quot;Return a dictionary describing every dataset dimension.</span>
 
 <span class="sd">        Args::</span>
 
@@ -2848,7 +2846,7 @@
 
 <span class="sd">        Returns::</span>
 
-<span class="sd">          Dictionnary where each key is a dimension name. If no name</span>
+<span class="sd">          Dictionary where each key is a dimension name. If no name</span>
 <span class="sd">          has been given to the dimension, the key is set to</span>
 <span class="sd">          &#39;fakeDimx&#39; where &#39;x&#39; is the dimension index number.</span>
 <span class="sd">          If parameter &#39;full&#39; is false, key value is the dimension</span>
@@ -2899,7 +2897,7 @@
 <span class="sd">       methods of this instance.  Attributes can also be set using the</span>
 <span class="sd">       &quot;dot notation&quot;. &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sds</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sds</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Init an SDim instance. This method should not be called</span>
 <span class="sd">        directly by the user program. To create an SDim instance,</span>
 <span class="sd">        call the SDS.dim() method.</span>
@@ -2919,12 +2917,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="nb">id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">=</span> <span class="n">index</span>
 
-    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="c1"># Get value(s) of SDim attribute &#39;name&#39;.</span>
 
         <span class="k">return</span> <span class="n">_getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="c1"># Set value(s) of SDim attribute &#39;name&#39;.</span>
 
         <span class="n">_setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;_sds&#39;</span><span class="p">,</span> <span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;_index&#39;</span><span class="p">])</span>
@@ -2959,7 +2957,7 @@
         <span class="k">return</span> <span class="n">dim_name</span><span class="p">,</span> <span class="n">dim_size</span><span class="p">,</span> <span class="n">data_type</span><span class="p">,</span> <span class="n">n_attrs</span></div>
 
 <div class="viewcode-block" id="SDim.length"><a class="viewcode-back" href="../../modules/SD.html#pyhdf.SD.SDim.length">[docs]</a>    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the dimension length. This method is usefull</span>
+        <span class="sd">&quot;&quot;&quot;Return the dimension length. This method is useful</span>
 <span class="sd">        to quickly retrieve the current length of an unlimited</span>
 <span class="sd">        dimension.</span>
 
@@ -2984,7 +2982,7 @@
 
 <span class="sd">          dim_name    dimension name; setting 2 dimensions to the same</span>
 <span class="sd">                      name make the dimensions &quot;shared&quot;; in order to be</span>
-<span class="sd">                      shared, the dimesions must be deined similarly.</span>
+<span class="sd">                      shared, the dimensions must be defined similarly.</span>
 
 <span class="sd">        Returns::</span>
 
@@ -3204,7 +3202,7 @@
         <span class="k">return</span> <span class="n">SDAttr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name_or_index</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SDim.attributes"><a class="viewcode-back" href="../../modules/SD.html#pyhdf.SD.SDim.attributes">[docs]</a>    <span class="k">def</span> <span class="nf">attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a dictionnary describing every attribute defined</span>
+        <span class="sd">&quot;&quot;&quot;Return a dictionary describing every attribute defined</span>
 <span class="sd">        on the dimension.</span>
 
 <span class="sd">        Args::</span>
@@ -3214,8 +3212,8 @@
 
 <span class="sd">        Returns::</span>
 
-<span class="sd">          Empty dictionnary if no attribute defined.</span>
-<span class="sd">          Otherwise, dictionnary where each key is the name of a</span>
+<span class="sd">          Empty dictionary if no attribute defined.</span>
+<span class="sd">          Otherwise, dictionary where each key is the name of a</span>
 <span class="sd">          dimension attribute. If parameter &#39;full&#39; is false,</span>
 <span class="sd">          key value is the attribute value. If &#39;full&#39; is true,</span>
 <span class="sd">          key value is a tuple with the following elements:</span>
@@ -3344,13 +3342,11 @@
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -3368,13 +3364,13 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">pyhdf 0.10.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">pyhdf 0.10.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, pyhdf authors.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
     </div>
   </body>
 </html>

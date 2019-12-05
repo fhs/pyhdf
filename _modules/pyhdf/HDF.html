@@ -1,12 +1,10 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>pyhdf.HDF &#8212; pyhdf 0.10.1 documentation</title>
+    <meta charset="utf-8" />
+    <title>pyhdf.HDF &#8212; pyhdf 0.10.2 documentation</title>
     <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     
@@ -28,7 +26,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">pyhdf 0.10.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">pyhdf 0.10.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -111,9 +109,9 @@
 
 <span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">types</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">hdfext</span> <span class="k">as</span> <span class="n">_C</span>
-<span class="kn">from</span> <span class="nn">.six.moves</span> <span class="k">import</span> <span class="n">xrange</span>
-<span class="kn">from</span> <span class="nn">.HC</span> <span class="k">import</span> <span class="n">HC</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">hdfext</span> <span class="k">as</span> <span class="n">_C</span>
+<span class="kn">from</span> <span class="nn">.six.moves</span> <span class="kn">import</span> <span class="n">xrange</span>
+<span class="kn">from</span> <span class="nn">.HC</span> <span class="kn">import</span> <span class="n">HC</span>
 
 <span class="c1"># NOTE: The vstart() and vgstart() modules need to access the</span>
 <span class="c1">#       VS and V modules, resp. We could simply import those</span>
@@ -128,7 +126,7 @@
 
 <span class="kn">import</span> <span class="nn">pyhdf</span>
 
-<span class="kn">from</span> <span class="nn">.error</span> <span class="k">import</span> <span class="n">HDF4Error</span><span class="p">,</span> <span class="n">_checkErr</span>
+<span class="kn">from</span> <span class="nn">.error</span> <span class="kn">import</span> <span class="n">HDF4Error</span><span class="p">,</span> <span class="n">_checkErr</span>
 
 <span class="c1"># List of names we want to be imported by an &quot;from pyhdf.HDF import *&quot;</span>
 <span class="c1"># statement</span>
@@ -176,7 +174,7 @@
 <span class="sd">    instances of the major HDF APIs (except for SD).</span>
 <span class="sd">    To instantiate an HDF class, call the HDF() constructor. &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">HC</span><span class="o">.</span><span class="n">READ</span><span class="p">,</span> <span class="n">nblocks</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">HC</span><span class="o">.</span><span class="n">READ</span><span class="p">,</span> <span class="n">nblocks</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;HDF constructor: open an HDF file, creating the file if</span>
 <span class="sd">        necessary.</span>
 
@@ -214,7 +212,7 @@
 <span class="sd">                   file be opened in read-write mode, or created</span>
 <span class="sd">                   if it does not exist.</span>
 
-<span class="sd">          nblocks  number of data descriptor blocks in a block wit which</span>
+<span class="sd">          nblocks  number of data descriptor blocks in a block with which</span>
 <span class="sd">                   to create the file; the parameter is ignored if the file</span>
 <span class="sd">                   is not created; 0 asks to use the default</span>
 
@@ -258,7 +256,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="nb">id</span>
 
 
-    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete the instance, first calling the end() method</span>
 <span class="sd">        if not already done.          &quot;&quot;&quot;</span>
 
@@ -371,13 +369,11 @@
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -395,13 +391,13 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">pyhdf 0.10.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">pyhdf 0.10.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, pyhdf authors.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
     </div>
   </body>
 </html>

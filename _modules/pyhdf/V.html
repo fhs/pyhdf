@@ -1,12 +1,10 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>pyhdf.V &#8212; pyhdf 0.10.1 documentation</title>
+    <meta charset="utf-8" />
+    <title>pyhdf.V &#8212; pyhdf 0.10.2 documentation</title>
     <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     
@@ -28,7 +26,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">pyhdf 0.10.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">pyhdf 0.10.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -115,7 +113,7 @@
 
 <span class="sd">This document assumes the last import style is used.</span>
 
-<span class="sd">V is not self-contained, and needs functionnality provided by another</span>
+<span class="sd">V is not self-contained, and needs functionality provided by another</span>
 <span class="sd">pyhdf module, namely the HDF module. This module must thus be imported</span>
 <span class="sd">also:</span>
 
@@ -255,7 +253,7 @@
 <span class="sd">            getid()       return the reference number of the vgroup</span>
 <span class="sd">                          following the one with the given reference number</span>
 
-<span class="sd">  VG    The VG class encapsulates the functionnality of a vgroup.</span>
+<span class="sd">  VG    The VG class encapsulates the functionality of a vgroup.</span>
 
 <span class="sd">        To instantiate a VG class, call the attach() or create() methods</span>
 <span class="sd">        of a V class instance.</span>
@@ -308,7 +306,7 @@
 <span class="sd">         Remember that vgroup attributes can also be set and queried by</span>
 <span class="sd">         applying the standard python &quot;dot notation&quot; on a VG instance.</span>
 
-<span class="sd">           get attibute value(s)</span>
+<span class="sd">           get attribute value(s)</span>
 
 <span class="sd">             get()         obtain the attribute value(s)</span>
 
@@ -397,7 +395,7 @@
 <span class="sd">starts with an underscore (&#39;_&#39;) is either a &quot;predefined&quot; HDF attribute</span>
 <span class="sd">(see below) or a standard python attribute. Otherwise, the attribute</span>
 <span class="sd">is handled as an HDF attribute. Also, HDF attributes are not stored inside</span>
-<span class="sd">the object dictionnary: the python dir() function will not list them.</span>
+<span class="sd">the object dictionary: the python dir() function will not list them.</span>
 
 <span class="sd">Attribute values can be updated, but it is illegal to try to change the</span>
 <span class="sd">value type, or the attribute order (number of values). This is important</span>
@@ -691,12 +689,12 @@
 
 <span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">types</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">hdfext</span> <span class="k">as</span> <span class="n">_C</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">hdfext</span> <span class="k">as</span> <span class="n">_C</span>
 
-<span class="kn">from</span> <span class="nn">.six.moves</span> <span class="k">import</span> <span class="n">xrange</span>
-<span class="kn">from</span> <span class="nn">.HC</span> <span class="k">import</span> <span class="n">HC</span>
-<span class="kn">from</span> <span class="nn">.VS</span> <span class="k">import</span> <span class="n">VD</span>
-<span class="kn">from</span> <span class="nn">.error</span> <span class="k">import</span> <span class="n">HDF4Error</span><span class="p">,</span> <span class="n">_checkErr</span>
+<span class="kn">from</span> <span class="nn">.six.moves</span> <span class="kn">import</span> <span class="n">xrange</span>
+<span class="kn">from</span> <span class="nn">.HC</span> <span class="kn">import</span> <span class="n">HC</span>
+<span class="kn">from</span> <span class="nn">.VS</span> <span class="kn">import</span> <span class="n">VD</span>
+<span class="kn">from</span> <span class="nn">.error</span> <span class="kn">import</span> <span class="n">HDF4Error</span><span class="p">,</span> <span class="n">_checkErr</span>
 
 <span class="c1"># List of names we want to be imported by an &quot;from pyhdf.V import *&quot;</span>
 <span class="c1"># statement</span>
@@ -709,7 +707,7 @@
 <span class="sd">    To instantiate a V class, call the vgstart() method of an</span>
 <span class="sd">    HDF instance. &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hinst</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hinst</span><span class="p">):</span>
         <span class="c1"># Not to be called directly by the user.</span>
         <span class="c1"># A V object is instantiated using the vgstart()</span>
         <span class="c1"># method of an HDF instance.</span>
@@ -732,7 +730,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_hdf_inst</span> <span class="o">=</span> <span class="n">hinst</span>
 
 
-    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete the instance, first calling the end() method</span>
 <span class="sd">        if not already done.          &quot;&quot;&quot;</span>
 
@@ -914,12 +912,12 @@
 
 
 <div class="viewcode-block" id="VG"><a class="viewcode-back" href="../../modules/V.html#pyhdf.V.VG">[docs]</a><span class="k">class</span> <span class="nc">VG</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The VG class encapsulates the functionnality of a vgroup.</span>
+    <span class="sd">&quot;&quot;&quot;The VG class encapsulates the functionality of a vgroup.</span>
 <span class="sd">    To instantiate a VG class, call the attach() or create() methods</span>
 <span class="sd">    of a V class instance.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vinst</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
-        <span class="c1"># This construtor is not intended to be called directly</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vinst</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="c1"># This constructor is not intended to be called directly</span>
         <span class="c1"># by the user program. The attach() method of an</span>
         <span class="c1"># V class instance should be called instead.</span>
 
@@ -934,7 +932,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_v_inst</span> <span class="o">=</span> <span class="n">vinst</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="nb">id</span>
 
-    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete the instance, first calling the detach() method</span>
 <span class="sd">        if not already done.          &quot;&quot;&quot;</span>
 
@@ -944,7 +942,7 @@
         <span class="k">except</span><span class="p">:</span>
             <span class="k">pass</span>
 
-    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Some vgroup properties can be queried/set through the following</span>
 <span class="sd">        attributes. Their names all start with an &quot;_&quot; to avoid</span>
 <span class="sd">        clashes with user-defined attributes. Most are read-only.</span>
@@ -963,7 +961,7 @@
 <span class="sd">                                                         &quot;&quot;&quot;</span>
 
         <span class="c1"># NOTE: python will call this method only if the attribute</span>
-        <span class="c1">#       is not found in the object dictionnary.</span>
+        <span class="c1">#       is not found in the object dictionary.</span>
 
         <span class="c1"># Check for a user defined attribute first.</span>
         <span class="n">att</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -1009,7 +1007,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">AttributeError</span>
 
-    <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 
         <span class="c1"># A name starting with an underscore will be treated as</span>
         <span class="c1"># a standard python attribute, and as an HDF attribute</span>
@@ -1265,7 +1263,7 @@
 
 <span class="sd">        Returns::</span>
 
-<span class="sd">          dictionnary describing each vgroup attribute; for each attribute,</span>
+<span class="sd">          dictionary describing each vgroup attribute; for each attribute,</span>
 <span class="sd">          a (name,data) pair is added to the dictionary, where &#39;data&#39; is</span>
 <span class="sd">          a tuple holding:</span>
 
@@ -1315,7 +1313,7 @@
 <span class="sd">    attributes defined on a vgroup. To create an instance of this class,</span>
 <span class="sd">    call the attr() method of a VG class.    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name_or_index</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name_or_index</span><span class="p">):</span>
         <span class="c1"># This constructor should not be called directly by the user</span>
         <span class="c1"># program. The attr() method of a VG class must be called to</span>
         <span class="c1"># instantiate this class.</span>
@@ -1624,13 +1622,11 @@
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -1648,13 +1644,13 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">pyhdf 0.10.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">pyhdf 0.10.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, pyhdf authors.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
     </div>
   </body>
 </html>

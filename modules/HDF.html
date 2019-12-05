@@ -1,12 +1,10 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Basic API (pyhdf.HDF) &#8212; pyhdf 0.10.1 documentation</title>
+    <meta charset="utf-8" />
+    <title>Basic API (pyhdf.HDF) &#8212; pyhdf 0.10.2 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
@@ -36,7 +34,7 @@
         <li class="right" >
           <a href="../install.html" title="Installation"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pyhdf 0.10.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">pyhdf 0.10.2 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -64,31 +62,28 @@ closing methods, whereas VS uses methods of the HDF.HDF class for that.</p>
 <h2>Functions and classes summary<a class="headerlink" href="#functions-and-classes-summary" title="Permalink to this headline">¶</a></h2>
 <p>The HDF module provides the following classes.</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>HC</dt>
-<dd>The HC class holds constants defining opening modes and
-various data types.</dd>
-<dt>HDF</dt>
-<dd><p class="first">The HDF class provides methods to open and close an HDF file,
+<div><dl>
+<dt>HC</dt><dd><p>The HC class holds constants defining opening modes and
+various data types.</p>
+</dd>
+<dt>HDF</dt><dd><p>The HDF class provides methods to open and close an HDF file,
 and return instances of the major HDF APIs (except SD).</p>
 <p>To instantiate an HDF class, call the HDF() constructor.</p>
-<dl class="last docutils">
-<dt>methods:</dt>
-<dd><dl class="first last docutils">
-<dt>constructors:</dt>
-<dd><dl class="first last docutils">
-<dt>HDF()     open an HDF file, creating the file if necessary,</dt>
-<dd>and return an HDF instance</dd>
-<dt>vstart()  initialize the VS (Vdata) API over the HDF file and</dt>
-<dd>return a VS instance</dd>
-<dt>vgstart() initialize the V (Vgroup) interface over the HDF file</dt>
-<dd>and return a V instance.</dd>
+<dl class="simple">
+<dt>methods:</dt><dd><dl class="simple">
+<dt>constructors:</dt><dd><dl class="simple">
+<dt>HDF()     open an HDF file, creating the file if necessary,</dt><dd><p>and return an HDF instance</p>
+</dd>
+<dt>vstart()  initialize the VS (Vdata) API over the HDF file and</dt><dd><p>return a VS instance</p>
+</dd>
+<dt>vgstart() initialize the V (Vgroup) interface over the HDF file</dt><dd><p>and return a V instance.</p>
+</dd>
 </dl>
 </dd>
-<dt>closing file</dt>
-<dd>close()  close the HDF file</dd>
-<dt>inquiry</dt>
-<dd>getfileversion()  return info about the version of the  HDF file</dd>
+<dt>closing file</dt><dd><p>close()  close the HDF file</p>
+</dd>
+<dt>inquiry</dt><dd><p>getfileversion()  return info about the version of the  HDF file</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -97,46 +92,45 @@ and return instances of the major HDF APIs (except SD).</p>
 </div></blockquote>
 <p>The HDF module also offers the following functions.</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>inquiry</dt>
-<dd>getlibversion()    return info about the version of the library
-ishdf()            determine whether a file is an HDF file</dd>
+<div><dl class="simple">
+<dt>inquiry</dt><dd><p>getlibversion()    return info about the version of the library
+ishdf()            determine whether a file is an HDF file</p>
+</dd>
 </dl>
 </div></blockquote>
 <dl class="class">
 <dt id="pyhdf.HDF.HDF">
-<em class="property">class </em><code class="descclassname">pyhdf.HDF.</code><code class="descname">HDF</code><span class="sig-paren">(</span><em>path</em>, <em>mode=1</em>, <em>nblocks=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/HDF.html#HDF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.HDF.HDF" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pyhdf.HDF.</code><code class="sig-name descname">HDF</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">mode=1</em>, <em class="sig-param">nblocks=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/HDF.html#HDF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.HDF.HDF" title="Permalink to this definition">¶</a></dt>
 <dd><p>The HDF class encapsulates the basic HDF functions.
 Its main use is to open and close an HDF file, and return
 instances of the major HDF APIs (except for SD).
 To instantiate an HDF class, call the HDF() constructor.</p>
 <dl class="method">
 <dt id="pyhdf.HDF.HDF.close">
-<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/HDF.html#HDF.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.HDF.HDF.close" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/HDF.html#HDF.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.HDF.HDF.close" title="Permalink to this definition">¶</a></dt>
 <dd><p>Close the HDF file.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>no argument</dd>
-<dt>Returns:</dt>
-<dd>None</dd>
+<dl class="simple">
+<dt>Args:</dt><dd><p>no argument</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
 </dl>
 <p>C library equivalent : Hclose</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyhdf.HDF.HDF.getfileversion">
-<code class="descname">getfileversion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/HDF.html#HDF.getfileversion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.HDF.HDF.getfileversion" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getfileversion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/HDF.html#HDF.getfileversion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.HDF.HDF.getfileversion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get file version info.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>no argument</dd>
-<dt>Returns:</dt>
-<dd><dl class="first last docutils">
-<dt>4-element tuple with the following components:</dt>
-<dd>-major version number (int)
+<dl class="simple">
+<dt>Args:</dt><dd><p>no argument</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>4-element tuple with the following components:</dt><dd><p>-major version number (int)
 -minor version number (int)
 -complete library version number (int)
--additional information (string)</dd>
+-additional information (string)</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -145,26 +139,26 @@ To instantiate an HDF class, call the HDF() constructor.</p>
 
 <dl class="method">
 <dt id="pyhdf.HDF.HDF.vgstart">
-<code class="descname">vgstart</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/HDF.html#HDF.vgstart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.HDF.HDF.vgstart" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">vgstart</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/HDF.html#HDF.vgstart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.HDF.HDF.vgstart" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the V API over the file and return a V instance.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>no argument</dd>
-<dt>Returns:</dt>
-<dd>V instance</dd>
+<dl class="simple">
+<dt>Args:</dt><dd><p>no argument</p>
+</dd>
+<dt>Returns:</dt><dd><p>V instance</p>
+</dd>
 </dl>
 <p>C library equivalent : Vstart (in fact: Vinitialize)</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyhdf.HDF.HDF.vstart">
-<code class="descname">vstart</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/HDF.html#HDF.vstart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.HDF.HDF.vstart" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">vstart</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/HDF.html#HDF.vstart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.HDF.HDF.vstart" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the VS API over the file and return a VS instance.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>no argument</dd>
-<dt>Returns:</dt>
-<dd>VS instance</dd>
+<dl class="simple">
+<dt>Args:</dt><dd><p>no argument</p>
+</dd>
+<dt>Returns:</dt><dd><p>VS instance</p>
+</dd>
 </dl>
 <p>C library equivalent : Vstart (in fact: Vinitialize)</p>
 </dd></dl>
@@ -173,23 +167,24 @@ To instantiate an HDF class, call the HDF() constructor.</p>
 
 <dl class="exception">
 <dt id="pyhdf.HDF.HDF4Error">
-<em class="property">exception </em><code class="descclassname">pyhdf.HDF.</code><code class="descname">HDF4Error</code><a class="reference internal" href="../_modules/pyhdf/error.html#HDF4Error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.HDF.HDF4Error" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">pyhdf.HDF.</code><code class="sig-name descname">HDF4Error</code><a class="reference internal" href="../_modules/pyhdf/error.html#HDF4Error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.HDF.HDF4Error" title="Permalink to this definition">¶</a></dt>
 <dd><p>An error from inside the HDF4 library.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="pyhdf.HDF.HC">
-<em class="property">class </em><code class="descclassname">pyhdf.HDF.</code><code class="descname">HC</code><a class="reference internal" href="../_modules/pyhdf/HC.html#HC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.HDF.HC" title="Permalink to this definition">¶</a></dt>
-<dd><p>The HC class holds contants defining opening modes and data types.</p>
+<em class="property">class </em><code class="sig-prename descclassname">pyhdf.HDF.</code><code class="sig-name descname">HC</code><a class="reference internal" href="../_modules/pyhdf/HC.html#HC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.HDF.HC" title="Permalink to this definition">¶</a></dt>
+<dd><p>The HC class holds constants defining opening modes and data types.</p>
 <p>File opening modes (flags ORed together)</p>
 <blockquote>
-<div>CREATE       4    create file if it does not exist
+<div><p>CREATE       4    create file if it does not exist
 READ         1    read-only mode
 TRUNC      256    truncate if it exists
-WRITE        2    read-write mode</div></blockquote>
+WRITE        2    read-write mode</p>
+</div></blockquote>
 <p>Data types</p>
 <blockquote>
-<div>CHAR         4    8-bit char
+<div><p>CHAR         4    8-bit char
 CHAR8        4    8-bit char
 UCHAR        3    unsigned 8-bit integer (0 to 255)
 UCHAR8       3    unsigned 8-bit integer (0 to 255)
@@ -200,133 +195,134 @@ UINT16      23    unsigned 16-bit integer
 INT32       24    signed 32-bit integer
 UINT32      25    unsigned 32-bit integer
 FLOAT32      5    32-bit floating point
-FLOAT64      6    64-bit floating point</div></blockquote>
+FLOAT64      6    64-bit floating point</p>
+</div></blockquote>
 <p>Tags</p>
 <blockquote>
-<div>DFTAG_NDG  720    dataset
+<div><p>DFTAG_NDG  720    dataset
 DFTAG_VH  1962    vdata
-DFTAG_VG  1965    vgroup</div></blockquote>
+DFTAG_VG  1965    vgroup</p>
+</div></blockquote>
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.CHAR">
-<code class="descname">CHAR</code><em class="property"> = 4</em><a class="headerlink" href="#pyhdf.HDF.HC.CHAR" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">CHAR</code><em class="property"> = 4</em><a class="headerlink" href="#pyhdf.HDF.HC.CHAR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.CHAR8">
-<code class="descname">CHAR8</code><em class="property"> = 4</em><a class="headerlink" href="#pyhdf.HDF.HC.CHAR8" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">CHAR8</code><em class="property"> = 4</em><a class="headerlink" href="#pyhdf.HDF.HC.CHAR8" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.CREATE">
-<code class="descname">CREATE</code><em class="property"> = 4</em><a class="headerlink" href="#pyhdf.HDF.HC.CREATE" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">CREATE</code><em class="property"> = 4</em><a class="headerlink" href="#pyhdf.HDF.HC.CREATE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.DFTAG_NDG">
-<code class="descname">DFTAG_NDG</code><em class="property"> = 720</em><a class="headerlink" href="#pyhdf.HDF.HC.DFTAG_NDG" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">DFTAG_NDG</code><em class="property"> = 720</em><a class="headerlink" href="#pyhdf.HDF.HC.DFTAG_NDG" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.DFTAG_VG">
-<code class="descname">DFTAG_VG</code><em class="property"> = 1965</em><a class="headerlink" href="#pyhdf.HDF.HC.DFTAG_VG" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">DFTAG_VG</code><em class="property"> = 1965</em><a class="headerlink" href="#pyhdf.HDF.HC.DFTAG_VG" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.DFTAG_VH">
-<code class="descname">DFTAG_VH</code><em class="property"> = 1962</em><a class="headerlink" href="#pyhdf.HDF.HC.DFTAG_VH" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">DFTAG_VH</code><em class="property"> = 1962</em><a class="headerlink" href="#pyhdf.HDF.HC.DFTAG_VH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.FLOAT32">
-<code class="descname">FLOAT32</code><em class="property"> = 5</em><a class="headerlink" href="#pyhdf.HDF.HC.FLOAT32" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">FLOAT32</code><em class="property"> = 5</em><a class="headerlink" href="#pyhdf.HDF.HC.FLOAT32" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.FLOAT64">
-<code class="descname">FLOAT64</code><em class="property"> = 6</em><a class="headerlink" href="#pyhdf.HDF.HC.FLOAT64" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">FLOAT64</code><em class="property"> = 6</em><a class="headerlink" href="#pyhdf.HDF.HC.FLOAT64" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.FULL_INTERLACE">
-<code class="descname">FULL_INTERLACE</code><em class="property"> = 0</em><a class="headerlink" href="#pyhdf.HDF.HC.FULL_INTERLACE" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">FULL_INTERLACE</code><em class="property"> = 0</em><a class="headerlink" href="#pyhdf.HDF.HC.FULL_INTERLACE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.INT16">
-<code class="descname">INT16</code><em class="property"> = 22</em><a class="headerlink" href="#pyhdf.HDF.HC.INT16" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">INT16</code><em class="property"> = 22</em><a class="headerlink" href="#pyhdf.HDF.HC.INT16" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.INT32">
-<code class="descname">INT32</code><em class="property"> = 24</em><a class="headerlink" href="#pyhdf.HDF.HC.INT32" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">INT32</code><em class="property"> = 24</em><a class="headerlink" href="#pyhdf.HDF.HC.INT32" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.INT8">
-<code class="descname">INT8</code><em class="property"> = 20</em><a class="headerlink" href="#pyhdf.HDF.HC.INT8" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">INT8</code><em class="property"> = 20</em><a class="headerlink" href="#pyhdf.HDF.HC.INT8" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.NO_INTERLACE">
-<code class="descname">NO_INTERLACE</code><em class="property"> = 1</em><a class="headerlink" href="#pyhdf.HDF.HC.NO_INTERLACE" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">NO_INTERLACE</code><em class="property"> = 1</em><a class="headerlink" href="#pyhdf.HDF.HC.NO_INTERLACE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.READ">
-<code class="descname">READ</code><em class="property"> = 1</em><a class="headerlink" href="#pyhdf.HDF.HC.READ" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">READ</code><em class="property"> = 1</em><a class="headerlink" href="#pyhdf.HDF.HC.READ" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.TRUNC">
-<code class="descname">TRUNC</code><em class="property"> = 256</em><a class="headerlink" href="#pyhdf.HDF.HC.TRUNC" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">TRUNC</code><em class="property"> = 256</em><a class="headerlink" href="#pyhdf.HDF.HC.TRUNC" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.UCHAR">
-<code class="descname">UCHAR</code><em class="property"> = 3</em><a class="headerlink" href="#pyhdf.HDF.HC.UCHAR" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">UCHAR</code><em class="property"> = 3</em><a class="headerlink" href="#pyhdf.HDF.HC.UCHAR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.UCHAR8">
-<code class="descname">UCHAR8</code><em class="property"> = 3</em><a class="headerlink" href="#pyhdf.HDF.HC.UCHAR8" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">UCHAR8</code><em class="property"> = 3</em><a class="headerlink" href="#pyhdf.HDF.HC.UCHAR8" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.UINT16">
-<code class="descname">UINT16</code><em class="property"> = 23</em><a class="headerlink" href="#pyhdf.HDF.HC.UINT16" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">UINT16</code><em class="property"> = 23</em><a class="headerlink" href="#pyhdf.HDF.HC.UINT16" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.UINT32">
-<code class="descname">UINT32</code><em class="property"> = 25</em><a class="headerlink" href="#pyhdf.HDF.HC.UINT32" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">UINT32</code><em class="property"> = 25</em><a class="headerlink" href="#pyhdf.HDF.HC.UINT32" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.UINT8">
-<code class="descname">UINT8</code><em class="property"> = 21</em><a class="headerlink" href="#pyhdf.HDF.HC.UINT8" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">UINT8</code><em class="property"> = 21</em><a class="headerlink" href="#pyhdf.HDF.HC.UINT8" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhdf.HDF.HC.WRITE">
-<code class="descname">WRITE</code><em class="property"> = 2</em><a class="headerlink" href="#pyhdf.HDF.HC.WRITE" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">WRITE</code><em class="property"> = 2</em><a class="headerlink" href="#pyhdf.HDF.HC.WRITE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="function">
 <dt id="pyhdf.HDF.getlibversion">
-<code class="descclassname">pyhdf.HDF.</code><code class="descname">getlibversion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/HDF.html#getlibversion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.HDF.getlibversion" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pyhdf.HDF.</code><code class="sig-name descname">getlibversion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/HDF.html#getlibversion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.HDF.getlibversion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the library version info.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>no argument</dd>
-<dt>Returns:</dt>
-<dd><dl class="first last docutils">
-<dt>4-element tuple with the following components:</dt>
-<dd>-major version number (int)
+<dl class="simple">
+<dt>Args:</dt><dd><p>no argument</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>4-element tuple with the following components:</dt><dd><p>-major version number (int)
 -minor version number (int)
 -complete library version number (int)
--additional information (string)</dd>
+-additional information (string)</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -335,13 +331,13 @@ DFTAG_VG  1965    vgroup</div></blockquote>
 
 <dl class="function">
 <dt id="pyhdf.HDF.ishdf">
-<code class="descclassname">pyhdf.HDF.</code><code class="descname">ishdf</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/HDF.html#ishdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.HDF.ishdf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pyhdf.HDF.</code><code class="sig-name descname">ishdf</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/HDF.html#ishdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.HDF.ishdf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine whether a file is an HDF file.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>filename  name of the file to check</dd>
-<dt>Returns:</dt>
-<dd>1 if the file is an HDF file, 0 otherwise</dd>
+<dl class="simple">
+<dt>Args:</dt><dd><p>filename  name of the file to check</p>
+</dd>
+<dt>Returns:</dt><dd><p>1 if the file is an HDF file, 0 otherwise</p>
+</dd>
 </dl>
 <p>C library equivalent : Hishdf</p>
 </dd></dl>
@@ -357,7 +353,7 @@ DFTAG_VG  1965    vgroup</div></blockquote>
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Basic API (<code class="docutils literal notranslate"><span class="pre">pyhdf.HDF</span></code>)</a><ul>
+<li><a class="reference internal" href="#">Basic API (<code class="xref py py-mod docutils literal notranslate"><span class="pre">pyhdf.HDF</span></code>)</a><ul>
 <li><a class="reference internal" href="#introduction">Introduction</a></li>
 <li><a class="reference internal" href="#functions-and-classes-summary">Functions and classes summary</a></li>
 </ul>
@@ -369,7 +365,7 @@ DFTAG_VG  1965    vgroup</div></blockquote>
                         title="previous chapter">Installation</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="SD.html"
-                        title="next chapter">SD (scientific dataset) API (<code class="docutils literal notranslate"><span class="pre">pyhdf.SD</span></code>)</a></p>
+                        title="next chapter">SD (scientific dataset) API (<code class="xref py py-mod docutils literal notranslate"><span class="pre">pyhdf.SD</span></code>)</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -378,13 +374,11 @@ DFTAG_VG  1965    vgroup</div></blockquote>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -408,12 +402,12 @@ DFTAG_VG  1965    vgroup</div></blockquote>
         <li class="right" >
           <a href="../install.html" title="Installation"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pyhdf 0.10.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">pyhdf 0.10.2 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, pyhdf authors.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
     </div>
   </body>
 </html>

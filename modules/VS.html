@@ -1,12 +1,10 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>VS (Vdata table) API (pyhdf.VS) &#8212; pyhdf 0.10.1 documentation</title>
+    <meta charset="utf-8" />
+    <title>VS (Vdata table) API (pyhdf.VS) &#8212; pyhdf 0.10.2 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
@@ -36,7 +34,7 @@
         <li class="right" >
           <a href="SD.html" title="SD (scientific dataset) API (pyhdf.SD)"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pyhdf 0.10.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">pyhdf 0.10.2 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -80,41 +78,42 @@ inside an HDF file. See section “Programming models” for an example
 program implementing this vdata.</p>
 <blockquote>
 <div><blockquote>
-<div>INVENTORY (experimental status)</div></blockquote>
-<table border="1" class="docutils">
+<div><p>INVENTORY (experimental status)</p>
+</div></blockquote>
+<table class="docutils align-default">
 <colgroup>
-<col width="17%" />
-<col width="31%" />
-<col width="8%" />
-<col width="22%" />
-<col width="22%" />
+<col style="width: 17%" />
+<col style="width: 31%" />
+<col style="width: 8%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">partid</th>
-<th class="head">description</th>
-<th class="head">qty</th>
-<th class="head">wght(lb)</th>
-<th class="head">price($)</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>partid</p></th>
+<th class="head"><p>description</p></th>
+<th class="head"><p>qty</p></th>
+<th class="head"><p>wght(lb)</p></th>
+<th class="head"><p>price($)</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>Q1234</td>
-<td>bolt</td>
-<td>12</td>
-<td>0.01</td>
-<td>0.05</td>
+<tbody>
+<tr class="row-even"><td><p>Q1234</p></td>
+<td><p>bolt</p></td>
+<td><p>12</p></td>
+<td><p>0.01</p></td>
+<td><p>0.05</p></td>
 </tr>
-<tr class="row-odd"><td>B5432</td>
-<td>brush</td>
-<td>10</td>
-<td>0.4</td>
-<td>4.25</td>
+<tr class="row-odd"><td><p>B5432</p></td>
+<td><p>brush</p></td>
+<td><p>10</p></td>
+<td><p>0.4</p></td>
+<td><p>4.25</p></td>
 </tr>
-<tr class="row-even"><td>S7613</td>
-<td>scissor</td>
-<td>2</td>
-<td>0.2</td>
-<td>3.75</td>
+<tr class="row-even"><td><p>S7613</p></td>
+<td><p>scissor</p></td>
+<td><p>2</p></td>
+<td><p>0.2</p></td>
+<td><p>3.75</p></td>
 </tr>
 </tbody>
 </table>
@@ -139,23 +138,25 @@ vdata as if it were a python sequence.</p>
 <h2>VS module key features<a class="headerlink" href="#vs-module-key-features" title="Permalink to this headline">¶</a></h2>
 <p>VS key features are as follows.</p>
 <ul class="simple">
-<li>pyhdf implements almost every routine of the original VS API.
-Only a few have been ignored, most of them being of a rare use:<ul>
-<li>VSgetblocksize() / VSsetblocksize()</li>
-<li>VSsetnumblocks()</li>
-<li>VSlone</li>
+<li><p>pyhdf implements almost every routine of the original VS API.
+Only a few have been ignored, most of them being of a rare use:</p>
+<ul>
+<li><p>VSgetblocksize() / VSsetblocksize()</p></li>
+<li><p>VSsetnumblocks()</p></li>
+<li><p>VSlone</p></li>
 </ul>
 </li>
-<li>It is quite straightforward to go from a C version to a python version
-of a program accessing the VS API, and to learn VS usage by refering to
-the C API documentation.</li>
-<li>A few high-level python methods have been developped to ease
-programmers task. Of greatest interest are the following:<ul>
-<li>Access to attributes through the familiar “dot notation”.</li>
-<li>Indexing and slicing a vdata to read and write its records,
-similarly to a python sequence.</li>
-<li>Easy retrieval of info on a vdata and its fields.</li>
-<li>Easy creation of vdatas.</li>
+<li><p>It is quite straightforward to go from a C version to a python version
+of a program accessing the VS API, and to learn VS usage by referring to
+the C API documentation.</p></li>
+<li><p>A few high-level python methods have been developed to ease
+programmers task. Of greatest interest are the following:</p>
+<ul>
+<li><p>Access to attributes through the familiar “dot notation”.</p></li>
+<li><p>Indexing and slicing a vdata to read and write its records,
+similarly to a python sequence.</p></li>
+<li><p>Easy retrieval of info on a vdata and its fields.</p></li>
+<li><p>Easy creation of vdatas.</p></li>
 </ul>
 </li>
 </ul>
@@ -164,15 +165,15 @@ similarly to a python sequence.</li>
 <h2>Accessing the VS module<a class="headerlink" href="#accessing-the-vs-module" title="Permalink to this headline">¶</a></h2>
 <p>To access the VS module a python program can say one of:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pyhdf.VS</span>        <span class="c1"># must prefix names with &quot;pyhdf.VS.&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf</span> <span class="k">import</span> <span class="n">VS</span>   <span class="c1"># must prefix names with &quot;VS.&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="k">import</span> <span class="o">*</span> <span class="c1"># names need no prefix</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf</span> <span class="kn">import</span> <span class="n">VS</span>   <span class="c1"># must prefix names with &quot;VS.&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1"># names need no prefix</span>
 </pre></div>
 </div>
 <p>This document assumes the last import style is used.</p>
-<p>VS is not self-contained, and needs functionnality provided by another
+<p>VS is not self-contained, and needs functionality provided by another
 pyhdf module, namely the HDF module. This module must thus be imported
 also:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">.HDF</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">.HDF</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 </div>
@@ -186,20 +187,20 @@ stands for the python installation directory.</p>
 <p>For each HDF API exists a corresponding set of modules.</p>
 <p>The following modules are related to the VS API.</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>_hdfext</dt>
-<dd>C extension module responsible for wrapping the HDF
-C library for all python modules</dd>
-<dt>hdfext</dt>
-<dd>python module implementing some utility functions
-complementing the _hdfext extension module</dd>
-<dt>error</dt>
-<dd>defines the HDF4Error exception</dd>
-<dt>HDF</dt>
-<dd>python module providing support to the VS module</dd>
-<dt>VS</dt>
-<dd>python module wrapping the VS API routines inside
-an OOP framework</dd>
+<div><dl class="simple">
+<dt>_hdfext</dt><dd><p>C extension module responsible for wrapping the HDF
+C library for all python modules</p>
+</dd>
+<dt>hdfext</dt><dd><p>python module implementing some utility functions
+complementing the _hdfext extension module</p>
+</dd>
+<dt>error</dt><dd><p>defines the HDF4Error exception</p>
+</dd>
+<dt>HDF</dt><dd><p>python module providing support to the VS module</p>
+</dd>
+<dt>VS</dt><dd><p>python module wrapping the VS API routines inside
+an OOP framework</p>
+</dd>
 </dl>
 </div></blockquote>
 <p>_hdfext and hdfext were generated using the SWIG preprocessor.
@@ -212,11 +213,10 @@ directly. Only HDF and VS should be imported by the user program.</p>
 <p>The following software must be installed in order for VS to
 work.</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>HDF (v4) library</dt>
-<dd><p class="first">pyhdf does <em>not</em> include the HDF4 library, which must
+<div><dl>
+<dt>HDF (v4) library</dt><dd><p>pyhdf does <em>not</em> include the HDF4 library, which must
 be installed separately.</p>
-<p class="last">HDF is available at:
+<p>HDF is available at:
 “<a class="reference external" href="https://portal.hdfgroup.org/display/support/Download+HDF4">https://portal.hdfgroup.org/display/support/Download+HDF4</a>”.</p>
 </dd>
 </dl>
@@ -231,7 +231,7 @@ the naming conventions and calling sequences documented inside the
 to the C API, the manual can be easily used as a documentary source
 for pyhdf, once the class to which a function belongs has been
 identified, and of course once requirements imposed by the Python
-langage have been taken into account. Consequently, this documentation
+language have been taken into account. Consequently, this documentation
 will not attempt to provide an exhaustive coverage of the HDF VS
 API. For this, the user is referred to the above manual.
 The documentation of each pyhdf method will indicate the name
@@ -241,8 +241,8 @@ produced using “pydoc”, the Python documentation generator (which
 made its debut in the 2.1 Python release). pydoc can also be used
 as an on-line help tool. For example, to know everything about
 the VS.VD class, say:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pydoc</span> <span class="k">import</span> <span class="n">help</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pydoc</span> <span class="kn">import</span> <span class="n">help</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">VD</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -262,14 +262,14 @@ VD class:</p>
 <p>Most of the differences between the pyhdf and C VS API can
 be summarized as follows.</p>
 <ul class="simple">
-<li>In the C API, every function returns an integer status code, and values
+<li><p>In the C API, every function returns an integer status code, and values
 computed by the function are returned through one or more pointers
-passed as arguments.</li>
-<li>In pyhdf, error statuses are returned through the Python exception
+passed as arguments.</p></li>
+<li><p>In pyhdf, error statuses are returned through the Python exception
 mechanism, and values are returned as the method result. When the
 C API specifies that multiple values are returned, pyhdf returns a
 sequence of values, which are ordered similarly to the pointers in the
-C function argument list.</li>
+C function argument list.</p></li>
 </ul>
 </div>
 <div class="section" id="error-handling">
@@ -287,15 +287,15 @@ of the time cannot do more than saying “execution error”.</p>
 <p>The VS module is not self-contained (countrary to the SD module).
 It requires help from the HDF module, namely:</p>
 <ul class="simple">
-<li>the HDF.HDF class to open and close the HDF file, and initialize the
-VS interface</li>
-<li>the HDF.HC class to provide different sorts of constants (opening modes,
-data types, etc).</li>
+<li><p>the HDF.HDF class to open and close the HDF file, and initialize the
+VS interface</p></li>
+<li><p>the HDF.HC class to provide different sorts of constants (opening modes,
+data types, etc).</p></li>
 </ul>
 <p>A program wanting to access HDF vdatas will almost always need to execute
 the following minimal set of calls:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="k">import</span> <span class="o">*</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">hdfFile</span> <span class="o">=</span> <span class="n">HDF</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">HC</span><span class="o">.</span><span class="n">xxx</span><span class="p">)</span><span class="c1"># open HDF file</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">vs</span> <span class="o">=</span> <span class="n">hdfFile</span><span class="o">.</span><span class="n">vstart</span><span class="p">()</span>      <span class="c1"># initialize VS interface on HDF file</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="o">...</span>                        <span class="c1"># manipulate vdatas through &quot;vs&quot;</span>
@@ -435,15 +435,15 @@ and later when querying the definition of those fields and attributes.
 Data types are specified using the symbolic constants defined inside the
 HC class of the HDF module.</p>
 <ul class="simple">
-<li>CHAR and CHAR8 (equivalent): an 8-bit character.</li>
-<li>UCHAR, UCHAR8 and UINT8 (equivalent): unsigned 8-bit values (0 to 255)</li>
-<li>INT8:    signed 8-bit values (-128 to 127)</li>
-<li>INT16:   signed 16-bit values</li>
-<li>UINT16:  unsigned 16 bit values</li>
-<li>INT32:   signed 32 bit values</li>
-<li>UINT32:  unsigned 32 bit values</li>
-<li>FLOAT32: 32 bit floating point values (C floats)</li>
-<li>FLOAT64: 64 bit floating point values (C doubles)</li>
+<li><p>CHAR and CHAR8 (equivalent): an 8-bit character.</p></li>
+<li><p>UCHAR, UCHAR8 and UINT8 (equivalent): unsigned 8-bit values (0 to 255)</p></li>
+<li><p>INT8:    signed 8-bit values (-128 to 127)</p></li>
+<li><p>INT16:   signed 16-bit values</p></li>
+<li><p>UINT16:  unsigned 16 bit values</p></li>
+<li><p>INT32:   signed 32 bit values</p></li>
+<li><p>UINT32:  unsigned 32 bit values</p></li>
+<li><p>FLOAT32: 32 bit floating point values (C floats)</p></li>
+<li><p>FLOAT64: 64 bit floating point values (C doubles)</p></li>
 </ul>
 <p>There is no explicit “string” type. To simulate a string, set the field or
 attribute type to CHAR, and set the field or attribute “order” to
@@ -464,8 +464,8 @@ VDAttr instance representing the wanted attribute (possibly non existent).
 The set() method of this VDAttr instance is then called to define the
 attribute value, creating it if it does not already exist. The get() method
 returns the current attribute value. Here is an example.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="k">import</span> <span class="o">*</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">HDF</span><span class="p">(</span><span class="s1">&#39;test.hdf&#39;</span><span class="p">,</span> <span class="n">HC</span><span class="o">.</span><span class="n">WRITE</span><span class="p">)</span> <span class="c1"># Open file &#39;test.hdf&#39; in write mode</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">vs</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">vstart</span><span class="p">()</span>            <span class="c1"># init vdata interface</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">vd</span> <span class="o">=</span> <span class="n">vs</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="s1">&#39;vtest&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># attach vdata &#39;vtest&#39; in write mode</span>
@@ -488,8 +488,8 @@ returns the current attribute value. Here is an example.</p>
 <p>The second way consists of setting/querying an attribute as if it were a
 normal python class attribute, using the usual dot notation. Above example
 then becomes:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="k">import</span> <span class="o">*</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">HDF</span><span class="p">(</span><span class="s1">&#39;test.hdf&#39;</span><span class="p">,</span> <span class="n">HC</span><span class="o">.</span><span class="n">WRITE</span><span class="p">)</span> <span class="c1"># Open file &#39;test.hdf&#39; in write mode</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">vs</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">vstart</span><span class="p">()</span>            <span class="c1"># init vdata interface</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">vd</span> <span class="o">=</span> <span class="n">vs</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="s1">&#39;vtest&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># attach vdata &#39;vtest&#39; in write mode</span>
@@ -510,20 +510,20 @@ Some latitude is however lost by manipulating attributes in that way,
 because the pyhdf package, not the programmer, is then responsible of
 setting the attribute type. The attribute type is chosen to be one of:</p>
 <blockquote>
-<div><table border="1" class="docutils">
+<div><table class="docutils align-default">
 <colgroup>
-<col width="23%" />
-<col width="77%" />
+<col style="width: 23%" />
+<col style="width: 77%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>HC.CHAR8</td>
-<td>if the attribute value is a string</td>
+<tbody>
+<tr class="row-odd"><td><p>HC.CHAR8</p></td>
+<td><p>if the attribute value is a string</p></td>
 </tr>
-<tr class="row-even"><td>HC.INT32</td>
-<td>if all attribute values are integers</td>
+<tr class="row-even"><td><p>HC.INT32</p></td>
+<td><p>if all attribute values are integers</p></td>
 </tr>
-<tr class="row-odd"><td>HC.FLOAT64</td>
-<td>otherwise</td>
+<tr class="row-odd"><td><p>HC.FLOAT64</p></td>
+<td><p>otherwise</p></td>
 </tr>
 </tbody>
 </table>
@@ -539,7 +539,7 @@ to HDF attributes. pyhdf uses the following rule: an attribute whose name
 starts with an underscore (‘_’) is either a “predefined” attribute
 (see below) or a standard python attribute. Otherwise, the attribute
 is handled as an HDF attribute. Also, HDF attributes are not stored inside
-the object dictionnary: the python dir() function will not list them.</p>
+the object dictionary: the python dir() function will not list them.</p>
 <p>Attribute values can be updated, but it is illegal to try to change the
 value type, or the attribute order (number of values). This is important
 for attributes holding string values. An attribute initialized with an
@@ -562,137 +562,137 @@ is read/write. See the HDF User s guide for details about more
 <blockquote>
 <div><p>VD predefined attributes</p>
 <blockquote>
-<div><table border="1" class="docutils">
+<div><table class="docutils align-default">
 <colgroup>
-<col width="16%" />
-<col width="3%" />
-<col width="38%" />
-<col width="43%" />
+<col style="width: 16%" />
+<col style="width: 3%" />
+<col style="width: 38%" />
+<col style="width: 43%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">name</th>
-<th class="head">RW</th>
-<th class="head">description</th>
-<th class="head">C library routine</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>RW</p></th>
+<th class="head"><p>description</p></th>
+<th class="head"><p>C library routine</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>_class</td>
-<td>X</td>
-<td>class name</td>
-<td>VSgetclass/VSsetclass</td>
+<tbody>
+<tr class="row-even"><td><p>_class</p></td>
+<td><p>X</p></td>
+<td><p>class name</p></td>
+<td><p>VSgetclass/VSsetclass</p></td>
 </tr>
-<tr class="row-odd"><td>_fields</td>
-<td>&#160;</td>
-<td>list of field names</td>
-<td>VSgetfields</td>
+<tr class="row-odd"><td><p>_fields</p></td>
+<td></td>
+<td><p>list of field names</p></td>
+<td><p>VSgetfields</p></td>
 </tr>
-<tr class="row-even"><td>_interlace</td>
-<td>X</td>
-<td>interlace mode</td>
-<td>VSgetinterlace/VSsetinterlace</td>
+<tr class="row-even"><td><p>_interlace</p></td>
+<td><p>X</p></td>
+<td><p>interlace mode</p></td>
+<td><p>VSgetinterlace/VSsetinterlace</p></td>
 </tr>
-<tr class="row-odd"><td>_isattr</td>
-<td>&#160;</td>
-<td>true if vdata is “faked”
-by HDF to hold attributes</td>
-<td>VSisattr</td>
+<tr class="row-odd"><td><p>_isattr</p></td>
+<td></td>
+<td><p>true if vdata is “faked”
+by HDF to hold attributes</p></td>
+<td><p>VSisattr</p></td>
 </tr>
-<tr class="row-even"><td>_name</td>
-<td>X</td>
-<td>name of the vdata</td>
-<td>VSgetname/VSsetname</td>
+<tr class="row-even"><td><p>_name</p></td>
+<td><p>X</p></td>
+<td><p>name of the vdata</p></td>
+<td><p>VSgetname/VSsetname</p></td>
 </tr>
-<tr class="row-odd"><td>_nattrs</td>
-<td>&#160;</td>
-<td>number of attributes</td>
-<td>VSfnattrs</td>
+<tr class="row-odd"><td><p>_nattrs</p></td>
+<td></td>
+<td><p>number of attributes</p></td>
+<td><p>VSfnattrs</p></td>
 </tr>
-<tr class="row-even"><td>_nfields</td>
-<td>&#160;</td>
-<td>number of fields</td>
-<td>VFnfields</td>
+<tr class="row-even"><td><p>_nfields</p></td>
+<td></td>
+<td><p>number of fields</p></td>
+<td><p>VFnfields</p></td>
 </tr>
-<tr class="row-odd"><td>_nrecs</td>
-<td>&#160;</td>
-<td>number of records</td>
-<td>VSelts</td>
+<tr class="row-odd"><td><p>_nrecs</p></td>
+<td></td>
+<td><p>number of records</p></td>
+<td><p>VSelts</p></td>
 </tr>
-<tr class="row-even"><td>_recsize</td>
-<td>&#160;</td>
-<td>record size (bytes)</td>
-<td>VSQueryvsize</td>
+<tr class="row-even"><td><p>_recsize</p></td>
+<td></td>
+<td><p>record size (bytes)</p></td>
+<td><p>VSQueryvsize</p></td>
 </tr>
-<tr class="row-odd"><td>_refnum</td>
-<td>&#160;</td>
-<td>reference number</td>
-<td>VSQueryref</td>
+<tr class="row-odd"><td><p>_refnum</p></td>
+<td></td>
+<td><p>reference number</p></td>
+<td><p>VSQueryref</p></td>
 </tr>
-<tr class="row-even"><td>_tag</td>
-<td>&#160;</td>
-<td>vdata tag</td>
-<td>VSQuerytag</td>
+<tr class="row-even"><td><p>_tag</p></td>
+<td></td>
+<td><p>vdata tag</p></td>
+<td><p>VSQuerytag</p></td>
 </tr>
-<tr class="row-odd"><td>_tnattrs</td>
-<td>&#160;</td>
-<td>total number of vdata and
-field attributes</td>
-<td>VSnattrs</td>
+<tr class="row-odd"><td><p>_tnattrs</p></td>
+<td></td>
+<td><p>total number of vdata and
+field attributes</p></td>
+<td><p>VSnattrs</p></td>
 </tr>
 </tbody>
 </table>
 </div></blockquote>
 <p>VDField predefined attributes</p>
 <blockquote>
-<div><table border="1" class="docutils">
+<div><table class="docutils align-default">
 <colgroup>
-<col width="16%" />
-<col width="3%" />
-<col width="38%" />
-<col width="43%" />
+<col style="width: 16%" />
+<col style="width: 3%" />
+<col style="width: 38%" />
+<col style="width: 43%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">name</th>
-<th class="head">RW</th>
-<th class="head">description</th>
-<th class="head">C library routine</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>RW</p></th>
+<th class="head"><p>description</p></th>
+<th class="head"><p>C library routine</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>_esize</td>
-<td>&#160;</td>
-<td>external size (bytes)</td>
-<td>VFfieldesize</td>
+<tbody>
+<tr class="row-even"><td><p>_esize</p></td>
+<td></td>
+<td><p>external size (bytes)</p></td>
+<td><p>VFfieldesize</p></td>
 </tr>
-<tr class="row-odd"><td>_index</td>
-<td>&#160;</td>
-<td>index number</td>
-<td>VSfindex</td>
+<tr class="row-odd"><td><p>_index</p></td>
+<td></td>
+<td><p>index number</p></td>
+<td><p>VSfindex</p></td>
 </tr>
-<tr class="row-even"><td>_isize</td>
-<td>&#160;</td>
-<td>internal size (bytes)</td>
-<td>VFfieldisize</td>
+<tr class="row-even"><td><p>_isize</p></td>
+<td></td>
+<td><p>internal size (bytes)</p></td>
+<td><p>VFfieldisize</p></td>
 </tr>
-<tr class="row-odd"><td>_name</td>
-<td>&#160;</td>
-<td>name</td>
-<td>VFfieldname</td>
+<tr class="row-odd"><td><p>_name</p></td>
+<td></td>
+<td><p>name</p></td>
+<td><p>VFfieldname</p></td>
 </tr>
-<tr class="row-even"><td>_nattrs</td>
-<td>&#160;</td>
-<td>number of attributes</td>
-<td>VSfnattrs</td>
+<tr class="row-even"><td><p>_nattrs</p></td>
+<td></td>
+<td><p>number of attributes</p></td>
+<td><p>VSfnattrs</p></td>
 </tr>
-<tr class="row-odd"><td>_order</td>
-<td>&#160;</td>
-<td>order (number of values)</td>
-<td>VFfieldorder</td>
+<tr class="row-odd"><td><p>_order</p></td>
+<td></td>
+<td><p>order (number of values)</p></td>
+<td><p>VFfieldorder</p></td>
 </tr>
-<tr class="row-even"><td>_type</td>
-<td>&#160;</td>
-<td>field type (HC.xxx)</td>
-<td>VFfieldtype</td>
+<tr class="row-even"><td><p>_type</p></td>
+<td></td>
+<td><p>field type (HC.xxx)</p></td>
+<td><p>VFfieldtype</p></td>
 </tr>
 </tbody>
 </table>
@@ -704,10 +704,10 @@ field attributes</td>
 <p>vdata records can be read and written in two different ways. The first one
 consists of calling the basic I/O methods of the vdata:</p>
 <ul class="simple">
-<li>seek() to set the current record position, if necessary;</li>
-<li>read() to retrieve a given number of records from that position;</li>
-<li>write() to write a given number of records starting at
-that position</li>
+<li><p>seek() to set the current record position, if necessary;</p></li>
+<li><p>read() to retrieve a given number of records from that position;</p></li>
+<li><p>write() to write a given number of records starting at
+that position</p></li>
 </ul>
 <p>A second, higher level way, lets one see a vdata similarly to a python
 sequence, and access its contents using the familiar indexing and slicing
@@ -768,8 +768,8 @@ try to assign just a few of the fields.</p>
 <p>The following code can serve as a model for the creation and
 initialization of a new vdata. It implements the INVENTORY example
 described in the “Introduction” section:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># Open HDF file and initialize the VS interface</span>
 <span class="n">f</span> <span class="o">=</span> <span class="n">HDF</span><span class="p">(</span><span class="s1">&#39;inventory.hdf&#39;</span><span class="p">,</span>    <span class="c1"># Open file &#39;inventory.hdf&#39; in write mode</span>
@@ -813,7 +813,7 @@ vdata attribute. We want to be able update this attribute (see
 following examples). However, the VS API  prohibits changing an attribute
 type when updating its value. Since the length (order) of an attribute
 is part of its type, we make sure of setting the attribute to a length
-long enough to accomodate the longest possible string we migh want to
+long enough to accommodate the longest possible string we migh want to
 assign to the attribute.</p>
 </div>
 <div class="section" id="appending-records-to-a-vdata">
@@ -821,8 +821,8 @@ assign to the attribute.</p>
 <p>Appending records requires first seeking to the end of the vdata, to avoid
 overwriting existing records. The following code can serve as a model. The
 INVENTORY vdata created before is used:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">f</span> <span class="o">=</span> <span class="n">HDF</span><span class="p">(</span><span class="s1">&#39;inventory.hdf&#39;</span><span class="p">,</span>         <span class="c1"># Open &#39;inventory.hdf&#39; in write mode</span>
         <span class="n">HC</span><span class="o">.</span><span class="n">WRITE</span><span class="o">|</span><span class="n">HC</span><span class="o">.</span><span class="n">CREATE</span><span class="p">)</span>      <span class="c1"># creating it if it does not exist</span>
@@ -861,8 +861,8 @@ until a new seek is performed or the vdata is closed. Note that record
 numbering starts at 0.</p>
 <p>The following code can serve as a model. The INVENTORY vdata created
 before is used:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">f</span> <span class="o">=</span> <span class="n">HDF</span><span class="p">(</span><span class="s1">&#39;inventory.hdf&#39;</span><span class="p">,</span>         <span class="c1"># Open &#39;inventory.hdf&#39; in write mode</span>
         <span class="n">HC</span><span class="o">.</span><span class="n">WRITE</span><span class="o">|</span><span class="n">HC</span><span class="o">.</span><span class="n">CREATE</span><span class="p">)</span>      <span class="c1"># creating it if it does not exist</span>
@@ -894,8 +894,8 @@ before is used:</p>
 <p>The following example shows how read the vdata attributes and sequentially
 maneuver through its records. Note how we use the exception mechanism
 to break out of the reading loop when we reach the end of the vdata:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">f</span> <span class="o">=</span> <span class="n">HDF</span><span class="p">(</span><span class="s1">&#39;inventory.hdf&#39;</span><span class="p">)</span>         <span class="c1"># open &#39;inventory.hdf&#39; in read mode</span>
 <span class="n">vs</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">vstart</span><span class="p">()</span>                  <span class="c1"># init vdata interface</span>
@@ -943,8 +943,8 @@ to break out of the reading loop when we reach the end of the vdata:</p>
 </div>
 <p>In the previous example, the reading/displaying loop can be greatly
 simplified by rewriting it as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyhdf.HDF</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyhdf.VS</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">f</span> <span class="o">=</span> <span class="n">HDF</span><span class="p">(</span><span class="s1">&#39;inventory.hdf&#39;</span><span class="p">)</span>         <span class="c1"># open &#39;inventory.hdf&#39; in read mode</span>
 <span class="n">vs</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">vstart</span><span class="p">()</span>                  <span class="c1"># init vdata interface</span>
@@ -965,14 +965,14 @@ which can then be looped over using a ‘for’ statement. This style of loop
 is quite clean, and should look very familiar to python adepts.</p>
 <dl class="class">
 <dt id="pyhdf.VS.VS">
-<em class="property">class </em><code class="descclassname">pyhdf.VS.</code><code class="descname">VS</code><span class="sig-paren">(</span><em>hinst</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VS" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pyhdf.VS.</code><code class="sig-name descname">VS</code><span class="sig-paren">(</span><em class="sig-param">hinst</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VS" title="Permalink to this definition">¶</a></dt>
 <dd><p>The VS class implements the VS (Vdata) interface applied to an
 HDF file.
 To instantiate a VS class, call the vstart() method of an
 HDF instance.</p>
 <dl class="method">
 <dt id="pyhdf.VS.VS.attach">
-<code class="descname">attach</code><span class="sig-paren">(</span><em>num_name</em>, <em>write=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VS.attach"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VS.attach" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">attach</code><span class="sig-paren">(</span><em class="sig-param">num_name</em>, <em class="sig-param">write=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VS.attach"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VS.attach" title="Permalink to this definition">¶</a></dt>
 <dd><p>Locate an existing vdata or create a new vdata in the HDF file,
 returning a VD instance.</p>
 <p>Args:</p>
@@ -1002,7 +1002,7 @@ create() method of the VS instance.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VS.create">
-<code class="descname">create</code><span class="sig-paren">(</span><em>name</em>, <em>fields</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VS.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VS.create" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">fields</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VS.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VS.create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new vdata, setting its name and allocating
 its fields.</p>
 <p>Args:</p>
@@ -1021,21 +1021,20 @@ its fields.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">VD</span> <span class="n">instance</span> <span class="n">representing</span> <span class="n">the</span> <span class="n">created</span> <span class="n">vdata</span>
 </pre></div>
 </div>
-<dl class="docutils">
-<dt>Calling the create() method is equivalent to the following calls:</dt>
-<dd><ul class="first last simple">
-<li><dl class="first docutils">
-<dt>vd = attach(-1,1), to create a new vdata and open it in</dt>
-<dd>write mode</dd>
+<dl class="simple">
+<dt>Calling the create() method is equivalent to the following calls:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>vd = attach(-1,1), to create a new vdata and open it in</dt><dd><p>write mode</p>
+</dd>
 </dl>
 </li>
-<li>vd._name = name, to set the vdata name</li>
-<li><dl class="first docutils">
-<dt>vd.fdefine(…), to define the name, type and order of</dt>
-<dd>each field</dd>
+<li><p>vd._name = name, to set the vdata name</p></li>
+<li><dl class="simple">
+<dt>vd.fdefine(…), to define the name, type and order of</dt><dd><p>each field</p>
+</dd>
 </dl>
 </li>
-<li>vd.setfields(…), to allocate fields to the vdata</li>
+<li><p>vd.setfields(…), to allocate fields to the vdata</p></li>
 </ul>
 </dd>
 </dl>
@@ -1044,7 +1043,7 @@ its fields.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VS.end">
-<code class="descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VS.end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VS.end" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VS.end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VS.end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Close the VS interface.</p>
 <p>Args:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">No</span> <span class="n">argument</span>
@@ -1059,7 +1058,7 @@ its fields.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VS.find">
-<code class="descname">find</code><span class="sig-paren">(</span><em>vName</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VS.find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VS.find" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">find</code><span class="sig-paren">(</span><em class="sig-param">vName</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VS.find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VS.find" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the reference number of a vdata given its name.
 The vdata can then be opened (attached) by passing this
 reference number to the attach() method.</p>
@@ -1079,7 +1078,7 @@ reference number to the attach() method.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VS.next">
-<code class="descname">next</code><span class="sig-paren">(</span><em>vRef</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VS.next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VS.next" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">next</code><span class="sig-paren">(</span><em class="sig-param">vRef</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VS.next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VS.next" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the reference number of the vdata following a given
 vdata.</p>
 <p>Args:</p>
@@ -1101,7 +1100,7 @@ vdata.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VS.storedata">
-<code class="descname">storedata</code><span class="sig-paren">(</span><em>fieldName</em>, <em>values</em>, <em>data_type</em>, <em>vName</em>, <em>vClass</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VS.storedata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VS.storedata" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">storedata</code><span class="sig-paren">(</span><em class="sig-param">fieldName</em>, <em class="sig-param">values</em>, <em class="sig-param">data_type</em>, <em class="sig-param">vName</em>, <em class="sig-param">vClass</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VS.storedata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VS.storedata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create and initialize a single field vdata, returning
 the vdata reference number.</p>
 <p>Args:</p>
@@ -1125,7 +1124,7 @@ vClass      Vdata class (string)
 
 <dl class="method">
 <dt id="pyhdf.VS.VS.vdatainfo">
-<code class="descname">vdatainfo</code><span class="sig-paren">(</span><em>listAttr=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VS.vdatainfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VS.vdatainfo" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">vdatainfo</code><span class="sig-paren">(</span><em class="sig-param">listAttr=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VS.vdatainfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VS.vdatainfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return info about all the file vdatas.</p>
 <p>Args:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">listAttr</span>   <span class="n">Set</span> <span class="n">to</span> <span class="mi">0</span> <span class="n">to</span> <span class="n">ignore</span> <span class="n">vdatas</span> <span class="n">used</span> <span class="n">to</span> <span class="n">store</span> <span class="n">attribute</span>
@@ -1153,7 +1152,7 @@ a 9-element tuple, composed of the following:
 
 <dl class="method">
 <dt id="pyhdf.VS.VS.vend">
-<code class="descname">vend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyhdf.VS.VS.vend" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">vend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyhdf.VS.VS.vend" title="Permalink to this definition">¶</a></dt>
 <dd><p>Close the VS interface.</p>
 <p>Args:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">No</span> <span class="n">argument</span>
@@ -1170,13 +1169,13 @@ a 9-element tuple, composed of the following:
 
 <dl class="class">
 <dt id="pyhdf.VS.VD">
-<em class="property">class </em><code class="descclassname">pyhdf.VS.</code><code class="descname">VD</code><span class="sig-paren">(</span><em>vsinst</em>, <em>id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD" title="Permalink to this definition">¶</a></dt>
-<dd><p>The VD class encapsulates the functionnality of a vdata.
+<em class="property">class </em><code class="sig-prename descclassname">pyhdf.VS.</code><code class="sig-name descname">VD</code><span class="sig-paren">(</span><em class="sig-param">vsinst</em>, <em class="sig-param">id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD" title="Permalink to this definition">¶</a></dt>
+<dd><p>The VD class encapsulates the functionality of a vdata.
 To instantiate a VD class, call the attach() or the create()
 method of a VS class instance.</p>
 <dl class="method">
 <dt id="pyhdf.VS.VD.attr">
-<code class="descname">attr</code><span class="sig-paren">(</span><em>name_or_index</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.attr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.attr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">attr</code><span class="sig-paren">(</span><em class="sig-param">name_or_index</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.attr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.attr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a VDAttr instance representing a vdata attribute.</p>
 <p>Args:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">name_or_index</span>   <span class="n">attribute</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">index</span> <span class="n">number</span><span class="p">;</span> <span class="k">if</span> <span class="n">a</span> <span class="n">name</span> <span class="ow">is</span>
@@ -1195,14 +1194,14 @@ method of a VS class instance.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VD.attrinfo">
-<code class="descname">attrinfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.attrinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.attrinfo" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">attrinfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.attrinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.attrinfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return info about all the vdata attributes.</p>
 <p>Args:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">no</span> <span class="n">argument</span>
 </pre></div>
 </div>
 <p>Returns:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dictionnary</span> <span class="n">describing</span> <span class="n">each</span> <span class="n">vdata</span> <span class="n">attribute</span><span class="p">;</span> <span class="k">for</span> <span class="n">each</span> <span class="n">attribute</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dictionary</span> <span class="n">describing</span> <span class="n">each</span> <span class="n">vdata</span> <span class="n">attribute</span><span class="p">;</span> <span class="k">for</span> <span class="n">each</span> <span class="n">attribute</span>
 <span class="n">a</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">data</span><span class="p">)</span> <span class="n">pair</span> <span class="ow">is</span> <span class="n">added</span> <span class="n">to</span> <span class="n">the</span> <span class="n">dictionary</span><span class="p">,</span> <span class="n">where</span> <span class="s1">&#39;data&#39;</span> <span class="ow">is</span>
 <span class="n">a</span> <span class="nb">tuple</span> <span class="n">holding</span><span class="p">:</span>
 <span class="o">-</span> <span class="n">attribute</span> <span class="n">data</span> <span class="nb">type</span> <span class="p">(</span><span class="n">one</span> <span class="n">of</span> <span class="n">HC</span><span class="o">.</span><span class="n">xxx</span> <span class="n">constants</span><span class="p">)</span>
@@ -1216,7 +1215,7 @@ method of a VS class instance.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VD.detach">
-<code class="descname">detach</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.detach"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.detach" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">detach</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.detach"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.detach" title="Permalink to this definition">¶</a></dt>
 <dd><p>Terminate access to the vdata.</p>
 <p>Args:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">no</span> <span class="n">argument</span>
@@ -1231,7 +1230,7 @@ method of a VS class instance.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VD.fdefine">
-<code class="descname">fdefine</code><span class="sig-paren">(</span><em>name</em>, <em>type</em>, <em>order</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.fdefine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.fdefine" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fdefine</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">type</em>, <em class="sig-param">order</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.fdefine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.fdefine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Define a field. To initialize a newly created vdata with
 fields created with fdefine(), assign a tuple of field names
 to the _fields attribute or call the setfields() method.</p>
@@ -1250,7 +1249,7 @@ to the _fields attribute or call the setfields() method.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VD.fexist">
-<code class="descname">fexist</code><span class="sig-paren">(</span><em>fields</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.fexist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.fexist" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fexist</code><span class="sig-paren">(</span><em class="sig-param">fields</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.fexist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.fexist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if a vdata contains a given set of fields.</p>
 <p>Args:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fields</span>   <span class="n">sequence</span> <span class="n">of</span> <span class="n">field</span> <span class="n">names</span> <span class="n">whose</span> <span class="n">presence</span> <span class="ow">in</span> <span class="n">the</span>
@@ -1267,7 +1266,7 @@ to the _fields attribute or call the setfields() method.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VD.field">
-<code class="descname">field</code><span class="sig-paren">(</span><em>name_index</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.field"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.field" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">field</code><span class="sig-paren">(</span><em class="sig-param">name_index</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.field"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.field" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a VDField instance representing a field of the vdata.</p>
 <p>Args:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">name_index</span>   <span class="n">name</span> <span class="ow">or</span> <span class="n">index</span> <span class="n">number</span> <span class="n">of</span> <span class="n">the</span> <span class="n">field</span>
@@ -1282,7 +1281,7 @@ to the _fields attribute or call the setfields() method.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VD.fieldinfo">
-<code class="descname">fieldinfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.fieldinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.fieldinfo" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fieldinfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.fieldinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.fieldinfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve info about all vdata fields.</p>
 <p>Args:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">no</span> <span class="n">argument</span>
@@ -1307,7 +1306,7 @@ to the _fields attribute or call the setfields() method.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VD.findattr">
-<code class="descname">findattr</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.findattr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.findattr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">findattr</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.findattr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.findattr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search the vdata for a given attribute.</p>
 <p>Args:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">name</span>    <span class="n">attribute</span> <span class="n">name</span>
@@ -1324,7 +1323,7 @@ to the _fields attribute or call the setfields() method.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VD.inquire">
-<code class="descname">inquire</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.inquire"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.inquire" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">inquire</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.inquire"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.inquire" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve info about the vdata.</p>
 <p>Args:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">no</span> <span class="n">argument</span>
@@ -1344,7 +1343,7 @@ to the _fields attribute or call the setfields() method.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VD.read">
-<code class="descname">read</code><span class="sig-paren">(</span><em>nRec=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.read" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param">nRec=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the values of a number of records, starting
 at the current record position. The current record position
 is advanced by the number of records read. Current position
@@ -1376,7 +1375,7 @@ remaining records in the vdata.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VD.seek">
-<code class="descname">seek</code><span class="sig-paren">(</span><em>recIndex</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.seek"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.seek" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">seek</code><span class="sig-paren">(</span><em class="sig-param">recIndex</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.seek"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.seek" title="Permalink to this definition">¶</a></dt>
 <dd><p>Seek to the beginning of the record identified by its
 record index. A succeeding read will load this record in
 memory.</p>
@@ -1403,7 +1402,7 @@ method <code class="docutils literal notranslate"><span class="pre">seekend()</s
 
 <dl class="method">
 <dt id="pyhdf.VS.VD.seekend">
-<code class="descname">seekend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.seekend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.seekend" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">seekend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.seekend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.seekend" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the current record position past the last vdata record.
 Subsequent write() calls will append records to the vdata.</p>
 <p>Args:</p>
@@ -1419,7 +1418,7 @@ Subsequent write() calls will append records to the vdata.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VD.setfields">
-<code class="descname">setfields</code><span class="sig-paren">(</span><em>*fldNames</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.setfields"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.setfields" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setfields</code><span class="sig-paren">(</span><em class="sig-param">*fldNames</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.setfields"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.setfields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Define the name and order of the fields to access
 with the read() and write() methods.</p>
 <p>Args:</p>
@@ -1452,7 +1451,7 @@ field name: only the field order can be changed.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VD.sizeof">
-<code class="descname">sizeof</code><span class="sig-paren">(</span><em>fields</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.sizeof"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.sizeof" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">sizeof</code><span class="sig-paren">(</span><em class="sig-param">fields</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.sizeof"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.sizeof" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the size in bytes of the given fields.</p>
 <p>Args:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fields</span>   <span class="n">sequence</span> <span class="n">of</span> <span class="n">field</span> <span class="n">names</span> <span class="n">to</span> <span class="n">query</span>
@@ -1467,7 +1466,7 @@ field name: only the field order can be changed.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VD.tell">
-<code class="descname">tell</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.tell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.tell" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tell</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.tell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.tell" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return current record position in the vdata.</p>
 <p>Args:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">no</span> <span class="n">argument</span>
@@ -1482,7 +1481,7 @@ field name: only the field order can be changed.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VD.write">
-<code class="descname">write</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.write" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">values</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VD.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VD.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write records to the vdata. Writing starts at the current
 record position, which is advanced by the number of records
 written.</p>
@@ -1513,13 +1512,13 @@ Method seekend() does just that.</p>
 
 <dl class="class">
 <dt id="pyhdf.VS.VDField">
-<em class="property">class </em><code class="descclassname">pyhdf.VS.</code><code class="descname">VDField</code><span class="sig-paren">(</span><em>vdinst</em>, <em>fIndex</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VDField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VDField" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pyhdf.VS.</code><code class="sig-name descname">VDField</code><span class="sig-paren">(</span><em class="sig-param">vdinst</em>, <em class="sig-param">fIndex</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VDField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VDField" title="Permalink to this definition">¶</a></dt>
 <dd><p>The VDField class represents a vdata field.
 To create a VDField instance, call the field() method of a
 VD class instance.</p>
 <dl class="method">
 <dt id="pyhdf.VS.VDField.attr">
-<code class="descname">attr</code><span class="sig-paren">(</span><em>name_or_index</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VDField.attr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VDField.attr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">attr</code><span class="sig-paren">(</span><em class="sig-param">name_or_index</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VDField.attr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VDField.attr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a VDAttr instance representing a field attribute.</p>
 <p>Args:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">name_or_index</span>   <span class="n">attribute</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">index</span> <span class="n">number</span><span class="p">;</span> <span class="k">if</span> <span class="n">a</span> <span class="n">name</span> <span class="ow">is</span>
@@ -1540,14 +1539,14 @@ VD class instance.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VDField.attrinfo">
-<code class="descname">attrinfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VDField.attrinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VDField.attrinfo" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">attrinfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VDField.attrinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VDField.attrinfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return info about all the field attributes.</p>
 <p>Args:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">no</span> <span class="n">argument</span>
 </pre></div>
 </div>
 <p>Returns:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dictionnary</span> <span class="n">describing</span> <span class="n">each</span> <span class="n">vdata</span> <span class="n">attribute</span><span class="p">;</span> <span class="k">for</span> <span class="n">each</span> <span class="n">attribute</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dictionary</span> <span class="n">describing</span> <span class="n">each</span> <span class="n">vdata</span> <span class="n">attribute</span><span class="p">;</span> <span class="k">for</span> <span class="n">each</span> <span class="n">attribute</span>
 <span class="n">a</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">data</span><span class="p">)</span> <span class="n">pair</span> <span class="ow">is</span> <span class="n">added</span> <span class="n">to</span> <span class="n">the</span> <span class="n">dictionary</span><span class="p">,</span> <span class="n">where</span> <span class="s1">&#39;data&#39;</span> <span class="ow">is</span>
 <span class="n">a</span> <span class="nb">tuple</span> <span class="n">holding</span><span class="p">:</span>
 
@@ -1562,7 +1561,7 @@ VD class instance.</p>
 
 <dl class="method">
 <dt id="pyhdf.VS.VDField.find">
-<code class="descname">find</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VDField.find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VDField.find" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">find</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VDField.find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VDField.find" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search the field for a given attribute.</p>
 <p>Args:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">name</span>    <span class="n">attribute</span> <span class="n">name</span>
@@ -1581,14 +1580,14 @@ VD class instance.</p>
 
 <dl class="class">
 <dt id="pyhdf.VS.VDAttr">
-<em class="property">class </em><code class="descclassname">pyhdf.VS.</code><code class="descname">VDAttr</code><span class="sig-paren">(</span><em>obj</em>, <em>name_or_index</em>, <em>fIndex</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VDAttr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VDAttr" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pyhdf.VS.</code><code class="sig-name descname">VDAttr</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">name_or_index</em>, <em class="sig-param">fIndex</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VDAttr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VDAttr" title="Permalink to this definition">¶</a></dt>
 <dd><p>The VDAttr class encapsulates methods used to set and query attributes
 defined at the level either of the vdata or of the vdata field.
 To create an instance of this class, call the attr() method of a VD
 (vdata) or VDField (vdata field) instance.</p>
 <dl class="method">
 <dt id="pyhdf.VS.VDAttr.get">
-<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VDAttr.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VDAttr.get" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VDAttr.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VDAttr.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the attribute value.</p>
 <p>Args:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">no</span> <span class="n">argument</span>
@@ -1606,7 +1605,7 @@ To create an instance of this class, call the attr() method of a VD
 
 <dl class="method">
 <dt id="pyhdf.VS.VDAttr.info">
-<code class="descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VDAttr.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VDAttr.info" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VDAttr.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VDAttr.info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve info about the attribute.</p>
 <p>Args:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">no</span> <span class="n">argument</span>
@@ -1625,7 +1624,7 @@ To create an instance of this class, call the attr() method of a VD
 
 <dl class="method">
 <dt id="pyhdf.VS.VDAttr.set">
-<code class="descname">set</code><span class="sig-paren">(</span><em>data_type</em>, <em>values</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VDAttr.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VDAttr.set" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="sig-param">data_type</em>, <em class="sig-param">values</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyhdf/VS.html#VDAttr.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhdf.VS.VDAttr.set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the attribute value.</p>
 <p>Args:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data_type</span>    <span class="p">:</span> <span class="n">attribute</span> <span class="n">data</span> <span class="nb">type</span> <span class="p">(</span><span class="n">see</span> <span class="n">constants</span> <span class="n">HC</span><span class="o">.</span><span class="n">xxx</span><span class="p">)</span>
@@ -1661,7 +1660,7 @@ To create an instance of this class, call the attr() method of a VD
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">VS (Vdata table) API (<code class="docutils literal notranslate"><span class="pre">pyhdf.VS</span></code>)</a><ul>
+<li><a class="reference internal" href="#">VS (Vdata table) API (<code class="xref py py-mod docutils literal notranslate"><span class="pre">pyhdf.VS</span></code>)</a><ul>
 <li><a class="reference internal" href="#introduction">Introduction</a></li>
 <li><a class="reference internal" href="#vs-module-key-features">VS module key features</a></li>
 <li><a class="reference internal" href="#accessing-the-vs-module">Accessing the VS module</a></li>
@@ -1689,10 +1688,10 @@ To create an instance of this class, call the attr() method of a VD
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="SD.html"
-                        title="previous chapter">SD (scientific dataset) API (<code class="docutils literal notranslate"><span class="pre">pyhdf.SD</span></code>)</a></p>
+                        title="previous chapter">SD (scientific dataset) API (<code class="xref py py-mod docutils literal notranslate"><span class="pre">pyhdf.SD</span></code>)</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="V.html"
-                        title="next chapter">V (Vgroup) API (<code class="docutils literal notranslate"><span class="pre">pyhdf.V</span></code>)</a></p>
+                        title="next chapter">V (Vgroup) API (<code class="xref py py-mod docutils literal notranslate"><span class="pre">pyhdf.V</span></code>)</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -1701,13 +1700,11 @@ To create an instance of this class, call the attr() method of a VD
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -1731,12 +1728,12 @@ To create an instance of this class, call the attr() method of a VD
         <li class="right" >
           <a href="SD.html" title="SD (scientific dataset) API (pyhdf.SD)"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pyhdf 0.10.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">pyhdf 0.10.2 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, pyhdf authors.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
     </div>
   </body>
 </html>
