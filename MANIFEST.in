@@ -1,6 +1,7 @@
 include README.md
 include LICENSE
 include AUTHORS
+include pyproject.toml
 include pyhdf/hdfext.i
 recursive-include examples *
 recursive-include doc *
