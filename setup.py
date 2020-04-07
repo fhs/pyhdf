@@ -113,7 +113,7 @@ if sys.platform == 'win32':
 elif _use_hdf4alt(library_dirs):
     libraries = ["mfhdfalt", "dfalt"]
 else:
-    libraries = ["mfhdf", "df"]
+    libraries = ["mfhdf", "hdf"]
 
 if szip_installed:
     extra_compile_args = []
