@@ -1,0 +1,17 @@
+name: package into static linked wheel
+
+jobs:
+    package:
+        name: package up into a nice wheel
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v2
+
+        - name: Build manylinux Python wheels
+          uses: RalfG/python-wheels-manylinux-build@v0.2-manylinux1_x86_64
+          with:
+            python-versions: 'cp36-cp36m cp37-cp37m cp38-cp38 cp39-cp39'
+            ystem-packages: 'epel-release hdf hdf-devel'
+            build-requirements: 'numpy'
+            pre-build-command: 'ln -s /usr/lib64/hdf/lib* /usr/lib64/'
+            package-path: ''
