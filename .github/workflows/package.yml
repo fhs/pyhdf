@@ -1,5 +1,7 @@
 name: package into static linked wheel
 
+on: [push]
+
 jobs:
     package:
         name: package up into a nice wheel
