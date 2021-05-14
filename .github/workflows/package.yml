@@ -13,14 +13,23 @@ jobs:
         steps:
         - uses: actions/checkout@v2
 
-        - name: Build manylinux Python wheels
-          uses: RalfG/python-wheels-manylinux-build@v0.3.3-manylinux2014_x86_64
+        - uses: actions/setup-python@v2
+          name: Install Python
           with:
-            python-versions: 'cp36-cp36m cp37-cp37m cp38-cp38 cp39-cp39'
-            system-packages: 'epel-release hdf hdf-devel'
-            build-requirements: 'numpy'
-            pre-build-command: 'ln -s /usr/lib64/hdf/lib* /usr/lib64/'
-            package-path: ''
+            python-version: '3.7'
+
+        - name: Install cibuildwheel
+          run: |
+            python -m pip install cibuildwheel==1.9.0
+
+        - name: Build wheels for linux python versions
+          run: |
+            python -m cibuildwheel --output-dir dist
+          env:
+            CIBW_BUILD: '{cp,pp}3*-*'
+            CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
+            CIBW_BEFORE_ALL_LINUX: yum -y install epel-release hdf hdf-devel && ln -s /usr/lib64/hdf/lib* /usr/lib64/
+            CIBW_ARCHS_LINUX: 'x86_64'
         
         - name: purge old _linux_wheels
           run: |
