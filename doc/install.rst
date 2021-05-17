@@ -16,7 +16,10 @@ Once you're in the conda environment, install `pyhdf from conda-forge
     conda install -c conda-forge pyhdf
 
 If you don't want to use conda, the instructions below describes how you
-can compile pyhdf from source.
+can compile pyhdf from source.  Version 0.10.3 also includes static linked wheels for
+linux with cpython 3.6-3.9.  If compatible, `pip install pyhdf` will include the neccessary
+libraries for you.  If you don't want to use the built manylinux distribution, follow instructions
+below to build from source downloading from pypi with `pip install pyhdf --no-binary :all:`.
 
 
 Download the source
