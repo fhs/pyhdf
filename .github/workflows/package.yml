@@ -35,7 +35,12 @@ jobs:
           run: |
             mkdir wheelhouse
             cp dist/*manylinux* wheelhouse/
-    
+        
+        - name: create source distribution archive for pypi
+          run: |
+            python -m pip install numpy
+            python setup.py sdist -d wheelhouse
+
         - uses: actions/upload-artifact@v2
           with:
             name: wheelhouse
