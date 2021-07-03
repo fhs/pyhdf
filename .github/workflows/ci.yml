@@ -9,7 +9,6 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         python-version: [ '3.6', '3.7', '3.8', '3.9' ]
     env:
-      PREFIX: $HOME/hdf4
       VERSION: 4.2.15
 
     name: Python ${{ matrix.python-version }} / ${{ matrix.os }}
@@ -27,6 +26,7 @@ jobs:
           gunzip ${TARFILE}.gz
           mv ${TARFILE} ${TARFILE}.gz
           tar xf ${TARFILE}.gz
+          export PREFIX=$HOME/hdf4
           mkdir -p $PREFIX
           ./hdf/HDF-${VERSION}-Darwin.sh --skip-license --prefix=$PREFIX
 
@@ -42,8 +42,10 @@ jobs:
 
       - name: Test pyhdf
         run: |
-          export LIBRARY_DIRS=$PREFIX/HDF_Group/HDF/${VERSION}/lib
-          export INCLUDE_DIRS=$PREFIX/HDF_Group/HDF/${VERSION}/include
+          if [ "$(uname)" = "Darwin" ]; then
+            export LIBRARY_DIRS=$HOME/hdf4/HDF_Group/HDF/${VERSION}/lib
+            export INCLUDE_DIRS=$HOME/hdf4/HDF_Group/HDF/${VERSION}/include
+          fi
           python3 --version
           python3 setup.py nosetests -v
           python3 examples/runall.py
