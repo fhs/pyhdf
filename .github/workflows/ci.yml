@@ -8,14 +8,14 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
         python-version: [ '3.6', '3.7', '3.8', '3.9' ]
-    name: Python ${{ matrix.python-version }} pyhdf
+    name: Python ${{ matrix.python-version }} / ${{ matrix.os }}
     steps:
       - name: Install libhdf4-dev (ubuntu-latest)
-        if: matrix.platform == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install libhdf4-dev
 
       - name: Install libhdf4-dev (macos-latest)
-        if: matrix.platform == 'macos-latest'
+        if: matrix.os == 'macos-latest'
         run: |
           VERSION=4.2.15
           TARFILE=hdf-${VERSION}-osx1013_64-clang.tar
