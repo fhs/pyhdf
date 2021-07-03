@@ -9,7 +9,7 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         python-version: [ '3.6', '3.7', '3.8', '3.9' ]
     env:
-      PREFIX: ${{env.HOME}}/hdf4
+      PREFIX: $HOME/hdf4
       VERSION: 4.2.15
 
     name: Python ${{ matrix.python-version }} / ${{ matrix.os }}
