@@ -20,7 +20,7 @@ jobs:
           architecture: x64
 
       - name: Install python dependencies
-        run: python3 -m pip install numpy
+        run: python3 -m pip install numpy nose
 
       - name: Test pyhdf
         run: |
