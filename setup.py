@@ -110,6 +110,8 @@ if sys.platform == 'win32':
 
 if sys.platform == 'win32':
     libraries = ["mfhdf", "hdf", "xdr" ]
+elif sys.platform == 'darwin':
+    libraries = ["mfhdf", "hdf"]
 elif _use_hdf4alt(library_dirs):
     libraries = ["mfhdfalt", "dfalt"]
 else:
