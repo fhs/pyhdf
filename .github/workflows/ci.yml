@@ -8,6 +8,10 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
         python-version: [ '3.6', '3.7', '3.8', '3.9' ]
+    env:
+      PREFIX: ${{env.HOME}}/hdf4
+      VERSION: 4.2.15
+
     name: Python ${{ matrix.python-version }} / ${{ matrix.os }}
     steps:
       - name: Install libhdf4-dev (ubuntu-latest)
@@ -17,18 +21,14 @@ jobs:
       - name: Install libhdf4-dev (macos-latest)
         if: matrix.os == 'macos-latest'
         run: |
-          VERSION=4.2.15
           TARFILE=hdf-${VERSION}-osx1013_64-clang.tar
           curl -O https://support.hdfgroup.org/ftp/HDF/releases/HDF${VERSION}/bin/unix/${TARFILE}.gz
           # The file is compressed twice for some reason.
           gunzip ${TARFILE}.gz
           mv ${TARFILE} ${TARFILE}.gz
           tar xf ${TARFILE}.gz
-          PREFIX=$HOME/hdf4
           mkdir -p $PREFIX
           ./hdf/HDF-${VERSION}-Darwin.sh --skip-license --prefix=$PREFIX
-          export LIBRARY_DIRS=$PREFIX/HDF_Group/HDF/${VERSION}/lib
-          export INCLUDE_DIRS=$PREFIX/HDF_Group/HDF/${VERSION}/include
 
       - uses: actions/checkout@v2
       - name: Setup python
@@ -42,6 +42,8 @@ jobs:
 
       - name: Test pyhdf
         run: |
+          export LIBRARY_DIRS=$PREFIX/HDF_Group/HDF/${VERSION}/lib
+          export INCLUDE_DIRS=$PREFIX/HDF_Group/HDF/${VERSION}/include
           python3 --version
           python3 setup.py nosetests -v
           python3 examples/runall.py
