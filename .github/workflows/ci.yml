@@ -45,6 +45,7 @@ jobs:
           if [ "$(uname)" = "Darwin" ]; then
             export LIBRARY_DIRS=$HOME/hdf4/HDF_Group/HDF/${VERSION}/lib
             export INCLUDE_DIRS=$HOME/hdf4/HDF_Group/HDF/${VERSION}/include
+            export DYLD_LIBRARY_PATH=$LIBRARY_DIRS:$DYLD_LIBRARY_PATH
           fi
           python3 --version
           python3 setup.py nosetests -v
