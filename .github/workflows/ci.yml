@@ -3,14 +3,32 @@ name: CI
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        os: [ubuntu-latest, macos-latest]
         python-version: [ '3.6', '3.7', '3.8', '3.9' ]
     name: Python ${{ matrix.python-version }} pyhdf
     steps:
-      - name: Install libhdf4-dev
+      - name: Install libhdf4-dev (ubuntu-latest)
+        if: matrix.platform == 'ubuntu-latest'
         run: sudo apt-get install libhdf4-dev
+
+      - name: Install libhdf4-dev (macos-latest)
+        if: matrix.platform == 'macos-latest'
+        run: |
+          VERSION=4.2.15
+          TARFILE=hdf-${VERSION}-osx1013_64-clang.tar
+          curl -O https://support.hdfgroup.org/ftp/HDF/releases/HDF${VERSION}/bin/unix/${TARFILE}.gz
+          # The file is compressed twice for some reason.
+          gunzip ${TARFILE}.gz
+          mv ${TARFILE} ${TARFILE}.gz
+          tar xf ${TARFILE}.gz
+          PREFIX=$HOME/hdf4
+          mkdir -p $PREFIX
+          ./hdf/HDF-${VERSION}-Darwin.sh --skip-license --prefix=$PREFIX
+          export LIBRARY_DIRS=$PREFIX/HDF_Group/HDF/${VERSION}/lib
+          export INCLUDE_DIRS=$PREFIX/HDF_Group/HDF/${VERSION}/include
 
       - uses: actions/checkout@v2
       - name: Setup python
