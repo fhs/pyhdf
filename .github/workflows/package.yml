@@ -60,7 +60,7 @@ jobs:
           - name: Download all the dists
             uses: actions/download-artifact@v2
             with:
-              name: wheels
+              name: wheelhouse
               path: ./wheelhouse/
 
           - name: create source distribution archive for pypi
