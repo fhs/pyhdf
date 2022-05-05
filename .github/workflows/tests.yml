@@ -1,0 +1,63 @@
+name: Test package
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number }}-${{ github.event.type }}
+  cancel-in-progress: true
+
+on:
+  push:
+
+jobs:
+    packages:
+        name: Test on ${{ matrix.os }} (${{ matrix.python }})
+        runs-on: ${{ matrix.os }}
+        strategy:
+          fail-fast: true
+          matrix:
+            os: [ubuntu-latest, macos-latest, windows-latest]
+            python: ["3.7", "3.8", "3.9", "3.x"]
+
+        steps:
+        - uses: actions/checkout@v2
+
+        - name: Install Python
+          uses: actions/setup-python@v2
+          with:
+            python-version: ${{ matrix.python }}
+
+        - name: Install libhdf4-dev (macos-latest)
+          if: matrix.os == 'macos-latest'
+          run: |
+            brew install ninja &&
+            cd /tmp &&
+            git clone https://github.com/HDFGroup/hdf4.git &&
+            mkdir build && cd build &&
+            ../hdf4/configure --enable-shared --disable-static --disable-fortran --disable-netcdf --enable-java --enable-production --with-zlib --prefix=/usr/local &&
+            make install
+
+        - name: Install libhdf4-dev (ubuntu-latest)
+          if: matrix.os == 'ubuntu-latest'
+          run: sudo apt-get install libhdf4-dev
+
+        - name: Setup conda (windows-latest)
+          if: matrix.os == 'windows-latest'
+          uses: s-weigand/setup-conda@v1
+
+        - name: Install libhdf4-dev (windows-latest)
+          if: matrix.os == 'windows-latest'
+          run: |
+            conda config --set always_yes yes --set changeps1 no --set auto_update_conda no --set safety_checks disabled
+            conda install -q hdf4
+            echo "LIBRARY_DIRS=C:\Miniconda\Library\lib;C:\Miniconda\Library\bin" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            echo "INCLUDE_DIRS=C:\Miniconda\Library\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+        - name: Install requirements
+          run: |
+            python -m pip install -U pip
+            python -m pip install numpy pytest
+
+        - name: Run tests
+          run: |
+            python setup.py develop
+            pytest
+            python examples/runall.py

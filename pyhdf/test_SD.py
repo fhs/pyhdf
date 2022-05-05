@@ -5,7 +5,6 @@ import os
 import pyhdf.SD
 import shutil
 import tempfile
-from nose.tools import eq_
 from numpy.testing import assert_array_equal
 from pyhdf.SD import SDC
 
@@ -29,7 +28,7 @@ def test_long_varname():
         name, _, _, _, _ = sds.info()
         sds.endaccess()
         sd.end()
-        eq_(sds_name, name)
+        assert sds_name == name
     finally:
         shutil.rmtree(temp)
 
@@ -42,16 +41,16 @@ def test_negative_int8():
         data = np.zeros(shape=(20,20), dtype=np.int8)
         sds = sd.create("testsds", SDC.INT8, data.shape)
         sds.setfillvalue(-1)
-        eq_(sds.getfillvalue(), -1)
+        assert sds.getfillvalue() == -1
 
         sds.setrange(-50, -30)
         min, max = sds.getrange()
-        eq_(min, -50)
-        eq_(max, -30)
+        assert min == -50
+        assert max == -30
 
         attr = sds.attr("testattr")
         attr.set(SDC.INT8, -1)
-        eq_(attr.get(), -1)
+        assert attr.get() == -1
 
         dim = sds.dim(0)
         scale = [-1]*20
