@@ -1,4 +1,4 @@
-name: package into static linked wheel
+name: Pypi build
 
 on:
   push:
