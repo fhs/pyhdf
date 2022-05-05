@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/fhs/pyhdf.svg?branch=master)](https://travis-ci.org/fhs/pyhdf)
-[![Build status](https://ci.appveyor.com/api/projects/status/4a8pf8vo8nrjgxol/branch/master?svg=true)](https://ci.appveyor.com/project/fhs/pyhdf/branch/master)
+[![Tests](https://github.com/fhs/pyhdf/actions/workflows/tests.yml/badge.svg)](https://github.com/fhs/pyhdf/actions/workflows/tests.yml)
+[![Pypi build](https://github.com/fhs/pyhdf/actions/workflows/package.yml/badge.svg)](https://github.com/fhs/pyhdf/actions/workflows/package.yml)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/pyhdf/badges/version.svg)](https://anaconda.org/conda-forge/pyhdf)
 
 # pyhdf
