@@ -52,7 +52,7 @@ jobs:
               cd /tmp &&
               git clone https://github.com/HDFGroup/hdf4.git &&
               mkdir build && cd build &&
-              ../hdf4/configure --enable-shared --disable-static --disable-fortran --disable-netcdf --enable-java --enable-production --with-zlib --prefix=/usr/local &&
+              ../hdf4/configure --enable-shared --disable-static --disable-fortran --disable-netcdf --enable-production --with-zlib --prefix=/usr/local &&
               make install
             CIBW_BEFORE_ALL_WINDOWS: >
               conda config --set always_yes yes --set changeps1 no --set auto_update_conda no --set safety_checks disabled &&
