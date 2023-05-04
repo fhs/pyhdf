@@ -102,7 +102,7 @@
 
 /* Tags */
 #define  DFTAG_NDG  720
-#define  DFTAG_VH  1962 
+#define  DFTAG_VH  1962
 #define  DFTAG_VG  1965
 
 /* limits */
@@ -129,7 +129,7 @@ typedef unsigned char uint8;
 #include "mfhdf.h"
 %}
 
-/* 
+/*
  ***************
  * Basic HDF API
  ***************
@@ -191,7 +191,7 @@ extern void _HEprint(void);
  ********
  */
 
-/* 
+/*
  * Interface to numpy, which is used to read and write
  * SD array data.
  */
@@ -205,7 +205,8 @@ extern void _HEprint(void);
 %{
 #include "hdfi.h"     /* declares int32, float32, etc */
 
-#include "numpy/oldnumeric.h"
+#include "numpy/ndarraytypes.h"
+#include "numpy/ndarrayobject.h"
 
 #define DFNT_FLOAT32     5
 #define DFNT_FLOAT       5  /* For backward compat; don't use */
@@ -233,21 +234,21 @@ static int HDFtoNumericType(int hdf)    {
     int num;
 
     switch (hdf)   {
-        case DFNT_FLOAT32: num = PyArray_FLOAT; break;
-        case DFNT_FLOAT64: num = PyArray_DOUBLE; break;
-        case DFNT_INT8   : num = PyArray_SBYTE; break;
-        case DFNT_UINT8  : num = PyArray_UBYTE; break;
-        case DFNT_INT16  : num = PyArray_SHORT; break;
+        case DFNT_FLOAT32: num = NPY_FLOAT; break;
+        case DFNT_FLOAT64: num = NPY_DOUBLE; break;
+        case DFNT_INT8   : num = NPY_BYTE; break;
+        case DFNT_UINT8  : num = NPY_UBYTE; break;
+        case DFNT_INT16  : num = NPY_SHORT; break;
 #ifndef NOUINT
-        case DFNT_UINT16 : num = PyArray_USHORT; break;
+        case DFNT_UINT16 : num = NPY_USHORT; break;
 #endif
-        case DFNT_INT32  : num = PyArray_INT; break;
+        case DFNT_INT32  : num = NPY_INT; break;
 #ifndef NOUINT
-        case DFNT_UINT32 : num = PyArray_UINT; break;
+        case DFNT_UINT32 : num = NPY_UINT; break;
 #endif
-        case DFNT_CHAR8  : num = PyArray_CHAR; break;
-        case DFNT_UCHAR8 : num = PyArray_UBYTE; break;
-        default: 
+        case DFNT_CHAR8  : num = NPY_CHAR; break;
+        case DFNT_UCHAR8 : num = NPY_UBYTE; break;
+        default:
             num = -1;
             break;
         }
@@ -256,7 +257,7 @@ static int HDFtoNumericType(int hdf)    {
 
 static PyObject * _SDreaddata_0(int32 sds_id, int32 data_type,
                                 PyObject *start,
-                                PyObject *edges, 
+                                PyObject *edges,
                                 PyObject *stride)    {
 
     /*
@@ -329,13 +330,13 @@ static PyObject * _SDreaddata_0(int32 sds_id, int32 data_type,
         PyErr_SetString(PyExc_ValueError, "data_type not compatible with numpy");
         return NULL;
         }
-    if ((array = (PyArrayObject *) 
+    if ((array = (PyArrayObject *)
                  PyArray_SimpleNew(outRank, dims, num_type)) == NULL)
         return NULL;
         /*
          * Load it from the SDS.
          */
-    status = SDreaddata(sds_id, startArr, strideArr, edgesArr, 
+    status = SDreaddata(sds_id, startArr, strideArr, edgesArr,
                         array -> data);
     if (status < 0)    {
         PyErr_SetString(PyExc_ValueError, "SDreaddata failure");
@@ -352,28 +353,28 @@ static PyObject * _SDreaddata_0(int32 sds_id, int32 data_type,
     if (outRank > 0)
         return (PyObject *) array;
     switch (num_type)    {
-        case PyArray_FLOAT:
+        case NPY_FLOAT:
             f32 = *(float *) array->data;
             o = PyFloat_FromDouble((double) f32);
             break;
-        case PyArray_DOUBLE:
+        case NPY_DOUBLE:
             f64 = *(double *) array->data;
             o = PyFloat_FromDouble(f64);
             break;
-        case PyArray_CHAR:
-        case PyArray_SBYTE:
+        case NPY_CHAR:
+        case NPY_BYTE:
             i32 = *(char *) array->data;
             o = PyInt_FromLong((long) i32);
             break;
-        case PyArray_UBYTE:
+        case NPY_UBYTE:
             i32 = *(unsigned char *) array->data;
             o = PyInt_FromLong((long) i32);
             break;
-        case PyArray_SHORT:
+        case NPY_SHORT:
             i32 = *(short *) array->data;
             o = PyInt_FromLong((long) i32);
             break;
-        case PyArray_INT:
+        case NPY_INT:
             i32 = *(int *) array->data;
             o = PyInt_FromLong((long) i32);
             break;
@@ -384,7 +385,7 @@ static PyObject * _SDreaddata_0(int32 sds_id, int32 data_type,
 
 static PyObject * _SDwritedata_0(int32 sds_id, int32 data_type,
                                  PyObject *start,
-                                 PyObject *edges, 
+                                 PyObject *edges,
                                  PyObject *data,
                                  PyObject *stride)    {
 
@@ -438,13 +439,13 @@ static PyObject * _SDwritedata_0(int32 sds_id, int32 data_type,
         PyErr_SetString(PyExc_ValueError, "data_type not compatible with numpy");
         return NULL;
         }
-    if ((array = (PyArrayObject *) 
+    if ((array = (PyArrayObject *)
                  PyArray_ContiguousFromObject(data, num_type, rank - 1, rank)) == NULL)
         return NULL;
         /*
          * Store in the SDS.
          */
-    status = SDwritedata(sds_id, startArr, strideArr, edgesArr, 
+    status = SDwritedata(sds_id, startArr, strideArr, edgesArr,
                          array -> data);
     Py_DECREF(array);      /* Free array */
     if (status < 0)    {
@@ -454,26 +455,26 @@ static PyObject * _SDwritedata_0(int32 sds_id, int32 data_type,
         /*
          * Return None.
          */
-    Py_INCREF(Py_None); 
+    Py_INCREF(Py_None);
     return Py_None;
     }
 
 %}
 
 /*
- * Following two routines are defined above, and interface to the 
+ * Following two routines are defined above, and interface to the
  * `SDreaddata()' and `SDwritedata()' hdf functions.
  */
 
 extern PyObject * _SDreaddata_0(int32 sds_id, int32 data_type,
-                                PyObject *start, 
+                                PyObject *start,
                                 PyObject *edges,
                                 PyObject *stride);
 
 extern PyObject * _SDwritedata_0(int32 sds_id, int32 data_type,
-                                 PyObject *start, 
+                                 PyObject *start,
                                  PyObject *edges,
-                                 PyObject *data, 
+                                 PyObject *data,
                                  PyObject *stride);
 
 /*
@@ -482,7 +483,7 @@ extern PyObject * _SDwritedata_0(int32 sds_id, int32 data_type,
 
 extern int32 SDstart(const char *filename, int32 access_mode);
 
-extern int32 SDcreate(int32 sd_id, const char *sds_name, int32 data_type, 
+extern int32 SDcreate(int32 sd_id, const char *sds_name, int32 data_type,
                       int32 rank, const int32 *dim_sizes);
 
 extern int32 SDselect(int32 sd_id, int32 sds_index);
@@ -519,7 +520,7 @@ extern int32 SDreftoindex(int32 sd_id, int32 sds_ref);
  */
 
 %cstring_bounded_output(char *dim_name, CHAR_BUFFER_SIZE);
-extern int32 SDdiminfo(int32 dim_id, char *dim_name, 
+extern int32 SDdiminfo(int32 dim_id, char *dim_name,
                        int32 *OUTPUT, int32 *OUTPUT, int32 *OUTPUT);
 %clear char *dim_name;
 
@@ -533,7 +534,7 @@ extern int32 SDsetdimname(int32 dim_id, const char *dim_name);
 
 extern int32 SDgetdimscale(int32 dim_id, void *buf);
 
-extern int32 SDsetdimscale(int32 dim_id, int32 n_values, int32 data_type, 
+extern int32 SDsetdimscale(int32 dim_id, int32 n_values, int32 data_type,
                            const void *buf);
 
 /*
@@ -541,7 +542,7 @@ extern int32 SDsetdimscale(int32 dim_id, int32 n_values, int32 data_type,
  */
 
 %cstring_bounded_output(char *attr_name, CHAR_BUFFER_SIZE);
-extern int32 SDattrinfo(int32 obj_id, int32 attr_index, 
+extern int32 SDattrinfo(int32 obj_id, int32 attr_index,
                         char *attr_name, int32 *OUTPUT, int32 *OUTPUT);
 %clear char *attr_name;
 
@@ -564,7 +565,7 @@ extern int32 SDgetcal(int32 sds_id, double *OUTPUT, double *OUTPUT,
 %cstring_bounded_output(char *unit, ATTRIB_BUFFER_SIZE);
 %cstring_bounded_output(char *format, ATTRIB_BUFFER_SIZE);
 %cstring_bounded_output(char *coord_system, ATTRIB_BUFFER_SIZE);
-extern int32 SDgetdatastrs(int32 sds_id, char *label, char *unit, char *format, 
+extern int32 SDgetdatastrs(int32 sds_id, char *label, char *unit, char *format,
                            char *coord_system, int32 len);
 %clear char *label;
 %clear char *unit;
@@ -574,7 +575,7 @@ extern int32 SDgetdatastrs(int32 sds_id, char *label, char *unit, char *format,
 %cstring_bounded_output(char *label, ATTRIB_BUFFER_SIZE);
 %cstring_bounded_output(char *unit, ATTRIB_BUFFER_SIZE);
 %cstring_bounded_output(char *format, ATTRIB_BUFFER_SIZE);
-extern int32 SDgetdimstrs(int32 sds_id, char *label, char *unit, char *format, 
+extern int32 SDgetdimstrs(int32 sds_id, char *label, char *unit, char *format,
                           int32 len);
 %clear char *label;
 %clear char *unit;
@@ -607,7 +608,7 @@ extern int32 SDsetrange(int32 sds_id, const void *max, const void *min);
 
 #include "hcomp.h"
 
-static int32 _SDgetcompress(int32 sds_id, int32 *comp_type, int32 *value, 
+static int32 _SDgetcompress(int32 sds_id, int32 *comp_type, int32 *value,
                             int32 *v2, int32 *v3, int32 *v4, int32 *v5)    {
 
     comp_info c_info;
@@ -684,7 +685,7 @@ extern int32 _SDsetcompress(int32 sds_id, int32 comp_type, int32 value,
  * Misc
  */
 
-extern int32 SDsetexternalfile(int32 sds_id, const char *filename, 
+extern int32 SDsetexternalfile(int32 sds_id, const char *filename,
                                int32 offset);
 
 /*
@@ -692,9 +693,9 @@ extern int32 SDsetexternalfile(int32 sds_id, const char *filename,
  * VS API
  ********
  */
- 
 
-/* 
+
+/*
  * Access / Create
  *****************
  */
@@ -713,7 +714,7 @@ extern intn    Vfinish(int32 file_id);         /* Vend is a macro */
  * Creating one-field vdata.
  */
 
-extern int32  VHstoredata(int32 file_id, 
+extern int32  VHstoredata(int32 file_id,
                           const char *fieldname,
                           void *buf,
                           int32 n_records,
@@ -721,7 +722,7 @@ extern int32  VHstoredata(int32 file_id,
                           const char *vdata_name,
                           const char *vdata_class);
 
-extern int32  VHstoredatam(int32 file_id, 
+extern int32  VHstoredatam(int32 file_id,
                            const char *fieldname,
                            void *buf,
                            int32 n_records,
@@ -823,13 +824,13 @@ extern int32  VFfieldtype(int32 vdata_id,
 extern const char *VFfieldname(int32 vdata_id,
                                int32 field_index);
 
-extern int32  VFfieldesize(int32 vdata_id, 
+extern int32  VFfieldesize(int32 vdata_id,
                            int32 field_index);
 
-extern int32  VFfieldisize(int32 vdata_id, 
+extern int32  VFfieldisize(int32 vdata_id,
                            int32 field_index);
 
-extern int32  VFfieldorder(int32 vdata_id, 
+extern int32  VFfieldorder(int32 vdata_id,
                            int32 field_index);
 
 
@@ -850,24 +851,24 @@ extern intn   VSfexist(int32 vdata_id,
  * Attributes.
  */
 
-extern int32 VSsetclass(int32 vdata_id, 
+extern int32 VSsetclass(int32 vdata_id,
                         const char *vdata_class);
 
 extern int32 VSsetname(int32 vdata_id,
                        const char *vdata_name);
 
-extern intn  VSsetinterlace(int32 vdata_id, 
+extern intn  VSsetinterlace(int32 vdata_id,
                             int32 interlace_mode);
 
-extern intn  VSsetattr(int32 vdata_id, 
+extern intn  VSsetattr(int32 vdata_id,
                        int32 field_index,
-                       const char *attr_name, 
+                       const char *attr_name,
                        int32 data_type,
-                       int32 n_values, 
+                       int32 n_values,
                        const void *values);
 
-extern intn  VSgetattr(int32 vdata_id, 
-                       int32 field_index, 
+extern intn  VSgetattr(int32 vdata_id,
+                       int32 field_index,
                        intn  attr_index,
                        void *buf);
 
@@ -879,7 +880,7 @@ extern int32 VSnattrs(int32 vdata_id);
 %cstring_bounded_output(char *attr_name, CHAR_BUFFER_SIZE);
 extern intn  VSattrinfo(int32 vdata_id,
                         int32 field_index,
-                        intn  attr_index, 
+                        intn  attr_index,
                         char  *attr_name,
                         int32 *OUTPUT,     /* data_type */
                         int32 *OUTPUT,     /* n_values */
@@ -981,19 +982,19 @@ extern int32 Vnrefs(int32 vgroup_id,
 extern intn  Vfindattr(int32 vgroup_id,
                        const char *attr_name);
 
-extern intn  Vgetattr(int32 vdata_id, 
+extern intn  Vgetattr(int32 vdata_id,
 		      intn  attr_index,
 		      void *buf);
 
-extern intn  Vsetattr(int32 vgroup_id, 
-                      const char *attr_name, 
+extern intn  Vsetattr(int32 vgroup_id,
+                      const char *attr_name,
                       int32 data_type,
-                      int32 n_values, 
+                      int32 n_values,
                       const void *values);
 
 %cstring_bounded_output(char *attr_name, CHAR_BUFFER_SIZE);
 extern intn  Vattrinfo(int32 vgroup_id,
-		       intn  attr_index, 
+		       intn  attr_index,
 		       char  *attr_name,
 		       int32 *OUTPUT,     /* data_type */
 		       int32 *OUTPUT,     /* n_values */
