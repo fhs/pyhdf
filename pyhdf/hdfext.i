@@ -205,6 +205,7 @@ extern void _HEprint(void);
 %{
 #include "hdfi.h"     /* declares int32, float32, etc */
 
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include "numpy/ndarraytypes.h"
 #include "numpy/ndarrayobject.h"
 
@@ -246,7 +247,7 @@ static int HDFtoNumericType(int hdf)    {
 #ifndef NOUINT
         case DFNT_UINT32 : num = NPY_UINT; break;
 #endif
-        case DFNT_CHAR8  : num = NPY_CHAR; break;
+        case DFNT_CHAR8  : num = NPY_STRING; break;
         case DFNT_UCHAR8 : num = NPY_UBYTE; break;
         default:
             num = -1;
@@ -337,7 +338,7 @@ static PyObject * _SDreaddata_0(int32 sds_id, int32 data_type,
          * Load it from the SDS.
          */
     status = SDreaddata(sds_id, startArr, strideArr, edgesArr,
-                        array -> data);
+                        PyArray_DATA(array));
     if (status < 0)    {
         PyErr_SetString(PyExc_ValueError, "SDreaddata failure");
         Py_DECREF(array);  /* Free array */
@@ -354,28 +355,28 @@ static PyObject * _SDreaddata_0(int32 sds_id, int32 data_type,
         return (PyObject *) array;
     switch (num_type)    {
         case NPY_FLOAT:
-            f32 = *(float *) array->data;
+            f32 = *(float *) PyArray_DATA(array);
             o = PyFloat_FromDouble((double) f32);
             break;
         case NPY_DOUBLE:
-            f64 = *(double *) array->data;
+            f64 = *(double *) PyArray_DATA(array);
             o = PyFloat_FromDouble(f64);
             break;
-        case NPY_CHAR:
+        case NPY_STRING:
         case NPY_BYTE:
-            i32 = *(char *) array->data;
+            i32 = *(char *) PyArray_DATA(array);
             o = PyInt_FromLong((long) i32);
             break;
         case NPY_UBYTE:
-            i32 = *(unsigned char *) array->data;
+            i32 = *(unsigned char *) PyArray_DATA(array);
             o = PyInt_FromLong((long) i32);
             break;
         case NPY_SHORT:
-            i32 = *(short *) array->data;
+            i32 = *(short *) PyArray_DATA(array);
             o = PyInt_FromLong((long) i32);
             break;
         case NPY_INT:
-            i32 = *(int *) array->data;
+            i32 = *(int *) PyArray_DATA(array);
             o = PyInt_FromLong((long) i32);
             break;
         }
@@ -446,7 +447,7 @@ static PyObject * _SDwritedata_0(int32 sds_id, int32 data_type,
          * Store in the SDS.
          */
     status = SDwritedata(sds_id, startArr, strideArr, edgesArr,
-                         array -> data);
+                         PyArray_DATA(array));
     Py_DECREF(array);      /* Free array */
     if (status < 0)    {
         PyErr_SetString(PyExc_ValueError, "SDwritedata failure");
