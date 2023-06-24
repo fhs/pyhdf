@@ -17,12 +17,12 @@ jobs:
         env:
           CIBW_SKIP: "*-musllinux_*"
         steps:
-        - uses: actions/checkout@v2
+        - uses: actions/checkout@v3
 
-        - uses: actions/setup-python@v2
+        - uses: actions/setup-python@v4
           name: Install Python
           with:
-            python-version: '3.7'
+            python-version: '3.10'
 
         - name: Setup conda (windows-latest)
           if: matrix.os == 'windows-latest'
@@ -50,9 +50,9 @@ jobs:
             CIBW_BEFORE_ALL_MACOS: >
               brew install ninja &&
               cd /tmp &&
-              git clone https://github.com/HDFGroup/hdf4.git &&
+              git clone --depth 1 --branch hdf-4_2_16 https://github.com/HDFGroup/hdf4.git &&
               mkdir build && cd build &&
-              ../hdf4/configure --enable-shared --disable-static --disable-fortran --disable-netcdf --enable-production --with-zlib --prefix=/usr/local &&
+              ../hdf4/configure --enable-hdf4-xdr --enable-shared --disable-static --disable-fortran --disable-netcdf --enable-production --with-zlib --prefix=/usr/local &&
               make install
             CIBW_BEFORE_ALL_WINDOWS: >
               conda config --set always_yes yes --set changeps1 no --set auto_update_conda no --set safety_checks disabled &&
@@ -71,10 +71,10 @@ jobs:
         needs: [packages]
         runs-on: ubuntu-latest
         steps:
-          - uses: actions/checkout@v2
+          - uses: actions/checkout@v3
 
           - name: Switch to using Python 3.x
-            uses: actions/setup-python@v2
+            uses: actions/setup-python@v4
             with:
               python-version: 3.x
 
