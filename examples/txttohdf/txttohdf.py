@@ -3,8 +3,7 @@
 from __future__ import print_function
 from pyhdf.six.moves import map
 
-from numpy import *
-from pyhdf.SD import *
+from pyhdf.SD import SD, SDC, HDF4Error
 
 import os
 
