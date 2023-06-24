@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 This script runs all the examples in examples directory.
-It should be run from the top-level directory (containing setup.py).
+It should be run from the top-level directory (containing pyproject.toml).
 """
 
 import glob
@@ -20,8 +20,7 @@ class ExampleTester:
     rootdir =  os.getcwd()
 
     def __init__(self):
-        subprocess.check_call([sys.executable, "setup.py", "build_ext", "--inplace"])
-        os.environ["PYTHONPATH"] = self.rootdir
+        pass
 
     def run(self, d, cmd, **kwargs):
         """

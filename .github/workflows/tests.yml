@@ -58,6 +58,6 @@ jobs:
 
         - name: Run tests
           run: |
-            python setup.py develop
+            pip install -e .
             pytest
             python examples/runall.py

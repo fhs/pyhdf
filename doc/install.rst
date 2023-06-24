@@ -96,13 +96,12 @@ Installing from the source archive
 
 3. Install system-wide or locally::
 
-        # sudo python setup.py install
-        $ python setup.py install --prefix=/usr/local (or prefix of choice)
+        # sudo pip install .
+        $ pip install -e .
 
-   Or, you might prefer to make a package (msi, rpm, egg, etc.) and install the 
-   package::
+   Or, you might prefer to make a python wheel and install it::
 
-        $ python setup.py bdist_<package>
+        $ python -m build
 
 To make sure everything works as expected, run the ``hdfstruct.py``
 script (under ``examples/hdfstruct``) on one of your HDF4 files. The

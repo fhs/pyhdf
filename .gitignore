@@ -1,4 +1,6 @@
 *.pyc
+venv/
+.venv/
 build/
 dist/
 pyhdf.egg-info/

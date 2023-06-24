@@ -6,21 +6,27 @@ all: build
 .PHONY: build
 build:
 	make -C pyhdf build
-	$(PYTHON) setup.py build
+	$(PYTHON) -m build
 
 .PHONY: install
 install: build
-	$(PYTHON) setup.py install
+	$(PYTHON) -m pip install .
 
 .PHONY: builddoc
 .ONESHELL:
 builddoc:
 	export PYTHONPATH=$(shell pwd)
-	$(PYTHON) setup.py build_ext --inplace
+	$(PYTHON) install -e .
 	make -C doc clean
 	make -C doc html
 	@echo
 	@echo doc index is doc/_build/html/index.html
+
+.PHONY: clean
+test:
+	$(PYTHON) -m pip install -e .
+	pytest
+	$(PYTHON) examples/runall.py
 
 .PHONY: clean
 clean:
@@ -30,7 +36,7 @@ clean:
 
 .PHONY: dist
 dist:
-	$(PYTHON) setup.py sdist
+	$(PYTHON) -m build
 	@echo Upload to test site:
 	@echo $(PYTHON) -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 	@echo Upload to PyPI:
