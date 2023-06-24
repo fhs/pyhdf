@@ -15,7 +15,7 @@ jobs:
             os: [windows-latest, ubuntu-latest, macos-latest]
             cibw_archs: ["auto"]
         env:
-          CIBW_SKIP: "*-musllinux_*"
+          CIBW_SKIP: "*-musllinux_* cp36-*"
         steps:
         - uses: actions/checkout@v3
 
@@ -36,7 +36,7 @@ jobs:
 
         - name: Install cibuildwheel
           run: |
-            python -m pip install cibuildwheel==2.3.1
+            python -m pip install cibuildwheel==2.13.1
         - name: Build wheels
           run: |
             python -m cibuildwheel --output-dir dist
