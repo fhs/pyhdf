@@ -1,7 +1,40 @@
 [build-system]
-# Minimum requirements for the build system to execute.
-requires = [  # PEP 508 specifications.
-	"numpy",
+requires = [
 	"setuptools",
-	"wheel"
+	"numpy",
 ]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyhdf"
+version = "0.10.5"
+description = "Python interface to the NCSA HDF4 library"
+readme = "README.md"
+keywords = ['hdf4', 'netcdf', 'numpy', 'python', 'pyhdf']
+classifiers = [
+	"Development Status :: 5 - Production/Stable",
+	"Intended Audience :: Science/Research",
+	"Intended Audience :: Developers",
+	"License :: OSI Approved",
+	"Programming Language :: C",
+	"Programming Language :: Python",
+	"Programming Language :: Python :: 3",
+	"Topic :: Software Development",
+	"Topic :: Scientific/Engineering",
+	"Operating System :: Microsoft :: Windows",
+	"Operating System :: POSIX",
+	"Operating System :: Unix",
+	"Operating System :: MacOS",
+]
+license = {text = "MIT License"}
+authors = [
+	{name = "Andre Gosselin", email = "Andre.Gosselin@dfo-mpo.gc.ca"},
+	{name = "Travis E. Oliphant", email = "teoliphant@gmail.com"},
+]
+maintainers = [
+	{name = "Fazlul Shahriar", email = "fshahriar@gmail.com"},
+]
+dependencies = []
+
+[project.urls]
+Homepage = 'https://github.com/fhs/pyhdf'
