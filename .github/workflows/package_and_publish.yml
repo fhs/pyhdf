@@ -65,7 +65,7 @@ jobs:
             path: wheelhouse
 
     publish:
-        if: ${{ startsWith(github.ref, "refs/tags/v") }}
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
         name: Publish to PyPI
         needs: [packages]
         runs-on: ubuntu-latest
