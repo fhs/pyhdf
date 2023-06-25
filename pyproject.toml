@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyhdf"
-version = "0.11.1"
+version = "0.11.2"
 description = "Python interface to the NCSA HDF4 library"
 readme = "README.md"
 keywords = ['hdf4', 'netcdf', 'numpy', 'python', 'pyhdf']
