@@ -34,7 +34,9 @@ authors = [
 maintainers = [
 	{name = "Fazlul Shahriar", email = "fshahriar@gmail.com"},
 ]
-dependencies = []
+dependencies = [
+	"numpy"
+]
 
 [project.urls]
 Homepage = 'https://github.com/fhs/pyhdf'
