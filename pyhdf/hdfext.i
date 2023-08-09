@@ -325,14 +325,17 @@ static PyObject * _SDreaddata_0(int32 sds_id, int32 data_type,
         }
 
         /*
-         * Create output numpy array.
+         * Create output numpy array. We provide 1 for the itemsize argument to
+         * PyArray_New to handle to case when num_type is NPY_STRING. All other
+         * num_type possibilities are fixed-size types, so itemsize is ignored.
          */
     if ((num_type = HDFtoNumericType(data_type)) < 0)    {
         PyErr_SetString(PyExc_ValueError, "data_type not compatible with numpy");
         return NULL;
         }
-    if ((array = (PyArrayObject *)
-                 PyArray_SimpleNew(outRank, dims, num_type)) == NULL)
+    array = (PyArrayObject *)PyArray_New(&PyArray_Type, outRank, dims, num_type,
+                                         NULL, NULL, 1, 0, NULL);
+    if (array == NULL)
         return NULL;
         /*
          * Load it from the SDS.
