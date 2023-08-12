@@ -6,6 +6,7 @@ import pyhdf.SD
 import shutil
 import tempfile
 from numpy.testing import assert_array_equal
+from pathlib import Path
 from pyhdf.SD import SDC
 
 def test_long_varname():
@@ -61,3 +62,11 @@ def test_negative_int8():
         sd.end()
     finally:
         shutil.rmtree(temp)
+
+def test_char():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        hdf_file = str(Path(temp_dir) / "test.hdf")
+        sd = pyhdf.SD.SD(hdf_file, SDC.WRITE | SDC.CREATE)
+        sds = sd.create("test_sds", SDC.CHAR, [5])
+        sds[:] = "ABCDE"
+        assert_array_equal(sds[:], np.array(list("ABCDE"), "S2"))
