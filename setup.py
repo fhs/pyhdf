@@ -4,6 +4,7 @@ import sys
 import os
 import os.path as path
 import shlex
+import sysconfig
 
 from setuptools import Extension, setup
 import numpy as np
@@ -31,6 +32,7 @@ def _use_hdf4alt(libdirs):
     if not sys.platform.startswith("linux"):
         return False
     libdirs.extend(os.environ.get("LD_LIBRARY_PATH", "").split(os.pathsep))
+    libdirs.append("/usr/lib/%s" % sysconfig.get_config_var('MULTIARCH'))
     libdirs.append("/usr/lib")
     libdirs.append("/usr/local/lib")
     libdirs.append("/lib")
