@@ -203,7 +203,7 @@ extern void _HEprint(void);
 
 
 %{
-#include "hdfi.h"     /* declares int32, float32, etc */
+#include "hdf.h"      /* declares int32, float32, etc */
 
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include "numpy/ndarraytypes.h"
