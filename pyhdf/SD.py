@@ -3087,7 +3087,7 @@ class SDim(object):
             buf = _C.array_float64(n_values)
 
         else:
-            raise HDF4Error("setscale: illegal or usupported data_type")
+            raise HDF4Error("setscale: illegal or unsupported data_type")
 
         if n_values == 1:
             buf[0] = scale

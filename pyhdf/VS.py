@@ -643,7 +643,7 @@ vdata attribute. We want to be able update this attribute (see
 following examples). However, the VS API  prohibits changing an attribute
 type when updating its value. Since the length (order) of an attribute
 is part of its type, we make sure of setting the attribute to a length
-long enough to accommodate the longest possible string we migh want to
+long enough to accommodate the longest possible string we might want to
 assign to the attribute.
 
 Appending records to a vdata
@@ -2053,7 +2053,7 @@ class VD(object):
         #  - tuple of the start indices along the vdata dimensions
         #  - tuple of the count values along the vdata dimensions
         #    a count of -1 indicates that an index, not a slice
-        #    was applied on the correcponding dimension.
+        #    was applied on the corresponding dimension.
 
         # Make sure the indexing expression does not exceed the
         # vdata number of dimensions (2).
