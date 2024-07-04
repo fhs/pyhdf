@@ -4107,7 +4107,7 @@ static PyObject * _SDwritedata_0(int32 sds_id, int32 data_type,
 
 #include "hcomp.h"
 
-static int32 _SDgetcompress(int32 sds_id, int32 *comp_type, int32 *value,
+static int32 _SDgetcompress(int32 sds_id, comp_coder_t *comp_type, int32 *value,
                             int32 *v2, int32 *v3, int32 *v4, int32 *v5)    {
 
     comp_info c_info;
@@ -7319,7 +7319,7 @@ SWIGINTERN PyObject *_wrap__SDgetcompress(PyObject *self, PyObject *args) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "_SDgetcompress" "', argument " "1"" of type '" "int32""'");
   } 
   arg1 = (int32)(val1);
-  result = (int32)_SDgetcompress(arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+  result = (int32)_SDgetcompress(arg1,(comp_coder_t *)arg2,arg3,arg4,arg5,arg6,arg7);
   resultobj = SWIG_From_int((int)(result));
   if (SWIG_IsTmpObj(res2)) {
     resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg2)));
