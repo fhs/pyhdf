@@ -96,7 +96,7 @@ jobs:
               packages_dir: wheelhouse/
 
           - name: Download all the wheels
-            uses: actions/download-artifact@v2
+            uses: actions/download-artifact@v4.1.7
             with:
               name: wheelhouse
               path: ./wheelhouse/
