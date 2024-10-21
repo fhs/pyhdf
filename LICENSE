@@ -22,7 +22,7 @@ THE SOFTWARE.
 
 
 Built distributions of pyhdf also include:
-Libary | License
-- hdf  | BSD-3
-- jpeg | Custom BSD-like 
-- zlib | zlib
+Library | License
+- hdf   | BSD-3
+- jpeg  | Custom BSD-like 
+- zlib  | zlib
