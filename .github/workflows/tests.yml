@@ -38,7 +38,7 @@ jobs:
             git clone --depth 1 --branch hdf4.3.0 https://github.com/HDFGroup/hdf4.git &&
             mkdir build && cd build &&
             ../hdf4/configure --enable-hdf4-xdr --enable-shared --disable-static --disable-fortran --disable-netcdf --enable-java --enable-production --with-zlib --prefix=/usr/local &&
-            make install
+            sudo make install
 
         - name: Install libhdf4-dev (ubuntu-latest)
           if: matrix.os == 'ubuntu-latest'
