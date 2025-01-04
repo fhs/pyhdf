@@ -28,9 +28,14 @@ jobs:
         - name: Install libhdf4-dev (macos-latest)
           if: matrix.os == 'macos-latest'
           run: |
-            brew install ninja &&
+            brew install ninja jpeg
+            export PATH="/opt/homebrew/opt/jpeg/bin:$PATH"
+            export LDFLAGS="-L/opt/homebrew/opt/jpeg/lib"
+            export CPPFLAGS="-I/opt/homebrew/opt/jpeg/include"
+            export PKG_CONFIG_PATH="/opt/homebrew/opt/jpeg/lib/pkgconfig"
+
             cd /tmp &&
-            git clone --depth 1 --branch hdf-4_2_16 https://github.com/HDFGroup/hdf4.git &&
+            git clone --depth 1 --branch hdf4.3.0 https://github.com/HDFGroup/hdf4.git &&
             mkdir build && cd build &&
             ../hdf4/configure --enable-hdf4-xdr --enable-shared --disable-static --disable-fortran --disable-netcdf --enable-java --enable-production --with-zlib --prefix=/usr/local &&
             make install
