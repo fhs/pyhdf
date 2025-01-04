@@ -1,5 +1,5 @@
 [![Tests](https://github.com/fhs/pyhdf/actions/workflows/tests.yml/badge.svg)](https://github.com/fhs/pyhdf/actions/workflows/tests.yml)
-[![Pypi build](https://github.com/fhs/pyhdf/actions/workflows/package.yml/badge.svg)](https://github.com/fhs/pyhdf/actions/workflows/package.yml)
+[![Pypi build](https://github.com/fhs/pyhdf/actions/workflows/package_and_publish.yml/badge.svg)](https://github.com/fhs/pyhdf/actions/workflows/package_and_publish.yml)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/pyhdf/badges/version.svg)](https://anaconda.org/conda-forge/pyhdf)
 
 # pyhdf
