@@ -59,7 +59,7 @@ jobs:
           run: |
             mkdir wheelhouse
             cp dist/*.whl wheelhouse
-        - uses: actions/upload-artifact@v2
+        - uses: actions/upload-artifact@v4
           with:
             name: wheelhouse
             path: wheelhouse
@@ -82,7 +82,7 @@ jobs:
               python -m pip install build
               python -m build --sdist -o wheelhouse
 
-          - uses: actions/upload-artifact@v2
+          - uses: actions/upload-artifact@v4
             with:
               name: wheelhouse
               path: wheelhouse
