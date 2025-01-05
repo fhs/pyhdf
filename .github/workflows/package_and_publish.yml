@@ -76,7 +76,7 @@ jobs:
             cp dist/*.whl wheelhouse
         - uses: actions/upload-artifact@v4
           with:
-            name: wheelhouse
+            name: wheelhouse-${{ matrix.os }}
             path: wheelhouse
 
     publish:
@@ -99,7 +99,7 @@ jobs:
 
           - uses: actions/upload-artifact@v4
             with:
-              name: wheelhouse
+              name: wheelhouse-sdist
               path: wheelhouse
 
           - name: Publish SDIST to PyPI  # there are some problems if sdist is not pushed first
@@ -111,10 +111,11 @@ jobs:
               packages_dir: wheelhouse/
 
           - name: Download all the wheels
-            uses: actions/download-artifact@v2
+            uses: actions/download-artifact@v4
             with:
-              name: wheelhouse
               path: ./wheelhouse/
+              pattern: wheelhouse-*
+              merge-multiple: true
 
           - name: Publish a Python distribution to Test PyPI
             uses: pypa/gh-action-pypi-publish@release/v1
