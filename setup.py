@@ -95,6 +95,7 @@ if not compress:
     extra_compile_args += ["-DNOCOMPRESS"]
 
 
+extra_compile_args += ['-Wno-discarded-qualifiers', '-Wincompatible-pointer-types']
 setup(
     ext_modules=[
         Extension(
