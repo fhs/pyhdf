@@ -616,12 +616,14 @@ static int32 _SDgetcompress(int32 sds_id, int32 *comp_type, int32 *value,
                             int32 *v2, int32 *v3, int32 *v4, int32 *v5)    {
 
     comp_info c_info;
+    comp_coder_t coder_type;
     int32 status;
 
 #ifdef NOCOMPRESS
     status = -1;
 #else
-    status = SDgetcompress(sds_id, comp_type, &c_info);
+    status = SDgetcompress(sds_id, &coder_type, &c_info);
+    *comp_type = (int32)coder_type;
     switch (*comp_type)  {
         case COMP_CODE_NONE:
         case COMP_CODE_RLE :
