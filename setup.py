@@ -87,7 +87,7 @@ if szip_installed:
 else:
     extra_compile_args = ["-DNOSZIP"]
 if sys.platform == "win32":
-    libraries += ["libjpeg", "zlib", "ws2_32"]
+    libraries += ["jpeg", "zlib", "ws2_32"]
 else:
     libraries += ["jpeg", "z"]
 

@@ -70,3 +70,5 @@ def test_char():
         sds = sd.create("test_sds", SDC.CHAR, [5])
         sds[:] = "ABCDE"
         assert_array_equal(sds[:], np.array(list("ABCDE"), "S2"))
+        sds.endaccess()
+        sd.end()
