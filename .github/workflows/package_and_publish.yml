@@ -13,7 +13,7 @@ jobs:
             os: [windows-latest, ubuntu-latest, macos-latest]
             cibw_archs: ["auto"]
         env:
-          CIBW_SKIP: "*-musllinux_*
+          CIBW_SKIP: "*-musllinux_*"
         steps:
         - uses: actions/checkout@v7
 
