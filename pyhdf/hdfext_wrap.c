@@ -11547,7 +11547,7 @@ SWIGINTERN int SWIG_mod_exec(PyObject *m) {
   SWIG_Python_SetConstant(d, "H4_MAX_VAR_DIMS",SWIG_From_int((int)(H4_MAX_VAR_DIMS)));
   
   /* Init numpy. Mandatory, otherwise the extension will bomb. */
-  import_array();
+  import_array1(-1);
   
   return 0;
 }

@@ -198,7 +198,7 @@ extern void _HEprint(void);
 
 %init %{
   /* Init numpy. Mandatory, otherwise the extension will bomb. */
-  import_array();
+  import_array1(-1);
   %}
 
 
