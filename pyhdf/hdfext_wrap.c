@@ -4148,6 +4148,7 @@ SWIGINTERN array_float64 *array_float64_frompointer(double *t){
 
 #include "hdf.h"
 #include "mfhdf.h"
+#include "hfile.h"
 
 
 SWIGINTERN swig_type_info*
@@ -9657,7 +9658,12 @@ SWIGINTERN PyObject *_wrap_Vgetname(PyObject *self, PyObject *args) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Vgetname" "', argument " "1"" of type '" "int32""'");
   } 
   arg1 = (int32)(val1);
+#if LIBVER_MAJOR == 4 && LIBVER_MINOR >= 4
+  size_t buf_size = sizeof(arg2);
+  result = (int32)Vgetname(arg1,arg2,&buf_size);
+#else
   result = (int32)Vgetname(arg1,arg2);
+#endif
   resultobj = SWIG_From_int((int)(result));
   arg2[4096] = 0;  
   resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_FromCharPtr(arg2), 0);
@@ -9720,7 +9726,12 @@ SWIGINTERN PyObject *_wrap_Vgetclass(PyObject *self, PyObject *args) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Vgetclass" "', argument " "1"" of type '" "int32""'");
   } 
   arg1 = (int32)(val1);
+#if LIBVER_MAJOR == 4 && LIBVER_MINOR >= 4
+  size_t buf_size = sizeof(arg2);
+  result = (int32)Vgetclass(arg1,arg2,&buf_size);
+#else
   result = (int32)Vgetclass(arg1,arg2);
+#endif
   resultobj = SWIG_From_int((int)(result));
   arg2[4096] = 0;  
   resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_FromCharPtr(arg2), 0);
