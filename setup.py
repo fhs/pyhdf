@@ -4,6 +4,7 @@ import sys
 import os
 import os.path as path
 import shlex
+import subprocess
 import sysconfig
 
 from setuptools import Extension, setup
@@ -44,11 +45,27 @@ def _use_hdf4alt(libdirs):
     return False
 
 
+def _get_hdf_version():
+    cmd = ['pkg-config', '--modversion', 'hdf']
+    try:
+        p = subprocess.run(cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+        v = p.stdout.decode().rstrip().split('.')
+        version = {
+            'major': int(v[0]),
+            'minor': int(v[1]),
+            'patch': int(v[2]),
+        }
+    except Exception:
+        version = None
+    return version
+
+
 include_dirs = _find_args("-i", "INCLUDE_DIRS")
 library_dirs = _find_args("-l", "LIBRARY_DIRS")
 szip_installed = "SZIP" in os.environ
 compress = "NO_COMPRESS" not in os.environ
 extra_link_args = None
+hdf_version = _get_hdf_version()
 if "LINK_ARGS" in os.environ:
     extra_link_args = shlex.split(os.environ["LINK_ARGS"])
 
@@ -75,6 +92,8 @@ if sys.platform == "win32":
     libraries = ["mfhdf", "hdf", "xdr"]
 elif _use_hdf4alt(library_dirs):
     libraries = ["mfhdfalt", "dfalt"]
+elif hdf_version and hdf_version['major'] == 4 and hdf_version['minor'] >= 4:
+    libraries = ["mfhdf", "hdf"]
 else:
     libraries = ["mfhdf", "df"]
 

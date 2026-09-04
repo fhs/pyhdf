@@ -127,6 +127,7 @@ typedef unsigned char uint8;
 %{
 #include "hdf.h"
 #include "mfhdf.h"
+#include "hfile.h"
 %}
 
 /*
@@ -912,16 +913,28 @@ extern int32  Vattach(int32 file_id,
 extern int32 Vdetach(int32 vgroup_id);
 
 %cstring_bounded_output(char *name, CHAR_BUFFER_SIZE);
+#if LIBVER_MAJOR == 4 && LIBVER_MINOR >= 4
+extern int32 Vgetname(int32 vgroup_id,
+                      char *name,
+                      size_t *buf_size);
+#else
 extern int32 Vgetname(int32 vgroup_id,
                       char *name);
+#endif
 %clear char *name;
 
 extern int32 Vsetname(int32 vgroup_id,
                       const char *vgroup_name);
 
 %cstring_bounded_output(char *name, CHAR_BUFFER_SIZE);
+#if LIBVER_MAJOR == 4 && LIBVER_MINOR >= 4
+extern int32 Vgetclass(int32 vgroup_id,
+                       char *name,
+                       size_t *buf_size);
+#else
 extern int32 Vgetclass(int32 vgroup_id,
                        char *name);
+#endif
 %clear char *name;
 
 extern int32 Vsetclass(int32 vgroup_id,
