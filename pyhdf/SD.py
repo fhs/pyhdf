@@ -1004,6 +1004,8 @@ from . import hdfext as _C
 from .six.moves import xrange
 from .error import _checkErr, HDF4Error
 
+_DFNT_LITEND = 0x4000
+
 # List of names we want to be imported by an "from pyhdf.SD import *"
 # statement
 
@@ -1913,6 +1915,7 @@ class SDS(object):
                 raise HDF4Error('get arguments violate ' \
                                  'the size (%d) of dimension %d' \
                                  % (dim_sizes[n], n))
+        data_type &= ~_DFNT_LITEND
         if not data_type in SDC.equivNumericTypes:
             raise HDF4Error('get cannot currently deal with '\
                              'the SDS data type')
@@ -1994,6 +1997,7 @@ class SDS(object):
                                  'the size (%d) of dimension %d' \
                                  % (dim_sizes[n], n))
         # ??? Check support for UINT16
+        data_type &= ~_DFNT_LITEND
         if not data_type in SDC.equivNumericTypes:
             raise HDF4Error('set cannot currently deal '\
                              'with the SDS data type')
